@@ -1,0 +1,11 @@
+name: PerceiveCore
+main: com.perceivedev.perceivecore.PerceiveCore
+version: 0.0.1
+description: A core plugin for Bukkit containing all sorts of utilities, making your life easier.
+author: [Rayzr]
+commands:
+  perceivecore:
+    description: PerceiveCore main command
+    aliases: [pc,perceive]
+    usage: "/pc [command]"
+    permission: PerceiveCore.main
