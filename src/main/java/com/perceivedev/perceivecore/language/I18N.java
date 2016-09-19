@@ -64,7 +64,6 @@ public class I18N implements MessageProvider {
 	 *
 	 * @throws NullPointerException If any parameter is null
 	 */
-	@SuppressWarnings({"WeakerAccess", "unused"})
 	public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader,
 	            Category defaultCategory, Category... more) {
 
@@ -385,7 +384,6 @@ public class I18N implements MessageProvider {
 	 *
 	 * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
 	 */
-	@SuppressWarnings("unused")
 	public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
 		Objects.requireNonNull(defaultPackage);
 		Objects.requireNonNull(targetDir);
