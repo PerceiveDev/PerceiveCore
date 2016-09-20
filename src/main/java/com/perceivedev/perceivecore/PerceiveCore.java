@@ -1,4 +1,3 @@
-
 package com.perceivedev.perceivecore;
 
 import org.bukkit.plugin.java.JavaPlugin;

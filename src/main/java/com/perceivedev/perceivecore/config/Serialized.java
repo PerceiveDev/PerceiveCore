@@ -1,4 +1,3 @@
-
 package com.perceivedev.perceivecore.config;
 
 import java.lang.annotation.ElementType;
