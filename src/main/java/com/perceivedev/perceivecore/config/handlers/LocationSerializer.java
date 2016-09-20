@@ -1,16 +1,15 @@
 
 package com.perceivedev.perceivecore.config.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import com.perceivedev.perceivecore.config.ConfigManager;
+import com.perceivedev.perceivecore.config.ISerializationHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.perceivedev.perceivecore.config.ConfigManager;
-import com.perceivedev.perceivecore.config.ISerializationHandler;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Adds the ability for {@link ConfigManager} to serialize and deserialize
@@ -42,11 +41,11 @@ public class LocationSerializer implements ISerializationHandler<Location> {
 		World world = Bukkit.getWorld(UUID.fromString((String) map.get("world")));
 		if (world == null) { return null; }
 
-		double x = d(map, "x");
-		double y = d(map, "y");
-		double z = d(map, "z");
-		float yaw = f(map, "yaw");
-		float pitch = f(map, "pitch");
+		double x = parseToDouble(map, "x");
+		double y = parseToDouble(map, "y");
+		double z = parseToDouble(map, "z");
+		float yaw = parseToFloat(map, "yaw");
+		float pitch = parseToFloat(map, "pitch");
 
 		return new Location(world, x, y, z, yaw, pitch);
 
