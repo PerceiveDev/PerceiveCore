@@ -2,6 +2,7 @@ package com.perceivedev.perceivecore.util;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The ArrayUtils class contains various methods for manipulating arrays
@@ -19,57 +20,25 @@ public class ArrayUtils {
      * <br>
      * Would return {@code "Hello_world!_How_are_you?"}
      *
-     * @param arr    the array
+     * @param arr the array
      * @param filler the String to concatenate the objects with
      *
      * @return The concatenated String
      */
     public static String concat(Object[] arr, String filler) {
-
-        if (arr.length < 1) {
-            return "";
-        }
-
-        filler = filler == null ? "" : filler;
-
-        String output = arr[0].toString();
-
-        for (int i = 1; i < arr.length; i++) {
-
-            output += filler + arr[i].toString();
-
-        }
-
-        return output;
-
+	return Arrays.stream(arr).map(Object::toString).collect(Collectors.joining(filler));
     }
 
     /**
      * Functions exactly like {@link ArrayUtils#concat(Object[], String)}
      *
-     * @param arr    the list
+     * @param list the list
      * @param filler the String to concatenate the objects with
      *
      * @return The concatenated String
      */
-    public static String concat(List<? extends Object> arr, String filler) {
-
-        if (arr.size() < 1) {
-            return "";
-        }
-
-        filler = filler == null ? "" : filler;
-
-        String output = arr.get(0).toString();
-
-        for (int i = 1; i < arr.size(); i++) {
-
-            output += filler + arr.get(i).toString();
-
-        }
-
-        return output;
-
+    public static String concat(List<? extends Object> list, String filler) {
+	return concat(list.toArray(), filler);
     }
 
     /**
@@ -80,10 +49,10 @@ public class ArrayUtils {
      * @return The reduced array
      */
     public static <T> T[] removeFirst(T[] original) {
-        if (original.length < 1) {
-            return original;
-        }
-        return Arrays.copyOfRange(original, 1, original.length);
+	if (original.length < 1) {
+	    return original;
+	}
+	return Arrays.copyOfRange(original, 1, original.length);
     }
 
 }
