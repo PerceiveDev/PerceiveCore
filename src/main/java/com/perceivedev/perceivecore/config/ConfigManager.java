@@ -174,15 +174,15 @@ public class ConfigManager {
      */
     public void saveConfig(YamlConfiguration config, String file) {
 	saveConfig(config, resolveFileName(file));
-
-	// DRY violation @Rayzr
-	/*
-	 * try { // createConfig(file); // this line does nothing useful config.save(resolveFileName(file)); } catch
-	 * (Exception e) { System.err.println("Failed to save config file"); }
-	 */
     }
 
-    // TODO: @Rayzr: Comment this.
+    /**
+     * Attempt to load an object of the given type from the file located at the given path
+     * 
+     * @param clazz the type
+     * @param path the path to the file
+     * @return A loaded instance of {@code clazz}, or null if something went wrong
+     */
     public <T> T load(Class<T> clazz, String path) {
 
 	if (!resolveFileName(path).exists()) {
@@ -193,20 +193,15 @@ public class ConfigManager {
 
 	return clazz.cast(load(clazz, config));
 
-	// DRY
-	/*
-	 * 
-	 * Map<String, Object> data = convertToMap(config);
-	 * 
-	 * return clazz.cast(deserialize(clazz, data));
-	 */
-
-	// @Rayzr
-	// added dynamic cast.
-	// return (T) deserialize(clazz, data);
     }
 
-    // TODO: @Rayzr: Comment this.
+    /**
+     * Attempt to load an object of the given type from the given config file
+     * 
+     * @param clazz the type
+     * @param config the config file to load from
+     * @return A loaded instance of {@code clazz}, or null if something went wrong
+     */
     public <T> T load(Class<T> clazz, YamlConfiguration config) {
 
 	Map<String, Object> data = convertToMap(config);
@@ -214,7 +209,13 @@ public class ConfigManager {
 	return clazz.cast(deserialize(clazz, data));
     }
 
-    // TODO: @Rayzr: Comment this.
+    /**
+     * Attempt to load an object of the given type from the given configuration section
+     * 
+     * @param clazz the type
+     * @param section the configuration section to load from
+     * @return A loaded instance of {@code clazz}, or null if something went wrong
+     */
     public <T> T load(Class<T> clazz, ConfigurationSection section) {
 
 	Map<String, Object> data = convertToMap(section);
