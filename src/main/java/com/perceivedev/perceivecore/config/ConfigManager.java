@@ -257,8 +257,12 @@ public class ConfigManager {
 				// Check if it's another Serializable
 				if (Reflection.hasInterface(field.getType(), ISerializable.class)) {
 					ISerializable serializable = (ISerializable) field.get(o);
-					serializable.onPreSerialize();
-					map.put(field.getName(), serialize(serializable));
+					if (serializable != null) {
+						serializable.onPreSerialize();
+						map.put(field.getName(), serialize(serializable));
+					} else {
+						map.put(field.getName(), null);
+					}
 				} else if (serializationHandlers.containsKey(field.getType())) {
 
 					// Get the handler for this type
@@ -268,6 +272,8 @@ public class ConfigManager {
 					} catch (ClassCastException e) {
 						System.err.println("SerializationHandler '" + handler.getClass().getCanonicalName() + "' encountered an invalid type while trying to load data for field '" + field.getName() + "'");
 						e.printStackTrace();
+					} catch (Exception e) {
+
 					}
 
 				} else {
@@ -382,7 +388,6 @@ public class ConfigManager {
 					Reflection.setValue(field, o, data.get(field.getName()));
 
 				}
-
 			} catch (Exception e) {
 
 				// Do various things if specified in an OnFail annotation

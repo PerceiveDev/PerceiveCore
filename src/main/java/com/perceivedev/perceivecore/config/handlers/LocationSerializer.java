@@ -42,13 +42,14 @@ public class LocationSerializer implements ISerializationHandler<Location> {
 		World world = Bukkit.getWorld(UUID.fromString((String) map.get("world")));
 		if (world == null) { return null; }
 
-		double x = (double) map.get("x");
-		double y = (double) map.get("y");
-		double z = (double) map.get("z");
-		float yaw = (float) map.get("yaw");
-		float pitch = (float) map.get("pitch");
+		double x = d(map, "x");
+		double y = d(map, "y");
+		double z = d(map, "z");
+		float yaw = f(map, "yaw");
+		float pitch = f(map, "pitch");
 
 		return new Location(world, x, y, z, yaw, pitch);
+
 	}
 
 }

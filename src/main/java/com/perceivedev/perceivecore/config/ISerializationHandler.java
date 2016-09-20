@@ -23,4 +23,28 @@ public interface ISerializationHandler<T extends Object> {
 
 	public T deserialize(Map<String, Object> map);
 
+	default int i(Map<String, Object> map, String key) {
+		try {
+			return Integer.valueOf(map.get(key).toString());
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+
+	default double d(Map<String, Object> map, String key) {
+		try {
+			return Double.valueOf(map.get(key).toString());
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+
+	default float f(Map<String, Object> map, String key) {
+		try {
+			return Float.valueOf(map.get(key).toString());
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+
 }
