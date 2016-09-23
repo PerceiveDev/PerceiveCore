@@ -1,15 +1,16 @@
 package com.perceivedev.perceivecore.config;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
 /**
  * Created by Julian on 21.09.2016.
  */
-public class TestClass implements ConfigSerializable {
+@SuppressWarnings("unused")
+public class SerializerTest implements ConfigSerializable {
 
     private static String     staticTest = ThreadLocalRandom.current().nextInt() + "";
     private transient String  transientTest;
@@ -19,10 +20,10 @@ public class TestClass implements ConfigSerializable {
     private TestTwo	      two;
     private SerializableClass serializableClass;
 
-    protected TestClass() {
+    protected SerializerTest() {
     }
 
-    public TestClass(String test) {
+    public SerializerTest(String test) {
 	this.test = test;
 	two = new TestTwo(test + " copy");
 	serializableClass = new SerializableClass("Serializable: " + test);
@@ -79,7 +80,7 @@ public class TestClass implements ConfigSerializable {
 
     public static void main(String[] args) {
 	SerializationManager serializationManager = new SerializationManager();
-	TestClass testClass = new TestClass("This is cool");
+	SerializerTest testClass = new SerializerTest("This is cool");
 
 	serializationManager.addSerializationProxy(String.class, new SerializationProxy<String>() {
 	    @Override
@@ -108,6 +109,6 @@ public class TestClass implements ConfigSerializable {
 
 	System.out.println();
 	System.out.println("==== AFTER ====");
-	System.out.println(serializationManager.deserialize(TestClass.class, serialize));
+	System.out.println(serializationManager.deserialize(SerializerTest.class, serialize));
     }
 }
