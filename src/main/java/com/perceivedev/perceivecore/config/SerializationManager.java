@@ -3,6 +3,7 @@ package com.perceivedev.perceivecore.config;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
@@ -156,7 +157,7 @@ public class SerializationManager {
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     *             field
+     * field
      */
     private <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
@@ -203,12 +204,29 @@ public class SerializationManager {
                 } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
                     if (serializedData instanceof Map) {
                         System.out.println("Found a map. This shouldn't happen, as it means the Bukkit configuration hasn't done it's job.");
+
+                        Object fieldValue = null;
+                        if (getMethod("deserialize", type, Map.class) != null) {
+                            fieldValue = invoke(getMethod("deserialize", type, Map.class), null, serializedData);
+                        } else if (getMethod("valueOf", type, Map.class) != null) {
+                            fieldValue = invoke(getMethod("valueOf", type, Map.class), null, serializedData);
+                        }
+
+                        if (fieldValue != null) {
+                            setField(field, instance, fieldValue);
+                            continue;
+                        }
+
                         // TODO: @I_Al_Istannen: This is
-                        // bad. We have NO idea if
-                        // there's a
-                        // constructor with a Map
-                        // parameter
-                        setField(field, instance, instantiate(type, new Class[] { Map.class }, serializedData));
+                        // bad. We have NO idea if there's a
+                        // constructor with a Map parameter
+
+                        // @Rayzr Should be fixed now.
+                        if (isConstructorPresent(type, Map.class)) {
+                            setField(field, instance, instantiate(type, new Class[] { Map.class }, serializedData));
+                        } else {
+                            System.out.println("No deserialization method found for ConfigurationSerializable " + type.getName());
+                        }
                     } else {
                         System.out.println("Set ConfigurationSerializable: " + type.getSimpleName() + " data: " + serializedData);
                         setField(field, instance, serializedData);
@@ -300,7 +318,6 @@ public class SerializationManager {
             return instantiate(constructor);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            System.out.println("Check if the class " + clazz.getName() + " contains a default constructor.");
         }
         return null;
     }
@@ -321,10 +338,74 @@ public class SerializationManager {
             return instantiate(constructor, params);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            // TODO: @I_Al_Istannen: This is an inaccurate message
-            System.out.println("Check if the class " + clazz.getName() + " contains a default constructor.");
         }
         return null;
+    }
+
+    /**
+     * Invokes a method
+     *
+     * @param method The method to invoke
+     * @param handle The handle to invoke it on
+     * @param params The parameters of it
+     *
+     * @return The resulting Object
+     */
+    private static Object invoke(Method method, Object handle, Object... params) {
+        method.setAccessible(true);
+        try {
+            return method.invoke(handle, params);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Returns a method
+     *
+     * @param name The name of the method
+     * @param clazz The clazz of the method
+     * @param params The parameters of the method
+     *
+     * @return The method or null if none found.
+     */
+    private static Method getMethod(String name, Class<?> clazz, Class<?>... params) {
+        for (Method method : clazz.getMethods()) {
+            if (method.getName().equals(name) && Arrays.equals(params, method.getParameterTypes())) {
+                return method;
+            }
+        }
+
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getName().equals(name) && Arrays.equals(params, method.getParameterTypes())) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if a constructor is present
+     *
+     * @param clazz The class to check
+     * @param params The Parameters of the Constructor
+     *
+     * @return True if there is a constructor for it
+     */
+    private static boolean isConstructorPresent(Class<?> clazz, Class<?>... params) {
+        for (Constructor<?> constructor : clazz.getConstructors()) {
+            if (Arrays.equals(constructor.getParameterTypes(), params)) {
+                return true;
+            }
+        }
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+            if (Arrays.equals(constructor.getParameterTypes(), params)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -336,6 +417,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .collect(Collectors.toList());
+                  .collect(Collectors.toList());
     }
 }
