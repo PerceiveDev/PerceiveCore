@@ -4,10 +4,12 @@
 package com.perceivedev.perceivecore.gui.component;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.DisplayColor;
 import com.perceivedev.perceivecore.gui.DisplayType;
+import com.perceivedev.perceivecore.gui.GUI;
 import com.perceivedev.perceivecore.gui.GUIHolder;
 
 /**
@@ -23,6 +25,8 @@ public class Component {
 
     protected DisplayType  type;
     protected DisplayColor color;
+
+    protected GUI	   gui;
 
     public Component(int x, int y, int width, int height, DisplayType type, DisplayColor color) {
 	this.x = x;
@@ -63,11 +67,13 @@ public class Component {
 	return type.getItem(color);
     }
 
-    public final boolean checkClick(Player player, int clickX, int clickY) {
+    public final boolean checkClick(Player player, int clickX, int clickY, InventoryClickEvent e) {
 
 	if (clickX >= x && clickX < x + width && clickY >= y && clickY < y + height) {
 
-	    onClick(player, clickX - x, clickY - y);
+	    if (onClick(player, clickX - x, clickY - y)) {
+		e.setCancelled(false);
+	    }
 	    return true;
 
 	}
@@ -75,8 +81,15 @@ public class Component {
 
     }
 
-    protected void onClick(Player player, int offX, int offY) {
-
+    /**
+     * 
+     * @param player
+     * @param offX
+     * @param offY
+     * @return If the clicking should be allowed (not cancelled)
+     */
+    protected boolean onClick(Player player, int offX, int offY) {
+	return false;
     }
 
     /**
@@ -193,6 +206,24 @@ public class Component {
      */
     public void setColor(DisplayColor color) {
 	this.color = color;
+    }
+
+    /**
+     * @return the gui
+     */
+    public GUI getGui() {
+	return gui;
+    }
+
+    /**
+     * This is only meant to be used by {@link GUI}. Don't use this unless you
+     * know what you're doing.
+     * 
+     * @param gui
+     *            the gui to set
+     */
+    public void setGui(GUI gui) {
+	this.gui = gui;
     }
 
 }

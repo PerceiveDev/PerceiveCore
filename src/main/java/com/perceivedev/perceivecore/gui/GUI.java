@@ -40,7 +40,11 @@ public class GUI {
     }
 
     public GUI(String name, int rows, DisplayColor color) {
-	this(name, rows, DisplayType.FLAT, color);
+	this(name, rows, DisplayType.EMPTY, color);
+    }
+
+    public GUI(String name, int rows, DisplayType type) {
+	this(name, rows, type, DisplayColor.BLACK);
     }
 
     public GUI(String name, int rows) {
@@ -54,14 +58,35 @@ public class GUI {
 	return components;
     }
 
-    public void addComponent(Component c) {
-	components.add(c);
+    /**
+     * Adds a component and returns the id of it
+     * 
+     * @param component
+     *            the component
+     * @return The component's id
+     */
+    public int addComponent(Component component) {
+	components.add(component);
+	component.setGui(this);
+	return components.size() - 1;
+    }
+
+    /**
+     * Gets a component with the given id
+     * 
+     * @param componentId
+     *            the id of the component
+     * @return The component. This will be null if no component could be found
+     *         for that id
+     */
+    public Component getComponent(int componentId) {
+	return components.get(componentId);
     }
 
     /**
      * Renders and returns the inventory
      * 
-     * @return
+     * @return The inventory
      */
     public Inventory getInventory() {
 	return new GUIHolder(this).getInventory();
@@ -81,13 +106,18 @@ public class GUI {
 	return rows;
     }
 
+    /**
+     * Render to the given {@link GUIHolder}
+     * 
+     * @param holder
+     *            the holder
+     */
     public void render(GUIHolder holder) {
 	for (int i = 0; i < rows * 9; i++) {
 	    ItemStack item = holder.getInventory().getItem(i);
 	    if (item == null || item.getType() == Material.AIR) {
 		holder.setItem(i, ItemUtils.setName(fill.getItem(color), " "));
 	    }
-
 	}
     }
 

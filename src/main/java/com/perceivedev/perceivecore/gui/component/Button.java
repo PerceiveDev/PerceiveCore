@@ -71,13 +71,14 @@ public class Button extends Label {
      * .Player, int, int)
      */
     @Override
-    protected void onClick(Player player, int offX, int offY) {
+    protected boolean onClick(Player player, int offX, int offY) {
 	if (clickHandler != null) {
 	    clickHandler.accept(new ClickEvent(player, offX, offY));
 	}
 	if (closeOnClick) {
 	    player.closeInventory();
 	}
+	return false;
     }
 
     /**

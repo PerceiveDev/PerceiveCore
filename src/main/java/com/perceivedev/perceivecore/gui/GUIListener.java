@@ -44,7 +44,7 @@ public class GUIListener implements Listener {
 
 	e.setCancelled(true);
 
-	holder.handleClick(p, e.getRawSlot());
+	holder.handleClick(p, e);
 
     }
 
