@@ -5,14 +5,16 @@ import java.util.Map;
 /**
  * A Proxy to serialize another class
  *
- * @param <T> The type of the class to proxy
+ * @param <T>
+ *            The type of the class to proxy
  */
-public interface SerializationProxy <T> {
+public interface SerializationProxy<T> {
 
     /**
      * Serializes an object
      *
-     * @param object The object to serialize
+     * @param object
+     *            The object to serialize
      *
      * @return The serialized form
      */
@@ -21,7 +23,8 @@ public interface SerializationProxy <T> {
     /**
      * Deserialized an object
      *
-     * @param data The data of the object
+     * @param data
+     *            The data of the object
      *
      * @return The deserialized object
      */

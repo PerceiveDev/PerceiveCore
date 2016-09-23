@@ -11,113 +11,103 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class TestClass implements ConfigSerializable {
 
-    private static String staticTest = ThreadLocalRandom.current().nextInt() + "";
-    private transient String transientTest;
+    private static String     staticTest = ThreadLocalRandom.current().nextInt() + "";
+    private transient String  transientTest;
 
-    private String test;
-    private String testNull;
-    private TestTwo two;
+    private String	      test;
+    private String	      testNull;
+    private TestTwo	      two;
     private SerializableClass serializableClass;
 
-    private TestClass() {
+    protected TestClass() {
     }
 
     public TestClass(String test) {
-        this.test = test;
-        two = new TestTwo(test + " copy");
-        serializableClass = new SerializableClass("Serializable: " + test);
-        transientTest = "transient";
+	this.test = test;
+	two = new TestTwo(test + " copy");
+	serializableClass = new SerializableClass("Serializable: " + test);
+	transientTest = "transient";
     }
 
     @Override
     public String toString() {
-        return "TestClass\n{" +
-                        "\n\ttest='" + test + '\'' +
-                        "\n\t, testNull='" + testNull + '\'' +
-                        "\n\t, two=" + two +
-                        "\n\t, serializableClass=" + serializableClass +
-                        "\n\t, transientTest=" + transientTest +
-                        "\n\t, staticTest=" + staticTest +
-                        "\n}";
+	return "TestClass\n{" + "\n\ttest='" + test + '\'' + "\n\t, testNull='" + testNull + '\'' + "\n\t, two=" + two + "\n\t, serializableClass=" + serializableClass + "\n\t, transientTest="
+		+ transientTest + "\n\t, staticTest=" + staticTest + "\n}";
     }
 
     private static class TestTwo implements ConfigSerializable {
 
-        private String otherData;
+	private String otherData;
 
-        private TestTwo() {
-        }
+	protected TestTwo() {
+	}
 
-        public TestTwo(String otherData) {
-            this.otherData = otherData;
-        }
+	public TestTwo(String otherData) {
+	    this.otherData = otherData;
+	}
 
-        @Override
-        public String toString() {
-            return "TestTwo{" +
-                            "otherData='" + otherData + '\'' +
-                            '}';
-        }
+	@Override
+	public String toString() {
+	    return "TestTwo{" + "otherData='" + otherData + '\'' + '}';
+	}
     }
 
     private static class SerializableClass implements ConfigurationSerializable {
 
-        private String string;
+	private String string;
 
-        public SerializableClass(String string) {
-            this.string = string;
-        }
+	public SerializableClass(String string) {
+	    this.string = string;
+	}
 
-        public SerializableClass(Map<String, Object> map) {
-            string = (String) map.get("string");
-        }
+	public SerializableClass(Map<String, Object> map) {
+	    string = (String) map.get("string");
+	}
 
-        @Override
-        public Map<String, Object> serialize() {
-            Map<String, Object> map = new HashMap<>();
-            map.put("string", string);
-            return map;
-        }
+	@Override
+	public Map<String, Object> serialize() {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("string", string);
+	    return map;
+	}
 
-        @Override
-        public String toString() {
-            return "SerializableClass{" +
-                            "string='" + string + '\'' +
-                            '}';
-        }
+	@Override
+	public String toString() {
+	    return "SerializableClass{" + "string='" + string + '\'' + '}';
+	}
     }
 
     public static void main(String[] args) {
-        SerializationManager serializationManager = new SerializationManager();
-        TestClass testClass = new TestClass("This is cool");
+	SerializationManager serializationManager = new SerializationManager();
+	TestClass testClass = new TestClass("This is cool");
 
-        serializationManager.addSerializationProxy(String.class, new SerializationProxy<String>() {
-            @Override
-            public Map<String, Object> serialize(String object) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("string", object + " proxy serialized");
-                return map;
-            }
+	serializationManager.addSerializationProxy(String.class, new SerializationProxy<String>() {
+	    @Override
+	    public Map<String, Object> serialize(String object) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("string", object + " proxy serialized");
+		return map;
+	    }
 
-            @Override
-            public String deserialize(Map<String, Object> data) {
-                return ((String) data.get("string")).replace(" proxy serialized", " proxy deserialized");
-            }
-        });
+	    @Override
+	    public String deserialize(Map<String, Object> data) {
+		return ((String) data.get("string")).replace(" proxy serialized", " proxy deserialized");
+	    }
+	});
 
-        Map<String, Object> serialize = serializationManager.serialize(testClass);
+	Map<String, Object> serialize = serializationManager.serialize(testClass);
 
-        System.out.println();
-        System.out.println("==== BEFORE ====");
-        System.out.println(testClass);
-        System.out.println();
+	System.out.println();
+	System.out.println("==== BEFORE ====");
+	System.out.println(testClass);
+	System.out.println();
 
-        System.out.println("==== SERIALIZED ====");
-        System.out.println(serialize);
-        System.out.println();
+	System.out.println("==== SERIALIZED ====");
+	System.out.println(serialize);
+	System.out.println();
 
-        System.out.println();
-        System.out.println("==== AFTER ====");
-        System.out.println(serializationManager.deserialize(TestClass.class, serialize));
+	System.out.println();
+	System.out.println("==== AFTER ====");
+	System.out.println(serializationManager.deserialize(TestClass.class, serialize));
     }
 }
