@@ -20,31 +20,31 @@ public class GUIListener implements Listener {
      * @param plugin
      */
     public GUIListener(Plugin plugin) {
-	plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onPlayerInteract(InventoryClickEvent e) {
 
-	if (!(e.getWhoClicked() instanceof Player)) {
-	    return;
-	}
+        if (!(e.getWhoClicked() instanceof Player)) {
+            return;
+        }
 
-	Inventory inv = e.getInventory();
-	if (!(inv.getHolder() instanceof GUIHolder)) {
-	    return;
-	}
+        Inventory inv = e.getInventory();
+        if (!(inv.getHolder() instanceof GUIHolder)) {
+            return;
+        }
 
-	GUIHolder holder = (GUIHolder) inv.getHolder();
-	if (e.getRawSlot() >= holder.getInventory().getSize()) {
-	    return;
-	}
+        GUIHolder holder = (GUIHolder) inv.getHolder();
+        if (e.getRawSlot() >= holder.getInventory().getSize()) {
+            return;
+        }
 
-	Player p = (Player) e.getWhoClicked();
+        Player p = (Player) e.getWhoClicked();
 
-	e.setCancelled(true);
+        e.setCancelled(true);
 
-	holder.handleClick(p, e);
+        holder.handleClick(p, e);
 
     }
 

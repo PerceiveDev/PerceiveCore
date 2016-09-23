@@ -21,22 +21,22 @@ import com.perceivedev.perceivecore.util.TextUtils;
  */
 public class Label extends Component {
 
-    protected String	   name	= "Label";
-    protected List<String> lore	= Collections.emptyList();
+    protected String       name = "Label";
+    protected List<String> lore = Collections.emptyList();
 
     public Label(int x, int y, int width, int height, String name, String... lore) {
-	super(x, y, width, height);
-	setName(name);
-	setLore(lore);
-	setColor(DisplayColor.WHITE);
+        super(x, y, width, height);
+        setName(name);
+        setLore(lore);
+        setColor(DisplayColor.WHITE);
     }
 
     public Label(int x, int y, String name, String... lore) {
-	this(x, y, 1, 1, name, lore);
+        this(x, y, 1, 1, name, lore);
     }
 
     public Label(String name, String... lore) {
-	this(0, 0, name, lore);
+        this(0, 0, name, lore);
     }
 
     /*
@@ -47,45 +47,42 @@ public class Label extends Component {
      */
     @Override
     protected ItemStack render(GUIHolder holder, int posX, int posY) {
-	return ItemUtils.setDisplay(super.render(holder, posX, posY), name, lore);
+        return ItemUtils.setDisplay(super.render(holder, posX, posY), name, lore);
     }
 
     /**
      * @return the name
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
-	this.name = TextUtils.colorize(name);
+        this.name = TextUtils.colorize(name);
     }
 
     /**
      * @return the lore
      */
     public List<String> getLore() {
-	return lore;
+        return lore;
     }
 
     /**
-     * @param lore
-     *            the lore to set
+     * @param lore the lore to set
      */
     public void setLore(List<String> lore) {
-	this.lore = ListUtils.colorList(lore);
+        this.lore = ListUtils.colorList(lore);
     }
 
     /**
-     * @param lore
-     *            the lore to set
+     * @param lore the lore to set
      */
     public void setLore(String... lore) {
-	setLore(Arrays.asList(lore));
+        setLore(Arrays.asList(lore));
     }
 
 }

@@ -16,51 +16,50 @@ import com.perceivedev.perceivecore.gui.DisplayColor;
 public class Button extends Label {
 
     protected Consumer<ClickEvent> clickHandler;
-    protected boolean		   closeOnClick	= true;
+    protected boolean              closeOnClick = true;
 
     public Button(int x, int y, int width, int height, String name, Consumer<ClickEvent> clickHandler) {
-	super(x, y, width, height, name, new String[0]);
-	this.clickHandler = clickHandler;
-	setColor(DisplayColor.LIME);
+        super(x, y, width, height, name, new String[0]);
+        this.clickHandler = clickHandler;
+        setColor(DisplayColor.LIME);
     }
 
     public Button(int x, int y, String name, Consumer<ClickEvent> clickHandler) {
-	this(x, y, 1, 1, name, clickHandler);
+        this(x, y, 1, 1, name, clickHandler);
     }
 
     public Button(int x, int y, String name) {
-	this(x, y, name, null);
+        this(x, y, name, null);
     }
 
     public Button(String name) {
-	this(0, 0, name);
+        this(0, 0, name);
     }
 
     public Button(int x, int y, Consumer<ClickEvent> clickHandler) {
-	this(x, y, "Button", clickHandler);
+        this(x, y, "Button", clickHandler);
     }
 
     public Button(Consumer<ClickEvent> clickHandler) {
-	this(0, 0, clickHandler);
+        this(0, 0, clickHandler);
     }
 
     public Button(String name, Consumer<ClickEvent> clickHandler) {
-	this(0, 0, "Button", clickHandler);
+        this(0, 0, "Button", clickHandler);
     }
 
     /**
      * @return the clickHandler
      */
     public Consumer<ClickEvent> getClickHandler() {
-	return clickHandler;
+        return clickHandler;
     }
 
     /**
-     * @param clickHandler
-     *            the clickHandler to set
+     * @param clickHandler the clickHandler to set
      */
     public void setClickHandler(Consumer<ClickEvent> clickHandler) {
-	this.clickHandler = clickHandler;
+        this.clickHandler = clickHandler;
     }
 
     /*
@@ -72,62 +71,61 @@ public class Button extends Label {
      */
     @Override
     protected boolean onClick(Player player, int offX, int offY) {
-	if (clickHandler != null) {
-	    clickHandler.accept(new ClickEvent(player, offX, offY));
-	}
-	if (closeOnClick) {
-	    player.closeInventory();
-	}
-	return false;
+        if (clickHandler != null) {
+            clickHandler.accept(new ClickEvent(player, offX, offY));
+        }
+        if (closeOnClick) {
+            player.closeInventory();
+        }
+        return false;
     }
 
     /**
      * @return the value ofcloseOnClick
      */
     public boolean closeOnClick() {
-	return closeOnClick;
+        return closeOnClick;
     }
 
     /**
-     * @param closeOnClick
-     *            the value of closeOnClick to set
+     * @param closeOnClick the value of closeOnClick to set
      */
     public void setCloseOnClick(boolean closeOnClick) {
-	this.closeOnClick = closeOnClick;
+        this.closeOnClick = closeOnClick;
     }
 
     public class ClickEvent {
 
-	private Player player;
-	private int    offX;
-	private int    offY;
+        private Player player;
+        private int    offX;
+        private int    offY;
 
-	public ClickEvent(Player player, int offX, int offY) {
-	    this.player = player;
-	    this.offX = offX;
-	    this.offY = offY;
-	}
+        public ClickEvent(Player player, int offX, int offY) {
+            this.player = player;
+            this.offX = offX;
+            this.offY = offY;
+        }
 
-	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-	    return player;
-	}
+        /**
+         * @return the player
+         */
+        public Player getPlayer() {
+            return player;
+        }
 
-	/**
-	 * @return the offX
-	 */
-	public int getOffX() {
-	    return offX;
-	}
+        /**
+         * @return the offX
+         */
+        public int getOffX() {
+            return offX;
+        }
 
-	/**
-	 * @return the offY
-	 */
-	public int getOffY() {
-	    return offY;
-	}
+        /**
+         * @return the offY
+         */
+        public int getOffY() {
+            return offY;
+        }
 
     }
 

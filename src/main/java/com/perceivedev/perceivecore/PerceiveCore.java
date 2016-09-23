@@ -8,30 +8,30 @@ import com.perceivedev.perceivecore.gui.GUIListener;
 
 public class PerceiveCore extends JavaPlugin {
 
-    private Logger	logger;
+    private Logger      logger;
     @SuppressWarnings("unused")
-    private GUIListener	guiListener;
+    private GUIListener guiListener;
 
     @Override
     public void onEnable() {
 
-	logger = getLogger();
+        logger = getLogger();
 
-	guiListener = new GUIListener(this);
+        guiListener = new GUIListener(this);
 
-	logger.info(versionText() + " enabled");
+        logger.info(versionText() + " enabled");
 
     }
 
     @Override
     public void onDisable() {
 
-	logger.info(versionText() + " disabled");
+        logger.info(versionText() + " disabled");
 
     }
 
     public String versionText() {
-	return getName() + " v" + getDescription().getVersion();
+        return getName() + " v" + getDescription().getVersion();
     }
 
 }

@@ -14,218 +14,215 @@ public class ItemUtils {
 
     public static ItemStack enchantItem(ItemStack base, Enchant... enchantments) {
 
-	for (Enchant ench : enchantments) {
+        for (Enchant ench : enchantments) {
 
-	    base.addEnchantment(ench.getType(), ench.getLevel());
+            base.addEnchantment(ench.getType(), ench.getLevel());
 
-	}
+        }
 
-	return base;
+        return base;
 
     }
 
     public static class Enchant {
 
-	private int	    level;
-	private Enchantment type;
+        private int         level;
+        private Enchantment type;
 
-	public Enchant(Enchantment type, int level) {
-	    this.level = level;
-	    this.type = type;
-	}
+        public Enchant(Enchantment type, int level) {
+            this.level = level;
+            this.type = type;
+        }
 
-	public int getLevel() {
-	    return level;
-	}
+        public int getLevel() {
+            return level;
+        }
 
-	public Enchantment getType() {
-	    return type;
-	}
+        public Enchantment getType() {
+            return type;
+        }
 
     }
 
     public static boolean isEmpty(ItemStack item) {
 
-	return item == null || item.getType() == Material.AIR;
+        return item == null || item.getType() == Material.AIR;
 
     }
 
     public static ItemStack createItem(Material type, int amount, int damage, String name, List<String> lore) {
 
-	ItemStack item = new ItemStack(type, amount, (short) damage);
-	ItemMeta meta = item.getItemMeta();
-	meta.setDisplayName(name);
-	meta.setLore(ListUtils.colorList(lore));
-	item.setItemMeta(meta);
-	return item;
+        ItemStack item = new ItemStack(type, amount, (short) damage);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(ListUtils.colorList(lore));
+        item.setItemMeta(meta);
+        return item;
 
     }
 
     public static ItemStack parseItem(String string) {
 
-	String[] split = string.split(":");
-	Material type = Material.valueOf(split[0].toUpperCase());
+        String[] split = string.split(":");
+        Material type = Material.valueOf(split[0].toUpperCase());
 
-	if (type == null) {
+        if (type == null) {
 
-	    return null;
+            return null;
 
-	}
+        }
 
-	if (split.length == 2) {
+        if (split.length == 2) {
 
-	    try {
+            try {
 
-		int damage = Integer.parseInt(split[1]);
-		return new ItemStack(type, 1, (short) damage);
+                int damage = Integer.parseInt(split[1]);
+                return new ItemStack(type, 1, (short) damage);
 
-	    } catch (Exception e) {
+            } catch (Exception e) {
 
-		return new ItemStack(type);
+                return new ItemStack(type);
 
-	    }
+            }
 
-	} else if (split.length == 3) {
+        } else if (split.length == 3) {
 
-	    try {
+            try {
 
-		int damage = Integer.parseInt(split[1]);
-		int amount = Integer.parseInt(split[2]);
-		return new ItemStack(type, amount, (short) damage);
+                int damage = Integer.parseInt(split[1]);
+                int amount = Integer.parseInt(split[2]);
+                return new ItemStack(type, amount, (short) damage);
 
-	    } catch (Exception e) {
+            } catch (Exception e) {
 
-		return new ItemStack(type);
+                return new ItemStack(type);
 
-	    }
+            }
 
-	} else {
+        } else {
 
-	    return new ItemStack(type);
+            return new ItemStack(type);
 
-	}
+        }
 
     }
 
     public static String toString(ItemStack item) {
 
-	String out = "";
+        String out = "";
 
-	out += item.getType().toString();
-	out += ":" + item.getDurability();
-	out += ":" + item.getAmount();
+        out += item.getType().toString();
+        out += ":" + item.getDurability();
+        out += ":" + item.getAmount();
 
-	return out;
+        return out;
 
     }
 
     public static ItemStack setName(ItemStack item, String name) {
 
-	if (isEmpty(item)) {
-	    return item;
-	}
+        if (isEmpty(item)) {
+            return item;
+        }
 
-	ItemMeta meta = item.getItemMeta();
-	meta.setDisplayName(TextUtils.colorize(name));
-	item.setItemMeta(meta);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(TextUtils.colorize(name));
+        item.setItemMeta(meta);
 
-	return item;
+        return item;
 
     }
 
     public static ItemStack setLore(ItemStack item, List<String> lore) {
 
-	if (isEmpty(item)) {
-	    return item;
-	}
+        if (isEmpty(item)) {
+            return item;
+        }
 
-	ItemMeta meta = item.getItemMeta();
-	meta.setLore(lore);
-	item.setItemMeta(meta);
+        ItemMeta meta = item.getItemMeta();
+        meta.setLore(lore);
+        item.setItemMeta(meta);
 
-	return item;
+        return item;
 
     }
 
     public static List<String> getLore(ItemStack item) {
 
-	if (isEmpty(item)) {
-	    return null;
-	}
+        if (isEmpty(item)) {
+            return null;
+        }
 
-	ItemMeta meta = item.getItemMeta();
-	if (!meta.hasLore()) {
-	    return null;
-	}
+        ItemMeta meta = item.getItemMeta();
+        if (!meta.hasLore()) {
+            return null;
+        }
 
-	return meta.getLore();
+        return meta.getLore();
 
     }
 
     public static List<String> addLore(ItemStack item, List<String> lore) {
 
-	if (isEmpty(item)) {
-	    return null;
-	}
-	if (ListUtils.isEmpty(lore)) {
-	    return null;
-	}
+        if (isEmpty(item)) {
+            return null;
+        }
+        if (ListUtils.isEmpty(lore)) {
+            return null;
+        }
 
-	List<String> currentLore = getLore(item);
-	if (currentLore == null) {
-	    return null;
-	}
-	currentLore.addAll(lore);
+        List<String> currentLore = getLore(item);
+        if (currentLore == null) {
+            return null;
+        }
+        currentLore.addAll(lore);
 
-	ItemMeta meta = item.getItemMeta();
-	meta.setLore(currentLore);
-	item.setItemMeta(meta);
+        ItemMeta meta = item.getItemMeta();
+        meta.setLore(currentLore);
+        item.setItemMeta(meta);
 
-	return currentLore;
+        return currentLore;
 
     }
 
     public static ItemStack clearLore(ItemStack item) {
 
-	if (isEmpty(item)) {
-	    return item;
-	}
+        if (isEmpty(item)) {
+            return item;
+        }
 
-	ItemMeta meta = item.getItemMeta();
-	meta.setLore(null);
-	item.setItemMeta(meta);
+        ItemMeta meta = item.getItemMeta();
+        meta.setLore(null);
+        item.setItemMeta(meta);
 
-	return item;
+        return item;
 
     }
 
     public static Material getType(String material) {
 
-	try {
+        try {
 
-	    return Material.valueOf(TextUtils.enumFormat(material));
+            return Material.valueOf(TextUtils.enumFormat(material));
 
-	} catch (Exception e) {
+        } catch (Exception e) {
 
-	    return null;
+            return null;
 
-	}
+        }
 
     }
 
     /**
-     * @param item
-     *            the item
-     * @param name
-     *            the name
-     * @param lore
-     *            the lore
+     * @param item the item
+     * @param name the name
+     * @param lore the lore
      * @return The changed item
      */
     public static ItemStack setDisplay(ItemStack item, String name, List<String> lore) {
-	setName(item, name);
-	setLore(item, lore);
-	return item;
+        setName(item, name);
+        setLore(item, lore);
+        return item;
     }
 
 }

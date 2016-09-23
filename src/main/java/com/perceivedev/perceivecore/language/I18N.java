@@ -23,49 +23,46 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * An implementation of the {@link MessageProvider} using
  */
 public class I18N implements MessageProvider {
 
     /**
-     * Regex it find things references
-     * e.g.
-     * "Test 1234 [[path.to.other.message]]" ==> Matches "[[path.to.other.message]]"
+     * Regex it find things references e.g.
+     * "Test 1234 [[path.to.other.message]]" ==> Matches
+     * "[[path.to.other.message]]"
      */
-    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern          REFERENCE_PATTERN   = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
 
-
-    private Map<String, Category> categories = new HashMap<>();
+    private Map<String, Category>         categories          = new HashMap<>();
     private Map<Category, ResourceBundle> fileResourceBundles = new HashMap<>();
-    private Map<Category, ResourceBundle> jarResourceBundles = new HashMap<>();
+    private Map<Category, ResourceBundle> jarResourceBundles  = new HashMap<>();
 
-    private Locale currentLanguage;
-    private String basePackage;
+    private Locale                        currentLanguage;
+    private String                        basePackage;
 
-    private ClassLoader callerClassLoader, fileClassLoader;
+    private ClassLoader                   callerClassLoader, fileClassLoader;
 
-    private Category defaultCategory;
+    private Category                      defaultCategory;
 
     /**
      * Cache to increase performance. May be left out.
      */
-    private Map<String, MessageFormat> messageFormatCache = new HashMap<>();
-
+    private Map<String, MessageFormat>    messageFormatCache  = new HashMap<>();
 
     /**
-     * @param currentLanguage   The current language
-     * @param basePackage       The base package in the jar to read from
-     * @param savePath          The save path
-     * @param callerClassLoader Your class loader. Needed to query packages from your jar file
-     * @param defaultCategory   The default category
-     * @param more              More categories
+     * @param currentLanguage The current language
+     * @param basePackage The base package in the jar to read from
+     * @param savePath The save path
+     * @param callerClassLoader Your class loader. Needed to query packages from
+     *            your jar file
+     * @param defaultCategory The default category
+     * @param more More categories
      *
      * @throws NullPointerException If any parameter is null
      */
-    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader,
-                Category defaultCategory, Category... more) {
+    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, Category defaultCategory, Category... more) {
 
         Objects.requireNonNull(currentLanguage);
         Objects.requireNonNull(basePackage);
@@ -79,8 +76,7 @@ public class I18N implements MessageProvider {
         this.callerClassLoader = callerClassLoader;
 
         this.categories.put(defaultCategory.getName(), defaultCategory);
-        Arrays.stream(more)
-                .forEach(category -> categories.put(category.getName(), category));
+        Arrays.stream(more).forEach(category -> categories.put(category.getName(), category));
 
         this.defaultCategory = defaultCategory;
 
@@ -118,18 +114,14 @@ public class I18N implements MessageProvider {
      */
     private boolean createBundle(Category category) {
         try {
-            ResourceBundle jarBundle =
-                    ResourceBundle.getBundle(basePackage + "." + category.getName(),
-                            currentLanguage,
-                            callerClassLoader);
+            ResourceBundle jarBundle = ResourceBundle.getBundle(basePackage + "." + category.getName(), currentLanguage, callerClassLoader);
 
             jarResourceBundles.put(category, jarBundle);
         } catch (MissingResourceException ignored) {
         }
 
         try {
-            ResourceBundle fileBundle = ResourceBundle
-                    .getBundle(category.getName(), currentLanguage, fileClassLoader);
+            ResourceBundle fileBundle = ResourceBundle.getBundle(category.getName(), currentLanguage, fileClassLoader);
 
             fileResourceBundles.put(category, fileBundle);
         } catch (MissingResourceException ignored) {
@@ -141,12 +133,13 @@ public class I18N implements MessageProvider {
     /**
      * Translates a String
      *
-     * @param key      The key
+     * @param key The key
      * @param category The category
      *
      * @return The translated String
      *
-     * @throws IllegalArgumentException If the category isn't in {@link #categories}
+     * @throws IllegalArgumentException If the category isn't in
+     *             {@link #categories}
      */
     private String translate(String key, Category category) {
         if (!categories.containsKey(category.getName())) {
@@ -170,7 +163,7 @@ public class I18N implements MessageProvider {
     /**
      * Formats a (translated) string
      *
-     * @param pattern           The pattern
+     * @param pattern The pattern
      * @param formattingObjects The formattingObjects
      *
      * @return The formatted String
@@ -179,8 +172,7 @@ public class I18N implements MessageProvider {
         MessageFormat format;
         if (messageFormatCache.containsKey(pattern)) {
             format = messageFormatCache.get(pattern);
-        }
-        else {
+        } else {
             try {
                 format = new MessageFormat(pattern, getLanguage());
             } catch (IllegalArgumentException e) {
@@ -206,14 +198,14 @@ public class I18N implements MessageProvider {
     }
 
     /**
-     * @param key               The key
-     * @param category          The category it belongs to
+     * @param key The key
+     * @param category The category it belongs to
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, uncolored String
      *
      * @throws IllegalArgumentException If the category is unknown
-     * @throws NullPointerException     If any parameter is null
+     * @throws NullPointerException If any parameter is null
      */
     @Override
     public String trUncolored(String key, String category, Object... formattingObjects) {
@@ -225,10 +217,7 @@ public class I18N implements MessageProvider {
             throw new IllegalArgumentException("Unknown category");
         }
 
-        String formatted = format(
-                translate(key, categories.get(category)),
-                formattingObjects
-        );
+        String formatted = format(translate(key, categories.get(category)), formattingObjects);
 
         formatted = resolveReferences(formatted, category);
 
@@ -236,7 +225,7 @@ public class I18N implements MessageProvider {
     }
 
     /**
-     * @param key               The key
+     * @param key The key
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, uncolored String
@@ -326,13 +315,13 @@ public class I18N implements MessageProvider {
      */
     private static class FileClassLoader extends ClassLoader {
 
-        private Path path;
+        private Path   path;
         private String defaultPackage;
 
         /**
-         * @param path           The base path to read from
-         * @param defaultPackage The default package. Used for correctly mapping the two file structures. The path in
-         *                       the jar and outside.
+         * @param path The base path to read from
+         * @param defaultPackage The default package. Used for correctly mapping
+         *            the two file structures. The path in the jar and outside.
          */
         FileClassLoader(Path path, String defaultPackage) {
             if (!Files.isDirectory(path)) {
@@ -362,8 +351,7 @@ public class I18N implements MessageProvider {
                 return null;
             }
             try {
-                return Files.newInputStream(path.resolve(name.replace(defaultPackage + "/", "")),
-                        StandardOpenOption.READ);
+                return Files.newInputStream(path.resolve(name.replace(defaultPackage + "/", "")), StandardOpenOption.READ);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -371,18 +359,19 @@ public class I18N implements MessageProvider {
         }
     }
 
-
-    // TODO: This is untested, as I have no jar file and I am too lazy to add an artifact
+    // TODO: This is untested, as I have no jar file and I am too lazy to add an
+    // artifact
 
     /**
      * @param defaultPackage The package they are in
-     * @param targetDir      The target directory
-     * @param overwrite      If the existing files should be overwritten.
-     * @param file           The jar file to copy it out from
+     * @param targetDir The target directory
+     * @param overwrite If the existing files should be overwritten.
+     * @param file The jar file to copy it out from
      *
      * @return True if the files were written, false otherwise.
      *
-     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is
+     *             null
      */
     public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
         Objects.requireNonNull(defaultPackage);

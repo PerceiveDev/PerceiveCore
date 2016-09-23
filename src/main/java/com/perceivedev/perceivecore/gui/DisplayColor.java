@@ -32,37 +32,37 @@ public enum DisplayColor {
 
     private boolean  isDyeColor;
     private Material mat;
-    private int	     dataValue;
+    private int      dataValue;
 
     DisplayColor(boolean isDyeColor, Material mat, int dataValue) {
-	this.isDyeColor = isDyeColor;
-	this.mat = mat;
-	this.dataValue = dataValue;
+        this.isDyeColor = isDyeColor;
+        this.mat = mat;
+        this.dataValue = dataValue;
     }
 
     DisplayColor(boolean isDyeColor, Material mat) {
-	this(isDyeColor, mat, 0);
+        this(isDyeColor, mat, 0);
     }
 
     /**
      * @return if this is a dye color
      */
     public boolean isDyeColor() {
-	return isDyeColor;
+        return isDyeColor;
     }
 
     /**
      * @return the mat
      */
     public Material getMat() {
-	return mat;
+        return mat;
     }
 
     /**
      * @return the data value
      */
     public short getDataValue() {
-	return (short) dataValue;
+        return (short) dataValue;
     }
 
 }

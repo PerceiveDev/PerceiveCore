@@ -13,8 +13,8 @@ public interface MessageProvider {
     /**
      * Translates a message <b>and color it</b>
      *
-     * @param key               The key
-     * @param category          The category it belongs to
+     * @param key The key
+     * @param category The category it belongs to
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, colored String
@@ -28,12 +28,13 @@ public interface MessageProvider {
     /**
      * Translates a message <b>and color it</b>
      *
-     * @param key               The key
+     * @param key The key
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, colored String
      *
-     * @see #tr(String, String, Object...) #tr(String, String, Object...) with the default category
+     * @see #tr(String, String, Object...) #tr(String, String, Object...) with
+     *      the default category
      */
     default String tr(String key, Object... formattingObjects) {
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, formattingObjects));
@@ -42,8 +43,8 @@ public interface MessageProvider {
     /**
      * Translates a message <b>and doesn't color it</b>
      *
-     * @param key               The key
-     * @param category          The category it belongs to
+     * @param key The key
+     * @param category The category it belongs to
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, uncolored String
@@ -53,12 +54,13 @@ public interface MessageProvider {
     /**
      * Translates a message <b>and doesn't color it</b>
      *
-     * @param key               The key
+     * @param key The key
      * @param formattingObjects The objects to format the message with
      *
      * @return The translated, uncolored String
      *
-     * @see #trUncolored(String, String, Object...) #trUncolored(String, String, Object...) with the default category
+     * @see #trUncolored(String, String, Object...) #trUncolored(String, String,
+     *      Object...) with the default category
      */
     String trUncolored(String key, Object... formattingObjects);
 
@@ -95,10 +97,10 @@ public interface MessageProvider {
     Locale getLanguage();
 
     /**
-     * Reloads the language files from disk. The internal ones will not be reloaded.
+     * Reloads the language files from disk. The internal ones will not be
+     * reloaded.
      */
     void reload();
-
 
     /**
      * A category
@@ -124,9 +126,7 @@ public interface MessageProvider {
 
         @Override
         public String toString() {
-            return "Category{" +
-                    "name='" + name + '\'' +
-                    '}';
+            return "Category{" + "name='" + name + '\'' + '}';
         }
 
         @Override

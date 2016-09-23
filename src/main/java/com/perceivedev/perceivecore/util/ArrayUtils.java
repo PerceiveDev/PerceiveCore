@@ -26,7 +26,7 @@ public class ArrayUtils {
      * @return The concatenated String
      */
     public static String concat(Object[] arr, String filler) {
-	return Arrays.stream(arr).map(Object::toString).collect(Collectors.joining(filler));
+        return Arrays.stream(arr).map(Object::toString).collect(Collectors.joining(filler));
     }
 
     /**
@@ -38,7 +38,7 @@ public class ArrayUtils {
      * @return The concatenated String
      */
     public static String concat(List<? extends Object> list, String filler) {
-	return concat(list.toArray(), filler);
+        return concat(list.toArray(), filler);
     }
 
     /**
@@ -49,10 +49,10 @@ public class ArrayUtils {
      * @return The reduced array
      */
     public static <T> T[] removeFirst(T[] original) {
-	if (original.length < 1) {
-	    return original;
-	}
-	return Arrays.copyOfRange(original, 1, original.length);
+        if (original.length < 1) {
+            return original;
+        }
+        return Arrays.copyOfRange(original, 1, original.length);
     }
 
 }
