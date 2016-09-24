@@ -79,7 +79,7 @@ public class ItemFactory {
             bookMeta.setAuthor(TextUtils.colorize(author));
             itemStack.setItemMeta(bookMeta);
         } else {
-            Logger.getLogger("minecraft").warning("ItemStack is not a WRITTEN_BOOK!");
+            System.out.println("ItemStack is not a WRITTEN_BOOK!");
         }
         return this;
     }
@@ -90,7 +90,7 @@ public class ItemFactory {
             skullMeta.setOwner(name);
             itemStack.setItemMeta(skullMeta);
         } else {
-            Logger.getLogger("minecraft").warning("ItemStack is not a SKULL_ITEM!");
+            System.out.println("ItemStack is not a SKULL_ITEM!");
         }
         return this;
     }
