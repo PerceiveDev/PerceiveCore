@@ -3,6 +3,9 @@
  */
 package com.perceivedev.perceivecore.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -24,8 +27,9 @@ import com.perceivedev.perceivecore.gui.component.Container;
  */
 public class GUIHolder implements InventoryHolder {
 
-    private GUI       gui;
-    private Inventory inventory;
+    private GUI                 gui;
+    private Inventory           inventory;
+    private Map<String, Object> data = new HashMap<String, Object>();
 
     /**
      * @param name the name of the inventory
@@ -142,6 +146,82 @@ public class GUIHolder implements InventoryHolder {
 
         }
 
+    }
+
+    /**
+     * Sets a piece of arbitrary data
+     * 
+     * @param key the key of the data
+     * @param value the value of the data
+     */
+    public void setData(String key, Object value) {
+        data.put(key, value);
+    }
+
+    /**
+     * Gets a piece of arbitrary data
+     * 
+     * @param key the key of the data
+     * @return The data. Will be null if no data was found with that key.
+     */
+    public Object getData(String key) {
+        return data.get(key);
+    }
+
+    /**
+     * @param key
+     * @see #getData(String)
+     */
+    public String getString(String key) {
+        return getData(key).toString();
+    }
+
+    /**
+     * @param key
+     * @see #getData(String)
+     */
+    public int getInt(String key) {
+        try {
+            return Integer.parseInt(getString(key));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * @param key
+     * @see #getData(String)
+     */
+    public double getDouble(String key) {
+        try {
+            return Double.parseDouble(getString(key));
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    /**
+     * @param key
+     * @see #getData(String)
+     */
+    public float getFloat(String key) {
+        try {
+            return Float.parseFloat(getString(key));
+        } catch (NumberFormatException e) {
+            return 0.0f;
+        }
+    }
+
+    /**
+     * @param key
+     * @see #getData(String)
+     */
+    public long getLong(String key) {
+        try {
+            return Long.parseLong(getString(key));
+        } catch (NumberFormatException e) {
+            return 0L;
+        }
     }
 
 }
