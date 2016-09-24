@@ -32,8 +32,15 @@ public class ItemFactory {
         this.itemStack = itemStack.clone();
     }
 
-    private ItemFactory(Material material) {
-        itemStack = new ItemStack(material);
+    /**
+     * Creates a new ItemFactory builder with the given item as a base.
+     *
+     * @param itemStack the base {@link ItemStack}
+     *
+     * @return The new ItemFactory instance
+     */
+    public static ItemFactory builder(ItemStack itemStack) {
+        return new ItemFactory(itemStack);
     }
 
     /**
@@ -44,18 +51,7 @@ public class ItemFactory {
      * @return The new ItemFactory instance
      */
     public static ItemFactory builder(Material type) {
-        return new ItemFactory(type);
-    }
-
-    /**
-     * Creates a new ItemFactory builder with the given item as a base.
-     *
-     * @param itemStack the base {@link ItemStack}
-     *
-     * @return The new ItemFactory instance
-     */
-    public static ItemFactory builder(ItemStack itemStack) {
-        return new ItemFactory(itemStack);
+        return new ItemFactory(new ItemStack(type));
     }
 
     /**
