@@ -11,3 +11,4 @@
 *.eml
 .DS_Store
 META-INF
+out/
