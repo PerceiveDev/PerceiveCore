@@ -12,8 +12,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 @SuppressWarnings("unused")
 public class SerializerTest implements ConfigSerializable {
 
-    private static String staticTest = ThreadLocalRandom.current().nextInt() + "";
-    private transient String transientTest;
+    private static String     staticTest = ThreadLocalRandom.current().nextInt() + "";
+    private transient String  transientTest;
 
     private String            test;
     private String            testNull;
@@ -32,13 +32,8 @@ public class SerializerTest implements ConfigSerializable {
 
     @Override
     public String toString() {
-        return "TestClass\n{"
-                  + "\n\ttest='" + test + '\''
-                  + "\n\t, testNull='" + testNull + '\''
-                  + "\n\t, two=" + two
-                  + "\n\t, serializableClass=" + serializableClass
-                  + "\n\t, transientTest="
-                  + transientTest + "\n\t, staticTest=" + staticTest + "\n}";
+        return "TestClass\n{" + "\n\ttest='" + test + '\'' + "\n\t, testNull='" + testNull + '\'' + "\n\t, two=" + two + "\n\t, serializableClass=" + serializableClass + "\n\t, transientTest="
+                + transientTest + "\n\t, staticTest=" + staticTest + "\n}";
     }
 
     private static class TestTwo implements ConfigSerializable {
@@ -66,11 +61,10 @@ public class SerializerTest implements ConfigSerializable {
             this.string = string;
         }
 
-/*
-        public SerializableClass(Map<String, Object> map) {
-            string = (String) map.get("string");
-        }
-*/
+        /*
+         * public SerializableClass(Map<String, Object> map) { string = (String)
+         * map.get("string"); }
+         */
 
         @Override
         public Map<String, Object> serialize() {
@@ -79,11 +73,10 @@ public class SerializerTest implements ConfigSerializable {
             return map;
         }
 
-/*
-        public static SerializableClass deserialize(Map<String, Object> map) {
-            return new SerializableClass((String) map.get("string"));
-        }
-*/
+        /*
+         * public static SerializableClass deserialize(Map<String, Object> map)
+         * { return new SerializableClass((String) map.get("string")); }
+         */
 
         public static SerializableClass valueOf(Map<String, Object> map) {
             return new SerializableClass((String) map.get("string"));
@@ -99,7 +92,7 @@ public class SerializerTest implements ConfigSerializable {
         SerializationManager serializationManager = new SerializationManager();
         SerializerTest testClass = new SerializerTest("This is cool");
 
-        serializationManager.addSerializationProxy(String.class, new SerializationProxy<String>() {
+        SerializationManager.addSerializationProxy(String.class, new SerializationProxy<String>() {
             @Override
             public Map<String, Object> serialize(String object) {
                 Map<String, Object> map = new HashMap<>();
