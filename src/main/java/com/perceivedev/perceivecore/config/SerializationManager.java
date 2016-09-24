@@ -58,7 +58,7 @@ public class SerializationManager {
      * @param proxy The proxy
      * @param <T> The Type of the clazz to proxy
      */
-    public <T> void addSerializationProxy(Class<T> clazz, SerializationProxy<T> proxy) {
+    public static <T> void addSerializationProxy(Class<T> clazz, SerializationProxy<T> proxy) {
         serializationProxyMap.put(clazz, proxy);
     }
 
@@ -157,7 +157,7 @@ public class SerializationManager {
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     * field
+     *             field
      */
     private <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
@@ -417,6 +417,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                  .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 }

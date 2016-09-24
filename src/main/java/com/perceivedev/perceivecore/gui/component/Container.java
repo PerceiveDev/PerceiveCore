@@ -7,8 +7,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
+ * 
+ * A simple interface which just represents something that can contain items.
+ * 
  * @author Rayzr
- *
  */
 public interface Container {
 

@@ -4,7 +4,6 @@
 package com.perceivedev.perceivecore.gui.component;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,6 +49,12 @@ public class Component {
         this(0, 0, 1, 1);
     }
 
+    /**
+     * Renders all items to the inventory represented by the {@link GUIHolder}
+     * parameter.
+     * 
+     * @param holder the GUIHolder
+     */
     public final void render(GUIHolder holder) {
 
         for (int ix = x; ix < x + width; ix++) {
@@ -64,17 +69,36 @@ public class Component {
 
     }
 
+    /**
+     * "Renders" the ItemStack for the given position.
+     * 
+     * @param holder the {@link GUIHolder}
+     * @param posX the x position
+     * @param posY the y position
+     * @return The ItemStack
+     */
     protected ItemStack render(GUIHolder holder, int posX, int posY) {
         return type.getItem(color);
     }
 
+    /**
+     * Checks if a click is within the boundaries of this component.
+     * 
+     * @param player the player who clicked
+     * @param clickX the x position of the click
+     * @param clickY the y position of the click
+     * @param e the {@link InventoryClickEvent} itself
+     * 
+     * @return Whether or not this click was actually on the component.
+     */
     public final boolean checkClick(Player player, int clickX, int clickY, InventoryClickEvent e) {
 
         if (clickX >= x && clickX < x + width && clickY >= y && clickY < y + height) {
 
-            if (onClick(player, clickX - x, clickY - y, e.getClick())) {
-                e.setCancelled(false);
-            }
+            ClickEvent event = new ClickEvent(player, clickX - x, clickY - y, e.getClick());
+            onClick(event);
+            e.setCancelled(event.isCancelled());
+
             return true;
 
         }
@@ -83,14 +107,14 @@ public class Component {
     }
 
     /**
+     * This is called if
+     * {@link #checkClick(Player, int, int, InventoryClickEvent)} determines
+     * that the component was clicked.
      * 
-     * @param player
-     * @param offX
-     * @param offY
-     * @return If the clicking should be allowed (not cancelled)
+     * @param e the {@link ClickEvent}
      */
-    protected boolean onClick(Player player, int offX, int offY, ClickType type) {
-        return false;
+    protected void onClick(ClickEvent e) {
+
     }
 
     /**
@@ -200,20 +224,17 @@ public class Component {
     }
 
     /**
-     * @return the gui
-     */
-    public GUI getGui() {
-        return gui;
-    }
-
-    /**
-     * This is only meant to be used by {@link GUI}. Don't use this unless you
-     * know what you're doing.
-     * 
      * @param gui the gui to set
      */
     public void setGui(GUI gui) {
         this.gui = gui;
+    }
+
+    /**
+     * @return the gui
+     */
+    public GUI getGui() {
+        return gui;
     }
 
 }

@@ -6,6 +6,7 @@ package com.perceivedev.perceivecore.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,10 @@ import com.perceivedev.perceivecore.gui.component.Component;
 import com.perceivedev.perceivecore.gui.component.Container;
 
 /**
+ * 
+ * This class is an extension of {@link InventoryHolder} which stores a
+ * reference to it's owning {@link GUI}, as well as a map of arbitrary data.
+ * 
  * @author Rayzr
  *
  */
@@ -34,9 +39,9 @@ public class GUIHolder implements InventoryHolder {
 
     private void render() {
 
-        for (Component c : gui.getComponents()) {
+        for (Component comp : gui.getComponents()) {
 
-            c.render(this);
+            comp.render(this);
 
         }
 
@@ -99,6 +104,9 @@ public class GUIHolder implements InventoryHolder {
     }
 
     /**
+     * Sets the contents of a component to {@code contents}. The component
+     * represented by {@code componentId} must implement {@link Container}.
+     * 
      * @param inventory the inventory to set them in
      * @param contents the contents to set
      */
@@ -114,16 +122,19 @@ public class GUIHolder implements InventoryHolder {
     }
 
     /**
-     * @param p
-     * @param rawSlot
+     * Handle a click. This is intended to be called from within an
+     * {@link InventoryInteractEvent} listener.
+     * 
+     * @param player the player
+     * @param event the InventoryClickEvent itself
      */
-    public void handleClick(Player p, InventoryClickEvent e) {
+    public void handleClick(Player player, InventoryClickEvent event) {
 
-        int rawSlot = e.getRawSlot();
+        int rawSlot = event.getRawSlot();
 
-        for (Component c : gui.getComponents()) {
+        for (Component comp : gui.getComponents()) {
 
-            if (c.checkClick(p, rawSlot % 9, rawSlot / 9, e)) {
+            if (comp.checkClick(player, rawSlot % 9, rawSlot / 9, event)) {
 
                 break;
 

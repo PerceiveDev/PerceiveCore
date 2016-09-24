@@ -3,13 +3,12 @@
  */
 package com.perceivedev.perceivecore.gui.component;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.DisplayColor;
 import com.perceivedev.perceivecore.gui.DisplayType;
+import com.perceivedev.perceivecore.gui.GUIHolder;
 
 /**
  * 
@@ -32,6 +31,12 @@ public class ItemArea extends Component implements Container {
         this(x, y, width, height, false);
     }
 
+    /**
+     * Gets the contents of this ItemArea in reference to the given
+     * {@link Inventory}.
+     * 
+     * @param inventory the Inventory to get the contents from
+     */
     @Override
     public ItemStack[] getContents(Inventory inventory) {
         ItemStack[] items = new ItemStack[x + y * 9];
@@ -43,6 +48,13 @@ public class ItemArea extends Component implements Container {
         return items;
     }
 
+    /**
+     * Sets the contents of this ItemArea in reference to the given
+     * {@link Inventory}.
+     * 
+     * @param inventory the Inventory to set the contents of
+     * @param contents the items to set the contents to
+     */
     @Override
     public void setContents(Inventory inventory, ItemStack[] contents) {
         if (contents == null) {
@@ -60,20 +72,30 @@ public class ItemArea extends Component implements Container {
         }
     }
 
+    /**
+     * Renders as empty, due to the nature of ItemArea
+     * 
+     * @see Component#render(GUIHolder, int, int)
+     */
     @Override
-    protected boolean onClick(Player player, int offX, int offY, ClickType type) {
-        return interactable;
+    protected ItemStack render(GUIHolder holder, int posX, int posY) {
+        return null;
+    }
+
+    @Override
+    protected void onClick(ClickEvent e) {
+        e.setCancelled(!interactable);
     }
 
     /**
-     * @return If this ItemArea is interacatable
+     * @return If this ItemArea is interactable
      */
     public boolean isInteractable() {
         return interactable;
     }
 
     /**
-     * @param interacatable the value of interacatable to set
+     * @param interacatable the value of interactable to set
      */
     public void setInteractable(boolean interactable) {
         this.interactable = interactable;
