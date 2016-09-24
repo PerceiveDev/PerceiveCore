@@ -4,6 +4,7 @@
 package com.perceivedev.perceivecore.gui.component;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,7 +61,7 @@ public class ItemArea extends Component implements Container {
     }
 
     @Override
-    protected boolean onClick(Player player, int offX, int offY) {
+    protected boolean onClick(Player player, int offX, int offY, ClickType type) {
         return interactable;
     }
 

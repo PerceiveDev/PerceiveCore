@@ -4,6 +4,7 @@
 package com.perceivedev.perceivecore.gui.component;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -71,7 +72,7 @@ public class Component {
 
         if (clickX >= x && clickX < x + width && clickY >= y && clickY < y + height) {
 
-            if (onClick(player, clickX - x, clickY - y)) {
+            if (onClick(player, clickX - x, clickY - y, e.getClick())) {
                 e.setCancelled(false);
             }
             return true;
@@ -88,7 +89,7 @@ public class Component {
      * @param offY
      * @return If the clicking should be allowed (not cancelled)
      */
-    protected boolean onClick(Player player, int offX, int offY) {
+    protected boolean onClick(Player player, int offX, int offY, ClickType type) {
         return false;
     }
 

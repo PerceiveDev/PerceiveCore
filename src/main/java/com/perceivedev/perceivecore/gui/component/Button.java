@@ -6,6 +6,7 @@ package com.perceivedev.perceivecore.gui.component;
 import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import com.perceivedev.perceivecore.gui.DisplayColor;
 
@@ -70,9 +71,9 @@ public class Button extends Label {
      * .Player, int, int)
      */
     @Override
-    protected boolean onClick(Player player, int offX, int offY) {
+    protected boolean onClick(Player player, int offX, int offY, ClickType type) {
         if (clickHandler != null) {
-            clickHandler.accept(new ClickEvent(player, offX, offY));
+            clickHandler.accept(new ClickEvent(player, offX, offY, type));
         }
         if (closeOnClick) {
             player.closeInventory();
@@ -96,35 +97,53 @@ public class Button extends Label {
 
     public class ClickEvent {
 
-        private Player player;
-        private int    offX;
-        private int    offY;
+        private Player    player;
+        private int       offX;
+        private int       offY;
+        private ClickType type;
 
-        public ClickEvent(Player player, int offX, int offY) {
+        /**
+         * Initializes a new ClickEvent data object
+         * 
+         * @param player the player
+         * @param offX the offsetX
+         * @param offY the offsetY
+         * @param type the click type
+         */
+        public ClickEvent(Player player, int offX, int offY, ClickType type) {
             this.player = player;
             this.offX = offX;
             this.offY = offY;
+            this.type = type;
         }
 
         /**
-         * @return the player
+         * @return the player who clicked
          */
         public Player getPlayer() {
             return player;
         }
 
         /**
-         * @return the offX
+         * @return the x position relative to the button origin
          */
         public int getOffX() {
             return offX;
         }
 
         /**
-         * @return the offY
+         * @return the y position relative to the button origin
          */
         public int getOffY() {
             return offY;
+        }
+
+        /**
+         * @return the type of click
+         * @see ClickType
+         */
+        public ClickType getType() {
+            return type;
         }
 
     }
