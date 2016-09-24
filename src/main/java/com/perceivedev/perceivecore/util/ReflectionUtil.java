@@ -24,7 +24,6 @@ import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse.ResultTy
 /**
  * Provides utility methods for reflection
  */
-@SuppressWarnings({ "unused" })//, "WeakerAccess" })
 public class ReflectionUtil {
 
     private static final String SERVER_VERSION;
@@ -32,7 +31,7 @@ public class ReflectionUtil {
     // ==== INIT SERVER VERSION ====
 
     static {
-        //        String name = Bukkit.getServer().getClass().getName();
+        // String name = Bukkit.getServer().getClass().getName();
         String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
         name = name.substring(name.indexOf("craftbukkit.") + "craftbukkit.".length());
         name = name.substring(0, name.indexOf("."));
@@ -92,7 +91,8 @@ public class ReflectionUtil {
      * Returns the class with the given name in the given package
      *
      * @param nameSpace The {@link NameSpace} of the class
-     * @param qualifiedName The qualified name of the class inside the {@link NameSpace}
+     * @param qualifiedName The qualified name of the class inside the
+     *            {@link NameSpace}
      *
      * @return The Class, if found
      */
@@ -106,7 +106,9 @@ public class ReflectionUtil {
     /**
      * Returns the class with the given name in the given package
      *
-     * @param nameWithIdentifier The qualified name of the class inside the {@link NameSpace}, prefixed with the {@link NameSpace} identifier.
+     * @param nameWithIdentifier The qualified name of the class inside the
+     *            {@link NameSpace}, prefixed with the {@link NameSpace}
+     *            identifier.
      *
      * @return The Class, if found
      */
@@ -119,7 +121,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns the class for the name using the {@link Class#forName(String)} method
+     * Returns the class for the name using the {@link Class#forName(String)}
+     * method
      *
      * @param fullyQualifiedName The fully qualified name of a class
      *
@@ -127,9 +130,7 @@ public class ReflectionUtil {
      */
     private static Optional<Class<?>> classForName(String fullyQualifiedName) {
         try {
-            return Optional.ofNullable(
-                      Class.forName(fullyQualifiedName)
-            );
+            return Optional.ofNullable(Class.forName(fullyQualifiedName));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -150,9 +151,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
 
-        Optional<Field> first = getFields(clazz)
-                  .filter(selector)
-                  .findFirst();
+        Optional<Field> first = getFields(clazz).filter(selector).findFirst();
 
         if (!first.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -168,8 +167,7 @@ public class ReflectionUtil {
      * @return The fields of the class
      */
     private static Stream<Field> getFields(Class<?> clazz) {
-        return Stream
-                  .concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields()));
+        return Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields()));
     }
 
     /**
@@ -213,7 +211,8 @@ public class ReflectionUtil {
             field.setAccessible(true);
             return new ReflectResponse<>(field.get(handle));
         } catch (IllegalAccessException e) {
-            // This method must be logged. It is critical and you can't recover from it.
+            // This method must be logged. It is critical and you can't recover
+            // from it.
             e.printStackTrace();
             return new ReflectResponse<>(e);
         }
@@ -226,7 +225,8 @@ public class ReflectionUtil {
      * @param handle The handle to set it for
      * @param value The value to set it to
      *
-     * @return The result if setting it. Will just be SUCCESSFUL but not have a value.
+     * @return The result if setting it. Will just be SUCCESSFUL but not have a
+     *         value.
      */
     public static ReflectResponse<Void> setFieldValue(Field field, Object handle, Object value) {
         Objects.requireNonNull(field);
@@ -236,7 +236,8 @@ public class ReflectionUtil {
             field.set(handle, value);
             return new ReflectResponse<>(ResultType.SUCCESSFUL);
         } catch (IllegalAccessException e) {
-            // This method must be logged. It is critical and you can't recover from it.
+            // This method must be logged. It is critical and you can't recover
+            // from it.
             e.printStackTrace();
             return new ReflectResponse<>(e);
         }
@@ -250,7 +251,8 @@ public class ReflectionUtil {
      * @param handle The handle to set it for
      * @param value The value to set it to
      *
-     * @return The result if setting it. Will just be SUCCESSFUL but not have a value.
+     * @return The result if setting it. Will just be SUCCESSFUL but not have a
+     *         value.
      */
     public static ReflectResponse<Void> setFieldValue(Class<?> clazz, Predicate<Field> selector, Object handle, Object value) {
         Objects.requireNonNull(clazz);
@@ -278,9 +280,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
 
-        Optional<Method> firstMethod = getMethods(clazz)
-                  .filter(selector)
-                  .findFirst();
+        Optional<Method> firstMethod = getMethods(clazz).filter(selector).findFirst();
 
         if (!firstMethod.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -305,7 +305,8 @@ public class ReflectionUtil {
             method.setAccessible(true);
             return new ReflectResponse<>(method.invoke(handle, params));
         } catch (IllegalAccessException e) {
-            // This method must be logged. It is critical and you can't recover from it.
+            // This method must be logged. It is critical and you can't recover
+            // from it.
             e.printStackTrace();
             return new ReflectResponse<>(e);
         } catch (InvocationTargetException e) {
@@ -359,13 +360,11 @@ public class ReflectionUtil {
      *
      * @throws NullPointerException if any parameter is null
      */
-    public static <T> ReflectResponse<Constructor<T>> getConstructor(Class<T> clazz, Predicate<Constructor> selector) {
+    public static <T> ReflectResponse<Constructor<T>> getConstructor(Class<T> clazz, Predicate<Constructor<T>> selector) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
 
-        Optional<Constructor<T>> firstConstructor = getAllConstructors(clazz)
-                  .filter(selector)
-                  .findFirst();
+        Optional<Constructor<T>> firstConstructor = getAllConstructors(clazz).filter(selector).findFirst();
 
         if (!firstConstructor.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -412,7 +411,7 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      * @see #instantiate(Constructor, Object...)
      */
-    public static <T> ReflectResponse<T> instantiate(Class<T> clazz, Predicate<Constructor> selector, Object... params) {
+    public static <T> ReflectResponse<T> instantiate(Class<T> clazz, Predicate<Constructor<T>> selector, Object... params) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
         Objects.requireNonNull(params);
@@ -433,14 +432,12 @@ public class ReflectionUtil {
      *
      * @return All the {@link Constructor}s of that class
      */
-    @SuppressWarnings("unchecked")  // it is checked. The methods only use wildcards, as the array could be modified, which it isn't
+    @SuppressWarnings("unchecked")  // it is checked. The methods only use
+                                    // wildcards, as the array could be
+                                    // modified, which it isn't
     private static <T> Stream<Constructor<T>> getAllConstructors(Class<T> clazz) {
-        return Stream.concat(
-                  Arrays.stream(clazz.getConstructors())
-                            .map(constructor -> (Constructor<T>) constructor),
-                  Arrays.stream(clazz.getDeclaredConstructors())
-                            .map(constructor -> (Constructor<T>) constructor)
-        );
+        return Stream.concat(Arrays.stream(clazz.getConstructors()).map(constructor -> (Constructor<T>) constructor),
+                Arrays.stream(clazz.getDeclaredConstructors()).map(constructor -> (Constructor<T>) constructor));
     }
 
     // ==== UTILITY CLASSES ====
@@ -452,13 +449,11 @@ public class ReflectionUtil {
         /**
          * The {@code net.minecraft.server} namespace
          */
-        NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE),
-                  string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
+        NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
         /**
          * The {@code org.bukkit.craftbukkit} namespace
          */
-        OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE),
-                  string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
+        OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
 
         private Pattern                  detectionPattern;
         private Function<String, String> resolverFunction;
@@ -501,8 +496,7 @@ public class ReflectionUtil {
         /**
          * Resolves a class name.
          * <p>
-         * Format is:
-         * <br>
+         * Format is: <br>
          * {@literal <relative class name>}
          *
          * @param className The class name to resolve.
@@ -516,7 +510,8 @@ public class ReflectionUtil {
         /**
          * Returns the {@link NameSpace} which contains the identifier
          *
-         * @param input The input string, containing the identifier (and what else it wants)
+         * @param input The input string, containing the identifier (and what
+         *            else it wants)
          *
          * @return The NameSpace which has this identifier
          */
@@ -547,7 +542,8 @@ public class ReflectionUtil {
         }
 
         /**
-         * Will automatically set {@link #getResultType()} to {@link ResultType#ERROR}
+         * Will automatically set {@link #getResultType()} to
+         * {@link ResultType#ERROR}
          *
          * @param exception The exception that occurred
          */
@@ -556,7 +552,8 @@ public class ReflectionUtil {
         }
 
         /**
-         * Will automatically set {@link #getResultType()} to {@link ResultType#SUCCESSFUL}
+         * Will automatically set {@link #getResultType()} to
+         * {@link ResultType#SUCCESSFUL}
          *
          * @param value The method value. May be null.
          */
@@ -565,7 +562,8 @@ public class ReflectionUtil {
         }
 
         /**
-         * Will automatically set {@link #getValue()}} and {@link #getException()} to null.
+         * Will automatically set {@link #getValue()}} and
+         * {@link #getException()} to null.
          *
          * @param resultType The type of the result.
          */
@@ -603,7 +601,8 @@ public class ReflectionUtil {
         /**
          * Returns the thrown exception
          *
-         * @return The exception. Only set if {@link #getResultType()} is {@link ResultType#ERROR}
+         * @return The exception. Only set if {@link #getResultType()} is
+         *         {@link ResultType#ERROR}
          */
         public Throwable getException() {
             return exception;
@@ -629,11 +628,7 @@ public class ReflectionUtil {
 
         @Override
         public String toString() {
-            return "ReflectResponse{" +
-                      "=" + get() +
-                      ", successful=" + isSuccessful() +
-                      ", valuePresent=" + isValuePresent() +
-                      '}';
+            return "ReflectResponse{" + "=" + get() + ", successful=" + isSuccessful() + ", valuePresent=" + isValuePresent() + '}';
         }
 
         /**
@@ -657,11 +652,12 @@ public class ReflectionUtil {
 
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
-        private String name;
+        private String               name;
         private Collection<Modifier> modifiers = Collections.emptyList();
 
         /**
-         * @param name The name of the method. Null for don't check. Is a <b>RegEx</b>
+         * @param name The name of the method. Null for don't check. Is a
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          */
         public MemberPredicate(String name, Collection<Modifier> modifiers) {
@@ -703,7 +699,8 @@ public class ReflectionUtil {
         /**
          * Sets the name of the method
          *
-         * @param name The name of the method. Null for don't check. Is a <b>RegEx</b>
+         * @param name The name of the method. Null for don't check. Is a
+         *            <b>RegEx</b>
          *
          * @return This predicate
          */
@@ -731,7 +728,8 @@ public class ReflectionUtil {
         private Class<?>[] parameters;
 
         /**
-         * @param name The name of the method. Null for don't check. Is a <b>RegEx</b>
+         * @param name The name of the method. Null for don't check. Is a
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          */
@@ -761,8 +759,7 @@ public class ReflectionUtil {
 
         @Override
         public boolean test(Member member) {
-            if (!(member instanceof Executable)
-                      || !super.test(member)) {
+            if (!(member instanceof Executable) || !super.test(member)) {
                 return false;
             }
             Executable executable = (Executable) member;
@@ -784,7 +781,8 @@ public class ReflectionUtil {
         private Class<?> returnType;
 
         /**
-         * @param name The name of the method. Null for don't check. Is a <b>RegEx</b>
+         * @param name The name of the method. Null for don't check. Is a
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          * @param returnType The return type. Null for don't check
@@ -815,8 +813,7 @@ public class ReflectionUtil {
 
         @Override
         public boolean test(Member member) {
-            if (!(member instanceof Method)
-                      || !super.test(member)) {
+            if (!(member instanceof Method) || !super.test(member)) {
                 return false;
             }
             Method method = (Method) member;
@@ -861,42 +858,36 @@ public class ReflectionUtil {
             return (modifiers & bitMask) != 0;
         }
     }
-    
+
     /*
-           get instance fields
-           get fields
-           set instance fields
-           set fields
-           get methods (private - public)
-           invoke methods on class (private - public)
-           invoke method on handle (private - public)
-           invoke passed method
-           get NMS class
-           get CraftBukkit class
-           get server major, minor and patch version
-           get constructor
-           instantiate via passed constructor
-           instantiate and find constructor
-           try set (tries a number of names, until one exists)  // uses RegEx now
-           try get (tries a number of names, until one exists)  // uses RegEx now
-           try invoke method (tries a number of names, until one exists)    // uses RegEx now
+     * get instance fields get fields set instance fields set fields get methods
+     * (private - public) invoke methods on class (private - public) invoke
+     * method on handle (private - public) invoke passed method get NMS class
+     * get CraftBukkit class get server major, minor and patch version get
+     * constructor instantiate via passed constructor instantiate and find
+     * constructor try set (tries a number of names, until one exists) // uses
+     * RegEx now try get (tries a number of names, until one exists) // uses
+     * RegEx now try invoke method (tries a number of names, until one exists)
+     * // uses RegEx now
      */
 
     public static void main(String[] args) {
-        ReflectResponse<Constructor<String>> response = getConstructor(String.class, constructor -> constructor.getParameterTypes().length == 1
-                  && constructor.getParameterTypes()[0] == String.class);
+        ReflectResponse<Constructor<String>> response = getConstructor(String.class, constructor -> constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == String.class);
 
         Constructor<String> constructorOpt = response.getValue();
         System.out.println(instantiate(constructorOpt, "This is a test"));
 
-        ReflectResponse<String> instantiate = instantiate(String.class,
-                  constructor -> constructor.getParameterTypes().length == 1
-                            && constructor.getParameterTypes()[0] == String.class,
-                  "This is my test");
+        ReflectResponse<String> instantiate = instantiate(String.class, constructor -> constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == String.class,
+                "This is my test");
         System.out.println(instantiate);
         System.out.println(getMethod(String.class, new MethodPredicate<>().withModifiers(Modifier.PRIVATE)));
-        System.out.println(getMethod(String.class, new ExecutablePredicate<Method>()
-                  .withName("adv|sfs|equals"))  // RegEx. Just use or for multiple names
+        System.out.println(getMethod(String.class, new ExecutablePredicate<Method>().withName("adv|sfs|equals"))  // RegEx.
+                                                                                                                  // Just
+                                                                                                                  // use
+                                                                                                                  // or
+                                                                                                                  // for
+                                                                                                                  // multiple
+                                                                                                                  // names
         );
     }
 }
