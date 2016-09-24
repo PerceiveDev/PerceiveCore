@@ -1,51 +1,68 @@
 package com.perceivedev.perceivecore.util;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 /**
- * 
  * Represents an ItemStack with utility methods to modify it's appearance.
- * 
- * @author ZP18
- * 
+ *
+ * @author ZP4RKER
  */
 public class ItemFactory {
     private ItemStack itemStack;
+    private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
+              Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET);
+    private static final Set<Material> LARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
+              Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+
+    private ItemFactory(ItemStack itemStack) {
+        this.itemStack = itemStack.clone();
+    }
+
+    private ItemFactory(Material material) {
+        itemStack = new ItemStack(material);
+    }
 
     /**
      * Creates a new ItemFactory builder with the given material as a base.
-     * 
+     *
      * @param type the type (material) of item to create
+     *
      * @return The new ItemFactory instance
      */
-    public ItemFactory builder(Material type) {
-        itemStack = new ItemStack(type);
-        return this;
+    public static ItemFactory builder(Material type) {
+        return new ItemFactory(type);
     }
 
     /**
      * Creates a new ItemFactory builder with the given item as a base.
-     * 
+     *
      * @param itemStack the base {@link ItemStack}
+     *
      * @return The new ItemFactory instance
      */
-    public ItemFactory builder(ItemStack itemStack) {
-        this.itemStack = itemStack.clone();
-        return this;
+    public static ItemFactory builder(ItemStack itemStack) {
+        return new ItemFactory(itemStack);
     }
 
     /**
      * Sets the type (material) of the item.
-     * 
+     *
      * @param type the type to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setType(Material type) {
@@ -55,8 +72,9 @@ public class ItemFactory {
 
     /**
      * Sets the size of the item (amount).
-     * 
+     *
      * @param size the size to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setSize(int size) {
@@ -66,8 +84,9 @@ public class ItemFactory {
 
     /**
      * Sets the amount of the item.
-     * 
+     *
      * @param amount the amount to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setAmount(int amount) {
@@ -76,8 +95,9 @@ public class ItemFactory {
 
     /**
      * Sets the name of the item.
-     * 
+     *
      * @param displayName the name to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setDisplayName(String displayName) {
@@ -89,8 +109,9 @@ public class ItemFactory {
 
     /**
      * Sets the name of the item.
-     * 
+     *
      * @param name the name to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setName(String name) {
@@ -99,8 +120,9 @@ public class ItemFactory {
 
     /**
      * Sets the lore of the item.
-     * 
+     *
      * @param lore the lore to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setLore(List<String> lore) {
@@ -112,8 +134,9 @@ public class ItemFactory {
 
     /**
      * Sets the lore if the item.
-     * 
+     *
      * @param lore the lore to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setLore(String... lore) {
@@ -122,8 +145,9 @@ public class ItemFactory {
 
     /**
      * Adds a line of lore to the item.
-     * 
+     *
      * @param line the line to add
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory addLore(String line) {
@@ -135,9 +159,23 @@ public class ItemFactory {
     }
 
     /**
+     * Adds multiple lines to the lore of the item.
+     *
+     * @param lines The lines of lore to add
+     * @return This ItemFactory instance
+     */
+    public ItemFactory addLore(String... lines) {
+        for (String line : lines) {
+            addLore(line);
+        }
+        return this;
+    }
+
+    /**
      * Sets the durability of an item.
-     * 
+     *
      * @param durability the durability to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setDurability(short durability) {
@@ -147,8 +185,9 @@ public class ItemFactory {
 
     /**
      * Sets the author of a written book ({@link Material#WRITTEN_BOOK}).
-     * 
+     *
      * @param author the author to set
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setAuthor(String author) {
@@ -164,8 +203,9 @@ public class ItemFactory {
 
     /**
      * Sets the owner of a player head.
-     * 
+     *
      * @param name the name of the player
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory setSkullOwner(String name) {
@@ -184,6 +224,55 @@ public class ItemFactory {
      */
     public ItemFactory setSkullOwner(OfflinePlayer player) {
         return setSkullOwner(player.getName());
+    }
+
+    /**
+     * Adds an enchantment to the itemstack.
+     *
+     * @param enchantment The enchantment to be addded
+     * @param level The level of the enchantment
+     *
+     * @return This ItemFactory instance
+     */
+    public ItemFactory addEnchantment(Enchantment enchantment, int level) {
+        if (level <= enchantment.getMaxLevel() && enchantment.canEnchantItem(itemStack)) {
+            itemStack.addEnchantment(enchantment, level);
+        } else {
+            itemStack.addUnsafeEnchantment(enchantment, level);
+        }
+        return this;
+    }
+
+    /**
+     * Sets the colour of the item, if it is a colourable item/block.
+     *
+     * @param colour The color to set the itemstack as
+     * @return This ItemFactory instance
+     */
+    public ItemFactory setColour(DyeColor colour) {
+        if (COLOURABLE.contains(itemStack.getType())) {
+            itemStack.setDurability(colour.getData());
+        } else {
+            System.err.println("Itemstack is not colourable!");
+        }
+        return this;
+    }
+
+    /**
+     * Sets the colour of a piece of leather armour.
+     *
+     * @param colour The color to set the armour piece as
+     * @return This ItemFactory instance
+     */
+    public ItemFactory setArmourColour(Color colour) {
+        if (LARMOUR.contains(itemStack.getType())) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
+            meta.setColor(colour);
+            itemStack.setItemMeta(meta);
+        } else {
+            System.err.println("Itemstack is not a type of leather armour!");
+        }
+        return this;
     }
 
     /**
