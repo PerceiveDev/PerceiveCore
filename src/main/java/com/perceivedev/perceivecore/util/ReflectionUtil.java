@@ -18,7 +18,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
+import com.perceivedev.perceivecore.nbt.ItemNBTUtil;
+import com.perceivedev.perceivecore.nbt.NBTWrappers;
+import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse.ResultType;
 
 /**
@@ -92,7 +97,7 @@ public class ReflectionUtil {
      *
      * @param nameSpace The {@link NameSpace} of the class
      * @param qualifiedName The qualified name of the class inside the
-     *            {@link NameSpace}
+     * {@link NameSpace}
      *
      * @return The Class, if found
      */
@@ -107,8 +112,8 @@ public class ReflectionUtil {
      * Returns the class with the given name in the given package
      *
      * @param nameWithIdentifier The qualified name of the class inside the
-     *            {@link NameSpace}, prefixed with the {@link NameSpace}
-     *            identifier.
+     * {@link NameSpace}, prefixed with the {@link NameSpace}
+     * identifier.
      *
      * @return The Class, if found
      */
@@ -197,6 +202,25 @@ public class ReflectionUtil {
     /**
      * Returns the value of a field
      *
+     * @param clazz The clazz get the Field from
+     * @param handle The handle to get it for
+     * @param name The name of the field
+     *
+     * @return The value of the field.
+     *
+     * @throws NullPointerException if clazz or selector is null
+     * @see #getFieldValue(Class, Object, Predicate)
+     */
+    public static ReflectResponse<Object> getFieldValue(Class<?> clazz, Object handle, String name) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(name);
+
+        return getFieldValue(clazz, handle, new MemberPredicate<Field>().withName(name));
+    }
+
+    /**
+     * Returns the value of a field
+     *
      * @param field The field to get
      * @param handle The handle to get it for
      *
@@ -226,7 +250,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     *         value.
+     * value.
      */
     public static ReflectResponse<Void> setFieldValue(Field field, Object handle, Object value) {
         Objects.requireNonNull(field);
@@ -252,7 +276,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     *         value.
+     * value.
      */
     public static ReflectResponse<Void> setFieldValue(Class<?> clazz, Predicate<Field> selector, Object handle, Object value) {
         Objects.requireNonNull(clazz);
@@ -334,7 +358,7 @@ public class ReflectionUtil {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
         }
 
-        return new ReflectResponse<>(invokeMethod(method.getValue(), handle, params));
+        return invokeMethod(method.getValue(), handle, params);
     }
 
     /**
@@ -360,17 +384,34 @@ public class ReflectionUtil {
      *
      * @throws NullPointerException if any parameter is null
      */
-    public static <T> ReflectResponse<Constructor<T>> getConstructor(Class<T> clazz, Predicate<Constructor<T>> selector) {
+    public static ReflectResponse<Constructor<?>> getConstructor(Class<?> clazz, Predicate<Constructor<?>> selector) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
 
-        Optional<Constructor<T>> firstConstructor = getAllConstructors(clazz).filter(selector).findFirst();
+        Optional<? extends Constructor<?>> firstConstructor = getAllConstructors(clazz).filter(selector).findFirst();
 
         if (!firstConstructor.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
         }
 
         return new ReflectResponse<>(firstConstructor.get());
+    }
+
+    /**
+     * Returns the first constructor matching the parameters
+     *
+     * @param clazz The class to get the constructors from
+     * @param params The parameter of the constructor
+     *
+     * @return The first constructor with the given params
+     *
+     * @throws NullPointerException if any parameter is null
+     * @see #getConstructor(Class, Predicate)
+     */
+    public static ReflectResponse<Constructor<?>> getConstructor(Class<?> clazz, Class<?>... params) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(params);
+        return getConstructor(clazz, new ExecutablePredicate<Constructor<?>>().withParameters(params));
     }
 
     /**
@@ -404,19 +445,18 @@ public class ReflectionUtil {
      * @param clazz The class to get the constructors from
      * @param selector The Selector function to use
      * @param params The parameters to pass
-     * @param <T> The type of the class to instantiate
      *
      * @return The instantiated Object
      *
      * @throws NullPointerException if any parameter is null
      * @see #instantiate(Constructor, Object...)
      */
-    public static <T> ReflectResponse<T> instantiate(Class<T> clazz, Predicate<Constructor<T>> selector, Object... params) {
+    public static ReflectResponse<?> instantiate(Class<?> clazz, Predicate<Constructor<?>> selector, Object... params) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(selector);
         Objects.requireNonNull(params);
 
-        ReflectResponse<Constructor<T>> constructor = getConstructor(clazz, selector);
+        ReflectResponse<Constructor<?>> constructor = getConstructor(clazz, selector);
 
         if (!constructor.isValuePresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -433,11 +473,11 @@ public class ReflectionUtil {
      * @return All the {@link Constructor}s of that class
      */
     @SuppressWarnings("unchecked")  // it is checked. The methods only use
-                                    // wildcards, as the array could be
-                                    // modified, which it isn't
+    // wildcards, as the array could be
+    // modified, which it isn't
     private static <T> Stream<Constructor<T>> getAllConstructors(Class<T> clazz) {
         return Stream.concat(Arrays.stream(clazz.getConstructors()).map(constructor -> (Constructor<T>) constructor),
-                Arrays.stream(clazz.getDeclaredConstructors()).map(constructor -> (Constructor<T>) constructor));
+                  Arrays.stream(clazz.getDeclaredConstructors()).map(constructor -> (Constructor<T>) constructor));
     }
 
     // ==== UTILITY CLASSES ====
@@ -511,7 +551,7 @@ public class ReflectionUtil {
          * Returns the {@link NameSpace} which contains the identifier
          *
          * @param input The input string, containing the identifier (and what
-         *            else it wants)
+         * else it wants)
          *
          * @return The NameSpace which has this identifier
          */
@@ -602,7 +642,7 @@ public class ReflectionUtil {
          * Returns the thrown exception
          *
          * @return The exception. Only set if {@link #getResultType()} is
-         *         {@link ResultType#ERROR}
+         * {@link ResultType#ERROR}
          */
         public Throwable getException() {
             return exception;
@@ -652,12 +692,12 @@ public class ReflectionUtil {
 
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
-        private String               name;
+        private String name;
         private Collection<Modifier> modifiers = Collections.emptyList();
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         *            <b>RegEx</b>
+         * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          */
         public MemberPredicate(String name, Collection<Modifier> modifiers) {
@@ -700,7 +740,7 @@ public class ReflectionUtil {
          * Sets the name of the method
          *
          * @param name The name of the method. Null for don't check. Is a
-         *            <b>RegEx</b>
+         * <b>RegEx</b>
          *
          * @return This predicate
          */
@@ -729,7 +769,7 @@ public class ReflectionUtil {
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         *            <b>RegEx</b>
+         * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          */
@@ -757,6 +797,22 @@ public class ReflectionUtil {
             return this;
         }
 
+        // there must be a nicer way!
+        @Override
+        public ExecutablePredicate<T> withModifiers(Collection<Modifier> modifiers) {
+            return (ExecutablePredicate<T>) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public ExecutablePredicate<T> withModifiers(Modifier... modifiers) {
+            return (ExecutablePredicate<T>) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public ExecutablePredicate<T> withName(String name) {
+            return (ExecutablePredicate<T>) super.withName(name);
+        }
+
         @Override
         public boolean test(Member member) {
             if (!(member instanceof Executable) || !super.test(member)) {
@@ -782,7 +838,7 @@ public class ReflectionUtil {
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         *            <b>RegEx</b>
+         * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          * @param returnType The return type. Null for don't check
@@ -809,6 +865,27 @@ public class ReflectionUtil {
         public MethodPredicate<T> withReturnType(Class<?> returnType) {
             this.returnType = returnType;
             return this;
+        }
+
+        // there must be a nicer way!
+        @Override
+        public MethodPredicate<T> withParameters(Class<?>... parameters) {
+            return (MethodPredicate<T>) super.withParameters(parameters);
+        }
+
+        @Override
+        public MethodPredicate<T> withModifiers(Collection<Modifier> modifiers) {
+            return (MethodPredicate<T>) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public MethodPredicate<T> withModifiers(Modifier... modifiers) {
+            return (MethodPredicate<T>) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public MethodPredicate<T> withName(String name) {
+            return (MethodPredicate<T>) super.withName(name);
         }
 
         @Override
@@ -859,35 +936,98 @@ public class ReflectionUtil {
         }
     }
 
-    /*
-     * get instance fields get fields set instance fields set fields get methods
-     * (private - public) invoke methods on class (private - public) invoke
-     * method on handle (private - public) invoke passed method get NMS class
-     * get CraftBukkit class get server major, minor and patch version get
-     * constructor instantiate via passed constructor instantiate and find
-     * constructor try set (tries a number of names, until one exists) // uses
-     * RegEx now try get (tries a number of names, until one exists) // uses
-     * RegEx now try invoke method (tries a number of names, until one exists)
-     * // uses RegEx now
-     */
-
     public static void main(String[] args) {
-        ReflectResponse<Constructor<String>> response = getConstructor(String.class, constructor -> constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == String.class);
+        {
+            System.out.println(" ");
+            System.out.println("=== WRAPPERS ====");
+            System.out.println(" ");
+            System.out.println("=== BYTE ===");
+            NBTWrappers.NBTTagByte nbtTagByte = new NBTWrappers.NBTTagByte((byte) 20);
+            System.out.println(nbtTagByte);
+            System.out.println(nbtTagByte.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagByte.toNBT()));
+            System.out.println(nbtTagByte.equals(INBTBase.fromNBT(nbtTagByte.toNBT())));
 
-        Constructor<String> constructorOpt = response.getValue();
-        System.out.println(instantiate(constructorOpt, "This is a test"));
+            System.out.println("=== SHORT ===");
+            NBTWrappers.NBTTagShort nbtTagShort = new NBTWrappers.NBTTagShort((short) 20);
+            System.out.println(nbtTagShort);
+            System.out.println(nbtTagShort.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagShort.toNBT()));
+            System.out.println(nbtTagShort.equals(INBTBase.fromNBT(nbtTagShort.toNBT())));
 
-        ReflectResponse<String> instantiate = instantiate(String.class, constructor -> constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == String.class,
-                "This is my test");
-        System.out.println(instantiate);
-        System.out.println(getMethod(String.class, new MethodPredicate<>().withModifiers(Modifier.PRIVATE)));
-        System.out.println(getMethod(String.class, new ExecutablePredicate<Method>().withName("adv|sfs|equals"))  // RegEx.
-                                                                                                                  // Just
-                                                                                                                  // use
-                                                                                                                  // or
-                                                                                                                  // for
-                                                                                                                  // multiple
-                                                                                                                  // names
-        );
+            System.out.println("=== INT ===");
+            NBTWrappers.NBTTagInt nbtTagInt = new NBTWrappers.NBTTagInt(20);
+            System.out.println(nbtTagInt);
+            System.out.println(nbtTagInt.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagInt.toNBT()));
+            System.out.println(nbtTagInt.equals(INBTBase.fromNBT(nbtTagInt.toNBT())));
+
+            System.out.println("=== LONG ===");
+            NBTWrappers.NBTTagLong nbtTagLong = new NBTWrappers.NBTTagLong(20);
+            System.out.println(nbtTagLong);
+            System.out.println(nbtTagLong.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagLong.toNBT()));
+            System.out.println(nbtTagLong.equals(INBTBase.fromNBT(nbtTagLong.toNBT())));
+
+            System.out.println("=== BYTE ARRAY ===");
+            NBTWrappers.NBTTagByteArray nbtTagByteArray = new NBTWrappers.NBTTagByteArray(new byte[] { 20, 21, 22, 23 });
+            System.out.println(nbtTagByteArray);
+            System.out.println(nbtTagByteArray.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagByteArray.toNBT()));
+            System.out.println(nbtTagByteArray.equals(INBTBase.fromNBT(nbtTagByteArray.toNBT())));
+
+            System.out.println("=== INT ARRAY ===");
+            NBTWrappers.NBTTagIntArray nbtTagIntArray = new NBTWrappers.NBTTagIntArray(new int[] { 20, 21, 22, 23 });
+            System.out.println(nbtTagIntArray);
+            System.out.println(nbtTagIntArray.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagIntArray.toNBT()));
+            System.out.println(nbtTagIntArray.equals(INBTBase.fromNBT(nbtTagIntArray.toNBT())));
+
+            System.out.println("=== LIST ===");
+            NBTWrappers.NBTTagList nbtTagList = new NBTWrappers.NBTTagList();
+            nbtTagList.add(new NBTWrappers.NBTTagInt(50));
+            nbtTagList.add(new NBTWrappers.NBTTagInt(100));
+            System.out.println(nbtTagList);
+            System.out.println(nbtTagList.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagList.toNBT()));
+            System.out.println(nbtTagList.equals(INBTBase.fromNBT(nbtTagList.toNBT())));
+
+            System.out.println("=== String ===");
+            NBTWrappers.NBTTagString nbtTagString = new NBTWrappers.NBTTagString("This is a String");
+            System.out.println(nbtTagString);
+            System.out.println(nbtTagString.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagString.toNBT()));
+            System.out.println(nbtTagString.equals(INBTBase.fromNBT(nbtTagString.toNBT())));
+
+            System.out.println("=== COMPOUND ===");
+            NBTWrappers.NBTTagCompound nbtTagCompound = new NBTWrappers.NBTTagCompound();
+            nbtTagCompound.setString("Test", "This is a test");
+            nbtTagCompound.setByte("TestByte", (byte) 20);
+            nbtTagCompound.setShort("TestShort", (short) 900);
+            nbtTagCompound.setInt("TestInt", 2032);
+            nbtTagCompound.setLong("TestLong", Integer.MAX_VALUE * 2L);
+            nbtTagCompound.setIntArray("TestIntArray", new int[] { 20, 21, 22, 23 });
+            nbtTagCompound.setByteArray("TestByteArray", new byte[] { 20, 21, 22, 23 });
+            nbtTagCompound.setBoolean("TestBoolean", true);
+            System.out.println(nbtTagCompound);
+            System.out.println(nbtTagCompound.toNBT());
+            System.out.println(INBTBase.fromNBT(nbtTagCompound.toNBT()));
+            System.out.println(nbtTagCompound.equals(INBTBase.fromNBT(nbtTagCompound.toNBT())));
+        }
+
+        {
+            System.out.println(" ");
+            System.out.println("=== ITEM NBT UTIL ===");
+            System.out.println(" ");
+            ItemStack stack = new ItemStack(Material.APPLE);
+            NBTWrappers.NBTTagCompound tag = ItemNBTUtil.getTag(stack);
+            System.out.println(tag);
+            tag.setString("Test", "A nice test");
+            tag.setInt("Test", -200);
+            stack = ItemNBTUtil.setNBTTag(tag, stack);
+            System.out.println(ItemNBTUtil.getTag(stack));
+            System.out.println(ItemNBTUtil.getTag(stack));
+            System.out.println(tag.equals(ItemNBTUtil.getTag(stack)));
+        }
     }
 }
