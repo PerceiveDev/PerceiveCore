@@ -20,14 +20,6 @@
 			<version>1.10.2-R0.1-SNAPSHOT</version>
 			<!-- <scope>provided</scope> -->
 		</dependency>
-
-		<dependency>
-			<groupId>test</groupId>
-			<artifactId>x</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>S:/Minecraft/Bukkit Server/1.8.8 clean/spigot-1.8.8.jar</systemPath>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${project.name}-${project.version}</finalName>
