@@ -182,6 +182,8 @@ public class ItemFactory {
     /**
      * Sets the author of a written book ({@link Material#WRITTEN_BOOK}).
      *
+     * @throws IllegalStateException
+     *
      * @param author the author to set
      *
      * @return This ItemFactory instance
@@ -192,13 +194,15 @@ public class ItemFactory {
             bookMeta.setAuthor(TextUtils.colorize(author));
             itemStack.setItemMeta(bookMeta);
         } else {
-            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+            throw new IllegalStateException("ItemStack is not a WRITTEN_BOOK!");
         }
         return this;
     }
 
     /**
      * Sets the owner of a player head.
+     *
+     * @throws IllegalStateException
      *
      * @param name the name of the player
      *
@@ -210,7 +214,7 @@ public class ItemFactory {
             skullMeta.setOwner(name);
             itemStack.setItemMeta(skullMeta);
         } else {
-            System.err.println("ItemStack is not a SKULL_ITEM!");
+            throw new IllegalStateException("ItemStack is not a SKULL_ITEM!");
         }
         return this;
     }
@@ -242,6 +246,8 @@ public class ItemFactory {
     /**
      * Sets the colour of the item, if it is a colourable item/block.
      *
+     * @throws IllegalStateException
+     *
      * @param colour The color to set the itemstack as
      * @return This ItemFactory instance
      */
@@ -249,13 +255,15 @@ public class ItemFactory {
         if (COLOURABLE.contains(itemStack.getType())) {
             itemStack.setDurability(colour.getData());
         } else {
-            System.err.println("Itemstack is not colourable!");
+            throw new IllegalStateException("Itemstack type is not colourable!");
         }
         return this;
     }
 
     /**
      * Sets the colour of a piece of leather armour.
+     *
+     * @throws IllegalStateException
      *
      * @param colour The color to set the armour piece as
      * @return This ItemFactory instance
@@ -266,13 +274,15 @@ public class ItemFactory {
             meta.setColor(colour);
             itemStack.setItemMeta(meta);
         } else {
-            System.err.println("Itemstack is not a type of leather armour!");
+            throw new IllegalStateException("Itemstack is not a type of leather armour!");
         }
         return this;
     }
 
     /**
      * Sets the contents of a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @throws IllegalStateException
      *
      * @param pages Lines to set in the book
      * @return This ItemFactory instance
@@ -283,7 +293,7 @@ public class ItemFactory {
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
         } else {
-            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+            throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
     }
@@ -298,6 +308,8 @@ public class ItemFactory {
     /**
      * Adds a single page to a ({@link Material#WRITTEN_BOOK}).
      *
+     * @throws IllegalStateException
+     *
      * @param page Line to add to book
      * @return This ItemFactory instance
      */
@@ -309,13 +321,15 @@ public class ItemFactory {
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
         } else {
-            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+            throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
     }
 
     /**
      * Adds multiple pages to a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @throws IllegalStateException
      *
      * @param pages The pages to add to the book
      * @return This ItemFactory instance
@@ -328,13 +342,15 @@ public class ItemFactory {
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
         } else {
-            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+            throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
     }
 
     /**
      * Sets the title of a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @throws IllegalStateException
      *
      * @param title The title to set to the book
      * @return This ItemFactory instance
@@ -345,7 +361,7 @@ public class ItemFactory {
             bookMeta.setTitle(TextUtils.colorize(title));
             itemStack.setItemMeta(bookMeta);
         } else {
-            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+            throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
     }
