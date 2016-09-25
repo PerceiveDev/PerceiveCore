@@ -1,9 +1,9 @@
 package com.perceivedev.perceivecore.language;
 
-import org.bukkit.ChatColor;
-
 import java.util.Locale;
 import java.util.Objects;
+
+import org.bukkit.ChatColor;
 
 /**
  * Provides translations
@@ -34,10 +34,37 @@ public interface MessageProvider {
      * @return The translated, colored String
      *
      * @see #tr(String, String, Object...) #tr(String, String, Object...) with
-     *      the default category
+     * the default category
      */
     default String tr(String key, Object... formattingObjects) {
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, formattingObjects));
+    }
+
+    /**
+     * Translates the message if found, otherwise translates the passed String
+     *
+     * @param key The key to use
+     * @param category The category it belongs to
+     * @param defaultString The default value to assume, if none is set
+     * @param formattingObjects The objects to format the message with
+     *
+     * @return The translated String
+     */
+    String trOrDefault(String key, String category, String defaultString, Object... formattingObjects);
+
+    /**
+     * Translates the message if found, otherwise translates the passed String
+     *
+     * @param key The key to use
+     * @param defaultString The default value to assume, if none is set
+     * @param formattingObjects The objects to format the message with
+     *
+     * @return The translated String
+     *
+     * @see #trOrDefault(String, String, String, Object...) #trOrDefault(String, String, String, Object...) with the #getDefaultCategory()
+     */
+    default String trOrDefault(String key, String defaultString, Object... formattingObjects) {
+        return trOrDefault(key, getDefaultCategory().getName(), defaultString, formattingObjects);
     }
 
     /**
@@ -60,9 +87,11 @@ public interface MessageProvider {
      * @return The translated, uncolored String
      *
      * @see #trUncolored(String, String, Object...) #trUncolored(String, String,
-     *      Object...) with the default category
+     * Object...) with the default category
      */
-    String trUncolored(String key, Object... formattingObjects);
+    default String trUncolored(String key, Object... formattingObjects) {
+        return trUncolored(key, getDefaultCategory().getName(), formattingObjects);
+    }
 
     /**
      * Sets the default category used by the shortened methods.
@@ -72,6 +101,13 @@ public interface MessageProvider {
      * @return True if the category was set
      */
     boolean setDefaultCategory(String categoryName);
+
+    /**
+     * Returns the default category. Used for the shortened methods
+     *
+     * @return The default category
+     */
+    Category getDefaultCategory();
 
     /**
      * Adds the category

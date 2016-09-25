@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,30 +34,30 @@ public class I18N implements MessageProvider {
      * "Test 1234 [[path.to.other.message]]" ==> Matches
      * "[[path.to.other.message]]"
      */
-    private static final Pattern          REFERENCE_PATTERN   = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
 
     private Map<String, Category>         categories          = new HashMap<>();
     private Map<Category, ResourceBundle> fileResourceBundles = new HashMap<>();
     private Map<Category, ResourceBundle> jarResourceBundles  = new HashMap<>();
 
-    private Locale                        currentLanguage;
-    private String                        basePackage;
+    private Locale currentLanguage;
+    private String basePackage;
 
-    private ClassLoader                   callerClassLoader, fileClassLoader;
+    private ClassLoader callerClassLoader, fileClassLoader;
 
-    private Category                      defaultCategory;
+    private Category defaultCategory;
 
     /**
      * Cache to increase performance. May be left out.
      */
-    private Map<String, MessageFormat>    messageFormatCache  = new HashMap<>();
+    private Map<String, MessageFormat> messageFormatCache = new HashMap<>();
 
     /**
      * @param currentLanguage The current language
      * @param basePackage The base package in the jar to read from
      * @param savePath The save path
      * @param callerClassLoader Your class loader. Needed to query packages from
-     *            your jar file
+     * your jar file
      * @param defaultCategory The default category
      * @param more More categories
      *
@@ -139,24 +140,43 @@ public class I18N implements MessageProvider {
      * @return The translated String
      *
      * @throws IllegalArgumentException If the category isn't in
-     *             {@link #categories}
+     * {@link #categories}
      */
     private String translate(String key, Category category) {
+        Optional<String> translated = translateOrEmpty(key, category);
+        if (translated.isPresent()) {
+            return translated.get();
+        }
+        return "No translation for [" + key + "]";
+    }
+
+    /**
+     * Translates a String
+     *
+     * @param key The key
+     * @param category The category
+     *
+     * @return The translated String OR an empty Optional if not found
+     *
+     * @throws IllegalArgumentException If the category isn't in
+     * {@link #categories}
+     */
+    private Optional<String> translateOrEmpty(String key, Category category) {
         if (!categories.containsKey(category.getName())) {
             throw new IllegalArgumentException("Category unknown!");
         }
 
         if (fileResourceBundles.containsKey(category)) {
             try {
-                return fileResourceBundles.get(category).getString(key);
+                return Optional.of(fileResourceBundles.get(category).getString(key));
             } catch (MissingResourceException ignored) {
             }
         }
 
         try {
-            return jarResourceBundles.get(category).getString(key);
+            return Optional.of(jarResourceBundles.get(category).getString(key));
         } catch (MissingResourceException e) {
-            return "No translation for [" + key + "]";
+            return Optional.empty();
         }
     }
 
@@ -195,6 +215,19 @@ public class I18N implements MessageProvider {
             result = result.replace("[[" + found + "]]", resolved);
         }
         return result;
+    }
+
+    @Override
+    public String trOrDefault(String key, String category, String defaultString, Object... formattingObjects) {
+        if (!categories.containsKey(category)) {
+            throw new IllegalArgumentException("Unknown category");
+        }
+
+        Optional<String> formatted = translateOrEmpty(key, categories.get(category));
+        if (formatted.isPresent()) {
+            return format(formatted.get(), formattingObjects);
+        }
+        return format(defaultString, formattingObjects);
     }
 
     /**
@@ -246,6 +279,11 @@ public class I18N implements MessageProvider {
 
         defaultCategory = categories.get(categoryName);
         return true;
+    }
+
+    @Override
+    public Category getDefaultCategory() {
+        return defaultCategory;
     }
 
     @Override
@@ -321,7 +359,7 @@ public class I18N implements MessageProvider {
         /**
          * @param path The base path to read from
          * @param defaultPackage The default package. Used for correctly mapping
-         *            the two file structures. The path in the jar and outside.
+         * the two file structures. The path in the jar and outside.
          */
         FileClassLoader(Path path, String defaultPackage) {
             if (!Files.isDirectory(path)) {
@@ -371,7 +409,7 @@ public class I18N implements MessageProvider {
      * @return True if the files were written, false otherwise.
      *
      * @throws NullPointerException If defaultPackage, targetDir or jarFile is
-     *             null
+     * null
      */
     public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
         Objects.requireNonNull(defaultPackage);
