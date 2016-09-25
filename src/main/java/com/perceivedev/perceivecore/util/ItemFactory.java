@@ -272,6 +272,85 @@ public class ItemFactory {
     }
 
     /**
+     * Sets the contents of a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param pages Lines to set in the book
+     * @return This ItemFactory instance
+     */
+    public ItemFactory setPages(List<String> pages) {
+        if (itemStack.getType() == Material.WRITTEN_BOOK) {
+            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+            bookMeta.setPages(pages);
+            itemStack.setItemMeta(bookMeta);
+        } else {
+            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+        }
+        return this;
+    }
+
+    /**
+     * @see #setPages(List)
+     */
+    public ItemFactory setPages(String... pages) {
+        return setPages(Arrays.asList(pages));
+    }
+
+    /**
+     * Adds a single page to a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param page Line to add to book
+     * @return This ItemFactory instance
+     */
+    public ItemFactory addPage(String page) {
+        if (itemStack.getType() == Material.WRITTEN_BOOK) {
+            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+            List<String> pages = bookMeta.getPages();
+            pages.add(page);
+            bookMeta.setPages(pages);
+            itemStack.setItemMeta(bookMeta);
+        } else {
+            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+        }
+        return this;
+    }
+
+    /**
+     * Adds multiple pages to a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param pages The pages to add to the book
+     * @return This ItemFactory instance
+     */
+    public ItemFactory addPages(String... pages) {
+        if (itemStack.getType() == Material.WRITTEN_BOOK) {
+            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+            List<String> original = bookMeta.getPages();
+            original.addAll(Arrays.asList(pages));
+            bookMeta.setPages(pages);
+            itemStack.setItemMeta(bookMeta);
+        } else {
+            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+        }
+        return this;
+    }
+
+    /**
+     * Sets the title of a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param title The title to set to the book
+     * @return This ItemFactory instance
+     */
+    public ItemFactory setTitle(String title) {
+        if (itemStack.getType() == Material.WRITTEN_BOOK) {
+            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+            bookMeta.setTitle(TextUtils.colorize(title));
+            itemStack.setItemMeta(bookMeta);
+        } else {
+            System.err.println("ItemStack is not a WRITTEN_BOOK!");
+        }
+        return this;
+    }
+
+    /**
      * @return The finished ItemStack.
      */
     public ItemStack build() {
