@@ -21,38 +21,22 @@ import org.bukkit.inventory.meta.SkullMeta;
  *
  * @author ZP4RKER
  */
+@SuppressWarnings({ "unused", "WeakerAccess" })
 public class ItemFactory {
-    private ItemStack itemStack;
+
     private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
               Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET);
-    private static final Set<Material> LARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
+    private static final Set<Material> LARMOUR    = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
               Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+    
+    
+    private ItemStack itemStack;
 
     private ItemFactory(ItemStack itemStack) {
         this.itemStack = itemStack.clone();
     }
 
-    /**
-     * Creates a new ItemFactory builder with the given item as a base.
-     *
-     * @param itemStack the base {@link ItemStack}
-     *
-     * @return The new ItemFactory instance
-     */
-    public static ItemFactory builder(ItemStack itemStack) {
-        return new ItemFactory(itemStack);
-    }
-
-    /**
-     * Creates a new ItemFactory builder with the given material as a base.
-     *
-     * @param type the type (material) of item to create
-     *
-     * @return The new ItemFactory instance
-     */
-    public static ItemFactory builder(Material type) {
-        return new ItemFactory(new ItemStack(type));
-    }
+    // === GENERAL METHODS ===
 
     /**
      * Sets the type (material) of the item.
@@ -158,6 +142,7 @@ public class ItemFactory {
      * Adds multiple lines to the lore of the item.
      *
      * @param lines The lines of lore to add
+     *
      * @return This ItemFactory instance
      */
     public ItemFactory addLore(String... lines) {
@@ -180,33 +165,32 @@ public class ItemFactory {
     }
 
     /**
-     * Sets the author of a written book ({@link Material#WRITTEN_BOOK}).
+     * Adds an enchantment to the itemstack.
      *
-     * @throws IllegalStateException
-     *
-     * @param author the author to set
+     * @param enchantment The enchantment to be added
+     * @param level The level of the enchantment
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setAuthor(String author) {
-        if (itemStack.getType() == Material.WRITTEN_BOOK) {
-            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
-            bookMeta.setAuthor(TextUtils.colorize(author));
-            itemStack.setItemMeta(bookMeta);
+    public ItemFactory addEnchantment(Enchantment enchantment, int level) {
+        if (level <= enchantment.getMaxLevel() && enchantment.canEnchantItem(itemStack)) {
+            itemStack.addEnchantment(enchantment, level);
         } else {
-            throw new IllegalStateException("ItemStack is not a WRITTEN_BOOK!");
+            itemStack.addUnsafeEnchantment(enchantment, level);
         }
         return this;
     }
 
+    // ==== SKULLS ====
+
     /**
      * Sets the owner of a player head.
-     *
-     * @throws IllegalStateException
      *
      * @param name the name of the player
      *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#SKULL_ITEM}
      */
     public ItemFactory setSkullOwner(String name) {
         if (itemStack.getType() == Material.SKULL_ITEM) {
@@ -226,31 +210,18 @@ public class ItemFactory {
         return setSkullOwner(player.getName());
     }
 
-    /**
-     * Adds an enchantment to the itemstack.
-     *
-     * @param enchantment The enchantment to be addded
-     * @param level The level of the enchantment
-     *
-     * @return This ItemFactory instance
-     */
-    public ItemFactory addEnchantment(Enchantment enchantment, int level) {
-        if (level <= enchantment.getMaxLevel() && enchantment.canEnchantItem(itemStack)) {
-            itemStack.addEnchantment(enchantment, level);
-        } else {
-            itemStack.addUnsafeEnchantment(enchantment, level);
-        }
-        return this;
-    }
+    // ==== COLOURS ====
 
     /**
      * Sets the colour of the item, if it is a colourable item/block.
      *
-     * @throws IllegalStateException
-     *
      * @param colour The color to set the itemstack as
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not colourable
      */
+    @SuppressWarnings("deprecation")
     public ItemFactory setColour(DyeColor colour) {
         if (COLOURABLE.contains(itemStack.getType())) {
             itemStack.setDurability(colour.getData());
@@ -263,10 +234,11 @@ public class ItemFactory {
     /**
      * Sets the colour of a piece of leather armour.
      *
-     * @throws IllegalStateException
-     *
      * @param colour The color to set the armour piece as
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a type of leather armour
      */
     public ItemFactory setArmourColour(Color colour) {
         if (LARMOUR.contains(itemStack.getType())) {
@@ -279,13 +251,36 @@ public class ItemFactory {
         return this;
     }
 
+    // ==== BOOKS ====
+
+    /**
+     * Sets the author of a written book ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param author the author to set
+     *
+     * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     */
+    public ItemFactory setAuthor(String author) {
+        if (itemStack.getType() == Material.WRITTEN_BOOK) {
+            BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+            bookMeta.setAuthor(TextUtils.colorize(author));
+            itemStack.setItemMeta(bookMeta);
+        } else {
+            throw new IllegalStateException("ItemStack is not a WRITTEN_BOOK!");
+        }
+        return this;
+    }
+
     /**
      * Sets the contents of a ({@link Material#WRITTEN_BOOK}).
      *
-     * @throws IllegalStateException
-     *
      * @param pages Lines to set in the book
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
     public ItemFactory setPages(List<String> pages) {
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
@@ -308,10 +303,11 @@ public class ItemFactory {
     /**
      * Adds a single page to a ({@link Material#WRITTEN_BOOK}).
      *
-     * @throws IllegalStateException
-     *
      * @param page Line to add to book
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
     public ItemFactory addPage(String page) {
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
@@ -329,10 +325,11 @@ public class ItemFactory {
     /**
      * Adds multiple pages to a ({@link Material#WRITTEN_BOOK}).
      *
-     * @throws IllegalStateException
-     *
      * @param pages The pages to add to the book
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
     public ItemFactory addPages(String... pages) {
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
@@ -350,10 +347,11 @@ public class ItemFactory {
     /**
      * Sets the title of a ({@link Material#WRITTEN_BOOK}).
      *
-     * @throws IllegalStateException
-     *
      * @param title The title to set to the book
+     *
      * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
     public ItemFactory setTitle(String title) {
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
@@ -366,11 +364,35 @@ public class ItemFactory {
         return this;
     }
 
+    // === BUILD AND CREATE ====
+
+    /**
+     * Creates a new ItemFactory builder with the given item as a base.
+     *
+     * @param itemStack the base {@link ItemStack}
+     *
+     * @return The new ItemFactory instance
+     */
+    public static ItemFactory builder(ItemStack itemStack) {
+        return new ItemFactory(itemStack);
+    }
+
+    /**
+     * Creates a new ItemFactory builder with the given material as a base.
+     *
+     * @param type the type (material) of item to create
+     *
+     * @return The new ItemFactory instance
+     */
+    public static ItemFactory builder(Material type) {
+        return new ItemFactory(new ItemStack(type));
+    }
+    
     /**
      * @return The finished ItemStack.
      */
     public ItemStack build() {
-        return itemStack;
+        return itemStack.clone();
     }
 
 }
