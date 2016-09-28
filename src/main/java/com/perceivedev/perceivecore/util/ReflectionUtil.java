@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,12 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
-import com.perceivedev.perceivecore.nbt.ItemNBTUtil;
-import com.perceivedev.perceivecore.nbt.NBTWrappers;
-import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse.ResultType;
 
 /**
@@ -100,10 +96,13 @@ public class ReflectionUtil {
      * {@link NameSpace}
      *
      * @return The Class, if found
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public static Optional<Class<?>> getClass(NameSpace nameSpace, String qualifiedName) {
         Objects.requireNonNull(nameSpace);
         Objects.requireNonNull(qualifiedName);
+
         String fullyQualifiedName = nameSpace.resolve(qualifiedName);
         return classForName(fullyQualifiedName);
     }
@@ -116,8 +115,13 @@ public class ReflectionUtil {
      * identifier.
      *
      * @return The Class, if found
+     *
+     * @throws NullPointerException if nameWithIdentifier is null
+     * @see #getClass(NameSpace, String) #getClass(NameSpace, String) with the resolved NameSpace and name
      */
     public static Optional<Class<?>> getClass(String nameWithIdentifier) {
+        Objects.requireNonNull(nameWithIdentifier);
+
         Optional<NameSpace> fromIdentifier = NameSpace.getFromIdentifier(nameWithIdentifier);
         if (!fromIdentifier.isPresent()) {
             throw new IllegalArgumentException("Identifier unknown '" + nameWithIdentifier + "'");
@@ -151,6 +155,8 @@ public class ReflectionUtil {
      * @param selector The Selector function to use
      *
      * @return The first field matching the selector
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public static ReflectResponse<Field> getField(Class<?> clazz, Predicate<Field> selector) {
         Objects.requireNonNull(clazz);
@@ -162,6 +168,24 @@ public class ReflectionUtil {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
         }
         return new ReflectResponse<>(first.get());
+    }
+
+    /**
+     * Returns ALL fields (public -> private) of a class, filtered by the given Predicate.
+     *
+     * @param clazz The Class to get the fields for
+     * @param predicate The Predicate to use to filter the fields
+     *
+     * @return The fields of the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     *
+     * @throws NullPointerException if any parameter is null
+     */
+    public static Stream<Field> getFields(Class<?> clazz, Predicate<Field> predicate) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(predicate);
+
+        return getFields(clazz)
+                  .filter(predicate);
     }
 
     /**
@@ -226,6 +250,7 @@ public class ReflectionUtil {
      *
      * @return The value of the field.
      *
+     * @throws NullPointerException if field is null
      * @throws NullPointerException If field is null
      */
     public static ReflectResponse<Object> getFieldValue(Field field, Object handle) {
@@ -251,6 +276,8 @@ public class ReflectionUtil {
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
      * value.
+     *
+     * @throws NullPointerException if field is null
      */
     public static ReflectResponse<Void> setFieldValue(Field field, Object handle, Object value) {
         Objects.requireNonNull(field);
@@ -277,6 +304,9 @@ public class ReflectionUtil {
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
      * value.
+     *
+     * @throws NullPointerException if clazz or selector is null
+     * @see #setFieldValue(Field, Object, Object)
      */
     public static ReflectResponse<Void> setFieldValue(Class<?> clazz, Predicate<Field> selector, Object handle, Object value) {
         Objects.requireNonNull(clazz);
@@ -299,6 +329,8 @@ public class ReflectionUtil {
      * @param selector The Selector function to use
      *
      * @return The first function matching the selector
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public static ReflectResponse<Method> getMethod(Class<?> clazz, Predicate<Method> selector) {
         Objects.requireNonNull(clazz);
@@ -320,6 +352,8 @@ public class ReflectionUtil {
      * @param params The parameters of the method
      *
      * @return The result of invoking the method.
+     *
+     * @throws NullPointerException if any parameter (except handle) is null
      */
     public static ReflectResponse<Object> invokeMethod(Method method, Object handle, Object... params) {
         Objects.requireNonNull(method);
@@ -347,6 +381,9 @@ public class ReflectionUtil {
      * @param params The parameters of the method
      *
      * @return The result of invoking the method.
+     *
+     * @throws NullPointerException if any parameter (except handle) is null
+     * @see #invokeMethod(Method, Object, Object...)
      */
     public static ReflectResponse<Object> invokeMethod(Class<?> clazz, Predicate<Method> selector, Object handle, Object... params) {
         Objects.requireNonNull(clazz);
@@ -359,6 +396,69 @@ public class ReflectionUtil {
         }
 
         return invokeMethod(method.getValue(), handle, params);
+    }
+
+    /**
+     * Invokes an instance method
+     *
+     * @param handle The class to get the method from
+     * @param selector The Selector function to use
+     * @param params The parameters of the method
+     *
+     * @return The result of invoking the method.
+     *
+     * @throws NullPointerException if any parameter is null
+     * @see #invokeMethod(Class, Predicate, Object, Object...)
+     */
+    public static ReflectResponse<Object> invokeInstanceMethod(Object handle, Predicate<Method> selector, Object... params) {
+        Objects.requireNonNull(handle);
+        Objects.requireNonNull(selector);
+        Objects.requireNonNull(params);
+        return invokeMethod(handle.getClass(), selector, params);
+    }
+
+    /**
+     * Invokes an instance method
+     *
+     * @param handle The class to get the method from
+     * @param name The name of the method.
+     * @param parameterClasses The classes of the parameters. Empty array for none, {@code null} is <b>NOT</b> permitted.
+     * @param params The parameters of the method
+     *
+     * @return The result of invoking the method.
+     *
+     * @throws NullPointerException if any parameter is null
+     * @see #invokeMethod(Class, Predicate, Object, Object...)
+     */
+    public static ReflectResponse<Object> invokeInstanceMethod(Object handle, String name, Class<?>[] parameterClasses, Object... params) {
+        Objects.requireNonNull(handle);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(parameterClasses);
+        Objects.requireNonNull(params);
+
+        return invokeMethod(handle.getClass(),
+                  new MethodPredicate<>()
+                            .withParameters(parameterClasses)
+                            .withName(name),
+                  params);
+    }
+
+    /**
+     * Returns all methods (public -> private) from the class, filtered by the given predicate
+     *
+     * @param clazz The Class to get the methods from
+     * @param predicate The predicate to use to filter
+     *
+     * @return All the methods in the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     *
+     * @throws NullPointerException if any parameter is null
+     */
+    public static Stream<Method> getMethods(Class<?> clazz, Predicate<Method> predicate) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(predicate);
+
+        return getMethods(clazz)
+                  .filter(predicate);
     }
 
     /**
@@ -466,18 +566,78 @@ public class ReflectionUtil {
     }
 
     /**
+     * Returns all constructors (public -> private) from the class, filtered by the given predicate
+     *
+     * @param clazz The class to get the constructors from
+     * @param predicate The predicate to use to filter
+     *
+     * @return All the constructors in the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     *
+     * @throws NullPointerException if any parameter is null
+     */
+    public static Stream<Constructor<?>> getAllConstructors(Class<?> clazz, Predicate<Constructor<?>> predicate) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(predicate);
+
+        return getAllConstructors(clazz)
+                  .filter(predicate);
+    }
+
+    /**
      * Returns all (public -> private) constructors of a class.
      *
      * @param clazz The Class to get the constructors for
      *
      * @return All the {@link Constructor}s of that class
      */
-    @SuppressWarnings("unchecked")  // it is checked. The methods only use
-    // wildcards, as the array could be
-    // modified, which it isn't
-    private static <T> Stream<Constructor<T>> getAllConstructors(Class<T> clazz) {
-        return Stream.concat(Arrays.stream(clazz.getConstructors()).map(constructor -> (Constructor<T>) constructor),
-                  Arrays.stream(clazz.getDeclaredConstructors()).map(constructor -> (Constructor<T>) constructor));
+    private static Stream<Constructor<?>> getAllConstructors(Class<?> clazz) {
+        return Stream.concat(Arrays.stream(clazz.getConstructors()),
+                  Arrays.stream(clazz.getDeclaredConstructors()));
+    }
+
+    // ==== ENUMS ====
+
+    /**
+     * Tries to find an enum constant.
+     *
+     * @param clazz The class to get it from
+     * @param predicate The predicate to filter with
+     *
+     * @return The found constant.
+     *
+     * @throws NullPointerException if any parameter is null
+     * @throws IllegalArgumentException if 'clazz' is not an enum
+     */
+    public static ReflectResponse<Enum<?>> getEnumConstant(Class<?> clazz, Predicate<Enum<?>> predicate) {
+        if (!clazz.isEnum()) {
+            throw new IllegalArgumentException("The class is no enum: " + clazz.getName());
+        }
+
+        Optional<? extends Enum<?>> anEnum = Arrays.stream(clazz.getEnumConstants())
+                  .map(o -> (Enum<?>) o)
+                  .filter(predicate)
+                  .findFirst();
+
+        if (!anEnum.isPresent()) {
+            return new ReflectResponse<>(ResultType.NOT_FOUND);
+        }
+
+        return new ReflectResponse<>(anEnum.get());
+    }
+
+    /**
+     * Tries to find an enum constant.
+     *
+     * @param clazz The class to get it from
+     * @param name The name it should match. Case sensitive.
+     *
+     * @return The found constant.
+     *
+     * @throws NullPointerException if any parameter is null
+     * @throws IllegalArgumentException if 'clazz' is not an enum
+     */
+    public static ReflectResponse<Enum<?>> getEnumConstant(Class<?> clazz, String name) {
+        return getEnumConstant(clazz, anEnum -> anEnum.name().equals(name));
     }
 
     // ==== UTILITY CLASSES ====
@@ -693,22 +853,26 @@ public class ReflectionUtil {
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
         private String name;
-        private Collection<Modifier> modifiers = Collections.emptyList();
+        private Collection<Modifier> modifiers       = Collections.emptyList();
+        private Collection<Modifier> withoutModifier = Collections.emptyList();
 
         /**
          * @param name The name of the method. Null for don't check. Is a
          * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for don't check
          */
-        public MemberPredicate(String name, Collection<Modifier> modifiers) {
+        public MemberPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier) {
             this.name = name;
             this.modifiers = modifiers;
+            this.withoutModifier = withoutModifier;
         }
 
         /**
          * Accepts anything
          */
         public MemberPredicate() {
+
         }
 
         /**
@@ -737,6 +901,31 @@ public class ReflectionUtil {
         }
 
         /**
+         * Sets the modifiers it <b>must not</b> have
+         *
+         * @param modifiers The modifiers. An empty list for don't check.
+         *
+         * @return This predicate
+         */
+        public MemberPredicate<T> withoutModifiers(Collection<Modifier> modifiers) {
+            this.withoutModifier = new ArrayList<>(modifiers);
+            return this;
+        }
+
+        /**
+         * Sets the modifiers it <b>must not</b> have
+         *
+         * @param modifiers The modifiers. An empty list for don't check.
+         *
+         * @return This predicate
+         *
+         * @see #withoutModifiers(Collection)
+         */
+        public MemberPredicate<T> withoutModifiers(Modifier... modifiers) {
+            return withoutModifiers(Arrays.asList(modifiers));
+        }
+
+        /**
          * Sets the name of the method
          *
          * @param name The name of the method. Null for don't check. Is a
@@ -759,6 +948,11 @@ public class ReflectionUtil {
                     return false;
                 }
             }
+            for (Modifier modifier : withoutModifier) {
+                if (modifier.isSet(member.getModifiers())) {
+                    return false;
+                }
+            }
             return true;
         }
     }
@@ -771,10 +965,11 @@ public class ReflectionUtil {
          * @param name The name of the method. Null for don't check. Is a
          * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          */
-        public ExecutablePredicate(String name, Collection<Modifier> modifiers, Class<?>[] parameters) {
-            super(name, modifiers);
+        public ExecutablePredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?>[] parameters) {
+            super(name, modifiers, withoutModifier);
             this.parameters = parameters;
         }
 
@@ -809,6 +1004,16 @@ public class ReflectionUtil {
         }
 
         @Override
+        public ExecutablePredicate<T> withoutModifiers(Collection<Modifier> modifiers) {
+            return (ExecutablePredicate<T>) super.withoutModifiers(modifiers);
+        }
+
+        @Override
+        public ExecutablePredicate<T> withoutModifiers(Modifier... modifiers) {
+            return (ExecutablePredicate<T>) super.withoutModifiers(modifiers);
+        }
+
+        @Override
         public ExecutablePredicate<T> withName(String name) {
             return (ExecutablePredicate<T>) super.withName(name);
         }
@@ -840,11 +1045,12 @@ public class ReflectionUtil {
          * @param name The name of the method. Null for don't check. Is a
          * <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for don't check
          * @param parameters The parameters. Null for don't check
          * @param returnType The return type. Null for don't check
          */
-        public MethodPredicate(String name, Collection<Modifier> modifiers, Class<?>[] parameters, Class<?> returnType) {
-            super(name, modifiers, parameters);
+        public MethodPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?>[] parameters, Class<?> returnType) {
+            super(name, modifiers, withoutModifier, parameters);
             this.returnType = returnType;
         }
 
@@ -881,6 +1087,16 @@ public class ReflectionUtil {
         @Override
         public MethodPredicate<T> withModifiers(Modifier... modifiers) {
             return (MethodPredicate<T>) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public MethodPredicate<T> withoutModifiers(Collection<Modifier> modifiers) {
+            return (MethodPredicate<T>) super.withoutModifiers(modifiers);
+        }
+
+        @Override
+        public MethodPredicate<T> withoutModifiers(Modifier... modifiers) {
+            return (MethodPredicate<T>) super.withoutModifiers(modifiers);
         }
 
         @Override
@@ -934,100 +1150,12 @@ public class ReflectionUtil {
         public boolean isSet(int modifiers) {
             return (modifiers & bitMask) != 0;
         }
-    }
 
-    public static void main(String[] args) {
-        {
-            System.out.println(" ");
-            System.out.println("=== WRAPPERS ====");
-            System.out.println(" ");
-            System.out.println("=== BYTE ===");
-            NBTWrappers.NBTTagByte nbtTagByte = new NBTWrappers.NBTTagByte((byte) 20);
-            System.out.println(nbtTagByte);
-            System.out.println(nbtTagByte.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagByte.toNBT()));
-            System.out.println(nbtTagByte.equals(INBTBase.fromNBT(nbtTagByte.toNBT())));
-
-            System.out.println("=== SHORT ===");
-            NBTWrappers.NBTTagShort nbtTagShort = new NBTWrappers.NBTTagShort((short) 20);
-            System.out.println(nbtTagShort);
-            System.out.println(nbtTagShort.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagShort.toNBT()));
-            System.out.println(nbtTagShort.equals(INBTBase.fromNBT(nbtTagShort.toNBT())));
-
-            System.out.println("=== INT ===");
-            NBTWrappers.NBTTagInt nbtTagInt = new NBTWrappers.NBTTagInt(20);
-            System.out.println(nbtTagInt);
-            System.out.println(nbtTagInt.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagInt.toNBT()));
-            System.out.println(nbtTagInt.equals(INBTBase.fromNBT(nbtTagInt.toNBT())));
-
-            System.out.println("=== LONG ===");
-            NBTWrappers.NBTTagLong nbtTagLong = new NBTWrappers.NBTTagLong(20);
-            System.out.println(nbtTagLong);
-            System.out.println(nbtTagLong.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagLong.toNBT()));
-            System.out.println(nbtTagLong.equals(INBTBase.fromNBT(nbtTagLong.toNBT())));
-
-            System.out.println("=== BYTE ARRAY ===");
-            NBTWrappers.NBTTagByteArray nbtTagByteArray = new NBTWrappers.NBTTagByteArray(new byte[] { 20, 21, 22, 23 });
-            System.out.println(nbtTagByteArray);
-            System.out.println(nbtTagByteArray.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagByteArray.toNBT()));
-            System.out.println(nbtTagByteArray.equals(INBTBase.fromNBT(nbtTagByteArray.toNBT())));
-
-            System.out.println("=== INT ARRAY ===");
-            NBTWrappers.NBTTagIntArray nbtTagIntArray = new NBTWrappers.NBTTagIntArray(new int[] { 20, 21, 22, 23 });
-            System.out.println(nbtTagIntArray);
-            System.out.println(nbtTagIntArray.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagIntArray.toNBT()));
-            System.out.println(nbtTagIntArray.equals(INBTBase.fromNBT(nbtTagIntArray.toNBT())));
-
-            System.out.println("=== LIST ===");
-            NBTWrappers.NBTTagList nbtTagList = new NBTWrappers.NBTTagList();
-            nbtTagList.add(new NBTWrappers.NBTTagInt(50));
-            nbtTagList.add(new NBTWrappers.NBTTagInt(100));
-            System.out.println(nbtTagList);
-            System.out.println(nbtTagList.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagList.toNBT()));
-            System.out.println(nbtTagList.equals(INBTBase.fromNBT(nbtTagList.toNBT())));
-
-            System.out.println("=== String ===");
-            NBTWrappers.NBTTagString nbtTagString = new NBTWrappers.NBTTagString("This is a String");
-            System.out.println(nbtTagString);
-            System.out.println(nbtTagString.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagString.toNBT()));
-            System.out.println(nbtTagString.equals(INBTBase.fromNBT(nbtTagString.toNBT())));
-
-            System.out.println("=== COMPOUND ===");
-            NBTWrappers.NBTTagCompound nbtTagCompound = new NBTWrappers.NBTTagCompound();
-            nbtTagCompound.setString("Test", "This is a test");
-            nbtTagCompound.setByte("TestByte", (byte) 20);
-            nbtTagCompound.setShort("TestShort", (short) 900);
-            nbtTagCompound.setInt("TestInt", 2032);
-            nbtTagCompound.setLong("TestLong", Integer.MAX_VALUE * 2L);
-            nbtTagCompound.setIntArray("TestIntArray", new int[] { 20, 21, 22, 23 });
-            nbtTagCompound.setByteArray("TestByteArray", new byte[] { 20, 21, 22, 23 });
-            nbtTagCompound.setBoolean("TestBoolean", true);
-            System.out.println(nbtTagCompound);
-            System.out.println(nbtTagCompound.toNBT());
-            System.out.println(INBTBase.fromNBT(nbtTagCompound.toNBT()));
-            System.out.println(nbtTagCompound.equals(INBTBase.fromNBT(nbtTagCompound.toNBT())));
-        }
-
-        {
-            System.out.println(" ");
-            System.out.println("=== ITEM NBT UTIL ===");
-            System.out.println(" ");
-            ItemStack stack = new ItemStack(Material.APPLE);
-            NBTWrappers.NBTTagCompound tag = ItemNBTUtil.getTag(stack);
-            System.out.println(tag);
-            tag.setString("Test", "A nice test");
-            tag.setInt("Test", -200);
-            stack = ItemNBTUtil.setNBTTag(tag, stack);
-            System.out.println(ItemNBTUtil.getTag(stack));
-            System.out.println(ItemNBTUtil.getTag(stack));
-            System.out.println(tag.equals(ItemNBTUtil.getTag(stack)));
+        @Override
+        public String toString() {
+            return "Modifier{" +
+                      "bitMask=" + bitMask
+                      + '}';
         }
     }
 }
