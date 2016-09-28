@@ -24,7 +24,6 @@ import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.NMS;
 /**
  * Provides wrapper objects to abstract the NBT versions. Probably way too complicated...
  */
-@SuppressWarnings({ "unused", "WeakerAccess" })
 public class NBTWrappers {
 
     /**
@@ -119,7 +118,7 @@ public class NBTWrappers {
         }
 
         public static INBTBase fromNBT(Object nbtObject) {
-            ReflectResponse<Object> data = ReflectionUtil.getFieldValue(nbtObject.getClass(), nbtObject, "data");
+            ReflectResponse<Object> data = ReflectionUtil.getFieldValue("data", nbtObject.getClass(), nbtObject);
             if (!data.isValuePresent()) {
                 System.err.println("An error occurred. Field not found in fromNBT String");
                 return null;
@@ -373,7 +372,7 @@ public class NBTWrappers {
                 return null;
             }
 
-            ReflectResponse<Method> setMethod = ReflectionUtil.getMethod(compound.getClass(), new MethodPredicate<>()
+            ReflectResponse<Method> setMethod = ReflectionUtil.getMethod(compound.getClass(), new MethodPredicate()
                       .withName("set")
                       .withParameters(String.class, nbtBase.get()));
             for (Map.Entry<String, INBTBase> entry : map.entrySet()) {
@@ -397,7 +396,7 @@ public class NBTWrappers {
             }
             NBTTagCompound compound = new NBTTagCompound();
 
-            ReflectResponse<Method> getMethod = ReflectionUtil.getMethod(nbtObject.getClass(), new MethodPredicate<>()
+            ReflectResponse<Method> getMethod = ReflectionUtil.getMethod(nbtObject.getClass(), new MethodPredicate()
                       .withName("get")
                       .withParameters(String.class));
 
@@ -504,7 +503,7 @@ public class NBTWrappers {
 
             for (INBTBase inbtBase : list) {
                 ReflectionUtil.invokeMethod(nbtList.getClass(),
-                          new MethodPredicate<>()
+                          new MethodPredicate()
                                     .withName("add")
                                     .withParameters(nbtBase.get()),
                           nbtList, inbtBase.toNBT());
@@ -514,7 +513,7 @@ public class NBTWrappers {
 
         public static INBTBase fromNBT(Object nbtObject) {
             NBTTagList list = new NBTTagList();
-            ReflectResponse<Object> listResponse = ReflectionUtil.getFieldValue(nbtObject.getClass(), nbtObject, "list");
+            ReflectResponse<Object> listResponse = ReflectionUtil.getFieldValue("list", nbtObject.getClass(), nbtObject);
 
             if (!listResponse.isValuePresent()) {
                 System.out.println("An error occurred reading an NBTTagList from nbt. Response: " + listResponse);
@@ -810,7 +809,7 @@ public class NBTWrappers {
 
         public static INBTBase fromNBT(Object nbtObject) {
             ReflectResponse<Method> methodResponse = ReflectionUtil.getMethod(nbtObject.getClass(),
-                      new MethodPredicate<>().withReturnType(int[].class));
+                      new MethodPredicate().withReturnType(int[].class));
 
             if (!methodResponse.isValuePresent()) {
                 System.out.println("No getter found for NBTTagIntArray");
@@ -965,7 +964,7 @@ public class NBTWrappers {
 
         public static INBTBase fromNBT(Object nbtObject) {
             ReflectResponse<Method> methodResponse = ReflectionUtil.getMethod(nbtObject.getClass(),
-                      new MethodPredicate<>().withReturnType(byte[].class));
+                      new MethodPredicate().withReturnType(byte[].class));
 
             if (!methodResponse.isValuePresent()) {
                 System.out.println("No getter found for NBTTagByteArray!");

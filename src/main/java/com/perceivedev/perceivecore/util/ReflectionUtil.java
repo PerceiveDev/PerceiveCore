@@ -437,7 +437,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(params);
 
         return invokeMethod(handle.getClass(),
-                  new MethodPredicate<>()
+                  new MethodPredicate()
                             .withParameters(parameterClasses)
                             .withName(name),
                   params);
@@ -1037,7 +1037,7 @@ public class ReflectionUtil {
     /**
      * A Predicate for a method
      */
-    public static class MethodPredicate<T extends Method> extends ExecutablePredicate<T> {
+    public static class MethodPredicate extends ExecutablePredicate<Method> {
 
         private Class<?> returnType;
 
@@ -1068,40 +1068,40 @@ public class ReflectionUtil {
          *
          * @return This predicate
          */
-        public MethodPredicate<T> withReturnType(Class<?> returnType) {
+        public MethodPredicate withReturnType(Class<?> returnType) {
             this.returnType = returnType;
             return this;
         }
 
         // there must be a nicer way!
         @Override
-        public MethodPredicate<T> withParameters(Class<?>... parameters) {
-            return (MethodPredicate<T>) super.withParameters(parameters);
+        public MethodPredicate withParameters(Class<?>... parameters) {
+            return (MethodPredicate) super.withParameters(parameters);
         }
 
         @Override
-        public MethodPredicate<T> withModifiers(Collection<Modifier> modifiers) {
-            return (MethodPredicate<T>) super.withModifiers(modifiers);
+        public MethodPredicate withModifiers(Collection<Modifier> modifiers) {
+            return (MethodPredicate) super.withModifiers(modifiers);
         }
 
         @Override
-        public MethodPredicate<T> withModifiers(Modifier... modifiers) {
-            return (MethodPredicate<T>) super.withModifiers(modifiers);
+        public MethodPredicate withModifiers(Modifier... modifiers) {
+            return (MethodPredicate) super.withModifiers(modifiers);
         }
 
         @Override
-        public MethodPredicate<T> withoutModifiers(Collection<Modifier> modifiers) {
-            return (MethodPredicate<T>) super.withoutModifiers(modifiers);
+        public MethodPredicate withoutModifiers(Collection<Modifier> modifiers) {
+            return (MethodPredicate) super.withoutModifiers(modifiers);
         }
 
         @Override
-        public MethodPredicate<T> withoutModifiers(Modifier... modifiers) {
-            return (MethodPredicate<T>) super.withoutModifiers(modifiers);
+        public MethodPredicate withoutModifiers(Modifier... modifiers) {
+            return (MethodPredicate) super.withoutModifiers(modifiers);
         }
 
         @Override
-        public MethodPredicate<T> withName(String name) {
-            return (MethodPredicate<T>) super.withName(name);
+        public MethodPredicate withName(String name) {
+            return (MethodPredicate) super.withName(name);
         }
 
         @Override

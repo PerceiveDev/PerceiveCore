@@ -32,7 +32,7 @@ public class NbtParser {
             error = true;
             PARSE_METHOD = null;
         } else {
-            ReflectResponse<Method> parseMethod = ReflectionUtil.getMethod(mojangsonParserClass.get(), new MethodPredicate<>()
+            ReflectResponse<Method> parseMethod = ReflectionUtil.getMethod(mojangsonParserClass.get(), new MethodPredicate()
                       .withName("parse")
                       .withParameters(String.class));
 

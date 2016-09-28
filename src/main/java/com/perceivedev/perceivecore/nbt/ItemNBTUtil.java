@@ -24,7 +24,7 @@ public class ItemNBTUtil {
      * @return The NMS Item stack
      */
     private static Object asNMSCopy(ItemStack itemStack) {
-        return ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate<>()
+        return ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate()
                             .withName("asNMSCopy")
                             .withParameters(ItemStack.class),
                   null, itemStack).getValue();
@@ -38,7 +38,7 @@ public class ItemNBTUtil {
      * @return The converted Item
      */
     private static ItemStack asBukkitCopy(Object nmsItem) {
-        return (ItemStack) ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate<>()
+        return (ItemStack) ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate()
                             .withName("asBukkitCopy").withModifiers(Modifier.PUBLIC, Modifier.STATIC),
                   null, nmsItem).getValue();
     }
@@ -54,7 +54,7 @@ public class ItemNBTUtil {
     public static ItemStack setNBTTag(NBTTagCompound tag, ItemStack itemStack) {
         Object nbtTag = tag.toNBT();
         Object nmsItem = asNMSCopy(itemStack);
-        ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate<>()
+        ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate()
                   .withName("setTag")
                   .withModifiers(Modifier.PUBLIC), nmsItem, nbtTag);
 
@@ -70,7 +70,7 @@ public class ItemNBTUtil {
      */
     public static NBTTagCompound getTag(ItemStack itemStack) {
         Object nmsItem = asNMSCopy(itemStack);
-        Object tag = ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate<>()
+        Object tag = ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate()
                   .withName("getTag").withParameters(), nmsItem).getValue();
         if (tag == null) {
             return new NBTTagCompound();

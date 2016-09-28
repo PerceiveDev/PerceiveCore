@@ -42,7 +42,7 @@ public class EntityNBTUtil {
             System.out.println("Can't find CraftEntity class! @EntityNBTUtil static block");
         } else {
             ReflectionUtil.ReflectResponse<Method> getHandleMethod = ReflectionUtil
-                      .getMethod(craftEntityClass.get(), new ReflectionUtil.MethodPredicate<>().withName("getHandle"));
+                      .getMethod(craftEntityClass.get(), new ReflectionUtil.MethodPredicate().withName("getHandle"));
 
             if (getHandleMethod.isValuePresent()) {
                 getHandle = getHandleMethod.getValue();

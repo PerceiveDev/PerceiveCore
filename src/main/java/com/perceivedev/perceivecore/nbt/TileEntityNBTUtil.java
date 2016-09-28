@@ -46,7 +46,7 @@ public class TileEntityNBTUtil {
             error = true;
         }
 
-        ReflectionUtil.ReflectResponse<Method> tileEntityMethod = ReflectionUtil.getMethod(CRAFT_BLOCK_STATE_CLASS, new MethodPredicate<>()
+        ReflectionUtil.ReflectResponse<Method> tileEntityMethod = ReflectionUtil.getMethod(CRAFT_BLOCK_STATE_CLASS, new MethodPredicate()
                   .withName("getTileEntity").withParameters());
 
         if (!tileEntityMethod.isValuePresent()) {
