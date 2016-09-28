@@ -1,13 +1,13 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.OBC;
+
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
-import com.perceivedev.perceivecore.util.ReflectionUtil;
-import com.perceivedev.perceivecore.util.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.util.ReflectionUtil.Modifier;
-
-import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.OBC;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.Modifier;
 
 /**
  * A Util to save NBT data to ItemStacks

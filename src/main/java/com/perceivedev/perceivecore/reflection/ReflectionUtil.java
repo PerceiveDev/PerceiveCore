@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -19,8 +19,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse.ResultType;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
 /**
  * Provides utility methods for reflection
@@ -32,10 +33,10 @@ public class ReflectionUtil {
     // ==== INIT SERVER VERSION ====
 
     static {
-        // String name = Bukkit.getServer().getClass().getName();
-        String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
-        name = name.substring(name.indexOf("craftbukkit.") + "craftbukkit.".length());
-        name = name.substring(0, name.indexOf("."));
+        String name = Bukkit.getServer().getClass().getName();
+//        String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
+        String[] split = name.split("\\.");
+        name = split[split.length];
 
         SERVER_VERSION = name;
     }
@@ -127,6 +128,32 @@ public class ReflectionUtil {
             throw new IllegalArgumentException("Identifier unknown '" + nameWithIdentifier + "'");
         }
         return getClass(fromIdentifier.get(), nameWithIdentifier);
+    }
+    
+    /**
+     * Gets a {@link ReflectedClass} from the object
+     * 
+     * @param object the object
+     * @return the ReflectedClass, this will be null if the object is null
+     */
+    public static <T> ReflectedClass<T> $(T object) {
+        Objects.requireNonNull(object);
+        return new ReflectedClass<T>(object);
+    }
+
+    /**
+     * Alias of {@link #getClass(String)}
+     * 
+     * @param className the class name
+     * @return the optional class
+     */
+    public static Optional<Class<?>> $(String className) {
+        return getClass(className);
+    }
+    
+    public static PlayerWrapper $(Player player) {
+        Objects.requireNonNull(player);
+        return new PlayerWrapper(player);
     }
 
     /**
@@ -318,6 +345,27 @@ public class ReflectionUtil {
         }
 
         return setFieldValue(field.getValue(), handle, value);
+    }
+    
+    /**
+     * Sets the value of a field
+     *
+     * @param selector The name of the field
+     * @param clazz The clazz get the field from
+     * @param handle The handle to set it for
+     * @param value The value to set it to
+     *
+     * @return The result if setting it. Will just be SUCCESSFUL but not have a
+     * value.
+     *
+     * @throws NullPointerException if clazz or selector is null
+     * @see #setFieldValue(Field, Object, Object)
+     */
+    public static ReflectResponse<Void> setFieldValue(String selector, Class<?> clazz, Object handle, Object value) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(selector);
+
+        return setFieldValue(clazz, new MemberPredicate<Field>().withName(selector), handle, value);
     }
 
     // ==== METHODS ====

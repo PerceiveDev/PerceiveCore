@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.NMS;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -15,11 +17,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import com.perceivedev.perceivecore.util.ReflectionUtil;
-import com.perceivedev.perceivecore.util.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse;
-
-import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.NMS;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
 /**
  * Provides wrapper objects to abstract the NBT versions. Probably way too complicated...

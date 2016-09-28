@@ -1,5 +1,8 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.NMS;
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.OBC;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map.Entry;
@@ -12,10 +15,7 @@ import org.bukkit.entity.EntityType;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
-import com.perceivedev.perceivecore.util.ReflectionUtil;
-
-import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.NMS;
-import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.OBC;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 
 /**
  * A utility to modify Entities NBT-tags. Uses reflection and scans through all methods to find the right ones,

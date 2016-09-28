@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.NMS;
+
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -7,12 +9,10 @@ import org.bukkit.Bukkit;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
-import com.perceivedev.perceivecore.util.ReflectionUtil;
-import com.perceivedev.perceivecore.util.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse;
-import com.perceivedev.perceivecore.util.ReflectionUtil.ReflectResponse.ResultType;
-
-import static com.perceivedev.perceivecore.util.ReflectionUtil.NameSpace.NMS;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
 /**
  * A wrapper for the MojangsonParser used for parsing NBT
