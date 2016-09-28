@@ -5,6 +5,8 @@ package com.perceivedev.perceivecore.reflection;
 
 import org.bukkit.entity.Player;
 
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
+
 /**
  * @author Rayzr
  *
@@ -16,8 +18,17 @@ public class PlayerWrapper extends ReflectedClass<Player> {
 
     }
 
+    /**
+     * Gets the NMS player
+     * 
+     * @return a new NMSPlayerWrapper
+     */
     public NMSPlayerWrapper getHandle() {
-        return new NMSPlayerWrapper(this);
+        ReflectResponse<Object> nmsPlayer = getMethod("getHandle").invoke();
+        if (!nmsPlayer.isSuccessful() || !nmsPlayer.isValuePresent()) {
+            return null;
+        }
+        return new NMSPlayerWrapper(nmsPlayer);
     }
 
     /**
