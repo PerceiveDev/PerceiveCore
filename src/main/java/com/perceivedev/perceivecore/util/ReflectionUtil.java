@@ -196,7 +196,7 @@ public class ReflectionUtil {
      * @return The fields of the class
      */
     private static Stream<Field> getFields(Class<?> clazz) {
-        return Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields()));
+        return Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields())).distinct();
     }
 
     /**
@@ -226,16 +226,16 @@ public class ReflectionUtil {
     /**
      * Returns the value of a field
      *
+     * @param name The name of the field
      * @param clazz The clazz get the Field from
      * @param handle The handle to get it for
-     * @param name The name of the field
      *
      * @return The value of the field.
      *
      * @throws NullPointerException if clazz or selector is null
      * @see #getFieldValue(Class, Object, Predicate)
      */
-    public static ReflectResponse<Object> getFieldValue(Class<?> clazz, Object handle, String name) {
+    public static ReflectResponse<Object> getFieldValue(String name, Class<?> clazz, Object handle) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(name);
 
@@ -469,7 +469,7 @@ public class ReflectionUtil {
      * @return All the methods in the class.
      */
     private static Stream<Method> getMethods(Class<?> clazz) {
-        return Stream.concat(Arrays.stream(clazz.getMethods()), Arrays.stream(clazz.getDeclaredMethods()));
+        return Stream.concat(Arrays.stream(clazz.getMethods()), Arrays.stream(clazz.getDeclaredMethods())).distinct();
     }
 
     // ==== CONSTRUCTORS ====
@@ -592,7 +592,7 @@ public class ReflectionUtil {
      */
     private static Stream<Constructor<?>> getAllConstructors(Class<?> clazz) {
         return Stream.concat(Arrays.stream(clazz.getConstructors()),
-                  Arrays.stream(clazz.getDeclaredConstructors()));
+                  Arrays.stream(clazz.getDeclaredConstructors())).distinct();
     }
 
     // ==== ENUMS ====
