@@ -24,7 +24,7 @@
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
 			<version>1.10.2-R0.1-SNAPSHOT</version>
-			<!-- <scope>provided</scope> -->
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
