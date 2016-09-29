@@ -13,3 +13,5 @@
 META-INF
 out/
 *.jar
+
+*.log

@@ -33,10 +33,10 @@ public class ReflectionUtil {
     // ==== INIT SERVER VERSION ====
 
     static {
-        String name = Bukkit.getServer().getClass().getName();
-//        String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
+        String name = Bukkit.getServer() == null ? "org.bukkit.craftbukkit.v1_10_R1" : Bukkit.getServer().getClass().getPackage().getName();
+        // String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
         String[] split = name.split("\\.");
-        name = split[split.length];
+        name = split[split.length - 1];
 
         SERVER_VERSION = name;
     }
@@ -94,7 +94,7 @@ public class ReflectionUtil {
      *
      * @param nameSpace The {@link NameSpace} of the class
      * @param qualifiedName The qualified name of the class inside the
-     * {@link NameSpace}
+     *            {@link NameSpace}
      *
      * @return The Class, if found
      *
@@ -112,13 +112,14 @@ public class ReflectionUtil {
      * Returns the class with the given name in the given package
      *
      * @param nameWithIdentifier The qualified name of the class inside the
-     * {@link NameSpace}, prefixed with the {@link NameSpace}
-     * identifier.
+     *            {@link NameSpace}, prefixed with the {@link NameSpace}
+     *            identifier.
      *
      * @return The Class, if found
      *
      * @throws NullPointerException if nameWithIdentifier is null
-     * @see #getClass(NameSpace, String) #getClass(NameSpace, String) with the resolved NameSpace and name
+     * @see #getClass(NameSpace, String) #getClass(NameSpace, String) with the
+     *      resolved NameSpace and name
      */
     public static Optional<Class<?>> getClass(String nameWithIdentifier) {
         Objects.requireNonNull(nameWithIdentifier);
@@ -129,7 +130,7 @@ public class ReflectionUtil {
         }
         return getClass(fromIdentifier.get(), nameWithIdentifier);
     }
-    
+
     /**
      * Gets a {@link ReflectedClass} from the object
      * 
@@ -150,7 +151,7 @@ public class ReflectionUtil {
     public static Optional<Class<?>> $(String className) {
         return getClass(className);
     }
-    
+
     public static PlayerWrapper $(Player player) {
         Objects.requireNonNull(player);
         return new PlayerWrapper(player);
@@ -198,12 +199,14 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns ALL fields (public -> private) of a class, filtered by the given Predicate.
+     * Returns ALL fields (public -> private) of a class, filtered by the given
+     * Predicate.
      *
      * @param clazz The Class to get the fields for
      * @param predicate The Predicate to use to filter the fields
      *
-     * @return The fields of the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     * @return The fields of the class. No {@link ReflectResponse}, as the only
+     *         error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -211,8 +214,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(predicate);
 
-        return getFields(clazz)
-                  .filter(predicate);
+        return getFields(clazz).filter(predicate);
     }
 
     /**
@@ -302,7 +304,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if field is null
      */
@@ -330,7 +332,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if clazz or selector is null
      * @see #setFieldValue(Field, Object, Object)
@@ -346,7 +348,7 @@ public class ReflectionUtil {
 
         return setFieldValue(field.getValue(), handle, value);
     }
-    
+
     /**
      * Sets the value of a field
      *
@@ -356,7 +358,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if clazz or selector is null
      * @see #setFieldValue(Field, Object, Object)
@@ -470,7 +472,8 @@ public class ReflectionUtil {
      *
      * @param handle The class to get the method from
      * @param name The name of the method.
-     * @param parameterClasses The classes of the parameters. Empty array for none, {@code null} is <b>NOT</b> permitted.
+     * @param parameterClasses The classes of the parameters. Empty array for
+     *            none, {@code null} is <b>NOT</b> permitted.
      * @param params The parameters of the method
      *
      * @return The result of invoking the method.
@@ -484,20 +487,18 @@ public class ReflectionUtil {
         Objects.requireNonNull(parameterClasses);
         Objects.requireNonNull(params);
 
-        return invokeMethod(handle.getClass(),
-                  new MethodPredicate()
-                            .withParameters(parameterClasses)
-                            .withName(name),
-                  params);
+        return invokeMethod(handle.getClass(), new MethodPredicate().withParameters(parameterClasses).withName(name), params);
     }
 
     /**
-     * Returns all methods (public -> private) from the class, filtered by the given predicate
+     * Returns all methods (public -> private) from the class, filtered by the
+     * given predicate
      *
      * @param clazz The Class to get the methods from
      * @param predicate The predicate to use to filter
      *
-     * @return All the methods in the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     * @return All the methods in the class. No {@link ReflectResponse}, as the
+     *         only error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -505,8 +506,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(predicate);
 
-        return getMethods(clazz)
-                  .filter(predicate);
+        return getMethods(clazz).filter(predicate);
     }
 
     /**
@@ -614,12 +614,14 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all constructors (public -> private) from the class, filtered by the given predicate
+     * Returns all constructors (public -> private) from the class, filtered by
+     * the given predicate
      *
      * @param clazz The class to get the constructors from
      * @param predicate The predicate to use to filter
      *
-     * @return All the constructors in the class. No {@link ReflectResponse}, as the only error that can occur is a SecurityException.
+     * @return All the constructors in the class. No {@link ReflectResponse}, as
+     *         the only error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -627,8 +629,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(predicate);
 
-        return getAllConstructors(clazz)
-                  .filter(predicate);
+        return getAllConstructors(clazz).filter(predicate);
     }
 
     /**
@@ -639,8 +640,7 @@ public class ReflectionUtil {
      * @return All the {@link Constructor}s of that class
      */
     private static Stream<Constructor<?>> getAllConstructors(Class<?> clazz) {
-        return Stream.concat(Arrays.stream(clazz.getConstructors()),
-                  Arrays.stream(clazz.getDeclaredConstructors())).distinct();
+        return Stream.concat(Arrays.stream(clazz.getConstructors()), Arrays.stream(clazz.getDeclaredConstructors())).distinct();
     }
 
     // ==== ENUMS ====
@@ -661,10 +661,7 @@ public class ReflectionUtil {
             throw new IllegalArgumentException("The class is no enum: " + clazz.getName());
         }
 
-        Optional<? extends Enum<?>> anEnum = Arrays.stream(clazz.getEnumConstants())
-                  .map(o -> (Enum<?>) o)
-                  .filter(predicate)
-                  .findFirst();
+        Optional<? extends Enum<?>> anEnum = Arrays.stream(clazz.getEnumConstants()).map(o -> (Enum<?>) o).filter(predicate).findFirst();
 
         if (!anEnum.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -759,7 +756,7 @@ public class ReflectionUtil {
          * Returns the {@link NameSpace} which contains the identifier
          *
          * @param input The input string, containing the identifier (and what
-         * else it wants)
+         *            else it wants)
          *
          * @return The NameSpace which has this identifier
          */
@@ -850,7 +847,7 @@ public class ReflectionUtil {
          * Returns the thrown exception
          *
          * @return The exception. Only set if {@link #getResultType()} is
-         * {@link ResultType#ERROR}
+         *         {@link ResultType#ERROR}
          */
         public Throwable getException() {
             return exception;
@@ -900,15 +897,16 @@ public class ReflectionUtil {
 
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
-        private String name;
+        private String               name;
         private Collection<Modifier> modifiers       = Collections.emptyList();
         private Collection<Modifier> withoutModifier = Collections.emptyList();
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
-         * @param withoutModifier The modifiers it must not have. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for
+         *            don't check
          */
         public MemberPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier) {
             this.name = name;
@@ -977,7 +975,7 @@ public class ReflectionUtil {
          * Sets the name of the method
          *
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          *
          * @return This predicate
          */
@@ -1011,9 +1009,10 @@ public class ReflectionUtil {
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
-         * @param withoutModifier The modifiers it must not have. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for
+         *            don't check
          * @param parameters The parameters. Null for don't check
          */
         public ExecutablePredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?>[] parameters) {
@@ -1091,9 +1090,10 @@ public class ReflectionUtil {
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
-         * @param withoutModifier The modifiers it must not have. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for
+         *            don't check
          * @param parameters The parameters. Null for don't check
          * @param returnType The return type. Null for don't check
          */
@@ -1201,9 +1201,7 @@ public class ReflectionUtil {
 
         @Override
         public String toString() {
-            return "Modifier{" +
-                      "bitMask=" + bitMask
-                      + '}';
+            return "Modifier{" + "bitMask=" + bitMask + '}';
         }
     }
 }
