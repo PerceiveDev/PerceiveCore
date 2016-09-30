@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.time;
 
+import static com.perceivedev.perceivecore.AssertUtil.assertThrows;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -80,21 +82,6 @@ public class DurationParserTest {
         } while (ThreadLocalRandom.current().nextInt(10) < 8);
 
         return new Object[] { expression.toString(), number };
-    }
-
-    private void assertThrows(Runnable runnable, Class<? extends Throwable> exception) {
-        boolean threw = false;
-        try {
-            runnable.run();
-        } catch (Throwable e) {
-            if (e.getClass() != exception) {
-                throw new RuntimeException("Threw " + e.getClass().getName() + " exception: " + exception.getName(), e);
-            }
-            threw = true;
-        }
-        if (!threw) {
-            throw new RuntimeException("Didn't throw any exception, expected: " + exception.getName());
-        }
     }
 
 }

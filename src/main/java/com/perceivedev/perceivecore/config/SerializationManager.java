@@ -41,6 +41,12 @@ public class SerializationManager {
         RAW_INSERTABLE_CLASSES.add(Float.class);
         RAW_INSERTABLE_CLASSES.add(Short.class);
         RAW_INSERTABLE_CLASSES.add(Byte.class);
+        RAW_INSERTABLE_CLASSES.add(Long.TYPE);
+        RAW_INSERTABLE_CLASSES.add(Integer.TYPE);
+        RAW_INSERTABLE_CLASSES.add(Double.TYPE);
+        RAW_INSERTABLE_CLASSES.add(Float.TYPE);
+        RAW_INSERTABLE_CLASSES.add(Short.TYPE);
+        RAW_INSERTABLE_CLASSES.add(Byte.TYPE);
     }
 
     private static Map<Class<?>, SerializationProxy<?>> serializationProxyMap = new HashMap<>();
@@ -60,6 +66,15 @@ public class SerializationManager {
      */
     public static <T> void addSerializationProxy(Class<T> clazz, SerializationProxy<T> proxy) {
         serializationProxyMap.put(clazz, proxy);
+    }
+
+    /**
+     * Removes a proxy for a class
+     *
+     * @param clazz The clazz to remove the proxy for
+     */
+    public static void removeSerializationProxy(Class<?> clazz) {
+        serializationProxyMap.remove(clazz);
     }
 
     /**
@@ -153,17 +168,21 @@ public class SerializationManager {
      * @param depth The recursion depth
      * @param <T> The type of the class to deserialize
      *
-     * @return The deserialized class
+     * @return The deserialized class or null if any other error occurred
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     *             field
+     * field
      */
     private <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
             throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
         }
 
+        // TODO: 30.09.2016 Throw an exception here? 
+        if (!hasDefaultConstructor(clazz)) {
+            return null;
+        }
         T instance = instantiate(clazz);
         if (instance == null) {
             return null;
@@ -323,6 +342,22 @@ public class SerializationManager {
     }
 
     /**
+     * Checks if the class has a default constructor
+     *
+     * @param clazz The class to check
+     *
+     * @return True if the class has a default constructor
+     */
+    private static boolean hasDefaultConstructor(Class<?> clazz) {
+        try {
+            clazz.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Instantiates an object
      *
      * @param clazz The class to instantiate
@@ -417,6 +452,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .collect(Collectors.toList());
+                  .collect(Collectors.toList());
     }
 }
