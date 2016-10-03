@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guisystem;
+package com.perceivedev.perceivecore.guisystem.implementation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import com.perceivedev.perceivecore.guisystem.component.Component;
+import com.perceivedev.perceivecore.guisystem.component.Pane;
+import com.perceivedev.perceivecore.guisystem.util.Dimension;
+
 /**
  * A Skeleton implementation for the {@link Pane} class
  */
@@ -23,6 +27,25 @@ public abstract class AbstractPane implements Pane {
     private List<Component> components;
     private Dimension       size;
     private InventoryMap    inventoryMap;
+
+    /**
+     * The offset of this pane in the inventory. Needed to fetch the right component in onClick. 0 until this pane is rendered.
+     * <p>
+     * If a child overwrites {@link #render(Inventory, Player, int, int)}, without calling super, it must set these himself.
+     * <p>
+     * <br>
+     * The x offset
+     */
+    protected int renderedXOffset;
+    /**
+     * The offset of this pane in the inventory. Needed to fetch the right component in onClick. 0 until this pane is rendered.
+     * <p>
+     * If a child overwrites {@link #render(Inventory, Player, int, int)}, without calling super, it must set these himself.
+     * <p>
+     * <br>
+     * The y offset
+     */
+    protected int renderedYOffset;
 
     /**
      * Creates a pane with the given components
@@ -90,11 +113,11 @@ public abstract class AbstractPane implements Pane {
     }
 
     /**
-     * Adds a component
+     * Adds a component. You can't add the same pane twice.
      * <p>
      * <b><i>Must update the {@link #getInventoryMap()} itself</i></b>
      *
-     * @param component The component to add
+     * @param component The component to add. You can't add the same component twice.
      *
      * @return True if the component was added
      */
@@ -106,6 +129,7 @@ public abstract class AbstractPane implements Pane {
         if (!containsComponent(component)) {
             return;
         }
+
         components.remove(component);
         getInventoryMap().removeComponent(component);
     }
@@ -113,8 +137,16 @@ public abstract class AbstractPane implements Pane {
     @Override
     public void onClick(InventoryClickEvent event) {
         int slot = event.getSlot();
-        int x = slotToGrid(slot)[0];
-        int y = slotToGrid(slot)[1];
+
+        // clicked outside the inventory. Constant is '-111' currently.
+        if (slot < 0) {
+            event.setCancelled(true);
+            return;
+        }
+
+        int invSize = event.getInventory().getSize();
+        int x = slotToGrid(invSize, slot)[0] - renderedXOffset;
+        int y = slotToGrid(invSize, slot)[1] - renderedYOffset;
         Optional<Component> component = inventoryMap.getComponent(x, y);
         if (component.isPresent()) {
             component.get().onClick(event);
@@ -122,11 +154,34 @@ public abstract class AbstractPane implements Pane {
     }
 
     @Override
-    public void render(Inventory inventory, Player player) {
+    public void render(Inventory inventory, Player player, int x, int y) {
+        renderedXOffset = x;
+        renderedYOffset = y;
         for (Entry<Interval, Component> entry : getInventoryMap().getComponentMap().entrySet()) {
-            // render all components
-            entry.getValue().render(inventory, player, entry.getKey().getMinX(), entry.getKey().getMinY());
+            if (fitsInside(inventory, renderedXOffset, renderedYOffset, entry.getKey())) {
+                // render the components
+                entry.getValue().render(inventory, player, x + entry.getKey().getMinX(), y + entry.getKey().getMinY());
+            } else {
+                System.err.println("A component couldn't be rendered. Check your bounds and offsets!");
+            }
         }
+    }
+
+    private boolean fitsInside(Inventory inventory, int xOffset, int yOffset, Interval interval) {
+        int inventoryWidth = inventory.getSize() % 9 == 0 ? 9 : inventory.getSize();
+        int inventoryHeight = inventory.getSize() / inventoryWidth;
+
+        // if the item is out of x bounds (>= and the > as the max is exclusive)
+        if ((interval.getMinX() + xOffset) >= inventoryWidth
+                  || (interval.getMaxX() + xOffset) > inventoryWidth) {
+            return false;
+        }
+
+        // out of y bounds (>= and the > as the max is exclusive)
+        return !(
+                  ((interval.getMinY() + yOffset) >= inventoryHeight)
+                            || ((interval.getMaxY() + yOffset) > inventoryHeight)
+        );
     }
 
     /**
@@ -146,6 +201,35 @@ public abstract class AbstractPane implements Pane {
     protected InventoryMap getInventoryMap() {
         return inventoryMap;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof AbstractPane))
+            return false;
+        AbstractPane that = (AbstractPane) o;
+        return Objects.equals(components, that.components) &&
+                  Objects.equals(size, that.size) &&
+                  Objects.equals(inventoryMap, that.inventoryMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(components, size, inventoryMap);
+    }
+
+    //<editor-fold desc="Utility Classes">
+    /* *************************************************************************
+     *                                                                         *
+     *                           Utility Classes                               *
+     *                                                                         *
+     **************************************************************************/
+
+    //<editor-fold desc="Interval">
+    /* *************************************************************************
+     *                               Interval
+     ***************************************************************************/
 
     /**
      * An Interval
@@ -213,6 +297,16 @@ public abstract class AbstractPane implements Pane {
         }
 
         @Override
+        public String toString() {
+            return "Interval{" +
+                      "minX=" + minX +
+                      ", maxX=" + maxX +
+                      ", minY=" + minY +
+                      ", maxY=" + maxY +
+                      '}';
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o)
                 return true;
@@ -230,6 +324,12 @@ public abstract class AbstractPane implements Pane {
             return Objects.hash(minX, maxX, minY, maxY);
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Inventory Map">
+    /* *************************************************************************
+     *                             Inventory Map
+     ***************************************************************************/
 
     /**
      * Maps components to their coordinates
@@ -340,7 +440,9 @@ public abstract class AbstractPane implements Pane {
             if (!componentEntry.isPresent()) {
                 return;
             }
-
+            componentMap.remove(componentEntry.get());
+            
+            
             // free up the space
             fillInterval(componentEntry.get(), false);
         }
@@ -527,4 +629,6 @@ public abstract class AbstractPane implements Pane {
             }
         }
     }
+    //</editor-fold>
+    //</editor-fold>
 }

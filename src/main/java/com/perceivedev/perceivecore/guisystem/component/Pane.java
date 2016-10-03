@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guisystem;
+package com.perceivedev.perceivecore.guisystem.component;
 
 import java.util.Collection;
 
@@ -6,16 +6,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import com.perceivedev.perceivecore.guisystem.util.Dimension;
+
 /**
  * A Pane to add Components to
  */
-public interface Pane {
+public interface Pane extends Component {
 
     /**
      * Reacts to a click
      *
      * @param event The event. Distributes it to the place it belongs.
      */
+    @Override
     void onClick(InventoryClickEvent event);
 
     /**
@@ -48,6 +51,7 @@ public interface Pane {
      *
      * @return The size of this pane
      */
+    @Override
     Dimension getSize();
 
     /**
@@ -57,36 +61,6 @@ public interface Pane {
      */
     Collection<Component> getChildrenUnmodifiable();
 
-    /**
-     * Renders the components in an inventory
-     *
-     * @param inventory The inventory to modify
-     * @param player The player to render for
-     */
-    void render(Inventory inventory, Player player);
-
-    /**
-     * Converts a slot to a grid value
-     *
-     * @param slot The slot
-     *
-     * @return The x (0) and y (1) coordinate
-     */
-    default int[] slotToGrid(int slot) {
-        int y = slot / getSize().getWidth();
-        int x = slot % getSize().getWidth();
-        return new int[] { x, y };
-    }
-
-    /**
-     * Converts a grid value to a slot
-     *
-     * @param x The x coordinate
-     * @param y The y coordinate
-     *
-     * @return The resulting slot index
-     */
-    default int gridToSlot(int x, int y) {
-        return getSize().getWidth() * y + x;
-    }
+    @Override
+    void render(Inventory inventory, Player player, int x, int y);
 }

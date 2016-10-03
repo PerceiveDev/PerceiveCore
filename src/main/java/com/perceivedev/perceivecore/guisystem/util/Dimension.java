@@ -1,6 +1,8 @@
-package com.perceivedev.perceivecore.guisystem;
+package com.perceivedev.perceivecore.guisystem.util;
 
 import java.util.Objects;
+
+import com.perceivedev.perceivecore.guisystem.component.Component;
 
 /**
  * The dimension of a {@link Component}
@@ -48,7 +50,7 @@ public class Dimension {
      * @return True if this dimension fits in the given one
      */
     public boolean fitsInside(Dimension dimension) {
-        return width < dimension.getWidth() && height < dimension.getHeight();
+        return width <= dimension.getWidth() && height <= dimension.getHeight();
     }
 
     /**
