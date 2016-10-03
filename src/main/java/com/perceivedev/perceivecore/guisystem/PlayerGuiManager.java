@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
 
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,127 +19,289 @@ import com.perceivedev.perceivecore.PerceiveCore;
  */
 public class PlayerGuiManager implements Listener {
 
-    private Map<UUID, Stack<Stage>> stageMap = new HashMap<>();
+    private Map<UUID, PlayerStages> stageMap = new HashMap<>();
 
     /**
-     * Adds the stage and opens it.
+     * Adds a Stage
      *
-     * @param uuid The UUID of the player
-     * @param stage The stage to add. Will be added at the front.
+     * @param uuid The {@link UUID} of the player
+     * @param stage The Stage to add
      */
     public void addStage(UUID uuid, Stage stage) {
-        Stack<Stage> stages = stageMap.getOrDefault(uuid, new Stack<>());
-        stages.add(stage);
+        PlayerStages stages = stageMap.getOrDefault(uuid, new PlayerStages());
+        stages.addStage(stage);
+        
         stageMap.put(uuid, stages);
 
-        // inject GuiManager reference
         stage.setGuiManager(this);
-
-        stage.open();
     }
 
     /**
-     * Removes and then closes the current foremost stage for the given Player
-     * <p>
-     * Without removing it, closing wouldn't really work. Just re-add it if you need it later again
+     * Removes the stage (and closes it)
      *
-     * @param uuid The UUID of the player
+     * @param uuid The {@link UUID} of the player
+     * @param stage The Stage to remove
      */
-    public void removeOpenGui(UUID uuid) {
-        if (!containsAStage(uuid)) {
+    public void removeStage(UUID uuid, Stage stage) {
+        if (!containsStageForPlayer(uuid)) {
             return;
         }
-        Stack<Stage> stages = stageMap.get(uuid);
-        stages.pop().close();
-
-        if (stages.isEmpty()) {
-            stageMap.remove(uuid);
-        }
+        stageMap.get(uuid).removeStage(stage);
     }
 
     /**
-     * Moves a Stage to the front.
-     * <p>
-     * <u><b>Only if it is already added.</b></u>
+     * Removes the currently opened stage (and closes it)
      *
-     * @param uuid The UUID of the player
-     * @param stage The Stage to move to the front
+     * @param uuid The {@link UUID} of the player
+     *
+     * @see #removeStage(UUID, Stage)
+     */
+    public void removeOpenedStage(UUID uuid) {
+        if (!containsStageForPlayer(uuid)) {
+            return;
+        }
+        stageMap.get(uuid).removeOpenedStage();
+    }
+
+    /**
+     * Brings the stage to the front. Won't open it though.
+     *
+     * @param uuid The {@link UUID} of the player
+     * @param stage The Stage to bring to the front
      */
     public void bringStageToFront(UUID uuid, Stage stage) {
-        if (!containsAStage(uuid)) {
+        if (!containsStageForPlayer(uuid)) {
             return;
         }
-
-        Stack<Stage> stages = stageMap.get(uuid);
-        if (!stages.contains(stage)) {
-            return;
-        }
-
-        Optional<Stage> openedStage = getOpenedStage(uuid);
-        // this contradicts the containsAStage method call at the top, so the suppress is okay
-        //noinspection OptionalGetWithoutIsPresent
-        Stage opened = openedStage.get();
-
-        // removes the opened gui
-        removeOpenGui(uuid);
-
-        // re-add it, but without opening
-        stages.add(opened);
-
-        // remove the to-be-front stage
-        stages.remove(stage);
-
-        // re-add it (now at the top)
-        stages.add(stage);
-
-        stage.open();
+        stageMap.get(uuid).bringToFront(stage);
     }
 
     /**
-     * Checks if the UUID is in the manager and at least one stage is added
+     * Opens the first Stage
      *
-     * @param uuid The UUID to check
-     *
-     * @return True if the UUID is in this manager and at least one stage is added
+     * @param uuid The {@link UUID} of the player
      */
-    private boolean containsAStage(UUID uuid) {
+    public void openFirstStage(UUID uuid) {
+        if (!containsStageForPlayer(uuid)) {
+            return;
+        }
+        stageMap.get(uuid).openFirstStage(false);
+    }
+
+    /**
+     * Returns the opened stage
+     *
+     * @param uuid The {@link UUID} of the player
+     *
+     * @return The opened Stage.
+     */
+    public Optional<Stage> getOpenedStage(UUID uuid) {
+        if (!hasStageOpened(uuid)) {
+            return Optional.empty();
+        }
+        return stageMap.get(uuid).getOpenedStage();
+    }
+
+    /**
+     * Checks if the Player has a Stage opened
+     *
+     * @param uuid The {@link UUID} of the player
+     *
+     * @return True if the Player has a Stage open
+     */
+    public boolean hasStageOpened(UUID uuid) {
+        return containsStageForPlayer(uuid) && stageMap.get(uuid).getOpenedStage().isPresent();
+    }
+
+    /**
+     * Checks if the given player has a Stage in this Manager
+     *
+     * @param uuid The {@link UUID} of the player
+     *
+     * @return True if there is a Stage for the given player
+     */
+    public boolean containsStageForPlayer(UUID uuid) {
         return stageMap.containsKey(uuid) && !stageMap.get(uuid).isEmpty();
     }
 
     /**
-     * Checks if the UUID is in the manager and at least one stage is added
+     * Reacts to the closing of a Stage
      *
-     * @param humanEntity The {@link HumanEntity} to check
-     *
-     * @return True if the UUID is in this manager and at least one stage is added
+     * @param uuid The {@link UUID} of the player
      */
-    private boolean containsAStage(HumanEntity humanEntity) {
-        return containsAStage(humanEntity.getUniqueId());
-    }
-
-    /**
-     * Returns the opened stage for a player
-     *
-     * @param uuid The UUID of the player
-     *
-     * @return The opened stage
-     */
-    public Optional<Stage> getOpenedStage(UUID uuid) {
-        if (!containsAStage(uuid)) {
-            return Optional.empty();
+    private void reactToClosing(UUID uuid) {
+        if (!hasStageOpened(uuid)) {
+            return;
         }
-        return Optional.ofNullable(stageMap.get(uuid).peek());
+        stageMap.get(uuid).reactToClosing();
     }
 
-    /**
-     * Closes and removes all stages for the current player
-     *
-     * @param uuid The UUID of the player
-     */
-    public void removePlayer(UUID uuid) {
-        removeOpenGui(uuid);
-        stageMap.remove(uuid);
+    //<editor-fold desc="Helper Classes">
+
+    /***************************************************************************
+     *                                                                         *
+     *                            Helper Classes                               *
+     *                                                                         *
+     **************************************************************************/
+
+    private static class PlayerStages {
+        private Stack<Stage> stages = new Stack<>();
+        private Stage openedStage;
+
+        /**
+         * Returns the opened stage
+         *
+         * @return The opened Stage.
+         */
+        private Optional<Stage> getOpenedStage() {
+            return Optional.ofNullable(openedStage);
+        }
+
+        /**
+         * Checks if the Stage is contained in this Object
+         *
+         * @param stage The Stage
+         *
+         * @return True if the stage is in this manager
+         */
+        private boolean containsStage(Stage stage) {
+            return stages.contains(stage);
+        }
+
+        /**
+         * The stage to add
+         *
+         * @param stage Adds this stage
+         */
+        public void addStage(Stage stage) {
+            if (containsStage(stage)) {
+                return;
+            }
+            stages.add(stage);
+        }
+
+        /**
+         * Removes the stage (and closes it)
+         *
+         * @param stage The Stage to remove
+         */
+        public void removeStage(Stage stage) {
+            stages.remove(stage);
+
+            if (openedStage.equals(stage)) {
+                closeCurrentStage();
+            }
+        }
+
+        /**
+         * Removes the currently opened stage (and closes it)
+         *
+         * @see #removeStage(Stage)
+         */
+        public void removeOpenedStage() {
+            if (openedStage == null) {
+                return;
+            }
+            removeStage(openedStage);
+        }
+
+        /**
+         * Checks if there are no stages
+         *
+         * @return True if this is empty
+         */
+        private boolean isEmpty() {
+            return stages.isEmpty();
+        }
+
+        /**
+         * Opens this stage
+         *
+         * @param stage The stage to open
+         */
+        private void openStage(Stage stage) {
+            openedStage = stage;
+            stage.open();
+        }
+
+        /**
+         * Opens the first Stage
+         */
+        private void openFirstStage(boolean delay) {
+            if (isEmpty()) {
+                return;
+            }
+            if (delay) {
+                openLater(stages.peek());
+            } else {
+                openStage(stages.peek());
+            }
+        }
+
+        /**
+         * Brings the stage to the front. Won't open it though.
+         *
+         * @param stage The Stage to bring to the front
+         */
+        private void bringToFront(Stage stage) {
+            if (!containsStage(stage)) {
+                return;
+            }
+
+            Stage first = stages.pop();
+            stages.add(first);
+
+            if (first.equals(stage)) {
+                return;
+            }
+
+            stages.add(stage);
+        }
+
+        /**
+         * Closes the currently opened stage
+         */
+        private void closeCurrentStage() {
+            if (openedStage == null) {
+                return;
+            }
+            Stage opened = openedStage;
+            openedStage = null;
+            opened.close();
+        }
+
+        /**
+         * Reacts to the closing of a Stage
+         */
+        private void reactToClosing() {
+            if (openedStage == null) {
+                // What was this??
+                return;
+            }
+            if (openedStage.isClosable()) {
+                removeStage(openedStage);
+                openFirstStage(true);
+            } else if (stages.peek().equals(openedStage)) {
+                // it is still the first stage, so the user closed it. If this is false, it was swapped.
+                openLater(openedStage);
+            }
+        }
+
+        /**
+         * Opens the stage after a few ticks.
+         *
+         * @param stage The stage to open
+         */
+        private void openLater(Stage stage) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    openStage(stage);
+                }
+            }.runTaskLater(PerceiveCore.getInstance(), 2L);
+        }
     }
+    //</editor-fold>
 
     //<editor-fold desc="Listeners">
 
@@ -152,35 +313,23 @@ public class PlayerGuiManager implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        UUID uuid = event.getWhoClicked().getUniqueId();
         // check if the player has a GUI open
-        if (!containsAStage(event.getWhoClicked())) {
+        if (!hasStageOpened(uuid)) {
             return;
         }
-        Stage stage = stageMap.get(event.getWhoClicked().getUniqueId()).get(0);
-        stage.onClick(event);
+        Optional<Stage> openedStage = stageMap.get(uuid).getOpenedStage();
+        openedStage.ifPresent(stage -> stage.onClick(event));
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
         // check if the player has a GUI open
-        if (!containsAStage(event.getPlayer())) {
+        if (!hasStageOpened(uuid)) {
             return;
         }
-        Stage stage = stageMap.get(event.getPlayer().getUniqueId()).peek();
-
-        // he closed it, remove it from the Gui stack to remove it code wise
-        if (stage.isClosable()) {
-            removeOpenGui(event.getPlayer().getUniqueId());
-            return;
-        }
-
-        // run it later as you can't open the inventory in the same tick. You must wait one or it won't work.
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                stage.open();
-            }
-        }.runTaskLater(PerceiveCore.getInstance(), 1L);
+        reactToClosing(uuid);
     }
     //</editor-fold>
 

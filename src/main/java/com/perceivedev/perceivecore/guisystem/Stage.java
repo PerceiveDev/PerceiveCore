@@ -91,10 +91,11 @@ public class Stage {
         // okay, try to swap it while visible
 
         // remove as the onClose event will either cancel the close or remove it itself.
-        getGuiManager().removeOpenGui(playerID);
+        getGuiManager().removeOpenedStage(playerID);
 
         // re-add it and show it
         getGuiManager().addStage(playerID, this);
+        getGuiManager().openFirstStage(playerID);
     }
 
     /**

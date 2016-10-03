@@ -3,6 +3,7 @@ package com.perceivedev.perceivecore.guisystem;
 import static com.perceivedev.perceivecore.util.TextUtils.colorize;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,8 +45,15 @@ public class TestListener implements Listener {
         Pane pane1 = constructGridPane(1, playerGuiManager, event.getPlayer());
 
         Scene scene = new Scene(pane1, Bukkit.createInventory(null, 9 * 6));
-        Stage stage = new Stage(scene, event.getPlayer().getUniqueId());
-        stage.setClosable(true);
+        Stage stage = new Stage(scene, event.getPlayer().getUniqueId(), true);
+
+        Stage stageTwo = new Stage(
+                  new Scene(
+                            constructPane(1, playerGuiManager, event.getPlayer()), Bukkit.createInventory(null, 9 * 5)
+                  ),
+                  event.getPlayer().getUniqueId(),
+                  false
+        );
 
         new BukkitRunnable() {
             @Override
@@ -54,7 +62,12 @@ public class TestListener implements Listener {
             }
         }.runTaskLater(PerceiveCore.getInstance(), 20L * 2);
 
-        playerGuiManager.addStage(event.getPlayer().getUniqueId(), stage);
+        UUID uuid = event.getPlayer().getUniqueId();
+
+        playerGuiManager.addStage(uuid, stageTwo);
+        playerGuiManager.addStage(uuid, stage);
+
+        playerGuiManager.openFirstStage(uuid);
     }
 
     private Pane constructGridPane(int number, PlayerGuiManager playerGuiManager, Player player) {
@@ -198,7 +211,7 @@ public class TestListener implements Listener {
                             ItemFactory.builder(Material.BARRIER)
                                       .setName("&6Go away!")
                                       .build(),
-                            () -> playerGuiManager.removeOpenGui(player.getUniqueId()),
+                            () -> playerGuiManager.removeOpenedStage(player.getUniqueId()),
                             new Dimension(1, 1)
                   ),
                   4,
