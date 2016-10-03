@@ -2,6 +2,7 @@ package com.perceivedev.perceivecore.guisystem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import com.perceivedev.perceivecore.PerceiveCore;
 /**
  * Manages the GUIs for players
  */
+@SuppressWarnings({ "unused", "WeakerAccess" })
 public class PlayerGuiManager implements Listener {
 
     private Map<UUID, PlayerStages> stageMap = new HashMap<>();
@@ -26,11 +28,16 @@ public class PlayerGuiManager implements Listener {
      *
      * @param uuid The {@link UUID} of the player
      * @param stage The Stage to add
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public void addStage(UUID uuid, Stage stage) {
+        Objects.requireNonNull(uuid);
+        Objects.requireNonNull(stage);
+
         PlayerStages stages = stageMap.getOrDefault(uuid, new PlayerStages());
         stages.addStage(stage);
-        
+
         stageMap.put(uuid, stages);
 
         stage.setGuiManager(this);
@@ -41,8 +48,13 @@ public class PlayerGuiManager implements Listener {
      *
      * @param uuid The {@link UUID} of the player
      * @param stage The Stage to remove
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public void removeStage(UUID uuid, Stage stage) {
+        Objects.requireNonNull(uuid);
+        Objects.requireNonNull(stage);
+
         if (!containsStageForPlayer(uuid)) {
             return;
         }
@@ -54,9 +66,12 @@ public class PlayerGuiManager implements Listener {
      *
      * @param uuid The {@link UUID} of the player
      *
+     * @throws NullPointerException if any parameter is null
      * @see #removeStage(UUID, Stage)
      */
     public void removeOpenedStage(UUID uuid) {
+        Objects.requireNonNull(uuid);
+
         if (!containsStageForPlayer(uuid)) {
             return;
         }
@@ -68,8 +83,13 @@ public class PlayerGuiManager implements Listener {
      *
      * @param uuid The {@link UUID} of the player
      * @param stage The Stage to bring to the front
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public void bringStageToFront(UUID uuid, Stage stage) {
+        Objects.requireNonNull(uuid);
+        Objects.requireNonNull(stage);
+
         if (!containsStageForPlayer(uuid)) {
             return;
         }
@@ -80,8 +100,12 @@ public class PlayerGuiManager implements Listener {
      * Opens the first Stage
      *
      * @param uuid The {@link UUID} of the player
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public void openFirstStage(UUID uuid) {
+        Objects.requireNonNull(uuid);
+
         if (!containsStageForPlayer(uuid)) {
             return;
         }
@@ -94,8 +118,12 @@ public class PlayerGuiManager implements Listener {
      * @param uuid The {@link UUID} of the player
      *
      * @return The opened Stage.
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public Optional<Stage> getOpenedStage(UUID uuid) {
+        Objects.requireNonNull(uuid);
+
         if (!hasStageOpened(uuid)) {
             return Optional.empty();
         }
@@ -108,8 +136,12 @@ public class PlayerGuiManager implements Listener {
      * @param uuid The {@link UUID} of the player
      *
      * @return True if the Player has a Stage open
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public boolean hasStageOpened(UUID uuid) {
+        Objects.requireNonNull(uuid);
+
         return containsStageForPlayer(uuid) && stageMap.get(uuid).getOpenedStage().isPresent();
     }
 
@@ -119,8 +151,12 @@ public class PlayerGuiManager implements Listener {
      * @param uuid The {@link UUID} of the player
      *
      * @return True if there is a Stage for the given player
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public boolean containsStageForPlayer(UUID uuid) {
+        Objects.requireNonNull(uuid);
+        
         return stageMap.containsKey(uuid) && !stageMap.get(uuid).isEmpty();
     }
 

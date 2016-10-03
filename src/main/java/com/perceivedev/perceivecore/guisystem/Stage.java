@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.guisystem;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,8 +25,13 @@ public class Stage {
      * @param scene The Scene
      * @param playerID The {@link UUID} of the player
      * @param isClosable Whether the player can close the GUI with 'E' or 'ESC'
+     *
+     * @throws NullPointerException if scene or playerID is null
      */
     public Stage(Scene scene, UUID playerID, boolean isClosable) {
+        Objects.requireNonNull(scene);
+        Objects.requireNonNull(playerID);
+
         this.scene = scene;
         this.playerID = playerID;
         this.isClosable = isClosable;
@@ -37,6 +43,7 @@ public class Stage {
      * @param scene The Scene
      * @param playerID The {@link UUID} of the player
      *
+     * @throws NullPointerException if scene or playerID is null
      * @see #Stage(Scene, UUID, boolean) #Stage(Scene, UUID, boolean) with isClosable set to true
      */
     public Stage(Scene scene, UUID playerID) {
@@ -67,8 +74,12 @@ public class Stage {
      * Sets the scene
      *
      * @param scene The scene
+     *
+     * @throws NullPointerException if scene is null
      */
     public void setScene(Scene scene) {
+        Objects.requireNonNull(scene);
+
         this.scene = scene;
 
         // never rendered, so not visible
@@ -145,6 +156,11 @@ public class Stage {
         getPlayer().ifPresent(HumanEntity::closeInventory);
     }
 
+    /**
+     * Handles a click in this stage
+     *
+     * @param event The {@link InventoryClickEvent} to handle
+     */
     void onClick(InventoryClickEvent event) {
         scene.onClick(event);
     }

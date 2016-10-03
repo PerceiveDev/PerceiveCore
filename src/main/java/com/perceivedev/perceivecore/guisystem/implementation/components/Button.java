@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guisystem.component;
+package com.perceivedev.perceivecore.guisystem.implementation.components;
 
 import java.util.Objects;
 
@@ -7,12 +7,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.perceivedev.perceivecore.guisystem.component.Component;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
- * A Label
+ * A simple button
  */
-public class Label implements Component {
+public class Button implements Component {
 
     // make instances distinct, even if they have the same size and item
     private static int counter;
@@ -20,19 +21,31 @@ public class Label implements Component {
     private final int ID = ++counter;
 
     private ItemStack itemStack;
+    private Runnable  runnable;
     private Dimension size;
 
     /**
-     * @param itemStack The ItemStack to use
-     * @param size The size of this component
+     * Constructs a button
+     *
+     * @param itemStack The ItemStack to display
+     * @param runnable The Runnable to run on click
+     * @param size The size of the button
+     *
+     * @throws NullPointerException if any parameter is null
      */
-    public Label(ItemStack itemStack, Dimension size) {
+    public Button(ItemStack itemStack, Runnable runnable, Dimension size) {
+        Objects.requireNonNull(itemStack);
+        Objects.requireNonNull(runnable);
+        Objects.requireNonNull(size);
+
         this.itemStack = itemStack.clone();
+        this.runnable = runnable;
         this.size = size;
     }
 
     @Override
     public void onClick(InventoryClickEvent clickEvent) {
+        runnable.run();
         clickEvent.setCancelled(true);
     }
 
@@ -48,7 +61,7 @@ public class Label implements Component {
             int slot = gridToSlot(inventory.getSize(), x + xOffset, y + yOffset);
             if (slot < 0 || slot >= inventory.getSize()) {
                 // can't happen *normally*
-                System.err.println("Label: An item was placed outside the inventory size. "
+                System.err.println("Button: An item was placed outside the inventory size. "
                           + "Size: "
                           + inventory.getSize()
                           + " Slot: "
@@ -63,10 +76,10 @@ public class Label implements Component {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof Label))
+        if (!(o instanceof Button))
             return false;
-        Label label = (Label) o;
-        return ID == label.ID;
+        Button button = (Button) o;
+        return ID == button.ID;
     }
 
     @Override

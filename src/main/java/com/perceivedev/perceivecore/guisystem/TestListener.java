@@ -20,13 +20,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.guisystem.component.Button;
 import com.perceivedev.perceivecore.guisystem.component.Component;
-import com.perceivedev.perceivecore.guisystem.component.Label;
 import com.perceivedev.perceivecore.guisystem.component.Pane;
-import com.perceivedev.perceivecore.guisystem.implementation.AnchorPane;
-import com.perceivedev.perceivecore.guisystem.implementation.FlowPane;
-import com.perceivedev.perceivecore.guisystem.implementation.GridPane;
+import com.perceivedev.perceivecore.guisystem.implementation.components.Button;
+import com.perceivedev.perceivecore.guisystem.implementation.components.Label;
+import com.perceivedev.perceivecore.guisystem.implementation.panes.AnchorPane;
+import com.perceivedev.perceivecore.guisystem.implementation.panes.FlowPane;
+import com.perceivedev.perceivecore.guisystem.implementation.panes.GridPane;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 

@@ -1,6 +1,7 @@
-package com.perceivedev.perceivecore.guisystem.implementation;
+package com.perceivedev.perceivecore.guisystem.implementation.panes;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.perceivedev.perceivecore.guisystem.component.Component;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
@@ -70,8 +71,12 @@ public class AnchorPane extends AbstractPane {
      * @param y The y coordinate of the upper left corner
      *
      * @return True if the component was added
+     *
+     * @throws NullPointerException if component is null
      */
     public boolean addComponent(Component component, int x, int y) {
+        Objects.requireNonNull(component);
+
         if (!getInventoryMap().hasEnoughSpace(x, y, component.getSize())) {
             return false;
         }

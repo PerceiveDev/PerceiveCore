@@ -1,8 +1,9 @@
-package com.perceivedev.perceivecore.guisystem.implementation;
+package com.perceivedev.perceivecore.guisystem.implementation.panes;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.perceivedev.perceivecore.guisystem.component.Component;
@@ -24,8 +25,8 @@ public class GridPane extends AbstractPane {
      * @param components The components to add
      * @param size The size of this pane
      * @param inventoryMap The {@link InventoryMap} to use
-     * @param columns The columns
-     * @param rows The rows
+     * @param columns The columns. It will leave spaces empty, if this isn't chosen in a fashion compatible with the inventory.
+     * @param rows The rows. It will leave spaces empty, if this isn't chosen in a fashion compatible with the inventory.
      *
      * @throws NullPointerException if any parameter is null
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does not equal size
@@ -135,9 +136,13 @@ public class GridPane extends AbstractPane {
      * @param component The component to add.You can't add the same component twice.
      *
      * @return True if the component was added
+     *
+     * @throws NullPointerException if component is null
      */
     @Override
     public boolean addComponent(Component component) {
+        Objects.requireNonNull(component);
+
         int[] freeSlot = getNextFreeSlot(component);
         return freeSlot != null
                   && addComponent(component, freeSlot[0], freeSlot[1]);
@@ -151,8 +156,12 @@ public class GridPane extends AbstractPane {
      * @param slotY The y coordinate of the slot
      *
      * @return True if it was added.
+     *
+     * @throws NullPointerException if component is null
      */
     public boolean addComponent(Component component, int slotX, int slotY) {
+        Objects.requireNonNull(component);
+
         if (!component.getSize().fitsInside(getGridSize())) {
             return false;
         }
@@ -178,6 +187,8 @@ public class GridPane extends AbstractPane {
 
     @Override
     public void removeComponent(Component component) {
+        Objects.requireNonNull(component);
+        
         if (!containsComponent(component)) {
             return;
         }

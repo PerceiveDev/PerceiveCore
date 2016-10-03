@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guisystem.implementation;
+package com.perceivedev.perceivecore.guisystem.implementation.panes;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +21,6 @@ import com.perceivedev.perceivecore.guisystem.util.Dimension;
 /**
  * A Skeleton implementation for the {@link Pane} class
  */
-@SuppressWarnings({ "WeakerAccess", "unused" })
 public abstract class AbstractPane implements Pane {
 
     private List<Component> components;
@@ -126,6 +125,8 @@ public abstract class AbstractPane implements Pane {
 
     @Override
     public void removeComponent(Component component) {
+        Objects.requireNonNull(component);
+        
         if (!containsComponent(component)) {
             return;
         }
@@ -251,16 +252,6 @@ public abstract class AbstractPane implements Pane {
             this.maxX = maxX;
             this.minY = minY;
             this.maxY = maxY;
-        }
-
-        /**
-         * An interval that just contains x and y
-         *
-         * @param x The x coordinate
-         * @param y The y coordinate
-         */
-        protected Interval(int x, int y) {
-            this(x, x + 1, y, y + 1);
         }
 
         /**
@@ -557,7 +548,7 @@ public abstract class AbstractPane implements Pane {
         }
 
         // TODO: 02.10.2016 Remove these visualizing methods 
-
+/*
         protected void printLines() {
             Status[][] array = new Status[lines.length][];
             for (int y = 0; y < lines.length; y++) {
@@ -628,6 +619,7 @@ public abstract class AbstractPane implements Pane {
                 }
             }
         }
+*/
     }
     //</editor-fold>
     //</editor-fold>

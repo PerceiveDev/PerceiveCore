@@ -1,7 +1,8 @@
-package com.perceivedev.perceivecore.guisystem.implementation;
+package com.perceivedev.perceivecore.guisystem.implementation.panes;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.perceivedev.perceivecore.guisystem.component.Component;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
@@ -58,6 +59,8 @@ public class FlowPane extends AbstractPane {
      */
     @Override
     public boolean addComponent(Component component) {
+        Objects.requireNonNull(component);
+        
         int[] location = ((FlowInventoryMap) getInventoryMap()).getNextComponentStartingLocation(component.getSize());
         if (location == null) {
             return false;
@@ -77,6 +80,8 @@ public class FlowPane extends AbstractPane {
 
     @Override
     public void removeComponent(Component component) {
+        Objects.requireNonNull(component);
+        
         if (!containsComponent(component)) {
             return;
         }
@@ -115,6 +120,8 @@ public class FlowPane extends AbstractPane {
             return null;
         }
 
+        // TODO: 03.10.2016 Remove this visualisation method 
+/*        
         private void printMaybe(Dimension dimension) {
             int[] starting = getNextComponentStartingLocation(dimension);
             if (starting == null) {
@@ -143,5 +150,6 @@ public class FlowPane extends AbstractPane {
         private boolean isInRange(int number, int min, int max) {
             return number >= min && number < max;
         }
+*/
     }
 }
