@@ -28,7 +28,7 @@ public class PlayerWrapper extends ReflectedClass<Player> {
         if (!nmsPlayer.isSuccessful() || !nmsPlayer.isValuePresent()) {
             return null;
         }
-        return new NMSPlayerWrapper(nmsPlayer);
+        return new NMSPlayerWrapper(nmsPlayer.getValue());
     }
 
     /**

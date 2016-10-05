@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.perceivedev.perceivecore.reflection;
 
@@ -7,22 +7,34 @@ import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
 /**
  * @author Rayzr
- *
  */
 public class NMSPlayerWrapper extends ReflectedClass<Object> {
 
     protected ReflectedClass<Object> connection;
+    protected ReflectedMethod        sendPacket;
 
     /**
-     * @param playerWrapper
+     * @param nmsPlayer The NMS player
      */
     protected NMSPlayerWrapper(Object nmsPlayer) {
         super(nmsPlayer);
-        connection = $(getField("playerConnection").get().getValue());
+        connection = $(getConnection());
+        sendPacket = connection.getMethod("sendPacket");
     }
 
+    /**
+     * @param packet The packet to send
+     */
     public void sendPacket(Packet packet) {
-        connection.getMethod("sendPacket").invoke(packet.getNMSPacket());
+        sendPacket.invoke(packet.getNMSPacket());
     }
 
+    /**
+     * Returns the playerConnection field
+     *
+     * @return The "playerConnection" field
+     */
+    public Object getConnection() {
+        return getField("playerConnection").get().getValue();
+    }
 }
