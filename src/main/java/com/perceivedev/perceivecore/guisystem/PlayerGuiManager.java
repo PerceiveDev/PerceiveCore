@@ -182,6 +182,7 @@ public class PlayerGuiManager implements Listener {
 
     private static class PlayerStages {
         private Stack<Stage> stages = new Stack<>();
+        private Stage        openedStage;
 
         /**
          * Returns the opened stage
@@ -254,6 +255,10 @@ public class PlayerGuiManager implements Listener {
          *
          * @param stage The stage to open
          */
+        private void openStage(Stage stage) {
+            if (openedStage != null) {
+                return;
+            }
             openedStage = stage;
             stage.open();
         }
@@ -316,6 +321,8 @@ public class PlayerGuiManager implements Listener {
                 removeStage(openedStage);
                 openFirstStage(true);
             } else if (stages.peek().equals(openedStage)) {
+                // it is still the first stage, so the user closed it. If this
+                // is false, it was swapped.
                 openLater(openedStage);
             }
         }
@@ -334,7 +341,9 @@ public class PlayerGuiManager implements Listener {
             }.runTaskLater(PerceiveCore.getInstance(), 2L);
         }
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Listeners">
 
     /***************************************************************************
      *                                                                         *
@@ -362,5 +371,6 @@ public class PlayerGuiManager implements Listener {
         }
         reactToClosing(uuid);
     }
+    // </editor-fold>
 
 }
