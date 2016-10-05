@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import com.perceivedev.perceivecore.guisystem.Scene;
 import com.perceivedev.perceivecore.guisystem.component.Component;
 import com.perceivedev.perceivecore.guisystem.component.Pane;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
@@ -26,6 +27,7 @@ public abstract class AbstractPane implements Pane {
     private List<Component> components;
     private Dimension       size;
     private InventoryMap    inventoryMap;
+    private Scene           scene;
 
     /**
      * The offset of this pane in the inventory. Needed to fetch the right component in onClick. 0 until this pane is rendered.
@@ -96,6 +98,16 @@ public abstract class AbstractPane implements Pane {
     }
 
     @Override
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    @Override
+    public Scene getScene() {
+        return scene;
+    }
+
+    @Override
     public boolean containsComponent(Component component) {
         return components.contains(component);
     }
@@ -126,7 +138,7 @@ public abstract class AbstractPane implements Pane {
     @Override
     public void removeComponent(Component component) {
         Objects.requireNonNull(component);
-        
+
         if (!containsComponent(component)) {
             return;
         }
@@ -432,8 +444,7 @@ public abstract class AbstractPane implements Pane {
                 return;
             }
             componentMap.remove(componentEntry.get());
-            
-            
+
             // free up the space
             fillInterval(componentEntry.get(), false);
         }

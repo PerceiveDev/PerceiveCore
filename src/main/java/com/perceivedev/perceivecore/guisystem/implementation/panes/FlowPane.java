@@ -60,7 +60,7 @@ public class FlowPane extends AbstractPane {
     @Override
     public boolean addComponent(Component component) {
         Objects.requireNonNull(component);
-        
+
         int[] location = ((FlowInventoryMap) getInventoryMap()).getNextComponentStartingLocation(component.getSize());
         if (location == null) {
             return false;

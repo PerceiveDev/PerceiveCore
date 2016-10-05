@@ -39,6 +39,15 @@ public class Label implements Component {
         this.size = size;
     }
 
+    /**
+     * Sets the item
+     *
+     * @param itemStack The new itemstack
+     */
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack.clone();
+    }
+
     @Override
     public void onClick(InventoryClickEvent clickEvent) {
         clickEvent.setCancelled(true);

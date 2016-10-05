@@ -15,7 +15,7 @@ import com.perceivedev.perceivecore.guisystem.util.Dimension;
  */
 public class Button implements Component {
 
-    // make instances distinct, even if they have the same size and item
+    // make instances distinct, even if they have the same size and item. Like '==', but the hashCode may be nicer?
     private static int counter;
 
     private final int ID = ++counter;
@@ -41,6 +41,41 @@ public class Button implements Component {
         this.itemStack = itemStack.clone();
         this.runnable = runnable;
         this.size = size;
+    }
+
+    /**
+     * Constructs a button
+     *
+     * @param itemStack The ItemStack to display
+     * @param size The size of the button
+     *
+     * @throws NullPointerException if any parameter is null
+     * @see #Button(ItemStack, Runnable, Dimension)
+     */
+    public Button(ItemStack itemStack, Dimension size) {
+        this(itemStack,
+                  () -> {
+                  },
+                  size);
+    }
+
+    /**
+     * Sets the item
+     *
+     * @param itemStack The new itemstack
+     */
+
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack.clone();
+    }
+
+    /**
+     * Sets the Button action
+     *
+     * @param action The Action of the button
+     */
+    public void setAction(Runnable action) {
+        this.runnable = action;
     }
 
     @Override

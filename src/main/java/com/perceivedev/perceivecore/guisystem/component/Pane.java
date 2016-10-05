@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import com.perceivedev.perceivecore.guisystem.Scene;
 import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
@@ -20,6 +21,22 @@ public interface Pane extends Component {
      */
     @Override
     void onClick(InventoryClickEvent event);
+
+    /**
+     * Called to set the scene this pane is in.
+     * <p>
+     * Should not be called by you. It is possible, but you can screw things up. Ugly implementation, because it allows i7 :/
+     *
+     * @param scene The Scene
+     */
+    void setScene(Scene scene);
+
+    /**
+     * Returns the Scene this pane is in
+     *
+     * @return The Scene this pane is in
+     */
+    Scene getScene();
 
     /**
      * Adds a component

@@ -25,11 +25,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class ItemFactory {
 
     private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
-              Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET);
+              Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
     private static final Set<Material> LARMOUR    = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
               Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
-    
-    
+
     private ItemStack itemStack;
 
     private ItemFactory(ItemStack itemStack) {
@@ -178,6 +177,21 @@ public class ItemFactory {
         } else {
             itemStack.addUnsafeEnchantment(enchantment, level);
         }
+        return this;
+    }
+
+    /**
+     * Removes an enchantment from the itemstack.
+     *
+     * @param enchantment The enchantment to be removed
+     *
+     * @return This ItemFactory instance
+     */
+    public ItemFactory removeEnchantment(Enchantment enchantment) {
+        if (!itemStack.containsEnchantment(enchantment)) {
+            return this;
+        }
+        itemStack.removeEnchantment(enchantment);
         return this;
     }
 
@@ -367,6 +381,15 @@ public class ItemFactory {
     // === BUILD AND CREATE ====
 
     /**
+     * Clones this factory
+     *
+     * @return A clones ItemFactory
+     */
+    public ItemFactory clone() {
+        return new ItemFactory(itemStack.clone());
+    }
+    
+    /**
      * Creates a new ItemFactory builder with the given item as a base.
      *
      * @param itemStack the base {@link ItemStack}
@@ -387,7 +410,7 @@ public class ItemFactory {
     public static ItemFactory builder(Material type) {
         return new ItemFactory(new ItemStack(type));
     }
-    
+
     /**
      * @return The finished ItemStack.
      */

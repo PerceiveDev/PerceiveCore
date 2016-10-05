@@ -71,6 +71,8 @@ public class Scene {
         // remove old frame
         inventory.clear();
 
+        pane.setScene(this);
+
         pane.render(inventory, player, 0, 0);
     }
 
@@ -83,6 +85,13 @@ public class Scene {
     void open(Player player) {
         playerID = player.getUniqueId();
         player.openInventory(inventory);
+    }
+
+    /**
+     * Requests to re-render this pane, in case anything changed
+     */
+    public void requestReRender() {
+        getPlayer().ifPresent(this::render);
     }
 
     /**
