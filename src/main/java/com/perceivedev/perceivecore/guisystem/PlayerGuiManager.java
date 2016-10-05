@@ -304,9 +304,9 @@ public class PlayerGuiManager implements Listener {
             if (openedStage == null) {
                 return;
             }
-            Stage opened = openedStage;
+            System.out.println("Closing a stage");
+            openedStage.close();
             openedStage = null;
-            opened.close();
         }
 
         /**
