@@ -305,8 +305,9 @@ public class PlayerGuiManager implements Listener {
                 return;
             }
             System.out.println("Closing a stage");
-            openedStage.close();
+            Stage oldStage = openedStage;
             openedStage = null;
+            oldStage.close();
         }
 
         /**
