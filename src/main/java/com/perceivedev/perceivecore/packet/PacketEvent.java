@@ -1,11 +1,13 @@
 package com.perceivedev.perceivecore.packet;
 
+import com.perceivedev.perceivecore.reflection.Packet;
+
 /**
  * A packet event
  */
 public class PacketEvent {
 
-    private Object              packet;
+    private Packet              packet;
     private boolean             cancelled;
     private ConnectionDirection direction;
 
@@ -15,7 +17,7 @@ public class PacketEvent {
      * @param direction The direction the packet is travelling
      */
     protected PacketEvent(Object packet, boolean cancelled, ConnectionDirection direction) {
-        this.packet = packet;
+        this.packet = Packet.createFromObject(packet);
         this.cancelled = cancelled;
         this.direction = direction;
     }
@@ -37,7 +39,7 @@ public class PacketEvent {
      *
      * @return The Packet
      */
-    public Object getPacket() {
+    public Packet getPacket() {
         return packet;
     }
 

@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.packet;
 
+import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.packet.PacketEvent.ConnectionDirection;
-import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
 import io.netty.channel.Channel;
@@ -43,19 +44,19 @@ public class PacketInjector extends ChannelDuplexHandler {
 
         // Lengthy way of doing: ( (CraftPlayer) handle ).getHandle().playerConnection.networkManager.channel
 
-        ReflectResponse<Object> playerConnectionResponse = ReflectionUtil.$(player).getHandle().getField("playerConnection").get();
+        ReflectResponse<Object> playerConnectionResponse = $(player).getHandle().getField("playerConnection").get();
         if (!playerConnectionResponse.isValuePresent()) {
             throw new NullPointerException("Couldn't find playerConnection field");
         }
         Object playerConnection = playerConnectionResponse.getValue();
 
-        ReflectResponse<Object> networkManager = ReflectionUtil.$(playerConnection).getField("networkManager").get();
+        ReflectResponse<Object> networkManager = $(playerConnection).getField("networkManager").get();
         if (!networkManager.isValuePresent()) {
             throw new NullPointerException("Couldn't find networkManager field");
         }
         Object manager = networkManager.getValue();
 
-        ReflectResponse<Object> channelResponse = ReflectionUtil.$(manager).getField("channel").get();
+        ReflectResponse<Object> channelResponse = $(manager).getField("channel").get();
         if (!channelResponse.isValuePresent()) {
             throw new NullPointerException("Couldn't find channel field");
         }

@@ -5,6 +5,7 @@ package com.perceivedev.perceivecore.reflection;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
@@ -24,10 +25,12 @@ public class Packet {
     private Object   obj;
 
     private Packet(Class<?> packetClass) throws Exception {
-
+        this(packetClass.getConstructor().newInstance());
         this.packetClass = packetClass;
-        obj = packetClass.getConstructor().newInstance();
+    }
 
+    private Packet(Object packet) throws Exception {
+        this.obj = packet;
     }
 
     /**
@@ -50,6 +53,33 @@ public class Packet {
 
         try {
             return new Packet(oClass.get());
+        } catch (Exception e) {
+            System.err.println("Failed to create Packet!");
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static Packet createFromObject(Object obj) {
+        Objects.requireNonNull(obj);
+        
+        if (obj instanceof Packet) {
+            return (Packet) obj;
+        }
+
+        Optional<Class<?>> packetClass = $("{nms}.Packet");
+
+        if (!packetClass.isPresent()) {
+            throw new IllegalStateException("Could not find packet class!");
+        }
+
+        if (!packetClass.get().isAssignableFrom(obj.getClass())) {
+            throw new IllegalArgumentException("You must pass a packet object!");
+        }
+
+        try {
+            return new Packet(obj.getClass());
         } catch (Exception e) {
             System.err.println("Failed to create Packet!");
             e.printStackTrace();
