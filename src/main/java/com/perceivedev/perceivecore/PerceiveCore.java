@@ -8,17 +8,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.perceivedev.perceivecore.gui.GUIListener;
 import com.perceivedev.perceivecore.guisystem.PlayerGuiManager;
 import com.perceivedev.perceivecore.guisystem.TestListener;
+import com.perceivedev.perceivecore.other.DisableManager;
 
 public class PerceiveCore extends JavaPlugin {
     private static PerceiveCore instance;
 
-    private Logger      logger;
+    private Logger logger;
 
     @SuppressWarnings("unused")
     private GUIListener guiListener;
 
     private PlayerGuiManager playerGuiManager;
-    
+    private DisableManager   disableManager;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -26,6 +28,8 @@ public class PerceiveCore extends JavaPlugin {
         logger = getLogger();
 
         guiListener = new GUIListener(this);
+
+        disableManager = new DisableManager();
 
         logger.info(versionText() + " enabled");
 
@@ -35,6 +39,7 @@ public class PerceiveCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        disableManager.disable();
         logger.info(versionText() + " disabled");
         // prevent the old instance from still being around.
         instance = null;
@@ -44,6 +49,16 @@ public class PerceiveCore extends JavaPlugin {
         return getName() + " v" + getDescription().getVersion();
     }
 
+    /**
+     * @return The {@link DisableManager}
+     */
+    public DisableManager getDisableManager() {
+        return disableManager;
+    }
+
+    /**
+     * @return The {@link PlayerGuiManager}
+     */
     public PlayerGuiManager getPlayerGuiManager() {
         return playerGuiManager;
     }

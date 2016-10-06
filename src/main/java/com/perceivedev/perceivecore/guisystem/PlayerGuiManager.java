@@ -304,7 +304,6 @@ public class PlayerGuiManager implements Listener {
             if (openedStage == null) {
                 return;
             }
-            System.out.println("Closing a stage");
             Stage oldStage = openedStage;
             openedStage = null;
             oldStage.close();
@@ -314,23 +313,17 @@ public class PlayerGuiManager implements Listener {
          * Reacts to the closing of a Stage
          */
         private void reactToClosing() {
-            System.out.println("PlayerStages.reactToClosing()");
             if (openedStage == null) {
-                System.out.println("Null");
                 // What was this??
                 return;
             }
             if (openedStage.isClosable()) {
-                System.out.println("Closable");
                 removeStage(openedStage);
                 openFirstStage(true);
             } else if (stages.peek().equals(openedStage)) {
-                System.out.println("Still first stage!");
                 // it is still the first stage, so the user closed it. If this
                 // is false, it was swapped.
                 openLater(openedStage);
-            } else {
-                System.out.println("Nope.");
             }
         }
 
