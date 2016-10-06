@@ -5,6 +5,8 @@ package com.perceivedev.perceivecore.reflection;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
+import com.perceivedev.perceivecore.packet.Packet;
+
 /**
  * @author Rayzr
  */

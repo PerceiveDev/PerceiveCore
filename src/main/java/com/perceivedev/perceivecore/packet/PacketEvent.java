@@ -1,7 +1,5 @@
 package com.perceivedev.perceivecore.packet;
 
-import com.perceivedev.perceivecore.reflection.Packet;
-
 /**
  * A packet event
  */
@@ -15,6 +13,9 @@ public class PacketEvent {
      * @param packet The packet
      * @param cancelled Whether the event is cancelled
      * @param direction The direction the packet is travelling
+     *
+     * @throws IllegalStateException if it couldn't find the NMS base class "Packet" (You are screwed)
+     * @throws IllegalArgumentException if 'object' isn't a packet.
      */
     protected PacketEvent(Object packet, boolean cancelled, ConnectionDirection direction) {
         this.packet = Packet.createFromObject(packet);
@@ -74,7 +75,7 @@ public class PacketEvent {
     /**
      * The direction the packet was travelling
      */
-    public static enum ConnectionDirection {
+    public enum ConnectionDirection {
         TO_CLIENT,
         TO_SERVER
     }
