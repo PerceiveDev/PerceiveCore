@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
+import com.perceivedev.perceivecore.util.Converter;
+import com.perceivedev.perceivecore.util.Converters;
 
 /**
  * A class which represents a packet.
@@ -24,6 +26,61 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
  */
 public class Packet {
 
+    private static ConverterMap converters = new ConverterMap();
+
+    static {
+
+        // Load the Converters class. This should work...
+        Converters.class.getName();
+
+    }
+
+    /**
+     * @param a
+     * @param b
+     * @param converter
+     * @return
+     * @see com.perceivedev.perceivecore.packet.ConverterMap#addConverter(java.lang.Class,
+     *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
+     */
+    public static <A, B> boolean addConverter(Class<?> a, Class<?> b, Converter<A, B> converter) {
+        return converters.addConverter(a, b, converter);
+    }
+
+    /**
+     * @param a
+     * @param b
+     * @param converter
+     * @return
+     * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
+     *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
+     */
+    public static <A, B> boolean removeConverter(Class<A> a, Class<B> b, Converter<A, B> converter) {
+        return converters.removeConverter(a, b, converter);
+    }
+
+    /**
+     * @param a
+     * @param b
+     * @return
+     * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
+     *      java.lang.Class)
+     */
+    public static <A, B> boolean removeConverter(Class<A> a, Class<B> b) {
+        return converters.removeConverter(a, b);
+    }
+
+    /**
+     * @param a
+     * @param b
+     * @return
+     * @see com.perceivedev.perceivecore.packet.ConverterMap#hasConverter(java.lang.Class,
+     *      java.lang.Class)
+     */
+    public static <A, B> boolean hasConverter(Class<A> a, Class<B> b) {
+        return converters.hasConverter(a, b);
+    }
+
     /**
      * The net.minecraft.server.Packet class
      * <p>
@@ -32,6 +89,7 @@ public class Packet {
     private static final Class<?> NMS_PACKET_CLASS;
 
     static {
+
         Optional<Class<?>> packet = ReflectionUtil.getClass(NMS, "Packet");
         if (!packet.isPresent()) {
             PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Can't find NMS Packet base class.");
@@ -39,6 +97,7 @@ public class Packet {
         } else {
             NMS_PACKET_CLASS = packet.get();
         }
+
     }
 
     private Class<?> packetClass;
@@ -60,7 +119,8 @@ public class Packet {
      *
      * @return a new Packet, or null if something went wrong
      *
-     * @throws IllegalArgumentException if it couldn't find the specified packet class
+     * @throws IllegalArgumentException if it couldn't find the specified packet
+     *             class
      */
     public static Packet create(String name) {
         if (!name.startsWith("Packet")) {
@@ -88,7 +148,8 @@ public class Packet {
      *
      * @return The wrapping Packet
      *
-     * @throws IllegalStateException if it couldn't find the NMS base class "Packet" (You are screwed)
+     * @throws IllegalStateException if it couldn't find the NMS base class
+     *             "Packet" (You are screwed)
      * @throws IllegalArgumentException if it isn't a packet.
      */
     public static Packet createFromObject(Object obj) {
