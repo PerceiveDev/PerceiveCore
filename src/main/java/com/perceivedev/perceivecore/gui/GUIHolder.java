@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.component.Component;
 import com.perceivedev.perceivecore.gui.component.Container;
+import com.perceivedev.perceivecore.gui.component.Rect;
 
 /**
  * 
@@ -44,9 +45,7 @@ public class GUIHolder implements InventoryHolder {
     private void render() {
 
         for (Component comp : gui.getComponents()) {
-
-            comp.render(this);
-
+            comp.render(getPos(comp), this);
         }
 
         gui.render(this);
@@ -92,6 +91,14 @@ public class GUIHolder implements InventoryHolder {
     }
 
     /**
+     * @param component the component to get the position of
+     * @return The position or null if the component couldn't be found
+     */
+    private Rect getPos(Component component) {
+        return null;
+    }
+
+    /**
      * @param inventory the inventory to reference when retrieving the items
      * @return The contents of this ItemArea
      */
@@ -103,8 +110,7 @@ public class GUIHolder implements InventoryHolder {
         if (!(component instanceof Container)) {
             return null;
         }
-        return ((Container) component).getContents(inventory);
-
+        return ((Container) component).getContents(getPos(component), inventory);
     }
 
     /**
@@ -122,7 +128,7 @@ public class GUIHolder implements InventoryHolder {
         if (!(component instanceof Container)) {
             throw new IllegalArgumentException("Component with ID #" + componentId + " is not a container!");
         }
-        ((Container) component).setContents(inventory, contents);
+        ((Container) component).setContents(getPos(component), inventory, contents);
     }
 
     /**
@@ -137,13 +143,9 @@ public class GUIHolder implements InventoryHolder {
         int rawSlot = event.getRawSlot();
 
         for (Component comp : gui.getComponents()) {
-
-            if (comp.checkClick(player, rawSlot % 9, rawSlot / 9, event)) {
-
+            if (comp.checkClick(getPos(comp), player, rawSlot % 9, rawSlot / 9, event)) {
                 break;
-
             }
-
         }
 
     }

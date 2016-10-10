@@ -24,19 +24,10 @@ public class Label extends Component {
     protected String       name = "Label";
     protected List<String> lore = Collections.emptyList();
 
-    public Label(int x, int y, int width, int height, String name, String... lore) {
-        super(x, y, width, height);
+    public Label(String name, String... lore) {
+        super(DisplayColor.WHITE);
         setName(name);
         setLore(lore);
-        setColor(DisplayColor.WHITE);
-    }
-
-    public Label(int x, int y, String name, String... lore) {
-        this(x, y, 1, 1, name, lore);
-    }
-
-    public Label(String name, String... lore) {
-        this(0, 0, name, lore);
     }
 
     /*
