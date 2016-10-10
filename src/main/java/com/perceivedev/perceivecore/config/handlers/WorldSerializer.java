@@ -8,8 +8,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import com.perceivedev.perceivecore.config.ConfigManager;
-import com.perceivedev.perceivecore.config.ISerializationHandler;
+import com.perceivedev.perceivecore.config.SerializationProxy;
 
 /**
  * Adds the ability for {@link ConfigManager} to serialize and deserialize
@@ -18,27 +17,27 @@ import com.perceivedev.perceivecore.config.ISerializationHandler;
  * @author Rayzr
  *
  */
-public class WorldSerializer implements ISerializationHandler<World> {
+public class WorldSerializer implements SerializationProxy<World> {
 
-	@Override
-	public Map<String, Object> serialize(World obj) {
+    @Override
+    public Map<String, Object> serialize(World obj) {
 
-		Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
-		map.put("uuid", obj.getUID().toString());
+        map.put("uuid", obj.getUID().toString());
 
-		return map;
-	}
+        return map;
+    }
 
-	@Override
-	public World deserialize(Map<String, Object> map) {
+    @Override
+    public World deserialize(Map<String, Object> map) {
 
-		UUID uuid = UUID.fromString((String) map.get("uuid"));
+        UUID uuid = UUID.fromString((String) map.get("uuid"));
 
-		World world = Bukkit.getWorld(uuid);
+        World world = Bukkit.getWorld(uuid);
 
-		return world;
+        return world;
 
-	}
+    }
 
 }

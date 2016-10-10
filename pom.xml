@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>PerceiveDev</groupId>
-	<artifactId>PerceiveCore</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>com.perceivedev</groupId>
+	<artifactId>perceivecore</artifactId>
+	<version>0.0.1</version>
 	<name>PerceiveCore</name>
 	<description>A core plugin for Bukkit containing all sorts of utilities, making your life easier.</description>
 	<repositories>
@@ -18,11 +18,17 @@
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.10.2-R0.1-SNAPSHOT</version>
+			<!-- <scope>provided</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>craftbukkit</artifactId>
+			<version>1.10.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>${project.artifactId}-${project.version}</finalName>
+		<finalName>${project.name}-${project.version}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 			<resource>
