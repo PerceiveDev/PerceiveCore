@@ -18,35 +18,22 @@ import com.perceivedev.perceivecore.gui.GUIHolder;
  */
 public class Component {
 
-    protected int          x;
-    protected int          y;
-    protected int          width;
-    protected int          height;
-
     protected DisplayType  type;
     protected DisplayColor color;
 
     protected GUI          gui;
 
-    public Component(int x, int y, int width, int height, DisplayType type, DisplayColor color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    public Component(DisplayType type, DisplayColor color) {
         this.type = type;
         this.color = color;
     }
 
-    public Component(int x, int y, int width, int height, DisplayColor color) {
-        this(x, y, width, height, DisplayType.FLAT, color);
-    }
-
-    public Component(int x, int y, int width, int height) {
-        this(x, y, width, height, DisplayColor.LIGHT_BLUE);
+    public Component(DisplayColor color) {
+        this(DisplayType.FLAT, color);
     }
 
     public Component() {
-        this(0, 0, 1, 1);
+        this(DisplayColor.LIGHT_BLUE);
     }
 
     /**
@@ -55,18 +42,12 @@ public class Component {
      * 
      * @param holder the GUIHolder
      */
-    public final void render(GUIHolder holder) {
-
-        for (int ix = x; ix < x + width; ix++) {
-
-            for (int iy = y; iy < y + height; iy++) {
-
+    public final void render(Rect pos, GUIHolder holder) {
+        for (int ix = pos.getX(); ix < pos.getX() + pos.getWidth(); ix++) {
+            for (int iy = pos.getY(); iy < pos.getY() + pos.getHeight(); iy++) {
                 holder.setItem(ix, iy, render(holder, ix, iy));
-
             }
-
         }
-
     }
 
     /**
@@ -91,17 +72,18 @@ public class Component {
      * 
      * @return Whether or not this click was actually on the component.
      */
-    public final boolean checkClick(Player player, int clickX, int clickY, InventoryClickEvent e) {
+    public final boolean checkClick(Rect pos, Player player, int clickX, int clickY, InventoryClickEvent e) {
 
-        if (clickX >= x && clickX < x + width && clickY >= y && clickY < y + height) {
+        if (clickX >= pos.getX() && clickX < pos.getX() + pos.getWidth() && clickY >= pos.getY() && clickY < pos.getY() + pos.getHeight()) {
 
-            ClickEvent event = new ClickEvent(player, clickX - x, clickY - y, e.getClick());
+            ClickEvent event = new ClickEvent(player, clickX - pos.getX(), clickY - pos.getY(), e.getClick());
             onClick(event);
             e.setCancelled(event.isCancelled());
 
             return true;
 
         }
+
         return false;
 
     }
@@ -115,84 +97,6 @@ public class Component {
      */
     protected void onClick(ClickEvent e) {
 
-    }
-
-    /**
-     * @return the x
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * @param x the x to set
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * @return the y
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * @param y the y to set
-     */
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    /**
-     * Sets the position of the component
-     * 
-     * @param x the x position
-     * @param y the y position
-     */
-    public void setPos(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     * Sets the size of the component
-     * 
-     * @param w the width
-     * @param h the height
-     */
-    public void setSize(int w, int h) {
-        this.width = w;
-        this.height = h;
-    }
-
-    /**
-     * @return the width
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * @param width the width to set
-     */
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    /**
-     * @return the height
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * @param height the height to set
-     */
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     /**

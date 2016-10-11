@@ -23,34 +23,18 @@ public class Button extends Label {
      */
     protected boolean              closeOnClick = true;
 
-    public Button(int x, int y, int width, int height, String name, Consumer<ClickEvent> clickHandler) {
-        super(x, y, width, height, name, new String[0]);
+    public Button(String name, Consumer<ClickEvent> clickHandler) {
+        super(name, new String[0]);
         this.clickHandler = clickHandler;
         setColor(DisplayColor.LIME);
     }
 
-    public Button(int x, int y, String name, Consumer<ClickEvent> clickHandler) {
-        this(x, y, 1, 1, name, clickHandler);
-    }
-
-    public Button(int x, int y, String name) {
-        this(x, y, name, null);
-    }
-
     public Button(String name) {
-        this(0, 0, name);
-    }
-
-    public Button(int x, int y, Consumer<ClickEvent> clickHandler) {
-        this(x, y, "Button", clickHandler);
+        this(name, null);
     }
 
     public Button(Consumer<ClickEvent> clickHandler) {
-        this(0, 0, clickHandler);
-    }
-
-    public Button(String name, Consumer<ClickEvent> clickHandler) {
-        this(0, 0, "Button", clickHandler);
+        this("Button", clickHandler);
     }
 
     /**
