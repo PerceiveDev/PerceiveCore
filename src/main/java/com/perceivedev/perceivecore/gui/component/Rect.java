@@ -19,6 +19,21 @@ public class Rect {
         this.y = y;
         this.width = width;
         this.height = height;
+        checkValidity();
+    }
+
+    public Rect(int x, int y) {
+        this(x, y, 1, 1);
+    }
+
+    /**
+     * Checks if the Rect is a valid rectangle
+     */
+    private boolean checkValidity() {
+        if (x < 0 || y < 0 || width < 0 || height < 0) {
+            throw new IllegalArgumentException("Rect parameters can not be negative!");
+        }
+        return true;
     }
 
     /**

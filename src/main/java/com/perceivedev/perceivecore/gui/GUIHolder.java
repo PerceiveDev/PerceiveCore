@@ -95,7 +95,7 @@ public class GUIHolder implements InventoryHolder {
      * @return The position or null if the component couldn't be found
      */
     private Rect getPos(Component component) {
-        return null;
+        return gui.getPos(component);
     }
 
     /**
