@@ -141,7 +141,7 @@ public interface MessageProvider {
     /**
      * A category
      */
-    class Category {
+    public class Category {
         private String name;
 
         /**
