@@ -33,7 +33,7 @@ public class PerceiveCore extends JavaPlugin {
 
         logger.info(versionText() + " enabled");
 
-        Bukkit.getPluginManager().registerEvents(new TestListener(), this);
+        /* Bukkit.getPluginManager().registerEvents(new TestListener(), this); */ // We don't want this anymore @i_al_istannen :P
         Bukkit.getPluginManager().registerEvents((playerGuiManager = new PlayerGuiManager()), this);
     }
 
