@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.gui.GUIListener;
 import com.perceivedev.perceivecore.guisystem.PlayerGuiManager;
-import com.perceivedev.perceivecore.guisystem.TestListener;
 import com.perceivedev.perceivecore.other.DisableManager;
 
 public class PerceiveCore extends JavaPlugin {
@@ -33,7 +32,6 @@ public class PerceiveCore extends JavaPlugin {
 
         logger.info(versionText() + " enabled");
 
-        /* Bukkit.getPluginManager().registerEvents(new TestListener(), this); */ // We don't want this anymore @i_al_istannen :P
         Bukkit.getPluginManager().registerEvents((playerGuiManager = new PlayerGuiManager()), this);
     }
 
