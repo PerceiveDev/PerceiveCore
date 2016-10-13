@@ -372,7 +372,7 @@ public class I18N implements MessageProvider {
      */
     private static class FileClassLoader extends ClassLoader {
 
-        private Path   path;
+        private Path path;
 
         /**
          * @param path The base path to read from
@@ -458,11 +458,11 @@ public class I18N implements MessageProvider {
     /**
      * @param plugin Your plugin
      * @param overwrite If the existing files should be overwritten.
+     * @param basePackage The base package in the jar to read from
      *
      * @return True if the files were written, false otherwise.
      *
-     * @throws NullPointerException If defaultPackage, targetDir or jarFile is
-     * null
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
      */
     public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
         File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();

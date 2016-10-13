@@ -464,6 +464,15 @@ public class NBTWrappers {
         }
 
         /**
+         * Removes an {@link INBTBase} from the list
+         *
+         * @param base The {@link INBTBase} to remove
+         */
+        public void remove(INBTBase base) {
+            list.remove(base);
+        }
+
+        /**
          * Returns the item
          *
          * @param index The index of the item
