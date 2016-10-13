@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.perceivedev.perceivecore.packet;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
