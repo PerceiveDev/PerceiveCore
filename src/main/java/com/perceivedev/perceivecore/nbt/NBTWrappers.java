@@ -467,9 +467,10 @@ public class NBTWrappers {
          * Removes an {@link INBTBase} from the list
          *
          * @param base The {@link INBTBase} to remove
+         * @return {@code true} if this list contained the specified element
          */
-        public void remove(INBTBase base) {
-            list.remove(base);
+        public boolean remove(INBTBase base) {
+            return list.remove(base);
         }
 
         /**
