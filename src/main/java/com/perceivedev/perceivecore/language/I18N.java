@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+
 /**
  * An implementation of the {@link MessageProvider} using
  */
@@ -409,9 +412,6 @@ public class I18N implements MessageProvider {
         }
     }
 
-    // TODO: This is untested, as I have no jar file and I am too lazy to add an
-    // artifact
-
     /**
      * @param defaultPackage The package they are in
      * @param targetDir The target directory
@@ -453,5 +453,28 @@ public class I18N implements MessageProvider {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * @param plugin Your plugin
+     * @param overwrite If the existing files should be overwritten.
+     *
+     * @return True if the files were written, false otherwise.
+     *
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is
+     * null
+     */
+    public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
+        File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();
+        Path targetDir = plugin.getDataFolder().toPath().resolve("language");
+        if (Files.notExists(targetDir)) {
+            try {
+                Files.createDirectories(targetDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return copyDefaultFiles(basePackage, targetDir, overwrite, pluginJar);
     }
 }
