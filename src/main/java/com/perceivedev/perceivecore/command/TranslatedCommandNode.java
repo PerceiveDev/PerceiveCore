@@ -6,6 +6,15 @@ import com.perceivedev.perceivecore.language.MessageProvider;
 
 /**
  * A CommandNode that uses the I18N translations
+ * <p>
+ * <br>
+ * <b>Needs a few language keys:</b>
+ * <ul>
+ * <li>baseKey.keyword</li>
+ * <li>baseKey.keyword.pattern</li>
+ * <li>baseKey.keyword.usage</li>
+ * <li>baseKey.keyword.description</li>
+ * </ul>
  */
 public abstract class TranslatedCommandNode extends AbstractCommandNode {
 
@@ -13,6 +22,8 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
     private MessageProvider messageProvider;
 
     /**
+     * <b>Some language keys are needed. Look at the {@link TranslatedCommandNode} javadoc</b>
+     *
      * @param permission The Permission
      * @param keywordKey The key in the language file for the keyword
      * @param keywordRegExKey The key in the language file for the regex to match the keyword
@@ -33,8 +44,10 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
     }
 
     /**
+     * <b>Some language keys are needed. Look at the {@link TranslatedCommandNode} javadoc</b>
+     *
      * @param permission The Permission
-     * @param baseKey The base key. Appended will be "_keyword", "_keyword_pattern", "_usage", "_description"
+     * @param baseKey The base key.
      * @param messageProvider The {@link MessageProvider}
      * @param acceptedSenders The accepted sender types
      *
@@ -45,10 +58,10 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
         super(permission, acceptedSenders);
         this.messageProvider = messageProvider;
 
-        this.keywordKey = baseKey + "_keyword";
-        this.keywordRegExKey = baseKey + "_keyword_pattern";
-        this.usageKey = baseKey + "_usage";
-        this.descriptionKey = baseKey + "_description";
+        this.keywordKey = baseKey + ".keyword";
+        this.keywordRegExKey = baseKey + ".keyword.pattern";
+        this.usageKey = baseKey + ".usage";
+        this.descriptionKey = baseKey + ".description";
     }
 
     @Override

@@ -159,7 +159,7 @@ public abstract class AbstractCommandNode implements CommandNode {
             return new CommandFindResult(null, Collections.emptyList());
         }
 
-        CommandFindResult chosenOne = new CommandFindResult(this, query);
+        CommandFindResult chosenOne = new CommandFindResult(this, new ArrayDeque<>(query));
 
         // now, is there any child that can continue
         for (AbstractCommandNode child : children) {
@@ -361,7 +361,10 @@ public abstract class AbstractCommandNode implements CommandNode {
         }
 
         ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, this, params.toArray(new Object[0]));
-
+        if (!response.isValuePresent()) {
+            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Command returned null: " + response.getException());
+            return CommandResult.ERROR;
+        }
         return (CommandResult) response.getValue();
     }
 
@@ -444,17 +447,27 @@ public abstract class AbstractCommandNode implements CommandNode {
      *
      * @return The tab completion of the command or an empty optional if the command was not found or tab complete returned null.
      */
-    public Optional<List<String>> findAndTabComplete(CommandSender sender, Collection<String> userChat) {
+    public Optional<List<String>> findAndTabComplete(CommandSender sender, List<String> userChat) {
         CommandFindResult commandFindResult = find(sender, userChat);
         if (!commandFindResult.wasFound()) {
             return Optional.empty();
         }
+
+        int index = userChat.size() - commandFindResult.getRestArgs().size();
+
+        index--;    // index and stuff
+
+        // if the user has just entered the command name, it is 0
+        if (commandFindResult.getRestArgs().isEmpty()) {
+            index = 0;
+        }
+
         return Optional.ofNullable(
                   commandFindResult.getCommandNode()
                             .tabComplete(
                                       sender,
                                       new ArrayList<>(userChat),
-                                      userChat.size() - commandFindResult.getRestArgs().size()
+                                      index
                             )
         );
     }
@@ -467,7 +480,7 @@ public abstract class AbstractCommandNode implements CommandNode {
      *
      * @return The tab completion of the command or an empty optional if the command was not found or tab complete returned null.
      *
-     * @see #findAndTabComplete(CommandSender, Collection)
+     * @see #findAndTabComplete(CommandSender, List)
      */
     public Optional<List<String>> findAndTabComplete(CommandSender sender, String userChat) {
         return findAndTabComplete(sender, Arrays.asList(userChat.split(" ")));

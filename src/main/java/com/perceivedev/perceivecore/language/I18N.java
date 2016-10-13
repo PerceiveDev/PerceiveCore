@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.util.TextUtils;
 
 /**
  * An implementation of the {@link MessageProvider} using
@@ -192,11 +193,13 @@ public class I18N implements MessageProvider {
             }
         }
 
-        try {
-            return Optional.of(jarResourceBundles.get(category).getString(key));
-        } catch (MissingResourceException e) {
-            return Optional.empty();
+        if (jarResourceBundles.containsKey(category)) {
+            try {
+                return Optional.of(jarResourceBundles.get(category).getString(key));
+            } catch (MissingResourceException ignored) {
+            }
         }
+        return Optional.empty();
     }
 
     /**
@@ -244,9 +247,9 @@ public class I18N implements MessageProvider {
 
         Optional<String> formatted = translateOrEmpty(key, category);
         if (formatted.isPresent()) {
-            return format(formatted.get(), formattingObjects);
+            return TextUtils.colorize(format(formatted.get(), formattingObjects));
         }
-        return format(defaultString, formattingObjects);
+        return TextUtils.colorize(format(defaultString, formattingObjects));
     }
 
     /**
@@ -361,7 +364,6 @@ public class I18N implements MessageProvider {
         return currentLanguage;
     }
 
-    // TODO: Test this
     @Override
     public void reload() {
         createBundles();
