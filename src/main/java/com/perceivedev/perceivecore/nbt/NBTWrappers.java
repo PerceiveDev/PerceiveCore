@@ -501,6 +501,14 @@ public class NBTWrappers {
         public boolean isType(Class<? extends INBTBase> type) {
             return list.isEmpty() || list.get(0).getClass() == type;
         }
+        
+        /**
+         * @return The list of NBT elements
+         */
+        // TODO: @i_al_istannen, is this ok? If not then I will need some other way to access/stream the list
+        public List<INBTBase> getList() {
+            return list;
+        }
 
         @Override
         public Object toNBT() {
