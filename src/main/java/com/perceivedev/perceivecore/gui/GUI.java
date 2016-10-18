@@ -6,9 +6,11 @@ package com.perceivedev.perceivecore.gui;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -121,6 +123,19 @@ public class GUI {
      */
     public Inventory getInventory() {
         return new GUIHolder(this).getInventory();
+    }
+
+    /**
+     * Opens this GUI to the player
+     * 
+     * @param player the player to open the GUI for
+     */
+    public void open(Player player) {
+        Objects.requireNonNull(player);
+        if (!player.isOnline()) {
+            throw new IllegalArgumentException("Player must be online!");
+        }
+        player.openInventory(getInventory());
     }
 
     /**
