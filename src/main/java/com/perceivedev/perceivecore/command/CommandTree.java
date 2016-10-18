@@ -1,15 +1,21 @@
 package com.perceivedev.perceivecore.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
+
+import com.perceivedev.perceivecore.language.MessageProvider;
 
 /**
  * A Command tree
@@ -26,12 +32,80 @@ public class CommandTree {
     }
 
     /**
+     * Returns all commands
+     *
+     * @return All commands
+     */
+    public List<CommandNode> getAllCommands() {
+        return root.getAllChildren();
+    }
+
+    /**
+     * Returns the tree root
+     *
+     * @return The Tree's root
+     */
+    CommandNode getRoot() {
+        return root;
+    }
+
+    /**
+     * Checks if the {@link CommandNode} is the TreeRoot
+     *
+     * @param commandNode The {@link CommandNode} to check
+     *
+     * @return True if it is the root
+     */
+    boolean isRoot(CommandNode commandNode) {
+        return commandNode instanceof TreeRoot;
+    }
+
+    /**
      * Adds a top level child
      *
      * @param node The {@link CommandNode} to add
      */
     public void addTopLevelChild(CommandNode node) {
         root.addChild(node);
+    }
+
+    /**
+     * Attaches the help
+     *
+     * @param node The {@link CommandNode} to add it to
+     * @param permission The permission for the help command
+     * @param provider The MessageProvider to use
+     */
+    public void attachHelp(AbstractCommandNode node, String permission, MessageProvider provider) {
+        node.addChild(new DefaultHelpCommand(new Permission(permission), provider, this));
+    }
+
+    /**
+     * Adds a top level child and registers it at runtime
+     *
+     * @param node The {@link CommandNode} to add
+     * @param executor The {@link CommandExecutor} to use
+     * @param tabCompleter The {@link TabCompleter} to use
+     * @param owner The owning {@link Plugin}
+     * @param aliases The aliases for this command
+     */
+    public void addTopLevelChildAndRegister(CommandNode node, CommandExecutor executor, TabCompleter tabCompleter, Plugin owner, String... aliases) {
+        root.addChild(node);
+        List<String> alias = Arrays.asList(aliases);
+        CommandSystemUtil.registerCommand(node.getKeyword(), owner, alias, executor, tabCompleter);
+    }
+
+    /**
+     * Removes the command and unregisters it at runtime
+     *
+     * @param commandNode The {@link CommandNode} to remove
+     */
+    public void removeTopLevelChild(CommandNode commandNode) {
+        if (!root.getChildren().contains(commandNode)) {
+            return;
+        }
+        root.removeChild(root);
+        CommandSystemUtil.unregisterCommand(commandNode.getKeyword());
     }
 
     /**
@@ -128,6 +202,11 @@ public class CommandTree {
         @Override
         public String getKeyword() {
             return "root keyword";
+        }
+
+        @Override
+        public String getName() {
+            return "root name";
         }
     }
 }

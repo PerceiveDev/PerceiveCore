@@ -89,6 +89,16 @@ public abstract class AbstractCommandNode implements CommandNode {
         return Collections.unmodifiableList(children);
     }
 
+    @Override
+    public List<CommandNode> getAllChildren() {
+        List<CommandNode> children = new ArrayList<>();
+        children.addAll(getChildren());
+        for (CommandNode commandNode : getChildren()) {
+            children.addAll(commandNode.getChildren());
+        }
+        return children;
+    }
+
     /**
      * Adds a child
      *

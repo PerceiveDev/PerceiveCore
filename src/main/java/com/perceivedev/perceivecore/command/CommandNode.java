@@ -17,6 +17,13 @@ interface CommandNode {
     List<CommandNode> getChildren();
 
     /**
+     * Returns all children of this command
+     *
+     * @return ALL children of this command
+     */
+    List<CommandNode> getAllChildren();
+
+    /**
      * Executes the command
      *
      * @param sender The sender to execute it as
@@ -107,4 +114,11 @@ interface CommandNode {
      * @return The keyword
      */
     String getKeyword();
+
+    /**
+     * Returns the name of the command.
+     *
+     * @return The name of the command. Used in e.g. the help command
+     */
+    String getName();
 }

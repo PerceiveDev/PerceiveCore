@@ -578,11 +578,12 @@ public class ReflectionUtil {
         Objects.requireNonNull(params);
 
         try {
+            constructor.setAccessible(true);
             return new ReflectResponse<>(constructor.newInstance(params));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return new ReflectResponse<>(e);
-        } catch (InstantiationException | InvocationTargetException e) {
+        } catch (InstantiationException | InvocationTargetException | IllegalArgumentException e) {
             return new ReflectResponse<>(e);
         }
     }
