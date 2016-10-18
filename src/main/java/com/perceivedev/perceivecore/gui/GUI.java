@@ -3,14 +3,19 @@
  */
 package com.perceivedev.perceivecore.gui;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.component.Component;
+import com.perceivedev.perceivecore.gui.component.Rect;
 import com.perceivedev.perceivecore.util.ItemUtils;
 import com.perceivedev.perceivecore.util.TextUtils;
 
@@ -20,12 +25,12 @@ import com.perceivedev.perceivecore.util.TextUtils;
  */
 public class GUI {
 
-    private List<Component> components = new ArrayList<>();
-    private String          name;
-    private int             rows;
+    private Map<Component, Rect> components = new HashMap<>();
+    private String               name;
+    private int                  rows;
 
-    private DisplayType     fill;
-    private DisplayColor    color;
+    private DisplayType          fill;
+    private DisplayColor         color;
 
     public GUI(String name, int rows, DisplayType fill, DisplayColor color) {
 
@@ -55,19 +60,46 @@ public class GUI {
      * @return the components
      */
     public List<Component> getComponents() {
-        return components;
+        return components.keySet().stream().collect(Collectors.toList());
     }
 
     /**
      * Adds a component and returns the id of it
      * 
      * @param component the component
+     * @param pos the position and size of the component
      * @return The component's id
      */
-    public int addComponent(Component component) {
-        components.add(component);
+    public int addComponent(Component component, Rect pos) {
+        components.put(component, pos);
         component.setGui(this);
         return components.size() - 1;
+    }
+
+    /**
+     * Adds a component and returns the id of it
+     * 
+     * @param component the component
+     * @param x the x position of the component
+     * @param y the y position of the component
+     * @param width the width of the component
+     * @param height the height of the component
+     * @return The component's id
+     */
+    public int addComponent(Component component, int x, int y, int width, int height) {
+        return addComponent(component, new Rect(x, y, width, height));
+    }
+
+    /**
+     * Adds a component and returns the id of it
+     * 
+     * @param component the component
+     * @param x the x position of the component
+     * @param y the y position of the component
+     * @return The component's id
+     */
+    public int addComponent(Component component, int x, int y) {
+        return addComponent(component, x, y, 1, 1);
     }
 
     /**
@@ -78,7 +110,10 @@ public class GUI {
      *         for that id
      */
     public Component getComponent(int componentId) {
-        return components.get(componentId);
+        if (componentId >= components.size()) {
+            return null;
+        }
+        return components.keySet().toArray(new Component[0])[componentId];
     }
 
     /**
@@ -88,6 +123,19 @@ public class GUI {
      */
     public Inventory getInventory() {
         return new GUIHolder(this).getInventory();
+    }
+
+    /**
+     * Opens this GUI to the player
+     * 
+     * @param player the player to open the GUI for
+     */
+    public void open(Player player) {
+        Objects.requireNonNull(player);
+        if (!player.isOnline()) {
+            throw new IllegalArgumentException("Player must be online!");
+        }
+        player.openInventory(getInventory());
     }
 
     /**
@@ -116,6 +164,14 @@ public class GUI {
                 holder.setItem(i, ItemUtils.setName(fill.getItem(color), " "));
             }
         }
+    }
+
+    /**
+     * @param component
+     * @return
+     */
+    public Rect getPos(Component component) {
+        return components.get(component);
     }
 
 }

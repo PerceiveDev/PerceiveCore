@@ -464,6 +464,17 @@ public class NBTWrappers {
         }
 
         /**
+         * Removes an {@link INBTBase} from the list
+         *
+         * @param base The {@link INBTBase} to remove
+         *
+         * @return {@code true} if this list contained the specified element
+         */
+        public boolean remove(INBTBase base) {
+            return list.remove(base);
+        }
+
+        /**
          * Returns the item
          *
          * @param index The index of the item
@@ -490,6 +501,15 @@ public class NBTWrappers {
          */
         public boolean isType(Class<? extends INBTBase> type) {
             return list.isEmpty() || list.get(0).getClass() == type;
+        }
+
+        /**
+         * Returns the list.
+         *
+         * @return The list of NBT elements. Unmodifiable. Use the add and remove functions.
+         */
+        public List<INBTBase> getList() {
+            return Collections.unmodifiableList(list);
         }
 
         @Override

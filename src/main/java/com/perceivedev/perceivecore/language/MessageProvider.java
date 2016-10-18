@@ -1,7 +1,6 @@
 package com.perceivedev.perceivecore.language;
 
 import java.util.Locale;
-import java.util.Objects;
 
 import org.bukkit.ChatColor;
 
@@ -64,7 +63,7 @@ public interface MessageProvider {
      * @see #trOrDefault(String, String, String, Object...) #trOrDefault(String, String, String, Object...) with the #getDefaultCategory()
      */
     default String trOrDefault(String key, String defaultString, Object... formattingObjects) {
-        return trOrDefault(key, getDefaultCategory().getName(), defaultString, formattingObjects);
+        return trOrDefault(key, getDefaultCategory(), defaultString, formattingObjects);
     }
 
     /**
@@ -90,7 +89,7 @@ public interface MessageProvider {
      * Object...) with the default category
      */
     default String trUncolored(String key, Object... formattingObjects) {
-        return trUncolored(key, getDefaultCategory().getName(), formattingObjects);
+        return trUncolored(key, getDefaultCategory(), formattingObjects);
     }
 
     /**
@@ -107,14 +106,14 @@ public interface MessageProvider {
      *
      * @return The default category
      */
-    Category getDefaultCategory();
+    String getDefaultCategory();
 
     /**
      * Adds the category
      *
      * @param category The category to add
      */
-    void addCategory(Category category);
+    void addCategory(String category);
 
     /**
      * Changes the language, if a new one is available.
@@ -137,49 +136,4 @@ public interface MessageProvider {
      * reloaded.
      */
     void reload();
-
-    /**
-     * A category
-     */
-    class Category {
-        private String name;
-
-        /**
-         * @param name The name
-         */
-        public Category(String name) {
-            this.name = name;
-        }
-
-        /**
-         * Returns the name
-         *
-         * @return The name
-         */
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return "Category{" + "name='" + name + '\'' + '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Category)) {
-                return false;
-            }
-            Category category = (Category) o;
-            return Objects.equals(name, category.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name);
-        }
-    }
 }

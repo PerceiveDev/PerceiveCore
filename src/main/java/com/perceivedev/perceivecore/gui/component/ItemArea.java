@@ -22,13 +22,13 @@ public class ItemArea extends Component implements Container {
 
     protected boolean interactable;
 
-    public ItemArea(int x, int y, int width, int height, boolean interactable) {
-        super(x, y, width, height, DisplayType.EMPTY, DisplayColor.WHITE);
+    public ItemArea(boolean interactable) {
+        super(DisplayType.EMPTY, DisplayColor.WHITE);
         this.interactable = interactable;
     }
 
-    public ItemArea(int x, int y, int width, int height) {
-        this(x, y, width, height, false);
+    public ItemArea() {
+        this(false);
     }
 
     /**
@@ -38,10 +38,10 @@ public class ItemArea extends Component implements Container {
      * @param inventory the Inventory to get the contents from
      */
     @Override
-    public ItemStack[] getContents(Inventory inventory) {
-        ItemStack[] items = new ItemStack[x + y * 9];
-        for (int ix = x; ix < x + width; ix++) {
-            for (int iy = y; iy < y + height; iy++) {
+    public ItemStack[] getContents(Rect pos, Inventory inventory) {
+        ItemStack[] items = new ItemStack[pos.getX() + pos.getY() * 9];
+        for (int ix = pos.getX(); ix < pos.getX() + pos.getWidth(); ix++) {
+            for (int iy = pos.getY(); iy < pos.getY() + pos.getHeight(); iy++) {
                 items[ix + iy * 9] = inventory.getItem(ix + iy * 9);
             }
         }
@@ -56,16 +56,16 @@ public class ItemArea extends Component implements Container {
      * @param contents the items to set the contents to
      */
     @Override
-    public void setContents(Inventory inventory, ItemStack[] contents) {
+    public void setContents(Rect pos, Inventory inventory, ItemStack[] contents) {
         if (contents == null) {
-            for (int ix = x; ix < x + width; ix++) {
-                for (int iy = y; iy < y + height; iy++) {
+            for (int ix = pos.getX(); ix < pos.getX() + pos.getWidth(); ix++) {
+                for (int iy = pos.getY(); iy < pos.getY() + pos.getHeight(); iy++) {
                     inventory.setItem(ix + iy * 9, null);
                 }
             }
         } else {
-            for (int ix = x; ix < x + width; ix++) {
-                for (int iy = y; iy < y + height; iy++) {
+            for (int ix = pos.getX(); ix < pos.getX() + pos.getWidth(); ix++) {
+                for (int iy = pos.getY(); iy < pos.getY() + pos.getHeight(); iy++) {
                     inventory.setItem(ix + iy * 9, contents[ix + iy * 9]);
                 }
             }

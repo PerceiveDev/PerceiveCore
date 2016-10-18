@@ -11,15 +11,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
 
 import com.perceivedev.perceivecore.config.handlers.LocationSerializer;
+import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
 
@@ -51,12 +55,6 @@ public class SerializationManager {
 
     private static Map<Class<?>, SerializationProxy<?>> serializationProxyMap = new HashMap<>();
 
-    static {
-        serializationProxyMap.put(Vector.class, new VectorSerializer());
-        serializationProxyMap.put(Location.class, new LocationSerializer());
-        serializationProxyMap.put(World.class, new WorldSerializer());
-    }
-
     /**
      * Adds a proxy for a class
      *
@@ -66,6 +64,13 @@ public class SerializationManager {
      */
     public static <T> void addSerializationProxy(Class<T> clazz, SerializationProxy<T> proxy) {
         serializationProxyMap.put(clazz, proxy);
+    }
+
+    static {
+        addSerializationProxy(Vector.class, new VectorSerializer());
+        addSerializationProxy(Location.class, new LocationSerializer());
+        addSerializationProxy(World.class, new WorldSerializer());
+        addSerializationProxy(UUID.class, new UUIDSerializer());
     }
 
     /**
@@ -87,7 +92,7 @@ public class SerializationManager {
      * @throws IllegalArgumentException if a field couldn't be serialized
      * @throws IllegalStateException if a too deep loop is detected
      */
-    public Map<String, Object> serialize(ConfigSerializable configSerializable) {
+    public static Map<String, Object> serialize(ConfigSerializable configSerializable) {
         return serialize(configSerializable, 0);
     }
 
@@ -102,7 +107,7 @@ public class SerializationManager {
      * @throws IllegalArgumentException if a field couldn't be serialized
      * @throws IllegalStateException if a too deep loop is detected
      */
-    private Map<String, Object> serialize(ConfigSerializable configSerializable, int depth) {
+    private static Map<String, Object> serialize(ConfigSerializable configSerializable, int depth) {
         if (configSerializable == null) {
             return Collections.emptyMap();
         }
@@ -151,12 +156,26 @@ public class SerializationManager {
      * Deserializes an object.
      *
      * @param clazz The clazz to deserialize
+     * @param data The serialized data (ConfigurationSection or
+     *            YamlConfiguration)
+     * @param <T> The type of the class to deserialize
+     *
+     * @return The deserialized class
+     */
+    public static <T> T deserialize(Class<T> clazz, ConfigurationSection data) {
+        return deserialize(clazz, convertToMap(data), 0);
+    }
+
+    /**
+     * Deserializes an object.
+     *
+     * @param clazz The clazz to deserialize
      * @param data The serialized data
      * @param <T> The type of the class to deserialize
      *
      * @return The deserialized class
      */
-    public <T> T deserialize(Class<T> clazz, Map<String, Object> data) {
+    public static <T> T deserialize(Class<T> clazz, Map<String, Object> data) {
         return deserialize(clazz, data, 0);
     }
 
@@ -172,14 +191,14 @@ public class SerializationManager {
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     * field
+     *             field
      */
-    private <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
+    private static <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
             throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
         }
 
-        // TODO: 30.09.2016 Throw an exception here? 
+        // TODO: 30.09.2016 Throw an exception here?
         if (!hasDefaultConstructor(clazz)) {
             return null;
         }
@@ -260,6 +279,24 @@ public class SerializationManager {
         }
 
         return instance;
+    }
+
+    /**
+     * @param section the ConfigurationSection to convert
+     */
+    private static Map<String, Object> convertToMap(ConfigurationSection section) {
+        if (section == null) {
+            return null;
+        }
+        Map<String, Object> data = new HashMap<String, Object>();
+        for (Entry<String, Object> entry : section.getValues(false).entrySet()) {
+            if (section.isConfigurationSection(entry.getKey())) {
+                data.put(entry.getKey(), convertToMap(section.getConfigurationSection(entry.getKey())));
+            } else {
+                data.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return data;
     }
 
     /**
@@ -452,6 +489,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                  .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 }

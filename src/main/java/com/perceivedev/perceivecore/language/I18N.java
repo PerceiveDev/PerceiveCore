@@ -10,19 +10,26 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.util.TextUtils;
 
 /**
  * An implementation of the {@link MessageProvider} using
@@ -36,16 +43,16 @@ public class I18N implements MessageProvider {
      */
     private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
 
-    private Map<String, Category>         categories          = new HashMap<>();
-    private Map<Category, ResourceBundle> fileResourceBundles = new HashMap<>();
-    private Map<Category, ResourceBundle> jarResourceBundles  = new HashMap<>();
+    private Set<String>                 categories          = new HashSet<>();
+    private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
+    private Map<String, ResourceBundle> jarResourceBundles  = new HashMap<>();
 
     private Locale currentLanguage;
     private String basePackage;
 
     private ClassLoader callerClassLoader, fileClassLoader;
 
-    private Category defaultCategory;
+    private String defaultCategory;
 
     /**
      * Cache to increase performance. May be left out.
@@ -63,7 +70,7 @@ public class I18N implements MessageProvider {
      *
      * @throws NullPointerException If any parameter is null
      */
-    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, Category defaultCategory, Category... more) {
+    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, String defaultCategory, String... more) {
 
         Objects.requireNonNull(currentLanguage);
         Objects.requireNonNull(basePackage);
@@ -76,14 +83,27 @@ public class I18N implements MessageProvider {
         this.basePackage = basePackage;
         this.callerClassLoader = callerClassLoader;
 
-        this.categories.put(defaultCategory.getName(), defaultCategory);
-        Arrays.stream(more).forEach(category -> categories.put(category.getName(), category));
+        this.categories.add(defaultCategory);
 
         this.defaultCategory = defaultCategory;
 
-        fileClassLoader = new FileClassLoader(savePath, basePackage);
+        fileClassLoader = new FileClassLoader(savePath);
 
         createBundles();
+    }
+
+    public I18N(JavaPlugin plugin, String basePackage) {
+        this(Locale.ENGLISH, basePackage, ensureDirExists(plugin.getDataFolder().toPath().resolve("language")), plugin.getClass().getClassLoader(), "Messages");
+    }
+
+    private static Path ensureDirExists(Path path) {
+        try {
+            Files.createDirectories(path);
+            return path;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -98,7 +118,7 @@ public class I18N implements MessageProvider {
 
         messageFormatCache.clear();
 
-        categories.values().forEach(category -> {
+        categories.forEach(category -> {
             if (!createBundle(category)) {
                 System.out.println("Not found: " + category);
                 // TODO: Log this properly
@@ -113,16 +133,16 @@ public class I18N implements MessageProvider {
      *
      * @return True if the bundle was found in the jar or on file.
      */
-    private boolean createBundle(Category category) {
+    private boolean createBundle(String category) {
         try {
-            ResourceBundle jarBundle = ResourceBundle.getBundle(basePackage + "." + category.getName(), currentLanguage, callerClassLoader);
+            ResourceBundle jarBundle = ResourceBundle.getBundle(basePackage + "." + category, currentLanguage, callerClassLoader);
 
             jarResourceBundles.put(category, jarBundle);
         } catch (MissingResourceException ignored) {
         }
 
         try {
-            ResourceBundle fileBundle = ResourceBundle.getBundle(category.getName(), currentLanguage, fileClassLoader);
+            ResourceBundle fileBundle = ResourceBundle.getBundle(category, currentLanguage, fileClassLoader);
 
             fileResourceBundles.put(category, fileBundle);
         } catch (MissingResourceException ignored) {
@@ -142,7 +162,7 @@ public class I18N implements MessageProvider {
      * @throws IllegalArgumentException If the category isn't in
      * {@link #categories}
      */
-    private String translate(String key, Category category) {
+    private String translate(String key, String category) {
         Optional<String> translated = translateOrEmpty(key, category);
         if (translated.isPresent()) {
             return translated.get();
@@ -161,8 +181,8 @@ public class I18N implements MessageProvider {
      * @throws IllegalArgumentException If the category isn't in
      * {@link #categories}
      */
-    private Optional<String> translateOrEmpty(String key, Category category) {
-        if (!categories.containsKey(category.getName())) {
+    private Optional<String> translateOrEmpty(String key, String category) {
+        if (!categories.contains(category)) {
             throw new IllegalArgumentException("Category unknown!");
         }
 
@@ -173,11 +193,13 @@ public class I18N implements MessageProvider {
             }
         }
 
-        try {
-            return Optional.of(jarResourceBundles.get(category).getString(key));
-        } catch (MissingResourceException e) {
-            return Optional.empty();
+        if (jarResourceBundles.containsKey(category)) {
+            try {
+                return Optional.of(jarResourceBundles.get(category).getString(key));
+            } catch (MissingResourceException ignored) {
+            }
         }
+        return Optional.empty();
     }
 
     /**
@@ -219,15 +241,15 @@ public class I18N implements MessageProvider {
 
     @Override
     public String trOrDefault(String key, String category, String defaultString, Object... formattingObjects) {
-        if (!categories.containsKey(category)) {
+        if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
         }
 
-        Optional<String> formatted = translateOrEmpty(key, categories.get(category));
+        Optional<String> formatted = translateOrEmpty(key, category);
         if (formatted.isPresent()) {
-            return format(formatted.get(), formattingObjects);
+            return TextUtils.colorize(format(formatted.get(), formattingObjects));
         }
-        return format(defaultString, formattingObjects);
+        return TextUtils.colorize(format(defaultString, formattingObjects));
     }
 
     /**
@@ -246,11 +268,11 @@ public class I18N implements MessageProvider {
         Objects.requireNonNull(category);
         Objects.requireNonNull(formattingObjects);
 
-        if (!categories.containsKey(category)) {
+        if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
         }
 
-        String formatted = format(translate(key, categories.get(category)), formattingObjects);
+        String formatted = format(translate(key, category), formattingObjects);
 
         formatted = resolveReferences(formatted, category);
 
@@ -267,46 +289,46 @@ public class I18N implements MessageProvider {
      */
     @Override
     public String trUncolored(String key, Object... formattingObjects) {
-        return trUncolored(key, defaultCategory.getName(), formattingObjects);
+        return trUncolored(key, defaultCategory, formattingObjects);
     }
 
     @Override
     public boolean setDefaultCategory(String categoryName) {
         Objects.requireNonNull(categoryName);
-        if (!categories.containsKey(categoryName)) {
+        if (!categories.contains(categoryName)) {
             return false;
         }
 
-        defaultCategory = categories.get(categoryName);
+        defaultCategory = categoryName;
         return true;
     }
 
     @Override
-    public Category getDefaultCategory() {
+    public String getDefaultCategory() {
         return defaultCategory;
     }
 
     @Override
-    public void addCategory(Category category) {
+    public void addCategory(String category) {
         Objects.requireNonNull(category);
-        if (categories.containsKey(category.getName())) {
+        if (categories.contains(category)) {
             return;
         }
-        categories.put(category.getName(), category);
+        categories.add(category);
         createBundle(category);
     }
 
     private boolean tryLanguage(Locale language) {
-        for (Category category : categories.values()) {
+        for (String category : categories) {
             boolean found = false;
             try {
-                ResourceBundle.getBundle(basePackage + "." + category.getName(), language, callerClassLoader);
+                ResourceBundle.getBundle(basePackage + "." + category, language, callerClassLoader);
                 found = true;
             } catch (MissingResourceException ignored) {
             }
 
             try {
-                ResourceBundle.getBundle(category.getName(), language, fileClassLoader);
+                ResourceBundle.getBundle(category, language, fileClassLoader);
                 found = true;
             } catch (MissingResourceException ignored) {
             }
@@ -342,7 +364,6 @@ public class I18N implements MessageProvider {
         return currentLanguage;
     }
 
-    // TODO: Test this
     @Override
     public void reload() {
         createBundles();
@@ -353,25 +374,21 @@ public class I18N implements MessageProvider {
      */
     private static class FileClassLoader extends ClassLoader {
 
-        private Path   path;
-        private String defaultPackage;
+        private Path path;
 
         /**
          * @param path The base path to read from
-         * @param defaultPackage The default package. Used for correctly mapping
-         * the two file structures. The path in the jar and outside.
          */
-        FileClassLoader(Path path, String defaultPackage) {
+        FileClassLoader(Path path) {
             if (!Files.isDirectory(path)) {
                 throw new IllegalArgumentException("Path can only be a directory.");
             }
             this.path = path;
-            this.defaultPackage = defaultPackage.replace(".", "/");
         }
 
         @Override
         public URL getResource(String name) {
-            Path resourcePath = path.resolve(name.replace(defaultPackage + "/", ""));
+            Path resourcePath = path.resolve(name);
             if (!Files.exists(resourcePath)) {
                 return null;
             }
@@ -389,16 +406,13 @@ public class I18N implements MessageProvider {
                 return null;
             }
             try {
-                return Files.newInputStream(path.resolve(name.replace(defaultPackage + "/", "")), StandardOpenOption.READ);
+                return Files.newInputStream(path.resolve(name), StandardOpenOption.READ);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
-
-    // TODO: This is untested, as I have no jar file and I am too lazy to add an
-    // artifact
 
     /**
      * @param defaultPackage The package they are in
@@ -441,5 +455,28 @@ public class I18N implements MessageProvider {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * @param plugin Your plugin
+     * @param overwrite If the existing files should be overwritten.
+     * @param basePackage The base package in the jar to read from
+     *
+     * @return True if the files were written, false otherwise.
+     *
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
+     */
+    public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
+        File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();
+        Path targetDir = plugin.getDataFolder().toPath().resolve("language");
+        if (Files.notExists(targetDir)) {
+            try {
+                Files.createDirectories(targetDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return copyDefaultFiles(basePackage, targetDir, overwrite, pluginJar);
     }
 }
