@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Location;
@@ -22,6 +23,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
 
 import com.perceivedev.perceivecore.config.handlers.LocationSerializer;
+import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
 
@@ -53,12 +55,6 @@ public class SerializationManager {
 
     private static Map<Class<?>, SerializationProxy<?>> serializationProxyMap = new HashMap<>();
 
-    static {
-        serializationProxyMap.put(Vector.class, new VectorSerializer());
-        serializationProxyMap.put(Location.class, new LocationSerializer());
-        serializationProxyMap.put(World.class, new WorldSerializer());
-    }
-
     /**
      * Adds a proxy for a class
      *
@@ -68,6 +64,13 @@ public class SerializationManager {
      */
     public static <T> void addSerializationProxy(Class<T> clazz, SerializationProxy<T> proxy) {
         serializationProxyMap.put(clazz, proxy);
+    }
+
+    static {
+        addSerializationProxy(Vector.class, new VectorSerializer());
+        addSerializationProxy(Location.class, new LocationSerializer());
+        addSerializationProxy(World.class, new WorldSerializer());
+        addSerializationProxy(UUID.class, new UUIDSerializer());
     }
 
     /**
@@ -153,7 +156,8 @@ public class SerializationManager {
      * Deserializes an object.
      *
      * @param clazz The clazz to deserialize
-     * @param data The serialized data (ConfigurationSection or YamlConfiguration)
+     * @param data The serialized data (ConfigurationSection or
+     *            YamlConfiguration)
      * @param <T> The type of the class to deserialize
      *
      * @return The deserialized class
