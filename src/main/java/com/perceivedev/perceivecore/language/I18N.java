@@ -27,6 +27,10 @@ import java.util.regex.Pattern;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
+import com.perceivedev.perceivecore.util.TextUtils;
+
 /**
  * An implementation of the {@link MessageProvider} using
  */
@@ -189,11 +193,13 @@ public class I18N implements MessageProvider {
             }
         }
 
-        try {
-            return Optional.of(jarResourceBundles.get(category).getString(key));
-        } catch (MissingResourceException e) {
-            return Optional.empty();
+        if (jarResourceBundles.containsKey(category)) {
+            try {
+                return Optional.of(jarResourceBundles.get(category).getString(key));
+            } catch (MissingResourceException ignored) {
+            }
         }
+        return Optional.empty();
     }
 
     /**
@@ -241,9 +247,9 @@ public class I18N implements MessageProvider {
 
         Optional<String> formatted = translateOrEmpty(key, category);
         if (formatted.isPresent()) {
-            return format(formatted.get(), formattingObjects);
+            return TextUtils.colorize(format(formatted.get(), formattingObjects));
         }
-        return format(defaultString, formattingObjects);
+        return TextUtils.colorize(format(defaultString, formattingObjects));
     }
 
     /**
@@ -358,7 +364,6 @@ public class I18N implements MessageProvider {
         return currentLanguage;
     }
 
-    // TODO: Test this
     @Override
     public void reload() {
         createBundles();
@@ -369,7 +374,7 @@ public class I18N implements MessageProvider {
      */
     private static class FileClassLoader extends ClassLoader {
 
-        private Path   path;
+        private Path path;
 
         /**
          * @param path The base path to read from
@@ -408,9 +413,6 @@ public class I18N implements MessageProvider {
             return null;
         }
     }
-
-    // TODO: This is untested, as I have no jar file and I am too lazy to add an
-    // artifact
 
     /**
      * @param defaultPackage The package they are in
@@ -453,5 +455,28 @@ public class I18N implements MessageProvider {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * @param plugin Your plugin
+     * @param overwrite If the existing files should be overwritten.
+     * @param basePackage The base package in the jar to read from
+     *
+     * @return True if the files were written, false otherwise.
+     *
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
+     */
+    public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
+        File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();
+        Path targetDir = plugin.getDataFolder().toPath().resolve("language");
+        if (Files.notExists(targetDir)) {
+            try {
+                Files.createDirectories(targetDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return copyDefaultFiles(basePackage, targetDir, overwrite, pluginJar);
     }
 }
