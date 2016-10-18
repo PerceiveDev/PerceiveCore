@@ -20,7 +20,6 @@ import static com.perceivedev.perceivecore.util.TextUtils.colorize;
 /**
  * Pages something.
  */
-@SuppressWarnings("unused")
 public class Pager {
 
     /**
@@ -503,13 +502,13 @@ public class Pager {
             String headerKey = this.headerKey == null ? "pager_header" : this.headerKey;
             String footerKey = this.footerKey == null ? "pager_footer" : this.footerKey;
 
-            sender.sendMessage(colorize(language.trOrDefault(headerKey,
-                      "\n&5+-------------- &a&lPage &8(&a{0}&8/&2{1}&8) &5----------------+\n ",
-                      pageIndex + 1, maxPages)));
+            sender.sendMessage(language.trOrDefault(headerKey,
+                      "\n&a&l+&8&m-----------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
+                      pageIndex + 1, maxPages));
             entries.forEach(s -> sender.sendMessage(colorize(s)));
-            sender.sendMessage(colorize(language.trOrDefault(footerKey,
-                      "\n&5+----------------- &8(&a{0}&8/&2{1}&8) &5------------------+\n ",
-                      pageIndex + 1, maxPages)));
+            sender.sendMessage(language.trOrDefault(footerKey,
+                      "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
+                      pageIndex + 1, maxPages));
         }
     }
 }
