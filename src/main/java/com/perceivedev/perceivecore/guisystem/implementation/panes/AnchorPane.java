@@ -93,4 +93,9 @@ public class AnchorPane extends AbstractPane {
 
         return result;
     }
+
+    @Override
+    public AnchorPane deepClone() {
+        return (AnchorPane) super.deepClone();
+    }
 }

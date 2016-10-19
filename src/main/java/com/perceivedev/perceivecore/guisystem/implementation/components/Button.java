@@ -64,9 +64,17 @@ public class Button implements Component {
      *
      * @param itemStack The new itemstack
      */
-
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack.clone();
+    }
+
+    /**
+     * Returns the {@link ItemStack} of this button
+     *
+     * @return The {@link ItemStack}
+     */
+    public ItemStack getItemStack() {
+        return itemStack.clone();
     }
 
     /**
@@ -107,6 +115,26 @@ public class Button implements Component {
         });
     }
 
+    /**
+     * The returned Button will be logically equal to this, but equals will return false.
+     * This is because of a hidden ID assigned, to distinguish instances.
+     *
+     * @return A clone of this button
+     */
+    @Override
+    public Button deepClone() {
+        try {
+            return new Button(itemStack.clone(), runnable, size.clone());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * This WILL NOT TEST FOR A LOGICAL EQUALS.
+     * It compares a hidden inner state and is used to distinguish instances of this class.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)

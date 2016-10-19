@@ -233,4 +233,14 @@ public class GridPane extends AbstractPane {
 
         removeComponent(component.get());
     }
+
+    @Override
+    public GridPane deepClone() {
+        GridPane clone = (GridPane) super.deepClone();
+        clone.slots = slots.clone();
+        for (int i = 0; i < slots.length; i++) {
+            clone.slots[i] = slots[i].clone();
+        }
+        return clone;
+    }
 }

@@ -167,7 +167,7 @@ public class CommandTree {
 
             // now, is there any child that can continue
             for (CommandNode child : getChildren()) {
-                // clone to prevent recursion to interfere with each other
+                // deepClone to prevent recursion to interfere with each other
                 CommandFindResult findRes = child.find(sender, joinedQuery);
 
                 if (findRes.wasFound()) {

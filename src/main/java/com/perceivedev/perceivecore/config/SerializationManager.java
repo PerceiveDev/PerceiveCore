@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -85,6 +86,51 @@ public class SerializationManager {
     }
 
     /**
+     * Returns the serialization proxy for a class
+     *
+     * @param clazz The clazz to get the SerializationProxy for
+     *
+     * @return The Serialization proxy for the given class
+     */
+    private static SerializationProxy<?> getSerializationProxy(Class<?> clazz) {
+        if (serializationProxyMap.containsKey(clazz)) {
+            return serializationProxyMap.get(clazz);
+        }
+
+        if (clazz.isPrimitive()) {
+            return null;
+        }
+
+        Class<?> superClass = clazz;
+        while ((superClass = superClass.getSuperclass()) != Class.class && superClass != Object.class) {
+            if (getProxyForClassExact(superClass) != null) {
+                return getProxyForClassExact(superClass);
+            }
+            for (Class<?> implementedInterface : superClass.getInterfaces()) {
+                if (getProxyForClassExact(implementedInterface) != null) {
+                    return getProxyForClassExact(implementedInterface);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static SerializationProxy<?> getProxyForClassExact(Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        // only use superclass proxies if they were registered for interfaces or abstract classes
+        if (!clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers())) {
+            return null;
+        }
+        if (serializationProxyMap.containsKey(clazz)) {
+            return serializationProxyMap.get(clazz);
+        }
+        return null;
+    }
+
+    /**
      * Checks if a class is serializable
      *
      * @param clazz The class to check
@@ -95,7 +141,7 @@ public class SerializationManager {
         return ConfigurationSerializable.class.isAssignableFrom(clazz)
                   || ConfigSerializable.class.isAssignableFrom(clazz)
                   || RAW_INSERTABLE_CLASSES.contains(clazz)
-                  || serializationProxyMap.containsKey(clazz);
+                  || getSerializationProxy(clazz) != null;
 
     }
 
@@ -116,57 +162,93 @@ public class SerializationManager {
     /**
      * Serializes a class
      *
-     * @param configSerializable The {@link ConfigSerializable} to serialize
+     * @param object The {@link Object} to serialize
      * @param depth The recursion depth
      *
      * @return The Serialized form
      *
      * @throws IllegalArgumentException if a field couldn't be serialized
+     * @throws IllegalArgumentException if the object can't be serialized
      * @throws IllegalStateException if a too deep loop is detected
      */
-    private static Map<String, Object> serialize(ConfigSerializable configSerializable, int depth) {
-        if (configSerializable == null) {
+    public static Map<String, Object> serialize(Object object, int depth) {
+        if (object == null) {
             return Collections.emptyMap();
         }
+
+        if (!isSerializable(object.getClass())) {
+            throw new IllegalArgumentException("Can't serialize class: " + object.getClass().getName());
+        }
+
         if (depth > MAX_DEPTH) {
             throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
         }
 
         Map<String, Object> map = new HashMap<>();
 
-        for (Field field : getFieldsToSerialize(configSerializable.getClass())) {
+        for (Field field : getFieldsToSerialize(object.getClass())) {
             Class<?> type = field.getType();
 
-            if (getField(field, configSerializable) == null) {
+            if (getField(field, object) == null) {
                 map.put(field.getName(), null);
                 continue;
             }
 
-            if (ConfigSerializable.class.isAssignableFrom(type)) {
-                Map<String, Object> nestedSerialized = serialize(getField(field, configSerializable), depth + 1);
-                map.put(field.getName(), nestedSerialized);
-            } else if (serializationProxyMap.containsKey(type)) {
-                SerializationProxy<?> proxy = serializationProxyMap.get(type);
-                Map<String, Object> serialized = proxy.serialize(getField(field, configSerializable));
-                map.put(field.getName(), serialized);
-            } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
-                ConfigurationSerializable configurationSerializable = getField(field, configSerializable);
-
-                // will actually be the case as I check in the
-                // first statement. Just to shut IntelliJ up
-                // and don't add any SuppressWarnings
-                // eclipse has never heard of.
-                assert configurationSerializable != null;
-
-                map.put(field.getName(), configurationSerializable.serialize());
-            } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
-                map.put(field.getName(), getField(field, configSerializable));
-            } else {
-                throw new IllegalArgumentException("The field " + field.getName() + " of type " + type.getName() + " is  not serializable");
+            try {
+                // yes, that will actually throw off the depth calc. Should still prevent Stack overflows.
+                Object value = getField(field, object);
+                map.put(field.getName(), serializeOneLevel(value, depth + 1));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("The field " + field.getName() + " of type " + type.getName() + " is not serializable");
             }
         }
 
         return map;
+    }
+
+    /**
+     * Serializes ONLY THIS object
+     *
+     * @param object The Object to serialize
+     *
+     * @return The serialized object
+     *
+     * @throws NullPointerException if object is null
+     */
+    public static Object serializeOneLevel(Object object) {
+        return serializeOneLevel(object, 0);
+    }
+
+    /**
+     * Serializes ONLY THIS object
+     *
+     * @param object The Object to serialize
+     * @param depth The maximum depth
+     *
+     * @return The serialized object
+     *
+     * @throws NullPointerException if object is null
+     */
+    private static Object serializeOneLevel(Object object, int depth) {
+        Objects.requireNonNull(object);
+
+        Class<?> type = object.getClass();
+        if (ConfigSerializable.class.isAssignableFrom(type)) {
+            return serialize(object, depth + 1);
+        } else if (getSerializationProxy(type) != null) {
+            @SuppressWarnings("rawtypes")
+            SerializationProxy proxy = getSerializationProxy(type);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = proxy.serialize(object);
+            return map;
+        } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
+            ConfigurationSerializable configurationSerializable = (ConfigurationSerializable) object;
+            return configurationSerializable.serialize();
+        } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
+            return object;
+        } else {
+            throw new IllegalArgumentException(type.getName() + " is not serializable.");
+        }
     }
 
     /**
@@ -236,59 +318,9 @@ public class SerializationManager {
                     continue;
                 }
 
-                if (ConfigSerializable.class.isAssignableFrom(type)) {
-
-                    if (serializedData instanceof Map) {
-                        // is assumed. If this false,
-                        // the data has been modified.
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> map = (Map<String, Object>) serializedData;
-
-                        setField(field, instance, deserialize(type, map, depth + 1));
-                    }
-                } else if (serializationProxyMap.containsKey(type)) {
-                    SerializationProxy<?> serializationProxy = serializationProxyMap.get(type);
-
-                    // is actually checked by the contains
-                    // call
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> map = (Map<String, Object>) serializedData;
-
-                    setField(field, instance, serializationProxy.deserialize(map));
-                } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
-                    if (serializedData instanceof Map) {
-                        System.out.println("Found a map. This shouldn't happen, as it means the Bukkit configuration hasn't done it's job.");
-
-                        Object fieldValue = null;
-                        if (getMethod("deserialize", type, Map.class) != null) {
-                            fieldValue = invoke(getMethod("deserialize", type, Map.class), null, serializedData);
-                        } else if (getMethod("valueOf", type, Map.class) != null) {
-                            fieldValue = invoke(getMethod("valueOf", type, Map.class), null, serializedData);
-                        }
-
-                        if (fieldValue != null) {
-                            setField(field, instance, fieldValue);
-                            continue;
-                        }
-
-                        // TODO: @I_Al_Istannen: This is
-                        // bad. We have NO idea if there's a
-                        // constructor with a Map parameter
-
-                        // @Rayzr Should be fixed now.
-                        if (isConstructorPresent(type, Map.class)) {
-                            setField(field, instance, instantiate(type, new Class[] { Map.class }, serializedData));
-                        } else {
-                            System.out.println("No deserialization method found for ConfigurationSerializable " + type.getName());
-                        }
-                    } else {
-                        System.out.println("Set ConfigurationSerializable: " + type.getSimpleName() + " data: " + serializedData);
-                        setField(field, instance, serializedData);
-                    }
-                } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
-                    System.out.println("Set raw data: {" + type.getSimpleName() + "= '" + serializedData + "'}");
-                    setField(field, instance, serializedData);
-                } else {
+                try {
+                    setField(field, instance, deserializeOneLevel(serializedData, type, depth + 1));
+                } catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("No deserialize method found for field " + field.getName() + " of type " + type.getName());
                 }
             }
@@ -298,13 +330,89 @@ public class SerializationManager {
     }
 
     /**
+     * Returns the deserialized object. Deserializes ONE ONE LEVEL.
+     * <b>DO NOT USE THIS METHOD if you don't know what that means</b>
+     *
+     * @param object The Object to deserialize
+     * @param type The class of the object to deserialize
+     *
+     * @return The deserialized object
+     */
+    public static Object deserializeOneLevel(Object object, Class<?> type) {
+        return deserializeOneLevel(object, type, 0);
+    }
+
+    /**
+     * Returns the deserialized object. Deserializes ONE ONE LEVEL.
+     * <b>DO NOT USE THIS METHOD if you don't know what that means</b>
+     *
+     * @param object The Object to deserialize
+     * @param type The class of the object to deserialize
+     *
+     * @return The deserialized object
+     */
+    private static Object deserializeOneLevel(Object object, Class<?> type, int depth) {
+        if (depth > MAX_DEPTH) {
+            throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
+        }
+
+        if (getSerializationProxy(type) != null) {
+            SerializationProxy<?> proxy = getSerializationProxy(type);
+            if (object instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) object;
+
+                // damn IntelliJ. I checked that, I swear!
+                assert proxy != null;
+
+                return proxy.deserialize(map);
+            } else {
+                throw new IllegalArgumentException("Deserialization found no map fpr proxy: " + type.getName());
+            }
+        } else if (ConfigSerializable.class.isAssignableFrom(type)) {
+            if (!(object instanceof Map)) {
+                throw new IllegalArgumentException("Deserialization found no map for ConfigSerializable: " + type.getName());
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = (Map<String, Object>) object;
+            return deserialize(type, map, depth + 1);
+        } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
+            if (object instanceof Map) {
+                // System.out.println("Found a map. This shouldn't happen, as it means the Bukkit configuration hasn't done it's job.");
+
+                Object fieldValue = null;
+                if (getMethod("deserialize", type, Map.class) != null) {
+                    fieldValue = invoke(getMethod("deserialize", type, Map.class), null, object);
+                } else if (getMethod("valueOf", type, Map.class) != null) {
+                    fieldValue = invoke(getMethod("valueOf", type, Map.class), null, object);
+                }
+
+                if (fieldValue != null) {
+                    return fieldValue;
+                }
+
+                if (isConstructorPresent(type, Map.class)) {
+                    return instantiate(type, new Class[] { Map.class }, object);
+                } else {
+                    System.out.println("No deserialization method found for ConfigurationSerializable " + type.getName());
+                }
+            } else {
+                return object;
+            }
+        } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
+            return object;
+        }
+        throw new IllegalArgumentException("No deserialize method found for type " + type.getName());
+    }
+
+    /**
      * @param section the ConfigurationSection to convert
      */
     private static Map<String, Object> convertToMap(ConfigurationSection section) {
         if (section == null) {
             return null;
         }
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         for (Entry<String, Object> entry : section.getValues(false).entrySet()) {
             if (section.isConfigurationSection(entry.getKey())) {
                 data.put(entry.getKey(), convertToMap(section.getConfigurationSection(entry.getKey())));

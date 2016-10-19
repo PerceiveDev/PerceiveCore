@@ -3,14 +3,10 @@
  */
 package com.perceivedev.perceivecore.packet;
 
-import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
-import com.perceivedev.perceivecore.packet.ConverterMap.Pair;
 import com.perceivedev.perceivecore.util.Converter;
+import com.perceivedev.perceivecore.util.Pair;
 
 /**
  * @author Rayzr
@@ -94,79 +90,6 @@ public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?,
      */
     public boolean hasConverter(Class<?> a, Class<?> b) {
         return containsKey(new Pair<Class<?>, Class<?>>(a, b)) || containsKey(new Pair<Class<?>, Class<?>>(b, a));
-    }
-
-    /**
-     * Better than an {@link Entry} ;)
-     * 
-     * @author Rayzr
-     *
-     * @param <K>
-     * @param <V>
-     */
-    public class Pair<K extends Object, V extends Object> implements Serializable, ConfigurationSerializable {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 7388136271482352386L;
-
-        private K                 key;
-        private V                 value;
-
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        /**
-         * Creates a parameter from a data map (used by
-         * {@link ConfigurationSerializable})
-         * 
-         * @param map the data map
-         */
-        @SuppressWarnings("unchecked")
-        public Pair(Map<String, Object> map) {
-            this.key = (K) map.get("key");
-            this.value = (V) map.get("value");
-        }
-
-        /**
-         * @return the key
-         */
-        public K getKey() {
-            return key;
-        }
-
-        /**
-         * @param key the key to set
-         */
-        public void setKey(K key) {
-            this.key = key;
-        }
-
-        /**
-         * @return the value
-         */
-        public V getValue() {
-            return value;
-        }
-
-        /**
-         * @param value the value to set
-         */
-        public void setValue(V value) {
-            this.value = value;
-        }
-
-        @Override
-        public Map<String, Object> serialize() {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("key", key);
-            map.put("value", value);
-            return map;
-        }
-
     }
 
 }

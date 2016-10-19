@@ -80,4 +80,7 @@ public interface Pane extends Component {
 
     @Override
     void render(Inventory inventory, Player player, int x, int y);
+
+    @Override
+    Pane deepClone();
 }

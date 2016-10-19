@@ -48,6 +48,15 @@ public class Label implements Component {
         this.itemStack = itemStack.clone();
     }
 
+    /**
+     * Returns the {@link ItemStack} of this button
+     *
+     * @return The {@link ItemStack}
+     */
+    public ItemStack getItemStack() {
+        return itemStack.clone();
+    }
+
     @Override
     public void onClick(InventoryClickEvent clickEvent) {
         clickEvent.setCancelled(true);
@@ -76,6 +85,27 @@ public class Label implements Component {
         });
     }
 
+    /**
+     * The returned Label will be logically equal to this, but equals will return false.
+     * This is because of a hidden ID assigned, to distinguish instances.
+     *
+     * @return A clone of this label
+     */
+    @Override
+    public Label deepClone() {
+        try {
+            return new Label(itemStack.clone(), size.clone());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * This WILL NOT TEST FOR A LOGICAL EQUALS.
+     * It compares a hidden inner state and is used to distinguish instances of this class.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)

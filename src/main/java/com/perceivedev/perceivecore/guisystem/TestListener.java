@@ -260,6 +260,11 @@ public class TestListener implements Listener {
                 }
             }
         }
+
+        @Override
+        public Component deepClone() {
+            return new ItemComponent(itemStack.clone(), runnable);
+        }
     }
 
     private static class DummyComp extends ItemComponent {

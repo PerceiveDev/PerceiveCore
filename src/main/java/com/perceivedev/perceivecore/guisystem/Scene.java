@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.guisystem.component.Pane;
@@ -140,5 +141,21 @@ public class Scene {
             return Optional.empty();
         }
         return Optional.ofNullable(Bukkit.getPlayer(playerID));
+    }
+
+    /**
+     * Deep-Clones this Scene.
+     */
+    public Scene deepClone() {
+        Inventory cloneInv;
+        if (inventory.getType() == InventoryType.CHEST) {
+            cloneInv = Bukkit.createInventory(inventory.getHolder(), inventory.getSize(), inventory.getTitle());
+        } else {
+            cloneInv = Bukkit.createInventory(inventory.getHolder(), inventory.getType(), inventory.getTitle());
+        }
+
+        Scene clone = new Scene(pane.deepClone(), cloneInv);
+        clone.playerID = new UUID(playerID.getMostSignificantBits(), playerID.getLeastSignificantBits());
+        return clone;
     }
 }

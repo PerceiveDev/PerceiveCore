@@ -7,7 +7,7 @@ import com.perceivedev.perceivecore.guisystem.component.Component;
 /**
  * The dimension of a {@link Component}
  */
-public class Dimension {
+public class Dimension implements Cloneable {
 
     private int width, height;
 
@@ -68,6 +68,11 @@ public class Dimension {
         if (height <= 0) {
             throw new IllegalArgumentException("Height must be > 0 (" + height + ")");
         }
+    }
+
+    @Override
+    public Dimension clone() throws CloneNotSupportedException {
+        return (Dimension) super.clone();
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.perceivedev.perceivecore.guisystem.util.Dimension;
 /**
  * A component of a Scene
  */
-public interface Component {
+public interface Component extends Cloneable {
 
     /**
      * Called if this component is clicked
@@ -82,4 +82,11 @@ public interface Component {
             }
         }
     }
+
+    /**
+     * Clones the component
+     *
+     * @return A deepClone of this component
+     */
+    Component deepClone();
 }

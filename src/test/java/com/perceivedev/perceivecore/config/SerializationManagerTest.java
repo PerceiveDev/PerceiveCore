@@ -2,7 +2,9 @@ package com.perceivedev.perceivecore.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,6 +65,7 @@ public class SerializationManagerTest {
         testMap.put("value123", "test");
         testMap.put("integer", 30);
         testMap.put(200, "IntKey");
+        testMap.put(new SerializableString("something"), "Serializable key");
         
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
@@ -71,7 +74,13 @@ public class SerializationManagerTest {
                   testMap, nestedObjectClass, configurationTest);
 
         Map<String, Object> serialized = SerializationManager.serialize(object);
-        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, serialized);
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.createSection("test", serialized);
+
+        System.out.println(configuration.saveToString());
+
+        //        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, serialized);
+        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, configuration.getConfigurationSection("test"));
 
         Assert.assertEquals(object.cloneWithoutTransient(), deserialized);
         Assert.assertEquals(object.getTestMap().get("value123").getClass(), String.class);
@@ -108,6 +117,28 @@ public class SerializationManagerTest {
 
         private String getData() {
             return data;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (!(o instanceof SerializableString))
+                return false;
+            SerializableString that = (SerializableString) o;
+            return Objects.equals(data, that.data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(data);
+        }
+
+        @Override
+        public String toString() {
+            return "SerializableString{" +
+                      "data='" + data + '\'' +
+                      '}';
         }
     }
 

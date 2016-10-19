@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -232,6 +233,33 @@ public abstract class AbstractPane implements Pane {
         return Objects.hash(components, size, inventoryMap);
     }
 
+    /**
+     * Clones the component.
+     * <p>
+     * <b>Leaves the reference to the Scene intact!</b>
+     *
+     * @return A deepClone of this component
+     */
+    @Override
+    public AbstractPane deepClone() {
+        try {
+            AbstractPane superClone = (AbstractPane) super.clone();
+            superClone.inventoryMap = inventoryMap.clone();
+            superClone.components = new ArrayList<>();
+            superClone.components.addAll(components
+                      .stream()
+                      .map(Component::deepClone)
+                      .collect(Collectors.toList())
+            );
+            // is immutable but whatever
+            superClone.size = size.clone();
+            return superClone;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //<editor-fold desc="Utility Classes">
     /* *************************************************************************
      *                                                                         *
@@ -247,7 +275,7 @@ public abstract class AbstractPane implements Pane {
     /**
      * An Interval
      */
-    protected static class Interval {
+    protected static class Interval implements Cloneable {
         private int minX, maxX;
         private int minY, maxY;
 
@@ -300,6 +328,11 @@ public abstract class AbstractPane implements Pane {
         }
 
         @Override
+        protected Interval clone() throws CloneNotSupportedException {
+            return (Interval) super.clone();
+        }
+
+        @Override
         public String toString() {
             return "Interval{" +
                       "minX=" + minX +
@@ -337,7 +370,7 @@ public abstract class AbstractPane implements Pane {
     /**
      * Maps components to their coordinates
      */
-    protected static class InventoryMap {
+    protected static class InventoryMap implements Cloneable {
         protected boolean[][] lines;
         protected Map<Interval, Component> componentMap = new HashMap<>();
 
@@ -558,8 +591,27 @@ public abstract class AbstractPane implements Pane {
             return true;
         }
 
+        @Override
+        protected InventoryMap clone() {
+            try {
+                InventoryMap clone = (InventoryMap) super.clone();
+                clone.lines = lines.clone();
+                for (int i = 0; i < lines.length; i++) {
+                    clone.lines[i] = lines[i].clone();
+                }
+                clone.componentMap = new HashMap<>();
+                for (Entry<Interval, Component> entry : componentMap.entrySet()) {
+                    clone.componentMap.put(entry.getKey().clone(), entry.getValue().deepClone());
+                }
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         // TODO: 02.10.2016 Remove these visualizing methods 
-/*
+
         protected void printLines() {
             Status[][] array = new Status[lines.length][];
             for (int y = 0; y < lines.length; y++) {
@@ -630,7 +682,7 @@ public abstract class AbstractPane implements Pane {
                 }
             }
         }
-*/
+
     }
     //</editor-fold>
     //</editor-fold>

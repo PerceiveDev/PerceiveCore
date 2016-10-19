@@ -173,7 +173,7 @@ public abstract class AbstractCommandNode implements CommandNode {
 
         // now, is there any child that can continue
         for (AbstractCommandNode child : children) {
-            // clone to prevent recursion to interfere with each other
+            // deepClone to prevent recursion to interfere with each other
             CommandFindResult findRes = child.impl_find(sender, new ArrayDeque<>(query));
 
             if (findRes.wasFound()) {

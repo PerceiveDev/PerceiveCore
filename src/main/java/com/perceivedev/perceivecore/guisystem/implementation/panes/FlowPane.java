@@ -89,6 +89,11 @@ public class FlowPane extends AbstractPane {
         getInventoryMap().removeComponent(component);
     }
 
+    @Override
+    public FlowPane deepClone() {
+        return (FlowPane) super.deepClone();
+    }
+
     /**
      * Maps components to their coordinates
      */

@@ -41,7 +41,7 @@ public class CommandFindResult {
     /**
      * Returns the remaining arguments
      *
-     * @return The remaining arguments to pass. A clone.
+     * @return The remaining arguments to pass. A deepClone.
      */
     public List<String> getRestArgs() {
         return new ArrayList<>(restArgs);
