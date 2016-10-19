@@ -21,6 +21,7 @@ public class SerializingTestObject implements ConfigSerializable {
 
     private transient String transientString;
 
+    private Map<String, Object> testMap;
     private NestedObjectClass nestedObjectClass;
     private ConfigurationTest configurationTest;
 
@@ -28,7 +29,7 @@ public class SerializingTestObject implements ConfigSerializable {
     }
 
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
-              float testFloat, double testDouble, String transientString,
+              float testFloat, double testDouble, String transientString, Map<String, Object> testMap,
               NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest) {
         this.testString = testString;
         this.testByte = testByte;
@@ -38,6 +39,7 @@ public class SerializingTestObject implements ConfigSerializable {
         this.testFloat = testFloat;
         this.testDouble = testDouble;
         this.transientString = transientString;
+        this.testMap = testMap;
         this.nestedObjectClass = nestedObjectClass;
         this.configurationTest = configurationTest;
     }
@@ -73,6 +75,10 @@ public class SerializingTestObject implements ConfigSerializable {
     public String getTransientString() {
         return transientString;
     }
+    
+    public Map<String, Object> getTestMap() {
+        return testMap;
+    }
 
     public NestedObjectClass getNestedObjectClass() {
         return nestedObjectClass;
@@ -83,7 +89,7 @@ public class SerializingTestObject implements ConfigSerializable {
     }
 
     public SerializingTestObject cloneWithoutTransient() {
-        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, null, nestedObjectClass, configurationTest);
+        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, null, testMap, nestedObjectClass, configurationTest);
     }
 
     @Override
@@ -103,6 +109,7 @@ public class SerializingTestObject implements ConfigSerializable {
                   (Double.compare(object.testDouble, testDouble) == 0) + " " +
                   (Objects.equals(testString, object.testString)) + " " +
                   (Objects.equals(transientString, object.transientString)) + " " +
+                  (Objects.equals(testMap, object.testMap)) + " " +
                   (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
                   (Objects.equals(configurationTest, object.configurationTest)));
 
@@ -114,13 +121,14 @@ public class SerializingTestObject implements ConfigSerializable {
                   Double.compare(object.testDouble, testDouble) == 0 &&
                   Objects.equals(testString, object.testString) &&
                   Objects.equals(transientString, object.transientString) &&
+                  Objects.equals(testMap, object.testMap) &&
                   Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
                   Objects.equals(configurationTest, object.configurationTest);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString, nestedObjectClass, configurationTest);
+        return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString, testMap, nestedObjectClass, configurationTest);
     }
 
     public static class NestedObjectClass implements ConfigSerializable {

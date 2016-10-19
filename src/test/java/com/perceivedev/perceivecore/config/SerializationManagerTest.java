@@ -11,19 +11,17 @@ import org.junit.Test;
  */
 public class SerializationManagerTest {
 
-    private SerializationManager serializationManager = new SerializationManager();
-
     @Test
     public void addSerializationProxy() throws Exception {
         String string = "this is a test";
-        Map<String, Object> serialize = serializationManager.serialize(new SerializableString(string));
-        SerializableString deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        Map<String, Object> serialize = SerializationManager.serialize(new SerializableString(string));
+        SerializableString deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
         Assert.assertEquals(string, deserialize.getData());
 
         SerializationManager.addSerializationProxy(String.class, new StringProxy());
 
-        serialize = serializationManager.serialize(new SerializableString(string));
-        deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        serialize = SerializationManager.serialize(new SerializableString(string));
+        deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string + "-proxy", deserialize.getData());
 
@@ -36,15 +34,15 @@ public class SerializationManagerTest {
         String string = "this is a test";
         SerializationManager.addSerializationProxy(String.class, new StringProxy());
 
-        Map<String, Object> serialize = serializationManager.serialize(new SerializableString(string));
-        SerializableString deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        Map<String, Object> serialize = SerializationManager.serialize(new SerializableString(string));
+        SerializableString deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string + "-proxy", deserialize.getData());
 
         SerializationManager.removeSerializationProxy(String.class);
 
-        serialize = serializationManager.serialize(new SerializableString(string));
-        deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        serialize = SerializationManager.serialize(new SerializableString(string));
+        deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string, deserialize.getData());
     }
@@ -61,26 +59,32 @@ public class SerializationManagerTest {
 
         String testTransient = "transient :)";
 
+        Map<String, Object> testMap = new HashMap<String, Object>();
+        testMap.put("value123", "test");
+        testMap.put("integer", 30);
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
 
         SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient,
-                  nestedObjectClass, configurationTest);
+                  testMap, nestedObjectClass, configurationTest);
 
-        Map<String, Object> serialized = serializationManager.serialize(object);
-        SerializingTestObject deserialized = serializationManager.deserialize(SerializingTestObject.class, serialized);
+        Map<String, Object> serialized = SerializationManager.serialize(object);
+        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, serialized);
 
         Assert.assertEquals(object.cloneWithoutTransient(), deserialized);
+        Assert.assertEquals(object.getTestMap().get("value123").getClass(), String.class);
+        Assert.assertEquals(object.getTestMap().get("integer").getClass(), Integer.class);
+
     }
 
     @Test
     public void deserialize() throws Exception {
         // Not much to do here, as it is tested in the serialize method. Just validate edge cases.
 
-        Map<String, Object> serialize = serializationManager.serialize(new UnSerializableString("nothing"));
-        Assert.assertNull("No default constructor given", serializationManager.deserialize(UnSerializableString.class, serialize));
+        Map<String, Object> serialize = SerializationManager.serialize(new UnSerializableString("nothing"));
+        Assert.assertNull("No default constructor given", SerializationManager.deserialize(UnSerializableString.class, serialize));
 
-        serializationManager.serialize(null);
+        SerializationManager.serialize(null);
     }
 
     private static class UnSerializableString implements ConfigSerializable {
