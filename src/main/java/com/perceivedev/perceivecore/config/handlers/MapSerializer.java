@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
+import com.perceivedev.perceivecore.util.Pair;
 
 /**
  * Adds the ability for {@link SerializationManager} to serialize and deserialize
@@ -42,17 +44,13 @@ public class MapSerializer implements SerializationProxy<Map> {
         @SuppressWarnings("unchecked")
         Set<Entry<?, ?>> entrySet = inputMap.entrySet();
 
-        List<Object> keys = new ArrayList<>(inputMap.size());
-        List<Object> values = new ArrayList<>(inputMap.size());
+        List<Pair<?, ?>> pairs = new ArrayList<>(inputMap.size());
 
-        for (Entry<?, ?> entry : entrySet) {
-            keys.add(entry.getKey());
-            values.add(entry.getValue());
-        }
+        pairs.addAll(entrySet.stream()
+                  .map(entry -> new Pair<Object, Object>(entry.getKey(), entry.getValue()))
+                  .collect(Collectors.toList()));
 
-        output.put("keys", keys);
-        output.put("values", values);
-
+        output.put("pairs", pairs);
         return output;
     }
 
@@ -61,19 +59,10 @@ public class MapSerializer implements SerializationProxy<Map> {
         Map<Object, Object> output = new HashMap<>();
 
         @SuppressWarnings("unchecked")
-        List<Object> keys = (List<Object>) map.get("keys");
-        @SuppressWarnings("unchecked")
-        List<Object> values = (List<Object>) map.get("values");
+        List<Pair<?, ?>> pairs = (List<Pair<?, ?>>) map.get("pairs");
 
-        if (keys.size() != values.size()) {
-            throw new IllegalArgumentException("Keys and values size not equal."
-                      + " Keys: " + keys.size()
-                      + " Values: " + values.size());
-        }
-
-        for (int i = 0, keysSize = keys.size(); i < keysSize; i++) {
-            Object key = keys.get(i);
-            output.put(key, values.get(i));
+        for (Pair<?, ?> pair : pairs) {
+            output.put(pair.getKey(), pair.getValue());
         }
 
         return output;
