@@ -21,15 +21,15 @@ public class SerializingTestObject implements ConfigSerializable {
 
     private transient String transientString;
 
-    private Map<String, Object> testMap;
-    private NestedObjectClass nestedObjectClass;
-    private ConfigurationTest configurationTest;
+    private Map<Object, Object> testMap;
+    private NestedObjectClass   nestedObjectClass;
+    private ConfigurationTest   configurationTest;
 
     public SerializingTestObject() {
     }
 
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
-              float testFloat, double testDouble, String transientString, Map<String, Object> testMap,
+              float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
               NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest) {
         this.testString = testString;
         this.testByte = testByte;
@@ -75,8 +75,8 @@ public class SerializingTestObject implements ConfigSerializable {
     public String getTransientString() {
         return transientString;
     }
-    
-    public Map<String, Object> getTestMap() {
+
+    public Map<Object, Object> getTestMap() {
         return testMap;
     }
 
@@ -128,7 +128,8 @@ public class SerializingTestObject implements ConfigSerializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString, testMap, nestedObjectClass, configurationTest);
+        return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString,
+                  testMap, nestedObjectClass, configurationTest);
     }
 
     public static class NestedObjectClass implements ConfigSerializable {

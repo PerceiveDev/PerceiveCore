@@ -59,9 +59,11 @@ public class SerializationManagerTest {
 
         String testTransient = "transient :)";
 
-        Map<String, Object> testMap = new HashMap<String, Object>();
+        Map<Object, Object> testMap = new HashMap<>();
         testMap.put("value123", "test");
         testMap.put("integer", 30);
+        testMap.put(200, "IntKey");
+        
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
 

@@ -85,6 +85,21 @@ public class SerializationManager {
     }
 
     /**
+     * Checks if a class is serializable
+     *
+     * @param clazz The class to check
+     *
+     * @return True if the class is serializable
+     */
+    public static boolean isSerializable(Class<?> clazz) {
+        return ConfigurationSerializable.class.isAssignableFrom(clazz)
+                  || ConfigSerializable.class.isAssignableFrom(clazz)
+                  || RAW_INSERTABLE_CLASSES.contains(clazz)
+                  || serializationProxyMap.containsKey(clazz);
+
+    }
+
+    /**
      * Serializes a class
      *
      * @param configSerializable The {@link ConfigSerializable} to serialize
@@ -158,8 +173,7 @@ public class SerializationManager {
      * Deserializes an object.
      *
      * @param clazz The clazz to deserialize
-     * @param data The serialized data (ConfigurationSection or
-     *            YamlConfiguration)
+     * @param data The serialized data (ConfigurationSection or YamlConfiguration)
      * @param <T> The type of the class to deserialize
      *
      * @return The deserialized class
@@ -193,7 +207,7 @@ public class SerializationManager {
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     *             field
+     * field
      */
     private static <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
@@ -491,6 +505,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .collect(Collectors.toList());
+                  .collect(Collectors.toList());
     }
 }
