@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.packet.PacketEvent.ConnectionDirection;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
@@ -19,20 +18,19 @@ import io.netty.channel.ChannelPromise;
 /**
  * A simple packet injector, to modify the packets sent and received
  */
-public class PacketInjector extends ChannelDuplexHandler {
+class PacketInjector extends ChannelDuplexHandler {
 
     private boolean isClosed;
     private Channel channel;
     private List<PacketListener> packetListeners = new ArrayList<>();
 
     /**
+     * Must be detached manually!
+     *
      * @param player The player to attach into
      */
-    public PacketInjector(Player player) {
+    PacketInjector(Player player) {
         attach(player);
-
-        // Detach on onDisable
-        PerceiveCore.getInstance().getDisableManager().addListener(this::detach);
     }
 
     /**
@@ -74,7 +72,7 @@ public class PacketInjector extends ChannelDuplexHandler {
     /**
      * Removes this handler
      */
-    public void detach() {
+    void detach() {
         if (isClosed || !channel.isOpen()) {
             return;
         }
@@ -96,7 +94,7 @@ public class PacketInjector extends ChannelDuplexHandler {
      *
      * @return The channel
      */
-    public Channel getChannel() {
+    private Channel getChannel() {
         return channel;
     }
 
@@ -105,7 +103,7 @@ public class PacketInjector extends ChannelDuplexHandler {
      *
      * @param packetListener The {@link PacketListener} to add
      */
-    public void addPacketListener(PacketListener packetListener) {
+    void addPacketListener(PacketListener packetListener) {
         packetListeners.add(packetListener);
     }
 
@@ -114,8 +112,17 @@ public class PacketInjector extends ChannelDuplexHandler {
      *
      * @param packetListener The {@link PacketListener} to remove
      */
-    public void removePacketListener(PacketListener packetListener) {
+    void removePacketListener(PacketListener packetListener) {
         packetListeners.remove(packetListener);
+    }
+
+    /**
+     * Returns the amount of listeners
+     *
+     * @return The amount of listeners
+     */
+    int getListenerAmount() {
+        return packetListeners.size();
     }
 
     @Override
