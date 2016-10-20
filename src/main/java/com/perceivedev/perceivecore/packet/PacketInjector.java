@@ -80,7 +80,7 @@ class PacketInjector extends ChannelDuplexHandler {
             return;
         }
         isClosed = true;
-        channel.eventLoop().submit(() -> getChannel().pipeline().remove(this));
+        channel.eventLoop().submit(() -> channel.pipeline().remove(this));
 
         // clear references. Probably not needed, but I am not sure about the channel.
         playerWeakReference.clear();
@@ -93,17 +93,8 @@ class PacketInjector extends ChannelDuplexHandler {
      *
      * @return True if the handler is closed
      */
-    public boolean isClosed() {
+    boolean isClosed() {
         return isClosed;
-    }
-
-    /**
-     * Returns the channel
-     *
-     * @return The channel
-     */
-    private Channel getChannel() {
-        return isClosed ? null : channel;
     }
 
     /**
