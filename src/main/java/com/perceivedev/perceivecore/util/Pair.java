@@ -6,19 +6,15 @@ import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import com.perceivedev.perceivecore.config.SerializationManager;
+
 /**
  * Better than an {@link Map.Entry} ;)
  *
  * @param <K> The key type
  * @param <V> The Value type
- *
- * @author Rayzr
  */
 public class Pair<K, V> implements Serializable, ConfigurationSerializable {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 7388136271482352386L;
 
     private K key;
@@ -37,8 +33,8 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     public Pair(Map<String, Object> map) {
-        this.key = (K) map.get("key");
-        this.value = (V) map.get("value");
+        this.key = (K) deserializePairPart(map.get("key"));
+        this.value = (V) deserializePairPart(map.get("value"));
     }
 
     /**
@@ -71,10 +67,41 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("key", key);
-        map.put("value", value);
+        if (!SerializationManager.isSerializable(getKey().getClass())) {
+            throw new IllegalArgumentException("Key not serializable: " + getKey().getClass().getName());
+        }
+        if (!SerializationManager.isSerializable(getValue().getClass())) {
+            throw new IllegalArgumentException("Value not serializable: " + getValue().getClass().getName());
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", serializePairPart(getKey()));
+        map.put("value", serializePairPart(getValue()));
         return map;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Object serializePairPart(Object object) {
+        Object serialized = SerializationManager.serializeOneLevel(object);
+        if (serialized instanceof Map) {
+            ((Map) serialized).put("classNameToDeserialize", object.getClass().getName());
+        }
+        return serialized;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private Object deserializePairPart(Object part) {
+        if (part instanceof Map) {
+            String className = (String) ((Map) part).get("classNameToDeserialize");
+            ((Map) part).remove("classNameToDeserialize");
+            try {
+                Class<?> type = Class.forName(className);
+                return SerializationManager.deserializeOneLevel(part, type);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        return SerializationManager.deserializeOneLevel(part, part.getClass());
     }
 
 }

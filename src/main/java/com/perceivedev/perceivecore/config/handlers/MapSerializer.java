@@ -47,22 +47,19 @@ public class MapSerializer implements SerializationProxy<Map> {
         List<Map<String, Object>> pairs = new ArrayList<>(inputMap.size());
 
         pairs.addAll(entrySet.stream()
-                  .map(entry -> new Pair<>(
-                            serializePairPart(entry.getKey()),
-                            serializePairPart(entry.getValue())
-                  ))
+                  .map(entry -> new Pair<>(entry.getKey(),
+                            entry.getValue())
+                  )
                   .map(Pair::serialize)
                   .collect(Collectors.toList())
         );
-
-        System.out.println(pairs);
 
         output.put("pairs", pairs);
         return output;
     }
 
     @Override
-    public Map deserialize(Map<String, Object> map) {
+    public Map<Object, Object> deserialize(Map<String, Object> map) {
         Map<Object, Object> output = new HashMap<>();
 
         if (map.isEmpty()) {
@@ -74,39 +71,9 @@ public class MapSerializer implements SerializationProxy<Map> {
 
         for (Map<String, Object> serializedPair : serializedPairs) {
             Pair<Object, Object> pair = new Pair<>(serializedPair);
-
-            Object keyDeserialized = deserializePairPart(pair.getKey());
-            Object valueDeserialized = deserializePairPart(pair.getValue());
-
-            output.put(keyDeserialized, valueDeserialized);
+            output.put(pair.getKey(), pair.getValue());
         }
 
         return output;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object serializePairPart(Object object) {
-        Object serialized = SerializationManager.serializeOneLevel(object);
-        if (serialized instanceof Map) {
-            ((Map) serialized).put("classNameToDeserialize", object.getClass().getName());
-        }
-        return serialized;
-    }
-
-    private Object deserializePairPart(Object part) {
-        if (part instanceof Map) {
-            String className = (String) ((Map) part).get("classNameToDeserialize");
-            ((Map) part).remove("classNameToDeserialize");
-            try {
-                Class<?> type = Class.forName(className);
-                System.out.println("Got type: " + type.getName());
-                System.out.println(SerializationManager.deserializeOneLevel(part, type));
-                return SerializationManager.deserializeOneLevel(part, type);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        return SerializationManager.deserializeOneLevel(part, part.getClass());
     }
 }
