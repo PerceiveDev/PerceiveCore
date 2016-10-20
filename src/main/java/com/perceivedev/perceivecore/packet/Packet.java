@@ -211,4 +211,11 @@ public class Packet {
         }
     }
 
+    /**
+     * @return the packet's class
+     */
+    public Class<?> getPacketClass() {
+        return packetClass;
+    }
+
 }
