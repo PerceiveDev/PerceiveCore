@@ -47,7 +47,8 @@ public class MapSerializer implements SerializationProxy<Map> {
         List<Map<String, Object>> pairs = new ArrayList<>(inputMap.size());
 
         pairs.addAll(entrySet.stream()
-                  .map(entry -> new Pair<>(entry.getKey(),
+                  .map(entry -> new Pair<>(
+                            entry.getKey(),
                             entry.getValue())
                   )
                   .map(Pair::serialize)

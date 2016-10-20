@@ -1,7 +1,7 @@
 package com.perceivedev.perceivecore.util;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -73,7 +73,7 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
         if (!SerializationManager.isSerializable(getValue().getClass())) {
             throw new IllegalArgumentException("Value not serializable: " + getValue().getClass().getName());
         }
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("key", serializePairPart(getKey()));
         map.put("value", serializePairPart(getValue()));
         return map;
