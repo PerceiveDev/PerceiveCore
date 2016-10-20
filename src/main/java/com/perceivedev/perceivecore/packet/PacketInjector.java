@@ -2,6 +2,7 @@ package com.perceivedev.perceivecore.packet;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ class PacketInjector extends ChannelDuplexHandler {
     private boolean isClosed;
     private Channel channel;
     private List<PacketListener> packetListeners = new ArrayList<>();
+    private WeakReference<Player> playerWeakReference;
 
     /**
      * Must be detached manually!
@@ -31,6 +33,7 @@ class PacketInjector extends ChannelDuplexHandler {
      */
     PacketInjector(Player player) {
         attach(player);
+        playerWeakReference = new WeakReference<>(player);
     }
 
     /**
@@ -77,7 +80,12 @@ class PacketInjector extends ChannelDuplexHandler {
             return;
         }
         isClosed = true;
-        getChannel().eventLoop().submit(() -> getChannel().pipeline().remove(this));
+        channel.eventLoop().submit(() -> getChannel().pipeline().remove(this));
+
+        // clear references. Probably not needed, but I am not sure about the channel.
+        playerWeakReference.clear();
+        packetListeners.clear();
+        channel = null;
     }
 
     /**
@@ -95,15 +103,20 @@ class PacketInjector extends ChannelDuplexHandler {
      * @return The channel
      */
     private Channel getChannel() {
-        return channel;
+        return isClosed ? null : channel;
     }
 
     /**
      * Adds a {@link PacketListener}
      *
      * @param packetListener The {@link PacketListener} to add
+     *
+     * @throws IllegalStateException if the channel is already closed
      */
     void addPacketListener(PacketListener packetListener) {
+        if (isClosed()) {
+            throw new IllegalStateException("Channel already closed. Adding of listener invalid");
+        }
         packetListeners.add(packetListener);
     }
 
@@ -127,7 +140,7 @@ class PacketInjector extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise) throws Exception {
-        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_CLIENT);
+        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_CLIENT, playerWeakReference.get());
 
         packetListeners.forEach((packetListener) -> packetListener.onPacketSend(event));
 
@@ -139,7 +152,7 @@ class PacketInjector extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_SERVER);
+        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_SERVER, playerWeakReference.get());
 
         packetListeners.forEach(packetListener -> packetListener.onPacketReceived(event));
 
