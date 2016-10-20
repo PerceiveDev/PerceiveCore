@@ -107,6 +107,7 @@ public class Packet {
 
     private Packet(Object packet) {
         this.obj = packet;
+        this.packetClass = packet.getClass();
     }
 
     /**
@@ -165,7 +166,7 @@ public class Packet {
         }
 
         try {
-            return new Packet(obj.getClass());
+            return new Packet(obj);
         } catch (Exception e) {
             PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to create packet!", e);
             return null;

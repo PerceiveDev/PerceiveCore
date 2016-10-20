@@ -487,7 +487,7 @@ public class ReflectionUtil {
         Objects.requireNonNull(parameterClasses);
         Objects.requireNonNull(params);
 
-        return invokeMethod(handle.getClass(), new MethodPredicate().withParameters(parameterClasses).withName(name), params);
+        return invokeMethod(handle.getClass(), new MethodPredicate().withParameters(parameterClasses).withName(name), handle, params);
     }
 
     /**
