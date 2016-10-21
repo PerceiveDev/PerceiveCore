@@ -3,6 +3,7 @@ package com.perceivedev.perceivecore.packet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,8 +47,13 @@ public class PacketManager implements Listener {
      *
      * @param listener The {@link PacketListener} to add
      * @param player The Player to listen for
+     *
+     * @throws NullPointerException if any parameter is null
      */
     public void addListener(PacketListener listener, Player player) {
+        Objects.requireNonNull(listener);
+        Objects.requireNonNull(player);
+
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {
             if (injectorMap.containsKey(player.getUniqueId())) {
@@ -65,9 +71,14 @@ public class PacketManager implements Listener {
      *
      * @param listener The listener to remove
      * @param player The player to remove it for
+     *
+     * @throws NullPointerException if any parameter is null
      */
     @SuppressWarnings("unused")
     public void removeListener(PacketListener listener, Player player) {
+        Objects.requireNonNull(listener);
+        Objects.requireNonNull(player);
+
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {
             if (!injectorMap.containsKey(player.getUniqueId())) {
@@ -86,8 +97,12 @@ public class PacketManager implements Listener {
      * Removes <b>all</b> listeners from a player
      *
      * @param uuid The {@link UUID} of the Player to remove all listeners for
+     *
+     * @throws NullPointerException if uuid is null
      */
     public void removeAllListeners(UUID uuid) {
+        Objects.requireNonNull(uuid);
+
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {
             if (injectorMap.containsKey(uuid)) {

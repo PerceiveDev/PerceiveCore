@@ -5,6 +5,7 @@ import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
@@ -107,6 +108,7 @@ class PacketInjector extends ChannelDuplexHandler {
      * @throws IllegalStateException if the channel is already closed
      */
     void addPacketListener(PacketListener packetListener) {
+        Objects.requireNonNull(packetListener);
         if (isClosed()) {
             throw new IllegalStateException("Channel already closed. Adding of listener invalid");
         }
