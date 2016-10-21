@@ -51,6 +51,15 @@ public class PacketEvent {
     }
 
     /**
+     * Sets the new packet
+     *
+     * @param packet The new packet
+     */
+    public void setPacket(Packet packet) {
+        this.packet = packet;
+    }
+
+    /**
      * Checks if the event is cancelled
      *
      * @return True if the event is cancelled

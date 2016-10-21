@@ -5,9 +5,11 @@ import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.packet.PacketEvent.ConnectionDirection;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
@@ -133,7 +135,14 @@ class PacketInjector extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise) throws Exception {
         PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_CLIENT, playerWeakReference.get());
 
-        packetListeners.forEach((packetListener) -> packetListener.onPacketSend(event));
+        for (PacketListener packetListener : packetListeners) {
+            try {
+                packetListener.onPacketSend(event);
+            } catch (Exception e) {
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING,
+                          "Error in a Packet Listener (send). This is not the fault of PerceiveCore!", e);
+            }
+        }
 
         // let it through
         if (!event.isCancelled()) {
@@ -145,7 +154,14 @@ class PacketInjector extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
         PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_SERVER, playerWeakReference.get());
 
-        packetListeners.forEach(packetListener -> packetListener.onPacketReceived(event));
+        for (PacketListener packetListener : packetListeners) {
+            try {
+                packetListener.onPacketReceived(event);
+            } catch (Exception e) {
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING,
+                          "Error in a Packet Listener (receive). This is not the fault of PerceiveCore!", e);
+            }
+        }
 
         // let it through
         if (!event.isCancelled()) {
