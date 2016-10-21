@@ -11,6 +11,8 @@ import java.util.WeakHashMap;
  */
 public class DisableManager {
 
+    // FIXME: 21.10.2016 Not thread safe
+
     private Collection<DisableListener> listeners    = new ArrayList<>();
     private Set<DisableListener>        weakListener = Collections.newSetFromMap(new WeakHashMap<>());
 

@@ -48,12 +48,15 @@ public class PacketManager implements Listener {
      * @param player The Player to listen for
      */
     public void addListener(PacketListener listener, Player player) {
-        if (injectorMap.containsKey(player.getUniqueId())) {
-            injectorMap.get(player.getUniqueId()).addPacketListener(listener);
-        } else {
-            PacketInjector injector = new PacketInjector(player);
-            injector.addPacketListener(listener);
-            injectorMap.put(player.getUniqueId(), injector);
+        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        synchronized (injectorMap) {
+            if (injectorMap.containsKey(player.getUniqueId())) {
+                injectorMap.get(player.getUniqueId()).addPacketListener(listener);
+            } else {
+                PacketInjector injector = new PacketInjector(player);
+                injector.addPacketListener(listener);
+                injectorMap.put(player.getUniqueId(), injector);
+            }
         }
     }
 
@@ -65,14 +68,17 @@ public class PacketManager implements Listener {
      */
     @SuppressWarnings("unused")
     public void removeListener(PacketListener listener, Player player) {
-        if (!injectorMap.containsKey(player.getUniqueId())) {
-            return;
-        }
-        PacketInjector injector = injectorMap.get(player.getUniqueId());
-        injector.removePacketListener(listener);
-        if (injector.getListenerAmount() < 1) {
-            injector.detach();
-            injectorMap.remove(player.getUniqueId());
+        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        synchronized (injectorMap) {
+            if (!injectorMap.containsKey(player.getUniqueId())) {
+                return;
+            }
+            PacketInjector injector = injectorMap.get(player.getUniqueId());
+            injector.removePacketListener(listener);
+            if (injector.getListenerAmount() < 1) {
+                injector.detach();
+                injectorMap.remove(player.getUniqueId());
+            }
         }
     }
 
@@ -82,9 +88,12 @@ public class PacketManager implements Listener {
      * @param uuid The {@link UUID} of the Player to remove all listeners for
      */
     public void removeAllListeners(UUID uuid) {
-        if (injectorMap.containsKey(uuid)) {
-            injectorMap.get(uuid).detach();
-            injectorMap.remove(uuid);
+        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        synchronized (injectorMap) {
+            if (injectorMap.containsKey(uuid)) {
+                injectorMap.get(uuid).detach();
+                injectorMap.remove(uuid);
+            }
         }
     }
 
@@ -95,6 +104,7 @@ public class PacketManager implements Listener {
      */
     public void shutdown() {
         synchronized (injectorMap) {
+            // clone to avoid concurrent modification
             Set<UUID> keys = new HashSet<>(injectorMap.keySet());
             keys.forEach(this::removeAllListeners);
         }
