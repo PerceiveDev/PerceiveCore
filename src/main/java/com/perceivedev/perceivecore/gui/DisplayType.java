@@ -58,6 +58,12 @@ public class DisplayType {
         });
     }
 
+    public static DisplayType custom(ItemStack item) {
+        return new DisplayType(item.getType(), item.getDurability(), (base, color) -> {
+            return item;
+        });
+    }
+
     private ItemStack baseItem() {
         return new ItemStack(material, 1, (short) defaultDataValue);
     }
