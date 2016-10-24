@@ -21,7 +21,7 @@ public class Button extends Label {
     /**
      * Whether or not to close the inventory when the button is clicked
      */
-    protected boolean              closeOnClick = true;
+    protected boolean              closeOnClick = false;
 
     public Button(String name, Consumer<ClickEvent> clickHandler) {
         super(name, new String[0]);
