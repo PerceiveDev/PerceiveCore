@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -21,7 +22,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  *
  * @author ZP4RKER
  */
-@SuppressWarnings({ "unused", "WeakerAccess" })
+@SuppressWarnings("WeakerAccess")
 public class ItemFactory {
 
     private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
@@ -131,11 +132,13 @@ public class ItemFactory {
      */
     public ItemFactory addLore(String line) {
         ItemMeta meta = itemStack.getItemMeta();
-        List<String> lore = meta.getLore();
+        List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         lore.add(TextUtils.colorize(line));
+        meta.setLore(lore);
         itemStack.setItemMeta(meta);
         return this;
     }
+    
 
     /**
      * Adds multiple lines to the lore of the item.
