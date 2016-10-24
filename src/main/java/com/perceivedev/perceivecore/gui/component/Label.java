@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.DisplayColor;
 import com.perceivedev.perceivecore.gui.GUIHolder;
-import com.perceivedev.perceivecore.util.ItemUtils;
+import com.perceivedev.perceivecore.util.ItemFactory;
 import com.perceivedev.perceivecore.util.ListUtils;
 import com.perceivedev.perceivecore.util.TextUtils;
 
@@ -38,7 +38,14 @@ public class Label extends Component {
      */
     @Override
     protected ItemStack render(GUIHolder holder, int posX, int posY) {
-        return ItemUtils.setDisplay(super.render(holder, posX, posY), name, lore);
+        ItemFactory factory = ItemFactory.builder(super.render(holder, posX, posY));
+        if (name != null) {
+            factory.setName(name);
+        }
+        if (lore != null && lore.size() > 0) {
+            factory.setLore(lore);
+        }
+        return factory.build();
     }
 
     /**
