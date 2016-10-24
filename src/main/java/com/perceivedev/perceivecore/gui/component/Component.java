@@ -108,23 +108,27 @@ public class Component {
 
     /**
      * @param type the type to set
+     * @return this component (useful for chaining method calls)
      */
-    public void setDisplayType(DisplayType type) {
+    public Component setDisplayType(DisplayType type) {
         this.type = type;
+        return this;
     }
 
     /**
      * @return the color
      */
-    public DisplayColor getDisplayColor() {
+    public DisplayColor getColor() {
         return color;
     }
 
     /**
      * @param color the color to set
+     * @return this component (useful for chaining method calls)
      */
-    public void setColor(DisplayColor color) {
+    public Component setColor(DisplayColor color) {
         this.color = color;
+        return this;
     }
 
     /**

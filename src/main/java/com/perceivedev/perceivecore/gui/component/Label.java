@@ -50,9 +50,11 @@ public class Label extends Component {
 
     /**
      * @param name the name to set
+     * @return this label (useful for chaining method calls)
      */
-    public void setName(String name) {
+    public Label setName(String name) {
         this.name = TextUtils.colorize(name);
+        return this;
     }
 
     /**
@@ -64,16 +66,19 @@ public class Label extends Component {
 
     /**
      * @param lore the lore to set
+     * @return this label (useful for chaining method calls)
      */
-    public void setLore(List<String> lore) {
+    public Label setLore(List<String> lore) {
         this.lore = ListUtils.colorList(lore);
+        return this;
     }
 
     /**
      * @param lore the lore to set
+     * @return this label (useful for chaining method calls)
      */
-    public void setLore(String... lore) {
-        setLore(Arrays.asList(lore));
+    public Label setLore(String... lore) {
+        return setLore(Arrays.asList(lore));
     }
 
 }

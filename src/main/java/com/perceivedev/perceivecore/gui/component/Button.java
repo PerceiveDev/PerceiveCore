@@ -46,9 +46,11 @@ public class Button extends Label {
 
     /**
      * @param clickHandler the clickHandler to set
+     * @return this button (useful for chaining method calls)
      */
-    public void setClickHandler(Consumer<ClickEvent> clickHandler) {
+    public Button setClickHandler(Consumer<ClickEvent> clickHandler) {
         this.clickHandler = clickHandler;
+        return this;
     }
 
     /**
@@ -77,9 +79,11 @@ public class Button extends Label {
 
     /**
      * @param set if it this button should {@link #closeOnClick}
+     * @return this button (useful for chaining method calls)
      */
-    public void setCloseOnClick(boolean closeOnClick) {
+    public Button setCloseOnClick(boolean closeOnClick) {
         this.closeOnClick = closeOnClick;
+        return this;
     }
 
 }

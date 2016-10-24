@@ -96,9 +96,11 @@ public class ItemArea extends Component implements Container {
 
     /**
      * @param interacatable the value of interactable to set
+     * @return this item area (useful for chaining method calls)
      */
-    public void setInteractable(boolean interactable) {
+    public ItemArea setInteractable(boolean interactable) {
         this.interactable = interactable;
+        return this;
     }
 
 }
