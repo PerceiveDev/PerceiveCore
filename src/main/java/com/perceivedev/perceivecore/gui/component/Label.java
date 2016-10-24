@@ -42,7 +42,7 @@ public class Label extends Component {
         if (name != null) {
             factory.setName(name);
         }
-        if (lore != null && lore.size() > 0) {
+        if (lore != null && !lore.isEmpty()) {
             factory.setLore(lore);
         }
         return factory.build();
