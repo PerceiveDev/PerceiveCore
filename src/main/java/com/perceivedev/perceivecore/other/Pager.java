@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.other;
 
+import static com.perceivedev.perceivecore.util.TextUtils.colorize;
+
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -14,8 +16,6 @@ import javax.annotation.Nonnull;
 import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
-
-import static com.perceivedev.perceivecore.util.TextUtils.colorize;
 
 /**
  * Pages something.
@@ -503,7 +503,7 @@ public class Pager {
             String footerKey = this.footerKey == null ? "pager_footer" : this.footerKey;
 
             sender.sendMessage(language.trOrDefault(headerKey,
-                      "\n&a&l+&8&m-----------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
+                      "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
                       pageIndex + 1, maxPages));
             entries.forEach(s -> sender.sendMessage(colorize(s)));
             sender.sendMessage(language.trOrDefault(footerKey,

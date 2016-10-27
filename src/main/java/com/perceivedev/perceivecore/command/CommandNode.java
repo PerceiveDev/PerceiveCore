@@ -9,7 +9,7 @@ import org.bukkit.permissions.Permissible;
 /**
  * A command
  */
-interface CommandNode {
+public interface CommandNode {
 
     /**
      * Returns the children of this command
