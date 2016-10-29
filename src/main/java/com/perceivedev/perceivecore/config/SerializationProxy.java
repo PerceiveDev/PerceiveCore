@@ -7,7 +7,7 @@ import java.util.Map;
  *
  * @param <T> The type of the class to proxy
  */
-public interface SerializationProxy<T> {
+public interface SerializationProxy<T extends Object> {
 
     /**
      * Serializes an object
