@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @param <T> The type of the class to proxy
  */
-public interface SimpleSerializationProxy<T extends Object> extends SerializationProxy<T> {
+public interface SimpleSerializationProxy<T> extends SerializationProxy<T> {
 
     /**
      * Do <i>NOT</i> override this method. This is used internally.

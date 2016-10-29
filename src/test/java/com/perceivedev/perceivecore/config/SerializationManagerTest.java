@@ -3,6 +3,7 @@ package com.perceivedev.perceivecore.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
@@ -58,7 +59,7 @@ public class SerializationManagerTest {
         long testLong = 5656565656L;
         float testFloat = (float) (253 + Math.pow(2, -4));
         double testDouble = 253 + Math.pow(2, -8);
-
+        
         String testTransient = "transient :)";
 
         Map<Object, Object> testMap = new HashMap<>();
@@ -69,9 +70,11 @@ public class SerializationManagerTest {
         
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
+        
+        UUID testUUID = UUID.randomUUID();
 
         SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient,
-                  testMap, nestedObjectClass, configurationTest);
+                  testMap, nestedObjectClass, configurationTest, testUUID);
 
         Map<String, Object> serialized = SerializationManager.serialize(object);
         YamlConfiguration configuration = new YamlConfiguration();
@@ -83,8 +86,11 @@ public class SerializationManagerTest {
         SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, configuration.getConfigurationSection("test"));
 
         Assert.assertEquals(object.cloneWithoutTransient(), deserialized);
-        Assert.assertEquals(object.getTestMap().get("value123").getClass(), String.class);
-        Assert.assertEquals(object.getTestMap().get("integer").getClass(), Integer.class);
+        Assert.assertEquals(deserialized.getTestMap().get("value123").getClass(), String.class);
+        Assert.assertEquals(deserialized.getTestMap().get("integer").getClass(), Integer.class);
+        Assert.assertEquals(deserialized.getTestUUID(), testUUID);
+        
+        System.out.println("Test UUID: " + testUUID + "\nAfter deserialization: " + deserialized.getTestUUID());
 
     }
 
