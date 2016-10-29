@@ -5,12 +5,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
 import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
 import com.perceivedev.perceivecore.util.TextUtils;
@@ -22,9 +22,15 @@ import com.perceivedev.perceivecore.util.TextUtils;
  */
 public class Gui implements InventoryHolder {
 
+    private static int counter;
+
+    private final int ID = counter++;
+
     private UUID      playerID;
     private Inventory inventory;
     private Pane      rootPane;
+    private boolean   reopenOnClose;
+    private boolean   killMe;
 
     /**
      * @param name The name of the Gui
@@ -41,6 +47,7 @@ public class Gui implements InventoryHolder {
 
         this.inventory = Bukkit.createInventory(this, rows * 9, TextUtils.colorize(name));
         this.rootPane = rootPane;
+        rootPane.setGui(this);
     }
 
     /**
@@ -74,6 +81,24 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Sets whether the Gui reopens if the player closes it
+     *
+     * @param reopenOnClose if true, the Gui will reopen if the player closes it
+     */
+    public void setReopenOnClose(boolean reopenOnClose) {
+        this.reopenOnClose = reopenOnClose;
+    }
+
+    /**
+     * Checks whether the Gui reopens if the player closes it
+     *
+     * @return if true, the gui will reopen if the player closes it
+     */
+    public boolean isReopenOnClose() {
+        return reopenOnClose;
+    }
+
+    /**
      * Re-Renders the Gui.
      *
      * @return False if the player is not online or an error occurred. True if it was re-rendered.
@@ -84,6 +109,7 @@ public class Gui implements InventoryHolder {
             return false;
         }
 
+        inventory.clear();
         rootPane.render(inventory, player.get(), 0, 0);
 
         return true;
@@ -97,11 +123,40 @@ public class Gui implements InventoryHolder {
     public void open(Player player) {
         Objects.requireNonNull(player);
 
+        PerceiveCore.getInstance().getGuiManager().submit(player.getUniqueId(), this);
+    }
+
+    /**
+     * Opens the inventory for the player
+     *
+     * @param player The Player to open it for
+     */
+    void openInventory(Player player) {
+        Objects.requireNonNull(player);
+
         playerID = player.getUniqueId();
 
         reRender();
-        // TODO: 29.10.2016 Incorporate GuiManager 
-        player.openInventory(inventory);
+
+        player.openInventory(getInventory());
+    }
+
+    /**
+     * Whether you should kill the gui
+     *
+     * @return Whether you should kill the gui
+     */
+    boolean isKillMe() {
+        return killMe;
+    }
+
+    /**
+     * Whether you should kill the gui
+     *
+     * @param killMe Whether you should kill the gui
+     */
+    void setKillMe(boolean killMe) {
+        this.killMe = killMe;
     }
 
     /**
@@ -114,8 +169,7 @@ public class Gui implements InventoryHolder {
             throw new IllegalStateException("Player not found!");
         }
 
-        // TODO: 29.10.2016 Check if you are opened 
-        getPlayer().ifPresent(HumanEntity::closeInventory);
+        PerceiveCore.getInstance().getGuiManager().removeGui(playerID, this);
     }
 
     /**
@@ -148,5 +202,28 @@ public class Gui implements InventoryHolder {
             return Optional.empty();
         }
         return Optional.ofNullable(Bukkit.getPlayer(playerID));
+    }
+
+    @Override
+    public String toString() {
+        return "Gui{" +
+                  "name=" + inventory.getName() +
+                  ", id=" + ID +
+                  '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Gui))
+            return false;
+        Gui gui = (Gui) o;
+        return gui.ID == ID;
+    }
+
+    @Override
+    public int hashCode() {
+        return ID;
     }
 }

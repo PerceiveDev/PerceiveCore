@@ -4,6 +4,7 @@
 package com.perceivedev.perceivecore.gui;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.guireal.Gui;
 import com.perceivedev.perceivecore.guireal.components.implementation.component.Button;
 import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
@@ -39,47 +41,85 @@ public class GUIListener implements Listener {
             return;
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Gui gui = new Gui("Hello", 4);
-            AnchorPane rootAnchorPane = (AnchorPane) gui.getRootPane();
+            Gui gui = createGui("hello", event.getPlayer(), false);
+            PerceiveCore.getInstance().getGuiManager().addGui(event.getPlayer().getUniqueId(), gui);
 
-            rootAnchorPane.addComponent(new Button(
-                      ItemFactory.builder(Material.LAVA_BUCKET)
-                                .setName("&3&lBUKKIT")
-                                .build(),
-                      () -> System.out.println("Buckit to the rescue!!"),
-                      new Dimension(3, 1)
-            ), 3, 0);
+            gui = createGui("NOPE", event.getPlayer(), true);
+            PerceiveCore.getInstance().getGuiManager().addGui(event.getPlayer().getUniqueId(), gui);
 
-            AnchorPane paneOne = new AnchorPane(9, 3);
-            paneOne.addComponent(new Button(
-                      ItemFactory.builder(Material.STONE_BUTTON)
-                                .setName("&c&lApple")
-                                .build(),
-                      () -> System.out.println("ACTION!"),
-                      new Dimension(9, 2)
-            ), 0, 0);
+            gui = createGui("OH YEA", event.getPlayer(), false);
+            PerceiveCore.getInstance().getGuiManager().addGui(event.getPlayer().getUniqueId(), gui);
 
-            GridPane paneTwo = new GridPane(8, 1, 2, 1);
-            paneTwo.addComponent(new Button(
-                      ItemFactory.builder(Material.GOLD_INGOT)
-                                .setName("&6&lBUTTER")
-                                .build(),
-                      () -> System.out.println("BUTTER!"),
-                      new Dimension(1, 1)
-            ), 1, 0);
-            paneTwo.addComponent(new Button(
+            PerceiveCore.getInstance().getGuiManager().openCurrentGui(event.getPlayer().getUniqueId());
+        }
+    }
+
+    private Gui createGui(String name, Player player, boolean reopen) {
+        Gui gui = new Gui(name, 4);
+        AnchorPane rootAnchorPane = (AnchorPane) gui.getRootPane();
+
+        rootAnchorPane.addComponent(new Button(
+                  ItemFactory.builder(Material.LAVA_BUCKET)
+                            .setName("&3&lBUKKIT")
+                            .build(),
+                  () -> System.out.println(name + " Buckit to the rescue!!"),
+                  new Dimension(3, 1)
+        ), 3, 0);
+
+        AnchorPane paneOne = new AnchorPane(9, 3);
+        paneOne.addComponent(new Button(
+                  ItemFactory.builder(Material.STONE_BUTTON)
+                            .setName("&c&lApple")
+                            .build(),
+                  () -> System.out.println(name + " ACTION!"),
+                  new Dimension(9, 2)
+        ), 0, 0);
+
+        GridPane paneTwo = new GridPane(8, 1, 4, 1);
+        paneTwo.addComponent(new Button(
+                  ItemFactory.builder(Material.GOLD_INGOT)
+                            .setName("&6&lBUTTER")
+                            .build(),
+                  () -> System.out.println(name + " BUTTER!"),
+                  new Dimension(1, 1)
+        ), 1, 0);
+        {
+            Button button = new Button(
                       ItemFactory.builder(Material.IRON_INGOT)
                                 .setName("&7&lIRON")
                                 .build(),
-                      () -> System.out.println("IRON!"),
+                      () -> System.out.println(name + " IRON!"),
                       new Dimension(1, 1)
-            ), 0, 0);
+            );
+            button.setAction(() -> {
+                System.out.println(name + " IRON!");
 
-            paneOne.addComponent(paneTwo, 0, 2);
-
-            rootAnchorPane.addComponent(paneOne, 0, 1);
-            gui.open(event.getPlayer());
+                if (button.getItemStack().getItemMeta().hasEnchant(Enchantment.PROTECTION_ENVIRONMENTAL)) {
+                    button.setItemStack(ItemFactory.builder(button.getItemStack()).removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+                } else {
+                    button.setItemStack(ItemFactory.builder(button.getItemStack()).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
+                }
+                gui.reRender();
+            });
+            paneTwo.addComponent(button, 0, 0);
         }
+        paneTwo.addComponent(new Button(
+                  ItemFactory.builder(Material.BARRIER)
+                            .setName("&4&lCLOSE")
+                            .build(),
+                  () -> {
+                      System.out.println(name + " CLOSING!");
+                      gui.close();
+                  },
+                  new Dimension(1, 1)
+        ), 2, 0);
+
+        paneOne.addComponent(paneTwo, 0, 2);
+
+        rootAnchorPane.addComponent(paneOne, 0, 1);
+
+        gui.setReopenOnClose(reopen);
+        return gui;
     }
 
     @EventHandler
@@ -94,9 +134,7 @@ public class GUIListener implements Listener {
         }
 
         Gui gui = (Gui) inv.getHolder();
-        System.out.println("Passing it on!");
         gui.onClick(e);
-        System.out.println("  ");
     }
 
     //@EventHandler

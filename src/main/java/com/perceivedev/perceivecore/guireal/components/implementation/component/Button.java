@@ -83,9 +83,6 @@ public class Button extends AbstractComponent {
 
     @Override
     public void onClick(ClickEvent clickEvent) {
-        System.out.println("Button.onClick()");
-        System.out.println(clickEvent);
-
         runnable.run();
         clickEvent.setCancelled(true);
     }

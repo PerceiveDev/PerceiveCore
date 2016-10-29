@@ -135,28 +135,12 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return false;
         }
 
+        // FIXME: 29.10.2016 Only works for root pane, as the Owner Gui is only added there
+        
         // TODO: 29.10.2016 Continue here! Currently re-renders the Whole Gui 
         return ownerGui.reRender();
     }
 
-    //    @Override
-    //    public void onClick(InventoryClickEvent event) {
-    //        int slot = event.getSlot();
-    //
-    //        // clicked outside the inventory. Constant is '-111' currently.
-    //        if (slot < 0) {
-    //            event.setCancelled(true);
-    //            return;
-    //        }
-    //
-    //        int invSize = event.getInventory().getSize();
-    //        int x = slotToGrid(invSize, slot)[0] - renderedXOffset;
-    //        int y = slotToGrid(invSize, slot)[1] - renderedYOffset;
-    //        Optional<Component> component = inventoryMap.getComponent(x, y);
-    //        if (component.isPresent()) {
-    //            component.get().onClick(event);
-    //        }
-    //    }
 
     @Override
     public void onClick(ClickEvent clickEvent) {
@@ -164,6 +148,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         if (clickEvent.isOutsideInventory()) {
             clickEvent.setCancelled(true);
+            // prevent nasty bugs, as the slot is negative
+            return;
         }
 
         int x = slotToGrid(clickEvent.getSlot())[0] - clickEvent.getOffsetX();
@@ -179,7 +165,6 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             });
             componentOptional.get().onClick(clickEvent);
         }
-        // TODO: 29.10.2016 !!Test!! 
     }
 
     @Override

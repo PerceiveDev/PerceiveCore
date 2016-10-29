@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.gui.GUIListener;
-import com.perceivedev.perceivecore.guisystem.PlayerGuiManager;
+import com.perceivedev.perceivecore.guireal.GuiManager;
 import com.perceivedev.perceivecore.other.DisableManager;
 
 public class PerceiveCore extends JavaPlugin {
@@ -17,8 +17,8 @@ public class PerceiveCore extends JavaPlugin {
     @SuppressWarnings("unused")
     private GUIListener guiListener;
 
-    private PlayerGuiManager playerGuiManager;
-    private DisableManager   disableManager;
+    private GuiManager     guiManager;
+    private DisableManager disableManager;
 
     @Override
     public void onEnable() {
@@ -32,7 +32,7 @@ public class PerceiveCore extends JavaPlugin {
 
         logger.info(versionText() + " enabled");
 
-        Bukkit.getPluginManager().registerEvents((playerGuiManager = new PlayerGuiManager()), this);
+        Bukkit.getPluginManager().registerEvents((guiManager = new GuiManager()), this);
     }
 
     @Override
@@ -55,10 +55,10 @@ public class PerceiveCore extends JavaPlugin {
     }
 
     /**
-     * @return The {@link PlayerGuiManager}
+     * @return The {@link GuiManager}
      */
-    public PlayerGuiManager getPlayerGuiManager() {
-        return playerGuiManager;
+    public GuiManager getGuiManager() {
+        return guiManager;
     }
 
     /**

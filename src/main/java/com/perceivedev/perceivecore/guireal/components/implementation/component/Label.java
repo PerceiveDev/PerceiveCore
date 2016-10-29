@@ -54,8 +54,6 @@ public class Label extends AbstractComponent {
 
     @Override
     public void onClick(ClickEvent clickEvent) {
-        System.out.println("Label.onClick()");
-        System.out.println(clickEvent);
         clickEvent.setCancelled(true);
     }
 
