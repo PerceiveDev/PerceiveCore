@@ -21,7 +21,7 @@ public class UUIDSerializer implements SerializationProxy<UUID> {
 
         Map<String, Object> map = new HashMap<>();
 
-        map.put("id", obj);
+        map.put("id", obj.toString());
 
         return map;
     }
