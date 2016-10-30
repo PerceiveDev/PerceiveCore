@@ -1,6 +1,7 @@
 package com.perceivedev.perceivecore.guireal.components.implementation.component;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,9 +16,9 @@ import com.perceivedev.perceivecore.guisystem.util.Dimension;
  */
 public class Button extends AbstractComponent {
 
-    private ItemStack itemStack;
-    private Runnable  runnable;
-    private Dimension size;
+    private ItemStack            itemStack;
+    private Consumer<ClickEvent> clickHandler;
+    private Dimension            size;
 
     /**
      * Constructs a button
@@ -28,13 +29,13 @@ public class Button extends AbstractComponent {
      *
      * @throws NullPointerException if any parameter is null
      */
-    public Button(ItemStack itemStack, Runnable runnable, Dimension size) {
+    public Button(ItemStack itemStack, Consumer<ClickEvent> clickHandler, Dimension size) {
         super(size);
         Objects.requireNonNull(itemStack);
-        Objects.requireNonNull(runnable);
+        Objects.requireNonNull(clickHandler);
 
         this.itemStack = itemStack.clone();
-        this.runnable = runnable;
+        this.clickHandler = clickHandler;
         this.size = size;
     }
 
@@ -48,10 +49,8 @@ public class Button extends AbstractComponent {
      * @see #Button(ItemStack, Runnable, Dimension)
      */
     public Button(ItemStack itemStack, Dimension size) {
-        this(itemStack,
-                  () -> {
-                  },
-                  size);
+        this(itemStack, e -> {
+        }, size);
     }
 
     /**
@@ -75,16 +74,18 @@ public class Button extends AbstractComponent {
     /**
      * Sets the Button action
      *
-     * @param action The Action of the button
+     * @param clickHandler The click handler of the button
      */
-    public void setAction(Runnable action) {
-        this.runnable = action;
+    public void setAction(Consumer<ClickEvent> clickHandler) {
+        this.clickHandler = clickHandler;
     }
 
     @Override
     public void onClick(ClickEvent clickEvent) {
-        runnable.run();
-        clickEvent.setCancelled(true);
+        clickHandler.accept(clickEvent);
+        // TODO: @i_al_istannen: They can cancel this from within the
+        // clickHandler if they want. We shouldn't force it cancelled :P
+        // clickEvent.setCancelled(true);
     }
 
     @Override
@@ -99,11 +100,8 @@ public class Button extends AbstractComponent {
             int slot = gridToSlot(x + xOffset, y + yOffset);
             if (slot < 0 || slot >= inventory.getSize()) {
                 // can't happen *normally*
-                System.err.println("Button: An item was placed outside the inventory size. "
-                          + "Size: "
-                          + inventory.getSize()
-                          + " Slot: "
-                          + slot);
+                System.err.println("Button: An item was placed outside the inventory size. Size: " + inventory.getSize()
+                        + " Slot: " + slot);
             } else {
                 inventory.setItem(slot, itemStack);
             }
@@ -111,15 +109,16 @@ public class Button extends AbstractComponent {
     }
 
     /**
-     * The returned Button will be logically equal to this, but equals will return false.
-     * This is because of a hidden ID assigned, to distinguish instances.
+     * The returned Button will be logically equal to this, but equals will
+     * return false. This is because of a hidden ID assigned to distinguish
+     * instances.
      *
      * @return A clone of this button
      */
     @Override
     public Button deepClone() {
         try {
-            return new Button(itemStack.clone(), runnable, size.clone());
+            return new Button(itemStack.clone(), clickHandler, size.clone());
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
