@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -25,17 +28,20 @@ import org.bukkit.inventory.meta.SkullMeta;
 @SuppressWarnings("WeakerAccess")
 public class ItemFactory {
 
-    private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
+    private static final Set<Material> COLOURABLE     = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
               Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
-    private static final Set<Material> LARMOUR    = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
+    private static final Set<Material> LEATHER_ARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
               Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 
     private ItemStack itemStack;
 
     private ItemFactory(ItemStack itemStack) {
+        Objects.requireNonNull(itemStack, "itemStack can not be null");
+
         this.itemStack = itemStack.clone();
     }
 
+    //<editor-fold desc="General Methods">
     // === GENERAL METHODS ===
 
     /**
@@ -45,7 +51,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setType(Material type) {
+    @Nonnull
+    public ItemFactory setType(@Nonnull Material type) {
+        Objects.requireNonNull(type, "type can not be null");
+
         itemStack = new ItemStack(type);
         return this;
     }
@@ -57,6 +66,7 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
+    @Nonnull
     public ItemFactory setSize(int size) {
         itemStack.setAmount(size);
         return this;
@@ -69,6 +79,7 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
+    @Nonnull
     public ItemFactory setAmount(int amount) {
         return setSize(amount);
     }
@@ -80,7 +91,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setDisplayName(String displayName) {
+    @Nonnull
+    public ItemFactory setDisplayName(@Nonnull String displayName) {
+        Objects.requireNonNull(displayName, "displayName can not be null");
+
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(TextUtils.colorize(displayName));
         itemStack.setItemMeta(meta);
@@ -94,7 +108,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setName(String name) {
+    @Nonnull
+    public ItemFactory setName(@Nonnull String name) {
+        Objects.requireNonNull(name, "name can not be null");
+
         return setDisplayName(TextUtils.colorize(name));
     }
 
@@ -105,7 +122,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setLore(List<String> lore) {
+    @Nonnull
+    public ItemFactory setLore(@Nonnull List<String> lore) {
+        Objects.requireNonNull(lore, "lore can not be null");
+
         ItemMeta meta = itemStack.getItemMeta();
         meta.setLore(ListUtils.colorList(lore));
         itemStack.setItemMeta(meta);
@@ -119,7 +139,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory setLore(String... lore) {
+    @Nonnull
+    public ItemFactory setLore(@Nonnull String... lore) {
+        Objects.requireNonNull(lore, "lore can not be null");
+
         return setLore(Arrays.asList(lore));
     }
 
@@ -130,7 +153,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory addLore(String line) {
+    @Nonnull
+    public ItemFactory addLore(@Nonnull String line) {
+        Objects.requireNonNull(line, "line can not be null");
+
         ItemMeta meta = itemStack.getItemMeta();
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
         lore.add(TextUtils.colorize(line));
@@ -138,7 +164,6 @@ public class ItemFactory {
         itemStack.setItemMeta(meta);
         return this;
     }
-    
 
     /**
      * Adds multiple lines to the lore of the item.
@@ -147,7 +172,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory addLore(String... lines) {
+    @Nonnull
+    public ItemFactory addLore(@Nonnull String... lines) {
+        Objects.requireNonNull(lines, "lines can not be null");
+
         for (String line : lines) {
             addLore(line);
         }
@@ -161,6 +189,7 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
+    @Nonnull
     public ItemFactory setDurability(short durability) {
         itemStack.setDurability(durability);
         return this;
@@ -174,7 +203,10 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory addEnchantment(Enchantment enchantment, int level) {
+    @Nonnull
+    public ItemFactory addEnchantment(@Nonnull Enchantment enchantment, int level) {
+        Objects.requireNonNull(enchantment, "enchantment can not be null");
+
         if (level <= enchantment.getMaxLevel() && enchantment.canEnchantItem(itemStack)) {
             itemStack.addEnchantment(enchantment, level);
         } else {
@@ -190,14 +222,19 @@ public class ItemFactory {
      *
      * @return This ItemFactory instance
      */
-    public ItemFactory removeEnchantment(Enchantment enchantment) {
+    @Nonnull
+    public ItemFactory removeEnchantment(@Nonnull Enchantment enchantment) {
+        Objects.requireNonNull(enchantment, "enchantment can not be null");
+
         if (!itemStack.containsEnchantment(enchantment)) {
             return this;
         }
         itemStack.removeEnchantment(enchantment);
         return this;
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Skulls">
     // ==== SKULLS ====
 
     /**
@@ -209,7 +246,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#SKULL_ITEM}
      */
-    public ItemFactory setSkullOwner(String name) {
+    @Nonnull
+    public ItemFactory setSkullOwner(@Nonnull String name) {
+        Objects.requireNonNull(name, "name can not be null");
+
         if (itemStack.getType() == Material.SKULL_ITEM) {
             SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
             skullMeta.setOwner(name);
@@ -223,7 +263,10 @@ public class ItemFactory {
     /**
      * @see #setSkullOwner(String)
      */
-    public ItemFactory setSkullOwner(OfflinePlayer player) {
+    @Nonnull
+    public ItemFactory setSkullOwner(@Nonnull OfflinePlayer player) {
+        Objects.requireNonNull(player, "player can not be null");
+
         return setSkullOwner(player.getName());
     }
 
@@ -238,8 +281,11 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not colourable
      */
+    @Nonnull
     @SuppressWarnings("deprecation")
-    public ItemFactory setColour(DyeColor colour) {
+    public ItemFactory setColour(@Nonnull DyeColor colour) {
+        Objects.requireNonNull(colour, "colour can not be null");
+
         if (COLOURABLE.contains(itemStack.getType())) {
             itemStack.setDurability(colour.getData());
         } else {
@@ -257,8 +303,11 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a type of leather armour
      */
-    public ItemFactory setArmourColour(Color colour) {
-        if (LARMOUR.contains(itemStack.getType())) {
+    @Nonnull
+    public ItemFactory setArmourColour(@Nonnull Color colour) {
+        Objects.requireNonNull(colour, "colour can not be null");
+
+        if (LEATHER_ARMOUR.contains(itemStack.getType())) {
             LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
             meta.setColor(colour);
             itemStack.setItemMeta(meta);
@@ -267,7 +316,9 @@ public class ItemFactory {
         }
         return this;
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Books">
     // ==== BOOKS ====
 
     /**
@@ -279,7 +330,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
-    public ItemFactory setAuthor(String author) {
+    @Nonnull
+    public ItemFactory setAuthor(@Nonnull String author) {
+        Objects.requireNonNull(author, "author can not be null");
+
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setAuthor(TextUtils.colorize(author));
@@ -299,7 +353,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
-    public ItemFactory setPages(List<String> pages) {
+    @Nonnull
+    public ItemFactory setPages(@Nonnull List<String> pages) {
+        Objects.requireNonNull(pages, "pages can not be null");
+
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setPages(pages);
@@ -313,7 +370,10 @@ public class ItemFactory {
     /**
      * @see #setPages(List)
      */
-    public ItemFactory setPages(String... pages) {
+    @Nonnull
+    public ItemFactory setPages(@Nonnull String... pages) {
+        Objects.requireNonNull(pages, "pages can not be null");
+
         return setPages(Arrays.asList(pages));
     }
 
@@ -326,7 +386,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
-    public ItemFactory addPage(String page) {
+    @Nonnull
+    public ItemFactory addPage(@Nonnull String page) {
+        Objects.requireNonNull(page, "page can not be null");
+
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             List<String> pages = bookMeta.getPages();
@@ -348,7 +411,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
-    public ItemFactory addPages(String... pages) {
+    @Nonnull
+    public ItemFactory addPages(@Nonnull String... pages) {
+        Objects.requireNonNull(pages, "pages can not be null");
+
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             List<String> original = bookMeta.getPages();
@@ -370,7 +436,10 @@ public class ItemFactory {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
      */
-    public ItemFactory setTitle(String title) {
+    @Nonnull
+    public ItemFactory setTitle(@Nonnull String title) {
+        Objects.requireNonNull(title, "title can not be null");
+
         if (itemStack.getType() == Material.WRITTEN_BOOK) {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setTitle(TextUtils.colorize(title));
@@ -380,7 +449,9 @@ public class ItemFactory {
         }
         return this;
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Build and create">
     // === BUILD AND CREATE ====
 
     /**
@@ -388,10 +459,11 @@ public class ItemFactory {
      *
      * @return A clones ItemFactory
      */
+    @Nonnull
     public ItemFactory clone() {
         return new ItemFactory(itemStack.clone());
     }
-    
+
     /**
      * Creates a new ItemFactory builder with the given item as a base.
      *
@@ -399,7 +471,10 @@ public class ItemFactory {
      *
      * @return The new ItemFactory instance
      */
-    public static ItemFactory builder(ItemStack itemStack) {
+    @Nonnull
+    public static ItemFactory builder(@Nonnull ItemStack itemStack) {
+        Objects.requireNonNull(itemStack, "itemStack can not be null");
+
         return new ItemFactory(itemStack);
     }
 
@@ -410,15 +485,20 @@ public class ItemFactory {
      *
      * @return The new ItemFactory instance
      */
-    public static ItemFactory builder(Material type) {
+    @Nonnull
+    public static ItemFactory builder(@Nonnull Material type) {
+        Objects.requireNonNull(type, "type can not be null");
+
         return new ItemFactory(new ItemStack(type));
     }
 
     /**
      * @return The finished ItemStack.
      */
+    @Nonnull
     public ItemStack build() {
         return itemStack.clone();
     }
+    //</editor-fold>
 
 }

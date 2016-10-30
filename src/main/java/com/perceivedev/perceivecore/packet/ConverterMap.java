@@ -34,7 +34,7 @@ public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?,
             return false;
         }
 
-        put(new Pair<Class<?>, Class<?>>(a, b), converter);
+        put(new Pair<>(a, b), converter);
 
         return true;
     }
@@ -53,11 +53,7 @@ public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?,
             return false;
         }
 
-        if (!remove(new Pair<Class<?>, Class<?>>(a, b), converter) && !remove(new Pair<Class<?>, Class<?>>(a, b), converter)) {
-            return false;
-        }
-
-        return true;
+        return !(!remove(new Pair<Class<?>, Class<?>>(a, b), converter) && !remove(new Pair<Class<?>, Class<?>>(a, b), converter));
     }
 
     /**
@@ -73,11 +69,8 @@ public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?,
             return false;
         }
 
-        if (remove(new Pair<Class<?>, Class<?>>(a, b)) == null && remove(new Pair<Class<?>, Class<?>>(a, b)) == null) {
-            return false;
-        }
+        return !(remove(new Pair<Class<?>, Class<?>>(a, b)) == null && remove(new Pair<Class<?>, Class<?>>(a, b)) == null);
 
-        return true;
     }
 
     /**

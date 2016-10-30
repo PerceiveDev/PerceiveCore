@@ -34,10 +34,7 @@ public class WorldSerializer implements SerializationProxy<World> {
 
         UUID uuid = UUID.fromString((String) map.get("uuid"));
 
-        World world = Bukkit.getWorld(uuid);
-
-        return world;
-
+        return Bukkit.getWorld(uuid);
     }
 
 }

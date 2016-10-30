@@ -1,63 +1,54 @@
-
 package com.perceivedev.perceivecore.util;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
 
 public class ListUtils {
 
-    public static String concatList(List<String> list, String filler) {
+    /**
+     * Joins a List to a String
+     *
+     * @param list The list to concat
+     * @param delimiter The delimiter
+     *
+     * @return The joined list
+     */
+    @Nonnull
+    public static String concatList(@Nonnull List<String> list, @Nonnull String delimiter) {
+        Objects.requireNonNull(list, "list can not be null");
+        Objects.requireNonNull(delimiter, "delimiter can not be null");
 
-        if (list.size() == 0) {
-
-            return "";
-
-        }
-
-        String output = "";
-        for (int i = 0; i < list.size() - 1; i++) {
-
-            output += list.get(i).toString();
-            output += filler;
-
-        }
-
-        output += list.get(list.size() - 1).toString();
-
-        return output;
-
+        return list.stream().collect(Collectors.joining(delimiter));
     }
 
-    public static List<String> colorList(List<String> list) {
-        if (list == null || isEmpty(list)) {
-            return list;
-        }
-        List<String> coloredList = new ArrayList<String>();
-        for (String string : list) {
-            coloredList.add(TextUtils.colorize(string));
-        }
-        return coloredList;
+    /**
+     * Colors every object in the list
+     *
+     * @param list The list to color
+     *
+     * @return The list, with every item colored
+     */
+    @Nonnull
+    public static List<String> colorList(@Nonnull List<String> list) {
+        Objects.requireNonNull(list, "list can not be null");
+
+        return list.stream().map(TextUtils::colorize).collect(Collectors.toList());
     }
 
-    public static List<String> reverseColorList(List<String> list) {
-        if (list == null || isEmpty(list)) {
-            return list;
-        }
-        List<String> coloredList = new ArrayList<String>();
-        for (String string : list) {
-            coloredList.add(TextUtils.uncolorize(string));
-        }
-        return coloredList;
+    /**
+     * Strips all colors from all lines
+     *
+     * @param list The list to strip colors from
+     *
+     * @return The list without colors
+     */
+    @Nonnull
+    public static List<String> stripColors(@Nonnull List<String> list) {
+        Objects.requireNonNull(list, "list can not be null");
+
+        return list.stream().map(TextUtils::stripColor).collect(Collectors.toList());
     }
-
-    public static boolean isEmpty(List<?> list) {
-
-        return list.size() < 1;
-
-    }
-
-    public static <T> List<T> empty() {
-        return new ArrayList<T>();
-    }
-
 }

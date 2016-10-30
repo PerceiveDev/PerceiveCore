@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.component.Component;
 import com.perceivedev.perceivecore.gui.component.Rect;
-import com.perceivedev.perceivecore.util.ItemUtils;
+import com.perceivedev.perceivecore.util.ItemFactory;
 import com.perceivedev.perceivecore.util.TextUtils;
 
 /**
@@ -131,7 +131,7 @@ public class GUI {
      * @param player the player to open the GUI for
      */
     public void open(Player player) {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "player can not be null");
         if (!player.isOnline()) {
             throw new IllegalArgumentException("Player must be online!");
         }
@@ -161,7 +161,7 @@ public class GUI {
         for (int i = 0; i < rows * 9; i++) {
             ItemStack item = holder.getInventory().getItem(i);
             if (item == null || item.getType() == Material.AIR) {
-                holder.setItem(i, ItemUtils.setName(fill.getItem(color), " "));
+                holder.setItem(i, ItemFactory.builder(fill.getItem(color)).setName(" ").build());
             }
         }
     }

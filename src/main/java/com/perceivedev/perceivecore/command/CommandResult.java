@@ -25,5 +25,5 @@ public enum CommandResult {
     /**
      * If a critical error occurred invoking the command. Normally indicates errors with the invocation system, NOT your command.
      */
-    ERROR;
+    ERROR
 }

@@ -387,7 +387,7 @@ public class NBTWrappers {
             for (Method method : nbtObject.getClass().getMethods()) {
                 if (Modifier.isPublic(method.getModifiers()) && Set.class.isAssignableFrom(method.getReturnType())) {
                     @SuppressWarnings("unchecked")
-                    Collection<? extends String> collection = (Collection<? extends String>)
+                    Collection<String> collection = (Collection<String>)
                               ReflectionUtil.invokeMethod(method, nbtObject).getValue();
                     if (collection != null) {
                         keys.addAll(collection);
@@ -1298,8 +1298,7 @@ public class NBTWrappers {
                 //noinspection ConfusingArgumentToVarargsMethod // The array is desired. If it is in the Superclass too, it is out method
                 clazz.getSuperclass().getMethod(method.getName(), method.getParameterTypes());
                 return method;
-            } catch (NoSuchMethodException e) {
-                continue;
+            } catch (NoSuchMethodException ignored) {
             }
         }
         return null;

@@ -90,7 +90,7 @@ public class EntityNBTUtil {
      */
     @SuppressWarnings("WeakerAccess") // util,...
     public static NBTTagCompound getNbtTag(Entity entity) {
-        Objects.requireNonNull(entity);
+        Objects.requireNonNull(entity, "entity can not be null");
 
         ensureNoError();
 
@@ -121,8 +121,8 @@ public class EntityNBTUtil {
      */
     @SuppressWarnings("WeakerAccess") // util...
     public static void setNbtTag(Entity entity, NBTTagCompound compound) {
-        Objects.requireNonNull(entity);
-        Objects.requireNonNull(compound);
+        Objects.requireNonNull(entity, "entity can not be null");
+        Objects.requireNonNull(compound, "compound can not be null");
 
         ensureNoError();
 
@@ -142,8 +142,8 @@ public class EntityNBTUtil {
      */
     public static void appendNbtTag(Entity entity, NBTTagCompound compound) {
         // yes, getNbtTag would throw them as well.
-        Objects.requireNonNull(entity);
-        Objects.requireNonNull(compound);
+        Objects.requireNonNull(entity, "entity can not be null");
+        Objects.requireNonNull(compound, "compound can not be null");
 
         ensureNoError();
 

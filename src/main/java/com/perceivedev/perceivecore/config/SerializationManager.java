@@ -120,7 +120,8 @@ public class SerializationManager {
         if (clazz == null) {
             return null;
         }
-        // only use superclass proxies if they were registered for interfaces or abstract classes
+        // only use superclass proxies if they were registered for interfaces or
+        // abstract classes
         if (!clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers())) {
             return null;
         }
@@ -138,10 +139,8 @@ public class SerializationManager {
      * @return True if the class is serializable
      */
     public static boolean isSerializable(Class<?> clazz) {
-        return ConfigurationSerializable.class.isAssignableFrom(clazz)
-                  || ConfigSerializable.class.isAssignableFrom(clazz)
-                  || RAW_INSERTABLE_CLASSES.contains(clazz)
-                  || getSerializationProxy(clazz) != null;
+        return ConfigurationSerializable.class.isAssignableFrom(clazz) || ConfigSerializable.class.isAssignableFrom(clazz) || RAW_INSERTABLE_CLASSES.contains(clazz)
+                || getSerializationProxy(clazz) != null;
 
     }
 
@@ -195,7 +194,8 @@ public class SerializationManager {
             }
 
             try {
-                // yes, that will actually throw off the depth calc. Should still prevent Stack overflows.
+                // yes, that will actually throw off the depth calc. Should
+                // still prevent Stack overflows.
                 Object value = getField(field, object);
                 map.put(field.getName(), serializeOneLevel(value, depth + 1));
             } catch (IllegalArgumentException e) {
@@ -229,18 +229,23 @@ public class SerializationManager {
      *
      * @throws NullPointerException if object is null
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static Object serializeOneLevel(Object object, int depth) {
-        Objects.requireNonNull(object);
+        Objects.requireNonNull(object, "object can not be null");
 
         Class<?> type = object.getClass();
         if (ConfigSerializable.class.isAssignableFrom(type)) {
             return serialize(object, depth + 1);
         } else if (getSerializationProxy(type) != null) {
-            @SuppressWarnings("rawtypes")
             SerializationProxy proxy = getSerializationProxy(type);
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = proxy.serialize(object);
-            return map;
+            Object data;
+            if (proxy instanceof SimpleSerializationProxy) {
+                data = ((SimpleSerializationProxy) proxy).serializeSimple(object);
+            } else {
+                assert proxy != null;   // will be true, checked in start if block 
+                data = proxy.serialize(object);
+            }
+            return data;
         } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
             ConfigurationSerializable configurationSerializable = (ConfigurationSerializable) object;
             return configurationSerializable.serialize();
@@ -255,7 +260,8 @@ public class SerializationManager {
      * Deserializes an object.
      *
      * @param clazz The clazz to deserialize
-     * @param data The serialized data (ConfigurationSection or YamlConfiguration)
+     * @param data The serialized data (ConfigurationSection or
+     *            YamlConfiguration)
      * @param <T> The type of the class to deserialize
      *
      * @return The deserialized class
@@ -289,16 +295,15 @@ public class SerializationManager {
      *
      * @throws IllegalStateException if a too deep loop is detected
      * @throws IllegalArgumentException if it doesn't know how to deal with a
-     * field
+     *             field
      */
     private static <T> T deserialize(Class<T> clazz, Map<String, Object> data, int depth) {
         if (depth > MAX_DEPTH) {
             throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
         }
 
-        // TODO: 30.09.2016 Throw an exception here?
         if (!hasDefaultConstructor(clazz)) {
-            return null;
+            throw new IllegalArgumentException("The class " + clazz.getCanonicalName() + " does not have a default constructor!");
         }
         T instance = instantiate(clazz);
         if (instance == null) {
@@ -330,8 +335,8 @@ public class SerializationManager {
     }
 
     /**
-     * Returns the deserialized object. Deserializes ONE ONE LEVEL.
-     * <b>DO NOT USE THIS METHOD if you don't know what that means</b>
+     * Returns the deserialized object. Deserializes ONE ONE LEVEL. <b>DO NOT
+     * USE THIS METHOD if you don't know what that means</b>
      *
      * @param object The Object to deserialize
      * @param type The class of the object to deserialize
@@ -343,8 +348,8 @@ public class SerializationManager {
     }
 
     /**
-     * Returns the deserialized object. Deserializes ONE ONE LEVEL.
-     * <b>DO NOT USE THIS METHOD if you don't know what that means</b>
+     * Returns the deserialized object. Deserializes ONE ONE LEVEL. <b>DO NOT
+     * USE THIS METHOD if you don't know what that means</b>
      *
      * @param object The Object to deserialize
      * @param type The class of the object to deserialize
@@ -367,7 +372,11 @@ public class SerializationManager {
 
                 return proxy.deserialize(map);
             } else {
-                throw new IllegalArgumentException("Deserialization found no map fpr proxy: " + type.getName());
+                if (proxy instanceof SimpleSerializationProxy) {
+                    return ((SimpleSerializationProxy<?>) proxy).deserializeSimple(object);
+                } else {
+                    throw new IllegalArgumentException("Deserialization found no map for proxy: " + type.getName());
+                }
             }
         } else if (ConfigSerializable.class.isAssignableFrom(type)) {
             if (!(object instanceof Map)) {
@@ -378,7 +387,8 @@ public class SerializationManager {
             return deserialize(type, map, depth + 1);
         } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
             if (object instanceof Map) {
-                // System.out.println("Found a map. This shouldn't happen, as it means the Bukkit configuration hasn't done it's job.");
+                // System.out.println("Found a map. This shouldn't happen, as it
+                // means the Bukkit configuration hasn't done it's job.");
 
                 Object fieldValue = null;
                 if (getMethod("deserialize", type, Map.class) != null) {
@@ -613,6 +623,6 @@ public class SerializationManager {
      */
     private static List<Field> getFieldsToSerialize(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields()).filter(field -> !Modifier.isTransient(field.getModifiers())).filter(field -> !Modifier.isStatic(field.getModifiers()))
-                  .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 }

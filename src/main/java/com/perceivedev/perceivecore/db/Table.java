@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Table {
@@ -17,9 +18,7 @@ public class Table {
     public Table(String name, Column primaryKey, Column... columns) {
         this.name = name;
         this.primaryKey = primaryKey;
-        for (Column column : columns) {
-            this.columns.add(column);
-        }
+        Collections.addAll(this.columns, columns);
     }
 
     public Table(String name, Collection<Column> columns, Column primaryKey) {
@@ -30,9 +29,7 @@ public class Table {
 
     public Table(String name, Column... columns) {
         this.name = name;
-        for (Column column : columns) {
-            this.columns.add(column);
-        }
+        Collections.addAll(this.columns, columns);
         this.primaryKey = this.columns.get(0);
     }
 
@@ -80,15 +77,15 @@ public class Table {
     }
 
     public String getQuery() {
-        String query = "CREATE TABLE IF NOT EXISTS " + getName() + " (";
+        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS " + getName() + " (");
         for (Column column : getColumns()) {
-            query += "`" + column.name + "` ";
-            query += Table.getStringType(column.dataType);
-            query += (column.limit > 0 ? " (" + column.limit + "), " : ", ");
+            query.append("`").append(column.name).append("` ");
+            query.append(Table.getStringType(column.dataType));
+            query.append((column.limit > 0 ? " (" + column.limit + "), " : ", "));
         }
-        query += "PRIMARY KEY (`" + primaryKey.getName() + "`)";
-        query += ");";
-        return query;
+        query.append("PRIMARY KEY (`").append(primaryKey.getName()).append("`)");
+        query.append(");");
+        return query.toString();
     }
     
     public void insert(List<Column> columns) {

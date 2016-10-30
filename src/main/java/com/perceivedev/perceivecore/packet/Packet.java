@@ -151,7 +151,7 @@ public class Packet {
      * @throws IllegalArgumentException if it isn't a packet.
      */
     public static Packet createFromObject(Object obj) {
-        Objects.requireNonNull(obj);
+        Objects.requireNonNull(obj, "obj can not be null");
 
         if (obj instanceof Packet) {
             return (Packet) obj;

@@ -7,10 +7,10 @@ package com.perceivedev.perceivecore.util;
  * @author Rayzr
  *
  */
-public interface Converter<A extends Object, B extends Object> {
+public interface Converter<A, B> {
 
-    public B convert(A input);
+    B convert(A input);
 
-    public A reverse(B input);
+    A reverse(B input);
 
 }

@@ -1,6 +1,9 @@
 package com.perceivedev.perceivecore.language;
 
 import java.util.Locale;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
 
 import org.bukkit.ChatColor;
 
@@ -20,7 +23,12 @@ public interface MessageProvider {
      *
      * @see #trUncolored(String, String, Object...)
      */
-    default String tr(String key, String category, Object... formattingObjects) {
+    @Nonnull
+    default String tr(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(category, "category can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
+        
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, category, formattingObjects));
     }
 
@@ -35,7 +43,11 @@ public interface MessageProvider {
      * @see #tr(String, String, Object...) #tr(String, String, Object...) with
      * the default category
      */
-    default String tr(String key, Object... formattingObjects) {
+    @Nonnull
+    default String tr(@Nonnull String key, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
+        
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, formattingObjects));
     }
 
@@ -49,7 +61,8 @@ public interface MessageProvider {
      *
      * @return The translated String
      */
-    String trOrDefault(String key, String category, String defaultString, Object... formattingObjects);
+    @Nonnull
+    String trOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, @Nonnull Object... formattingObjects);
 
     /**
      * Translates the message if found, otherwise translates the passed String
@@ -62,7 +75,12 @@ public interface MessageProvider {
      *
      * @see #trOrDefault(String, String, String, Object...) #trOrDefault(String, String, String, Object...) with the #getDefaultCategory()
      */
-    default String trOrDefault(String key, String defaultString, Object... formattingObjects) {
+    @Nonnull
+    default String trOrDefault(@Nonnull String key, @Nonnull String defaultString, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(defaultString, "defaultString can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
+        
         return trOrDefault(key, getDefaultCategory(), defaultString, formattingObjects);
     }
 
@@ -75,7 +93,8 @@ public interface MessageProvider {
      *
      * @return The translated, uncolored String
      */
-    String trUncolored(String key, String category, Object... formattingObjects);
+    @Nonnull
+    String trUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects);
 
     /**
      * Translates a message <b>and doesn't color it</b>
@@ -88,7 +107,11 @@ public interface MessageProvider {
      * @see #trUncolored(String, String, Object...) #trUncolored(String, String,
      * Object...) with the default category
      */
-    default String trUncolored(String key, Object... formattingObjects) {
+    @Nonnull
+    default String trUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
+        
         return trUncolored(key, getDefaultCategory(), formattingObjects);
     }
 
@@ -99,7 +122,7 @@ public interface MessageProvider {
      *
      * @return True if the category was set
      */
-    boolean setDefaultCategory(String categoryName);
+    boolean setDefaultCategory(@Nonnull String categoryName);
 
     /**
      * Returns the default category. Used for the shortened methods
@@ -113,7 +136,7 @@ public interface MessageProvider {
      *
      * @param category The category to add
      */
-    void addCategory(String category);
+    void addCategory(@Nonnull String category);
 
     /**
      * Changes the language, if a new one is available.
@@ -122,7 +145,7 @@ public interface MessageProvider {
      *
      * @return True if the language was changed
      */
-    boolean setLanguage(Locale locale);
+    boolean setLanguage(@Nonnull Locale locale);
 
     /**
      * Returns the current language

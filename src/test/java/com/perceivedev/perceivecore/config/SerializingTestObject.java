@@ -3,11 +3,12 @@ package com.perceivedev.perceivecore.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
- * Created by Julian on 30.09.2016.
+ * A small testobject
  */
 public class SerializingTestObject implements ConfigSerializable {
 
@@ -24,13 +25,15 @@ public class SerializingTestObject implements ConfigSerializable {
     private Map<Object, Object> testMap;
     private NestedObjectClass   nestedObjectClass;
     private ConfigurationTest   configurationTest;
+    
+    private UUID testUUID;
 
     public SerializingTestObject() {
     }
 
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
               float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
-              NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest) {
+              NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID) {
         this.testString = testString;
         this.testByte = testByte;
         this.testShort = testShort;
@@ -42,6 +45,7 @@ public class SerializingTestObject implements ConfigSerializable {
         this.testMap = testMap;
         this.nestedObjectClass = nestedObjectClass;
         this.configurationTest = configurationTest;
+        this.testUUID = testUUID;
     }
 
     public String getTestString() {
@@ -87,9 +91,13 @@ public class SerializingTestObject implements ConfigSerializable {
     public ConfigurationTest getConfigurationTest() {
         return configurationTest;
     }
+    
+    public UUID getTestUUID() {
+        return testUUID;
+    }
 
     public SerializingTestObject cloneWithoutTransient() {
-        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, null, testMap, nestedObjectClass, configurationTest);
+        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, null, testMap, nestedObjectClass, configurationTest, testUUID);
     }
 
     @Override
@@ -111,7 +119,8 @@ public class SerializingTestObject implements ConfigSerializable {
                   (Objects.equals(transientString, object.transientString)) + " " +
                   (Objects.equals(testMap, object.testMap)) + " " +
                   (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
-                  (Objects.equals(configurationTest, object.configurationTest)));
+                  (Objects.equals(configurationTest, object.configurationTest)) + " " +
+                  (Objects.equals(testUUID, object.testUUID)));
 
         return testByte == object.testByte &&
                   testShort == object.testShort &&
@@ -123,7 +132,8 @@ public class SerializingTestObject implements ConfigSerializable {
                   Objects.equals(transientString, object.transientString) &&
                   Objects.equals(testMap, object.testMap) &&
                   Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
-                  Objects.equals(configurationTest, object.configurationTest);
+                  Objects.equals(configurationTest, object.configurationTest) &&
+                  Objects.equals(testUUID, object.testUUID);
     }
 
     @Override

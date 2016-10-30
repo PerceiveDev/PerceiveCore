@@ -25,6 +25,8 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
@@ -72,12 +74,12 @@ public class I18N implements MessageProvider {
      */
     public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, String defaultCategory, String... more) {
 
-        Objects.requireNonNull(currentLanguage);
-        Objects.requireNonNull(basePackage);
-        Objects.requireNonNull(savePath);
-        Objects.requireNonNull(callerClassLoader);
-        Objects.requireNonNull(defaultCategory);
-        Objects.requireNonNull(more);
+        Objects.requireNonNull(currentLanguage, "currentLanguage can not be null");
+        Objects.requireNonNull(basePackage, "basePackage can not be null");
+        Objects.requireNonNull(savePath, "savePath can not be null");
+        Objects.requireNonNull(callerClassLoader, "callerClassLoader can not be null");
+        Objects.requireNonNull(defaultCategory, "defaultCategory can not be null");
+        Objects.requireNonNull(more, "more can not be null");
 
         this.currentLanguage = currentLanguage;
         this.basePackage = basePackage;
@@ -240,7 +242,8 @@ public class I18N implements MessageProvider {
     }
 
     @Override
-    public String trOrDefault(String key, String category, String defaultString, Object... formattingObjects) {
+    @Nonnull
+    public String trOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, @Nonnull Object... formattingObjects) {
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
         }
@@ -263,10 +266,11 @@ public class I18N implements MessageProvider {
      * @throws NullPointerException If any parameter is null
      */
     @Override
-    public String trUncolored(String key, String category, Object... formattingObjects) {
-        Objects.requireNonNull(key);
-        Objects.requireNonNull(category);
-        Objects.requireNonNull(formattingObjects);
+    @Nonnull
+    public String trUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(category, "category can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
@@ -288,13 +292,14 @@ public class I18N implements MessageProvider {
      * @see #trUncolored(String, String, Object...)
      */
     @Override
-    public String trUncolored(String key, Object... formattingObjects) {
+    @Nonnull
+    public String trUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
         return trUncolored(key, defaultCategory, formattingObjects);
     }
 
     @Override
-    public boolean setDefaultCategory(String categoryName) {
-        Objects.requireNonNull(categoryName);
+    public boolean setDefaultCategory(@Nonnull String categoryName) {
+        Objects.requireNonNull(categoryName, "categoryName can not be null");
         if (!categories.contains(categoryName)) {
             return false;
         }
@@ -309,8 +314,8 @@ public class I18N implements MessageProvider {
     }
 
     @Override
-    public void addCategory(String category) {
-        Objects.requireNonNull(category);
+    public void addCategory(@Nonnull String category) {
+        Objects.requireNonNull(category, "category can not be null");
         if (categories.contains(category)) {
             return;
         }
@@ -348,8 +353,8 @@ public class I18N implements MessageProvider {
      * @throws NullPointerException If locale is null
      */
     @Override
-    public boolean setLanguage(Locale locale) {
-        Objects.requireNonNull(locale);
+    public boolean setLanguage(@Nonnull Locale locale) {
+        Objects.requireNonNull(locale, "locale can not be null");
 
         if (tryLanguage(locale)) {
             currentLanguage = locale;
@@ -426,7 +431,7 @@ public class I18N implements MessageProvider {
      * null
      */
     public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
-        Objects.requireNonNull(defaultPackage);
+        Objects.requireNonNull(defaultPackage, "defaultPackage can not be null");
         Objects.requireNonNull(targetDir);
         Objects.requireNonNull(file);
 

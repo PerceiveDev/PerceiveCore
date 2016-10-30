@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.time;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +27,8 @@ public class DurationParser {
      * @throws RuntimeException If an error occurred while parsing.
      */
     public static long parseDurationToTicks(String input) throws RuntimeException {
+        Objects.requireNonNull(input, "input can not be null");
+
         return parseDuration(input) / 50;
     }
 
@@ -48,6 +51,8 @@ public class DurationParser {
      */
     @SuppressWarnings("WeakerAccess")
     public static long parseDuration(String input) throws RuntimeException {
+        Objects.requireNonNull(input, "input can not be null");
+
         return new Object() {
 
             private int pos = -1, ch;

@@ -28,7 +28,6 @@ public class MapSerializer implements SerializationProxy<Map> {
 
         // check if they are serializable keys and values
         {
-            @SuppressWarnings("rawtypes")
             Entry testEntry = (Entry) inputMap.entrySet().iterator().next();
 
             if (!SerializationManager.isSerializable(testEntry.getKey().getClass())) {

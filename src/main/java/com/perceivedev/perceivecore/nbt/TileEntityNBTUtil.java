@@ -82,7 +82,7 @@ public class TileEntityNBTUtil {
      */
     @SuppressWarnings("WeakerAccess")   // others may want to call that...
     public static NBTTagCompound getNbtTag(BlockState blockState) {
-        Objects.requireNonNull(blockState);
+        Objects.requireNonNull(blockState, "blockState can not be null");
         ensureCorrectClass(blockState);
         ensureNoError();
 
@@ -110,8 +110,8 @@ public class TileEntityNBTUtil {
      */
     @SuppressWarnings("WeakerAccess")   // others may want to call that...
     public static void setNbtTag(BlockState blockState, NBTTagCompound compound) {
-        Objects.requireNonNull(blockState);
-        Objects.requireNonNull(compound);
+        Objects.requireNonNull(blockState, "blockState can not be null");
+        Objects.requireNonNull(compound, "compound can not be null");
         ensureCorrectClass(blockState);
         ensureNoError();
 
@@ -136,8 +136,8 @@ public class TileEntityNBTUtil {
      * @throws IllegalStateException If an unrepairable error occurred earlier (probably version incompatibility).
      */
     public static void appendNbtTag(BlockState blockState, NBTTagCompound compound) {
-        Objects.requireNonNull(blockState);
-        Objects.requireNonNull(compound);
+        Objects.requireNonNull(blockState, "blockState can not be null");
+        Objects.requireNonNull(compound, "compound can not be null");
         ensureCorrectClass(blockState);
         ensureNoError();
 
