@@ -3,8 +3,11 @@ package com.perceivedev.perceivecore.other;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+
+import javax.annotation.Nonnull;
 
 /**
  * Allows DisableListeners to be added
@@ -21,7 +24,9 @@ public class DisableManager {
      *
      * @param listener The {@link DisableListener} to add
      */
-    public void addListener(DisableListener listener) {
+    public void addListener(@Nonnull DisableListener listener) {
+        Objects.requireNonNull(listener, "listener can not be null");
+
         listeners.add(listener);
     }
 
@@ -30,7 +35,9 @@ public class DisableManager {
      *
      * @param listener The {@link DisableListener} to add
      */
-    public void addWeakListener(DisableListener listener) {
+    public void addWeakListener(@Nonnull DisableListener listener) {
+        Objects.requireNonNull(listener, "listener can not be null");
+
         weakListener.add(listener);
     }
 
@@ -39,7 +46,9 @@ public class DisableManager {
      *
      * @param listener The {@link DisableListener} to remove
      */
-    public void removeListener(DisableListener listener) {
+    public void removeListener(@Nonnull DisableListener listener) {
+        Objects.requireNonNull(listener, "listener can not be null");
+
         listeners.remove(listener);
         weakListener.remove(listener);
     }

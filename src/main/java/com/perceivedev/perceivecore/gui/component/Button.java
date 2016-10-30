@@ -24,7 +24,7 @@ public class Button extends Label {
     protected boolean              closeOnClick = false;
 
     public Button(String name, Consumer<ClickEvent> clickHandler) {
-        super(name, new String[0]);
+        super(name);
         this.clickHandler = clickHandler;
         setColor(DisplayColor.LIME);
     }

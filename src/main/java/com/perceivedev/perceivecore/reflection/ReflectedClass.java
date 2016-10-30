@@ -18,10 +18,10 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
  * @author Rayzr
  *
  */
-public class ReflectedClass<T extends Object> {
+public class ReflectedClass<T> {
 
-    protected T                       instance;
-    protected Class<? extends Object> clazz;
+    protected T        instance;
+    protected Class<?> clazz;
 
     protected ReflectedClass(T instance) {
         this.instance = instance;

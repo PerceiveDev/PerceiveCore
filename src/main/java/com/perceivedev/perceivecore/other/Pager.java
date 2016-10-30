@@ -2,6 +2,7 @@ package com.perceivedev.perceivecore.other;
 
 import static com.perceivedev.perceivecore.util.TextUtils.colorize;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -33,8 +34,9 @@ public class Pager {
      */
     @Nonnull
     public static Page getPageFromStrings(@Nonnull Options options, @Nonnull List<String> all) {
-        Objects.requireNonNull(options);
-        Objects.requireNonNull(all);
+        Objects.requireNonNull(options, "Options can not be null");
+        Objects.requireNonNull(all, "'all' can not be null");
+
         return getPageFromFilterable(options, all.stream().map(StringFilterable::new).collect(Collectors.toList()));
     }
 
@@ -47,11 +49,10 @@ public class Pager {
      *
      * @return The resulting page
      */
-    @SuppressWarnings("WeakerAccess")
     @Nonnull
     public static Page getPageFromFilterable(@Nonnull Options options, @Nonnull List<PagerFilterable> all) {
-        Objects.requireNonNull(options);
-        Objects.requireNonNull(all);
+        Objects.requireNonNull(options, "Options can not be null");
+        Objects.requireNonNull(all, "'all' can not be null");
 
         List<PagerFilterable> list = filter(options, all);
         return slice(list, options.getEntriesPerPage(), options.getPageIndex());
@@ -68,6 +69,8 @@ public class Pager {
      */
     @Nonnull
     private static Page slice(@Nonnull List<PagerFilterable> all, int entriesPerPage, int pageIndex) {
+        Objects.requireNonNull(all, "'all' can not be null");
+
         int pageAmount = (int) Math.ceil(all.size() / (double) entriesPerPage);
 
         if (pageAmount == 0) {
@@ -94,8 +97,14 @@ public class Pager {
      *
      * @return The filtered list
      */
-    private static List<PagerFilterable> filter(Options options, @Nonnull List<PagerFilterable> all) {
-        return all.stream().filter(pagerFilterable -> pagerFilterable.accepts(options)).collect(Collectors.toList());
+    @Nonnull
+    private static List<PagerFilterable> filter(@Nonnull Options options, @Nonnull List<PagerFilterable> all) {
+        Objects.requireNonNull(options, "Options can not be null");
+        Objects.requireNonNull(all, "'all' can not be null");
+
+        return all.stream()
+                  .filter(pagerFilterable -> pagerFilterable.accepts(options))
+                  .collect(Collectors.toList());
     }
 
     /**
@@ -126,11 +135,15 @@ public class Pager {
          * @param string The String
          */
         private StringFilterable(String string) {
+            Objects.requireNonNull(string, "String can not be null!");
+
             this.string = string;
         }
 
         @Override
         public boolean accepts(@Nonnull Options options) {
+            Objects.requireNonNull(options, "Options can not be null");
+
             return options.matchesPattern(string);
         }
 
@@ -152,11 +165,14 @@ public class Pager {
         private String          searchPattern;
 
         private Options(int entriesPerPage, int pageIndex,
-                  @Nonnull Set<SearchMode> searchModes, String searchPattern) {
+                  @Nonnull Set<SearchMode> searchModes, @Nonnull String searchPattern) {
+
+            Objects.requireNonNull(searchModes, "SearchModes can not be null");
+            Objects.requireNonNull(searchPattern, "searchPattern can not be null");
 
             this.entriesPerPage = entriesPerPage;
             this.pageIndex = pageIndex;
-            this.searchModes = EnumSet.copyOf(searchModes);
+            this.searchModes = searchModes.isEmpty() ? EnumSet.noneOf(SearchMode.class) : EnumSet.copyOf(searchModes);
             this.searchPattern = searchPattern;
         }
 
@@ -184,8 +200,12 @@ public class Pager {
          * @param test The String to test
          *
          * @return True if the string matched one (or more) pattern(s)
+         *
+         * @throws NullPointerException if <code>test</code> is null
          */
         public boolean matchesPattern(String test) {
+            Objects.requireNonNull(test, "test can not be null");
+
             return searchModes.stream().anyMatch(mode -> mode.accepts(test, searchPattern));
         }
 
@@ -265,7 +285,7 @@ public class Pager {
              */
             @Nonnull
             public Builder setSearchModes(@Nonnull Set<SearchMode> searchModes) {
-                Objects.requireNonNull(searchModes);
+                Objects.requireNonNull(searchModes, "search modes can not be null");
 
                 if (searchModes.isEmpty()) {
                     throw new IllegalArgumentException("searchModes is empty");
@@ -287,9 +307,9 @@ public class Pager {
              * @see #setSearchModes(Set)
              */
             @Nonnull
-            public Builder setSearchModes(@Nonnull SearchMode first, SearchMode... rest) {
-                Objects.requireNonNull(first);
-                Objects.requireNonNull(rest);
+            public Builder setSearchModes(@Nonnull SearchMode first, @Nonnull SearchMode... rest) {
+                Objects.requireNonNull(first, "first can not be null");
+                Objects.requireNonNull(rest, "rest can not be null");
 
                 setSearchModes(EnumSet.of(first, rest));
 
@@ -306,8 +326,9 @@ public class Pager {
              * @throws NullPointerException if mode is null
              */
             @Nonnull
-            public Builder addSearchMode(SearchMode mode) {
-                Objects.requireNonNull(mode);
+            public Builder addSearchMode(@Nonnull SearchMode mode) {
+                Objects.requireNonNull(mode, "mode can not be null");
+
                 searchModes.add(mode);
 
                 return this;
@@ -321,8 +342,9 @@ public class Pager {
              * @return This Builder
              */
             @Nonnull
-            public Builder setSearchPattern(String searchPattern) {
-                Objects.requireNonNull(searchPattern);
+            public Builder setSearchPattern(@Nonnull String searchPattern) {
+                Objects.requireNonNull(searchPattern, "searchPattern can not be null");
+
                 this.searchPattern = searchPattern;
 
                 return this;
@@ -406,8 +428,13 @@ public class Pager {
          * @param pattern The pattern to match against
          *
          * @return True if it matches using this {@link SearchMode}
+         *
+         * @throws NullPointerException if any parameter is null
          */
-        public boolean accepts(String string, String pattern) {
+        public boolean accepts(@Nonnull String string, @Nonnull String pattern) {
+            Objects.requireNonNull(string, "string can not be null");
+            Objects.requireNonNull(pattern, "pattern can not be null");
+
             return accept.apply(string, pattern);
         }
     }
@@ -423,27 +450,38 @@ public class Pager {
         private final String       footerKey;
 
         /**
+         * The language Keys can be found in the {@link #send(CommandSender, MessageProvider)} method
+         *
          * @param maxPages The amount of pages it would give, at this depth
          * @param pageIndex The page number of this page
          * @param entries The entries of this page
          *
+         * @throws NullPointerException if any parameter is null
          * @see #Page(int, int, List, String, String) #Page(int, int, List, String, String) with the default header and footer
          */
-        private Page(int maxPages, int pageIndex, List<String> entries) {
-            this(maxPages, pageIndex, entries, null, null);
+        private Page(int maxPages, int pageIndex, @Nonnull List<String> entries) {
+            this(maxPages, pageIndex, entries, "pager_header", "pager_footer");
         }
 
         /**
+         * The language Keys can be found in the {@link #send(CommandSender, MessageProvider)} method
+         *
          * @param maxPages The amount of pages it would give, at this depth
          * @param pageIndex The page number of this page
          * @param entries The entries of this page
          * @param headerKey The language key for the header. Null for default.
          * @param footerKey The language key for the footer. Null for default.
+         *
+         * @throws NullPointerException if any parameter is null
          */
-        private Page(int maxPages, int pageIndex, List<String> entries, String headerKey, String footerKey) {
+        private Page(int maxPages, int pageIndex, @Nonnull List<String> entries, @Nonnull String headerKey, @Nonnull String footerKey) {
+            Objects.requireNonNull(entries, "Entries can not be null");
+            Objects.requireNonNull(headerKey, "The header key can not be null");
+            Objects.requireNonNull(footerKey, "The footer key can not be null");
+
             this.maxPages = maxPages;
             this.pageIndex = pageIndex;
-            this.entries = entries;
+            this.entries = new ArrayList<>(entries);
             this.headerKey = headerKey;
             this.footerKey = footerKey;
         }
@@ -496,11 +534,12 @@ public class Pager {
          *
          * @param sender The {@link CommandSender} to send to
          * @param language The {@link MessageProvider} to use
+         *
+         * @throws NullPointerException if sender or language is null
          */
-        @SuppressWarnings("WeakerAccess")
         public void send(@Nonnull CommandSender sender, @Nonnull MessageProvider language) {
-            String headerKey = this.headerKey == null ? "pager_header" : this.headerKey;
-            String footerKey = this.footerKey == null ? "pager_footer" : this.footerKey;
+            Objects.requireNonNull(sender, "Sender can not be null");
+            Objects.requireNonNull(language, "Language can not be null");
 
             sender.sendMessage(language.trOrDefault(headerKey,
                       "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",

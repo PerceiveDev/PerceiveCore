@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.perceivedev.perceivecore.util;
 
@@ -25,13 +25,12 @@ import com.google.gson.JsonPrimitive;
 /**
  * This is a complete JSON message builder class. To create a new JSONMessage do
  * {@link #create(String)}
- * 
- * @author Rayzr
  *
+ * @author Rayzr
  */
 public class JSONMessage {
 
-    private static final BiMap<ChatColor, String> stylesToNames;
+    private static final BiMap<ChatColor, String> STYLES_TO_NAMES;
 
     static {
         ImmutableBiMap.Builder<ChatColor, String> builder = ImmutableBiMap.builder();
@@ -55,14 +54,14 @@ public class JSONMessage {
 
             builder.put(style, styleName);
         }
-        stylesToNames = builder.build();
+        STYLES_TO_NAMES = builder.build();
     }
 
-    private List<MessagePart> parts = new ArrayList<MessagePart>();
+    private List<MessagePart> parts = new ArrayList<>();
 
     /**
      * Creates a new JSONChat object
-     * 
+     *
      * @param text the text to start with
      */
     private JSONMessage(String text) {
@@ -71,7 +70,7 @@ public class JSONMessage {
 
     /**
      * Creates a new JSONChat object
-     * 
+     *
      * @param text the text to start with
      */
     public static JSONMessage create(String text) {
@@ -87,7 +86,7 @@ public class JSONMessage {
 
     /**
      * Sends an action bar message
-     * 
+     *
      * @param players the players you want to send it to
      */
     public static void actionbar(String message, Player... players) {
@@ -98,6 +97,7 @@ public class JSONMessage {
 
     /**
      * @return The latest {@link MessagePart}
+     *
      * @throws ArrayIndexOutOfBoundsException If {@code parts.size() <= 0}.
      */
     public MessagePart last() {
@@ -109,7 +109,7 @@ public class JSONMessage {
 
     /**
      * Converts this JSONChat instance to actual JSON
-     * 
+     *
      * @return The JSON representation of this
      */
     public JsonObject toJSON() {
@@ -135,7 +135,7 @@ public class JSONMessage {
     public String toString() {
         return toJSON().toString();
     }
-    
+
     /**
      * Converts this JSONMessage object to the legacy formatting system, which uses formatting codes (like &6, &l, &4, etc.)
      */
@@ -149,47 +149,41 @@ public class JSONMessage {
 
     /**
      * Sends this JSONMessage to all the players specified
-     * 
+     *
      * @param players the players you want to send this to
      */
     public void send(Player... players) {
-
         ReflectionHelper.sendPacket(ReflectionHelper.createTextPacket(toString()), players);
-
     }
 
     /**
      * Sends this as a title to all the players specified
-     * 
+     *
      * @param fadeIn how many ticks to fade in
      * @param stay how many ticks to stay
      * @param fadeOut how many ticks to fade out
      * @param players the players to send it to
      */
     public void title(int fadeIn, int stay, int fadeOut, Player... players) {
-
         ReflectionHelper.sendPacket(ReflectionHelper.createTitleTimesPacket(fadeIn, stay, fadeOut), players);
         ReflectionHelper.sendPacket(ReflectionHelper.createTitlePacket(toString()), players);
-
     }
 
     /**
      * Sends this as a subtitle to all the players specified
-     * 
+     *
      * @param fadeIn how many ticks to fade in
      * @param stay how many ticks to stay
      * @param fadeOut how many ticks to fade out
      * @param players the players to send it to
      */
     public void subtitle(Player... players) {
-
         ReflectionHelper.sendPacket(ReflectionHelper.createSubtitlePacket(toString()), players);
-
     }
-    
+
     /**
      * Sends an action bar message
-     * 
+     *
      * @param players the players you want to send this to
      */
     public void actionbar(Player... players) {
@@ -198,8 +192,9 @@ public class JSONMessage {
 
     /**
      * Sets the color of the current message part.
-     * 
+     *
      * @param color the color to set
+     *
      * @return this
      */
     public JSONMessage color(ChatColor color) {
@@ -209,8 +204,9 @@ public class JSONMessage {
 
     /**
      * Adds a style to the current message part.
-     * 
+     *
      * @param style the style to add
+     *
      * @return this
      */
     public JSONMessage style(ChatColor style) {
@@ -220,8 +216,9 @@ public class JSONMessage {
 
     /**
      * Makes the text run a command.
-     * 
+     *
      * @param cmd the command to run
+     *
      * @return this
      */
     public JSONMessage runCommand(String cmd) {
@@ -231,8 +228,9 @@ public class JSONMessage {
 
     /**
      * Makes the text suggest a command.
-     * 
+     *
      * @param cmd the command to suggest
+     *
      * @return this
      */
     public JSONMessage suggestCommand(String cmd) {
@@ -242,8 +240,9 @@ public class JSONMessage {
 
     /**
      * Opens a URL.
-     * 
+     *
      * @param url the url to open
+     *
      * @return this
      */
     public JSONMessage openURL(String url) {
@@ -254,8 +253,9 @@ public class JSONMessage {
     /**
      * Changes the page of a book. Using this in a non-book context is useless
      * and will probably error.
-     * 
+     *
      * @param page the page to change to
+     *
      * @return this
      */
     public JSONMessage changePage(int page) {
@@ -265,8 +265,9 @@ public class JSONMessage {
 
     /**
      * Shows text when you hover over it
-     * 
+     *
      * @param text the text to show
+     *
      * @return this
      */
     public JSONMessage tooltip(String text) {
@@ -276,8 +277,9 @@ public class JSONMessage {
 
     /**
      * Shows text when you hover over it
-     * 
+     *
      * @param message the text to show
+     *
      * @return this
      */
     public JSONMessage tooltip(JSONMessage message) {
@@ -287,8 +289,9 @@ public class JSONMessage {
 
     /**
      * Shows an achievement when you hover over it
-     * 
+     *
      * @param id the id of the achievement
+     *
      * @return
      */
     public JSONMessage achievement(String id) {
@@ -298,8 +301,9 @@ public class JSONMessage {
 
     /**
      * Adds another part to this JSONChat
-     * 
+     *
      * @param text the text to start with
+     *
      * @return this
      */
     public JSONMessage then(String text) {
@@ -308,8 +312,9 @@ public class JSONMessage {
 
     /**
      * Adds another part to this JSONChat
-     * 
+     *
      * @param text the next part
+     *
      * @return this
      */
     public JSONMessage then(MessagePart nextPart) {
@@ -319,8 +324,9 @@ public class JSONMessage {
 
     /**
      * Adds a horizontal bar to the message of the given length
-     * 
+     *
      * @param length the length of the horizontal bar
+     *
      * @return this
      */
     public JSONMessage bar(int length) {
@@ -330,7 +336,7 @@ public class JSONMessage {
     /**
      * Adds a horizontal bar to the message that's 53 characters long. This is
      * the default width of the player's chat window.
-     * 
+     *
      * @return this
      */
     public JSONMessage bar() {
@@ -339,36 +345,38 @@ public class JSONMessage {
 
     /**
      * Adds a blank line to the message
-     * 
+     *
      * @return this
      */
     public JSONMessage newline() {
         return then("\n");
     }
 
+    //<editor-fold desc="Utility Classes">
     ///////////////////////////
     // BEGIN UTILITY CLASSES //
     ///////////////////////////
+
+    //<editor-fold desc="MessagePart">
     /**
      * Defines a section of the message.
-     * 
-     * @author Rayzr
      *
+     * @author Rayzr
      */
     public class MessagePart {
 
-        private MessageEvent    onClick;
-        private MessageEvent    onHover;
-        private List<ChatColor> styles = new ArrayList<ChatColor>();
-        private ChatColor       color;
-        private String          text;
+        private MessageEvent onClick;
+        private MessageEvent onHover;
+        private List<ChatColor> styles = new ArrayList<>();
+        private ChatColor color;
+        private String    text;
 
         public MessagePart(String text) {
             this.text = text == null ? "null" : text;
         }
 
         public JsonObject toJSON() {
-            Objects.requireNonNull(text);
+            Objects.requireNonNull(text, "text can not be null");
 
             JsonObject obj = new JsonObject();
             obj.addProperty("text", text);
@@ -378,7 +386,7 @@ public class JSONMessage {
             }
 
             for (ChatColor style : styles) {
-                obj.addProperty(stylesToNames.get(style), true);
+                obj.addProperty(STYLES_TO_NAMES.get(style), true);
             }
 
             if (onClick != null) {
@@ -461,7 +469,7 @@ public class JSONMessage {
 
         /**
          * Adds a style
-         * 
+         *
          * @param style the style to add
          */
         public void addStyle(ChatColor style) {
@@ -489,7 +497,9 @@ public class JSONMessage {
         }
 
     }
+    //</editor-fold>
 
+    //<editor-fold desc="MessageEvent">
     public static class MessageEvent {
 
         private String action;
@@ -545,13 +555,16 @@ public class JSONMessage {
         }
 
     }
+    //</editor-fold>
 
+    //<editor-fold desc="ClickEvent">
     public static class ClickEvent {
 
         /**
          * Runs a command.
-         * 
+         *
          * @param cmd the command to run
+         *
          * @return The MessageEvent
          */
         public static MessageEvent runCommand(String cmd) {
@@ -560,8 +573,9 @@ public class JSONMessage {
 
         /**
          * Suggests a command by putting inserting it in chat.
-         * 
+         *
          * @param cmd the command to suggest
+         *
          * @return The MessageEvent
          */
         public static MessageEvent suggestCommand(String cmd) {
@@ -570,8 +584,9 @@ public class JSONMessage {
 
         /**
          * Requires web links to be enabled on the client.
-         * 
+         *
          * @param url the url to open
+         *
          * @return The MessageEvent
          */
         public static MessageEvent openURL(String url) {
@@ -580,8 +595,9 @@ public class JSONMessage {
 
         /**
          * Only used with written books.
-         * 
+         *
          * @param page the page to switch to
+         *
          * @return The MessageEvent
          */
         public static MessageEvent changePage(int page) {
@@ -589,13 +605,16 @@ public class JSONMessage {
         }
 
     }
+    //</editor-fold>
 
+    //<editor-fold desc="HoverEvent">
     public static class HoverEvent {
 
         /**
          * Shows text when you hover over it
-         * 
+         *
          * @param text the text to show
+         *
          * @return The MessageEvent
          */
         public static MessageEvent showText(String text) {
@@ -604,8 +623,9 @@ public class JSONMessage {
 
         /**
          * Shows text when you hover over it
-         * 
+         *
          * @param chat the JSON message to show
+         *
          * @return The MessageEvent
          */
         public static MessageEvent showText(JSONMessage message) {
@@ -617,8 +637,9 @@ public class JSONMessage {
 
         /**
          * Shows an achievement when you hover over it
-         * 
+         *
          * @param id the id over the achievement
+         *
          * @return
          */
         public static MessageEvent showAchievement(String id) {
@@ -626,10 +647,12 @@ public class JSONMessage {
         }
 
     }
+    //</editor-fold>
 
+    //<editor-fold desc="ReflectionHelper">
     private static class ReflectionHelper {
 
-        private static Class<?>       craftPlayer;
+        private static Class<?> craftPlayer;
 
         private static Constructor<?> chatComponentText;
         private static Class<?>       packetPlayOutChat;
@@ -637,17 +660,17 @@ public class JSONMessage {
         private static Class<?>       iChatBaseComponent;
         private static Class<?>       titleAction;
 
-        private static Field          connection;
-        private static Method         getHandle;
-        private static Method         sendPacket;
-        private static Method         stringToChat;
+        private static Field  connection;
+        private static Method getHandle;
+        private static Method sendPacket;
+        private static Method stringToChat;
 
-        private static Object         actionTitle;
-        private static Object         actionSubtitle;
+        private static Object actionTitle;
+        private static Object actionSubtitle;
 
-        private static String         version;
+        private static String version;
 
-        private static boolean        SETUP = false;
+        private static boolean SETUP = false;
 
         static {
 
@@ -741,8 +764,7 @@ public class JSONMessage {
                 throw new IllegalStateException("ReflectionHelper is not set up!");
             }
             try {
-                Object packet = packetPlayOutTitle.getConstructor(titleAction, iChatBaseComponent).newInstance(actionTitle, fromJson(message));
-                return packet;
+                return packetPlayOutTitle.getConstructor(titleAction, iChatBaseComponent).newInstance(actionTitle, fromJson(message));
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -755,8 +777,7 @@ public class JSONMessage {
                 throw new IllegalStateException("ReflectionHelper is not set up!");
             }
             try {
-                Object packet = packetPlayOutTitle.getConstructor(titleAction, iChatBaseComponent).newInstance(actionSubtitle, fromJson(message));
-                return packet;
+                return packetPlayOutTitle.getConstructor(titleAction, iChatBaseComponent).newInstance(actionSubtitle, fromJson(message));
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -769,8 +790,7 @@ public class JSONMessage {
                 throw new IllegalStateException("ReflectionHelper is not set up!");
             }
             try {
-                Object packet = packetPlayOutTitle.getConstructor(int.class, int.class, int.class).newInstance(fadeIn, stay, fadeOut);
-                return packet;
+                return packetPlayOutTitle.getConstructor(int.class, int.class, int.class).newInstance(fadeIn, stay, fadeOut);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -839,5 +859,7 @@ public class JSONMessage {
         }
 
     }
+    //</editor-fold>
+    //</editor-fold>
 
 }

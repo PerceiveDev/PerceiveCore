@@ -1,8 +1,10 @@
 package com.perceivedev.perceivecore.util;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
 
 /**
  * The ArrayUtils class contains various methods for manipulating arrays
@@ -25,20 +27,12 @@ public class ArrayUtils {
      *
      * @return The concatenated String
      */
-    public static String concat(Object[] arr, String filler) {
-        return Arrays.stream(arr).map(Object::toString).collect(Collectors.joining(filler));
-    }
+    @Nonnull
+    public static String concat(@Nonnull Object[] arr, @Nonnull String filler) {
+        Objects.requireNonNull(arr, "array can not be null");
+        Objects.requireNonNull(filler, "filler can not be null");
 
-    /**
-     * Functions exactly like {@link ArrayUtils#concat(Object[], String)}
-     *
-     * @param list the list
-     * @param filler the String to concatenate the objects with
-     *
-     * @return The concatenated String
-     */
-    public static String concat(List<? extends Object> list, String filler) {
-        return concat(list.toArray(), filler);
+        return Arrays.stream(arr).map(Object::toString).collect(Collectors.joining(filler));
     }
 
     /**
@@ -48,7 +42,10 @@ public class ArrayUtils {
      *
      * @return The reduced array
      */
-    public static <T> T[] removeFirst(T[] original) {
+    @Nonnull
+    public static <T> T[] removeFirst(@Nonnull T[] original) {
+        Objects.requireNonNull(original, "original can not be null");
+
         if (original.length < 1) {
             return original;
         }

@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
- * Created by Julian on 30.09.2016.
+ * A small testobject
  */
 public class SerializingTestObject implements ConfigSerializable {
 

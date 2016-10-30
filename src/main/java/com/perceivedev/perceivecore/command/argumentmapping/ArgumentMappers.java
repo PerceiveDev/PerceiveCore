@@ -84,7 +84,7 @@ public class ArgumentMappers {
             }
 
             @Override
-            public Optional<? extends EntityType> map(Queue<String> strings) {
+            public Optional<EntityType> map(Queue<String> strings) {
                 if (strings.isEmpty()) {
                     return Optional.empty();
                 }

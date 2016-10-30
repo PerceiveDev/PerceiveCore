@@ -1,15 +1,15 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagShort;
 
-import static junit.framework.Assert.assertEquals;
-
 /**
- * Created by Julian on 24.09.2016.
+ * A small test for shorts
  */
 public class NBTTagShortTest {
 

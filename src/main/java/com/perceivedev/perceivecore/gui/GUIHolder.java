@@ -30,7 +30,7 @@ public class GUIHolder implements InventoryHolder {
 
     private GUI                 gui;
     private Inventory           inventory;
-    private Map<String, Object> data = new HashMap<String, Object>();
+    private Map<String, Object> data = new HashMap<>();
 
     /**
      * @param name the name of the inventory

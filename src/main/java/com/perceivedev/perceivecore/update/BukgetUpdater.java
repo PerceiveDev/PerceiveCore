@@ -61,7 +61,7 @@ public class BukgetUpdater extends Updater {
             }
         }
         JSONArray versions = (JSONArray) jsonObject.get("versions");
-        List<JSONObject> validVersions = new ArrayList();
+        List<JSONObject> validVersions = new ArrayList<>();
         for (Object versionObj : versions) {
             JSONObject version = (JSONObject) versionObj;
             if (((JSONArray) version.get("game_versions")).get(0).toString().contains(getMCVersion())) {

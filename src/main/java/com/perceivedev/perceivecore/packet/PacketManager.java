@@ -51,8 +51,8 @@ public class PacketManager implements Listener {
      * @throws NullPointerException if any parameter is null
      */
     public void addListener(PacketListener listener, Player player) {
-        Objects.requireNonNull(listener);
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(listener, "listener can not be null");
+        Objects.requireNonNull(player, "player can not be null");
 
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {
@@ -76,8 +76,8 @@ public class PacketManager implements Listener {
      */
     @SuppressWarnings("unused")
     public void removeListener(PacketListener listener, Player player) {
-        Objects.requireNonNull(listener);
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(listener, "listener can not be null");
+        Objects.requireNonNull(player, "player can not be null");
 
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {
@@ -101,7 +101,7 @@ public class PacketManager implements Listener {
      * @throws NullPointerException if uuid is null
      */
     public void removeAllListeners(UUID uuid) {
-        Objects.requireNonNull(uuid);
+        Objects.requireNonNull(uuid, "uuid can not be null");
 
         // no modifications during checks or the result may be wrong! (it changes depending on the current state)
         synchronized (injectorMap) {

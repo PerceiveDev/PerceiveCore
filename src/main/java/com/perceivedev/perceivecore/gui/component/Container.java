@@ -18,12 +18,12 @@ public interface Container {
      * @param inventory the inventory to reference when retrieving the items
      * @return The contents of this ItemArea
      */
-    public ItemStack[] getContents(Rect pos, Inventory inventory);
+    ItemStack[] getContents(Rect pos, Inventory inventory);
 
     /**
      * @param inventory the inventory to set them in
      * @param contents the contents to set
      */
-    public void setContents(Rect pos, Inventory inventory, ItemStack[] contents);
+    void setContents(Rect pos, Inventory inventory, ItemStack[] contents);
 
 }

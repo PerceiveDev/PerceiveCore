@@ -208,6 +208,7 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
             return ChatColor.stripColor(coloredString);
         }
 
+        @SuppressWarnings("StringConcatenationInLoop")
         private void calculateAllLines() {
             String finalString;
             {

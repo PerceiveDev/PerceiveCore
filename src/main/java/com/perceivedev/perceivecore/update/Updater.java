@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -143,7 +144,7 @@ public abstract class Updater {
      */
     boolean updateAvailable() {
         String currentVersion = plugin.getDescription().getVersion();
-        if (getLatestVersion() != currentVersion) {
+        if (!Objects.equals(getLatestVersion(), currentVersion)) {
             if (Double.parseDouble(currentVersion) < Double.parseDouble(getLatestVersion())) {
                 return true;
             }
