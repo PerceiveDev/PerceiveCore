@@ -59,7 +59,7 @@ public class SerializationManagerTest {
         long testLong = 5656565656L;
         float testFloat = (float) (253 + Math.pow(2, -4));
         double testDouble = 253 + Math.pow(2, -8);
-        
+
         String testTransient = "transient :)";
 
         Map<Object, Object> testMap = new HashMap<>();
@@ -67,14 +67,14 @@ public class SerializationManagerTest {
         testMap.put("integer", 30);
         testMap.put(200, "IntKey");
         testMap.put(new SerializableString("something"), "Serializable key");
-        
+
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
-        
+
         UUID testUUID = UUID.randomUUID();
 
-        SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient,
-                  testMap, nestedObjectClass, configurationTest, testUUID);
+        SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient, testMap, nestedObjectClass,
+                configurationTest, testUUID);
 
         Map<String, Object> serialized = SerializationManager.serialize(object);
         YamlConfiguration configuration = new YamlConfiguration();
@@ -82,24 +82,33 @@ public class SerializationManagerTest {
 
         System.out.println(configuration.saveToString());
 
-        //        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, serialized);
+        // SerializingTestObject deserialized =
+        // SerializationManager.deserialize(SerializingTestObject.class,
+        // serialized);
         SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, configuration.getConfigurationSection("test"));
 
         Assert.assertEquals(object.cloneWithoutTransient(), deserialized);
         Assert.assertEquals(deserialized.getTestMap().get("value123").getClass(), String.class);
         Assert.assertEquals(deserialized.getTestMap().get("integer").getClass(), Integer.class);
         Assert.assertEquals(deserialized.getTestUUID(), testUUID);
-        
+
         System.out.println("Test UUID: " + testUUID + "\nAfter deserialization: " + deserialized.getTestUUID());
 
     }
 
     @Test
     public void deserialize() throws Exception {
-        // Not much to do here, as it is tested in the serialize method. Just validate edge cases.
+        // Not much to do here, as it is tested in the serialize method. Just
+        // validate edge cases.
 
         Map<String, Object> serialize = SerializationManager.serialize(new UnSerializableString("nothing"));
-        Assert.assertNull("No default constructor given", SerializationManager.deserialize(UnSerializableString.class, serialize));
+        UnSerializableString unserializable = null;
+        try {
+            unserializable = SerializationManager.deserialize(UnSerializableString.class, serialize);
+        } catch (IllegalArgumentException ignore) {
+
+        }
+        Assert.assertNull("No default constructor", unserializable);
 
         SerializationManager.serialize(null);
     }
@@ -142,9 +151,7 @@ public class SerializationManagerTest {
 
         @Override
         public String toString() {
-            return "SerializableString{" +
-                      "data='" + data + '\'' +
-                      '}';
+            return "SerializableString{" + "data='" + data + '\'' + '}';
         }
     }
 

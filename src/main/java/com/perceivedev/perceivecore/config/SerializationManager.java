@@ -302,9 +302,8 @@ public class SerializationManager {
             throw new IllegalStateException("Trapped in a loop? Recursion amount too high.");
         }
 
-        // TODO: 30.09.2016 Throw an exception here?
         if (!hasDefaultConstructor(clazz)) {
-            return null;
+            throw new IllegalArgumentException("The class " + clazz.getCanonicalName() + " does not have a default constructor!");
         }
         T instance = instantiate(clazz);
         if (instance == null) {
