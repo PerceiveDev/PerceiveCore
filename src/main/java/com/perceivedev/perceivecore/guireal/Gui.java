@@ -127,6 +127,17 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Pushes the Gui on the stack, <b>without</b> opening it.
+     *
+     * @param player The player to push the Gui for
+     */
+    public void push(Player player) {
+        Objects.requireNonNull(player, "player can not be null");
+
+        PerceiveCore.getInstance().getGuiManager().addGui(player.getUniqueId(), this);
+    }
+
+    /**
      * Opens the inventory for the player
      *
      * @param player The Player to open it for
