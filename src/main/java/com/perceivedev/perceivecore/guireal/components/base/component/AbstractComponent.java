@@ -38,6 +38,11 @@ public abstract class AbstractComponent implements Component, Cloneable {
     }
 
     @Override
+    public Gui getGui() {
+        return ownerGui;
+    }
+
+    @Override
     public int getHeight() {
         return size.getHeight();
     }

@@ -11,8 +11,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -162,7 +164,7 @@ public class GuiManager implements Listener {
             Player player = playerOptional.get();
 
             // they have an inventory opened
-            if (player.getOpenInventory().getType() != InventoryType.CRAFTING) {
+            if (player.getOpenInventory().getType() != InventoryType.CRAFTING && player.getOpenInventory().getType() != InventoryType.CREATIVE) {
                 return false;
             }
 
@@ -253,5 +255,20 @@ public class GuiManager implements Listener {
 
         PlayerGuiData playerData = PerceiveCore.getInstance().getGuiManager().getOrCreatePlayerData(event.getPlayer().getUniqueId());
         playerData.reactToClose((Gui) holder);
+    }
+
+    @EventHandler
+    public void onPlayerClick(InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player)) {
+            return;
+        }
+
+        Inventory inv = e.getInventory();
+        if (!(inv.getHolder() instanceof Gui)) {
+            return;
+        }
+
+        Gui gui = (Gui) inv.getHolder();
+        gui.onClick(e);
     }
 }

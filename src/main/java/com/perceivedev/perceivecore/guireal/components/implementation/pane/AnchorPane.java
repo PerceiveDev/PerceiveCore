@@ -90,6 +90,7 @@ public class AnchorPane extends AbstractPane {
 
         if (getInventoryMap().addComponent(x, y, component)) {
             components.add(component);
+            updateComponentHierarchy(component);
             return true;
         }
 

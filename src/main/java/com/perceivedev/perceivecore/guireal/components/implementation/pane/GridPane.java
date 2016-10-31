@@ -208,6 +208,7 @@ public class GridPane extends AbstractPane {
         if (result) {
             slots[slotY][slotX] = true;
             components.add(component);
+            updateComponentHierarchy(component);
         }
 
         return result;

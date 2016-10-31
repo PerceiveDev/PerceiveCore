@@ -106,7 +106,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     /**
      * Adds a component. You can't add the same pane twice.
      * <p>
-     * <b><i>Must update the {@link #getInventoryMap()} itself</i></b>
+     * <b><i>Must update the {@link #getInventoryMap()} itself.</i></b>
+     * <p>
+     * <b>You should call upon successful add {@link #updateComponentHierarchy(Component)} or perform the tasks yourself</b>
      *
      * @param component The component to add. You can't add the same component twice.
      *
@@ -114,6 +116,22 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      */
     @Override
     public abstract boolean addComponent(Component component);
+
+    // @formatter:off
+    /**
+     * Performs basic updating task, that need to be done at adding
+     * 
+     * Currently:
+     * <ul>
+     *     <li>Sets the owner gui</li>
+     * </ul>
+     *
+     * @param component The component to update
+     */
+    // @formatter:on
+    protected void updateComponentHierarchy(Component component) {
+        component.setGui(ownerGui);
+    }
 
     @Override
     public boolean removeComponent(Component component) {
@@ -126,6 +144,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         components.remove(component);
         getInventoryMap().removeComponent(component);
 
+        component.setGui(null);
         return true;
     }
 
@@ -135,12 +154,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return false;
         }
 
-        // FIXME: 29.10.2016 Only works for root pane, as the Owner Gui is only added there
-        
         // TODO: 29.10.2016 Continue here! Currently re-renders the Whole Gui 
         return ownerGui.reRender();
     }
-
 
     @Override
     public void onClick(ClickEvent clickEvent) {

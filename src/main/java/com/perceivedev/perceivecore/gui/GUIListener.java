@@ -18,6 +18,9 @@ import org.bukkit.plugin.Plugin;
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.guireal.Gui;
 import com.perceivedev.perceivecore.guireal.components.implementation.component.Button;
+import com.perceivedev.perceivecore.guireal.components.implementation.component.simple.DisplayColor;
+import com.perceivedev.perceivecore.guireal.components.implementation.component.simple.SimpleButton;
+import com.perceivedev.perceivecore.guireal.components.implementation.component.simple.StandardDisplayTypes;
 import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
 import com.perceivedev.perceivecore.guireal.components.implementation.pane.GridPane;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
@@ -58,37 +61,68 @@ public class GUIListener implements Listener {
         Gui gui = new Gui(name, 4);
         AnchorPane rootAnchorPane = (AnchorPane) gui.getRootPane();
 
-        rootAnchorPane.addComponent(new Button(ItemFactory.builder(Material.LAVA_BUCKET).setName("&3&lBUKKIT").build(),
-                e -> System.out.println(name + " Buckit to the rescue!!"), new Dimension(3, 1)), 3, 0);
+        //        rootAnchorPane.addComponent(new Button(
+        //                  ItemFactory.builder(Material.LAVA_BUCKET).setName("&3&lBUKKIT").build(),
+        //                  e -> System.out.println(name + " Buckit to the rescue!!"),
+        //                  new Dimension(3, 1)
+        //        ), 3, 0);
+
+        {
+            StandardDisplayTypes[] values = StandardDisplayTypes.values();
+            for (int i = 0; i < values.length; i++) {
+                StandardDisplayTypes standardDisplayTypes = values[i];
+
+                rootAnchorPane.addComponent(new SimpleButton(standardDisplayTypes, DisplayColor.BLUE, "&3&lBUKKIT!", event -> {
+                    event.setCancelled(true);
+                    System.out.println(name + " Bukkit to the rescue!");
+                }), i, 0);
+            }
+
+            {
+                SimpleButton button = new SimpleButton(
+                          color -> ItemFactory.builder(Material.LAVA_BUCKET), DisplayColor.BLUE,
+                          "&3&lBUKKIT!",
+                          event -> {
+                              event.setCancelled(true);
+                              System.out.println(name + " Bukkit to the rescue!");
+                          }
+                );
+                button.setCloseOnClick(true);
+                rootAnchorPane.addComponent(button, values.length, 0);
+            }
+        }
 
         AnchorPane paneOne = new AnchorPane(9, 3);
         paneOne.addComponent(new Button(ItemFactory.builder(Material.STONE_BUTTON).setName("&c&lApple").build(),
-                e -> System.out.println(name + " ACTION!"), new Dimension(9, 2)), 0, 0);
+                  e -> System.out.println(name + " ACTION!"), new Dimension(9, 2)), 0, 0);
 
         GridPane paneTwo = new GridPane(8, 1, 4, 1);
         paneTwo.addComponent(new Button(ItemFactory.builder(Material.GOLD_INGOT).setName("&6&lBUTTER").build(),
-                e -> System.out.println(name + " BUTTER!"), new Dimension(1, 1)), 1, 0);
+                  e -> System.out.println(name + " BUTTER!"), new Dimension(1, 1)), 1, 0);
 
         Button button = new Button(ItemFactory.builder(Material.IRON_INGOT).setName("&7&lIRON").build(),
-                e -> System.out.println(name + " IRON!"), new Dimension(1, 1));
+                  e -> System.out.println(name + " IRON!"), new Dimension(1, 1));
         button.setAction(e -> {
             System.out.println(name + " IRON!");
 
             if (button.getItemStack().getItemMeta().hasEnchant(Enchantment.PROTECTION_ENVIRONMENTAL)) {
                 button.setItemStack(ItemFactory.builder(button.getItemStack())
-                        .removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+                          .removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             } else {
                 button.setItemStack(ItemFactory.builder(button.getItemStack())
-                        .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
+                          .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
             }
             gui.reRender();
         });
         paneTwo.addComponent(button, 0, 0);
 
-        paneTwo.addComponent(new Button(ItemFactory.builder(Material.BARRIER).setName("&4&lCLOSE").build(), e -> {
-            System.out.println(name + " CLOSING!");
-            gui.close();
-        }, new Dimension(1, 1)), 2, 0);
+        {
+            Button button2 = new Button(ItemFactory.builder(Material.BARRIER).setName("&4&lCLOSE").build(), e -> {
+                System.out.println(name + " CLOSING!");
+                gui.close();
+            }, new Dimension(1, 1));
+            paneTwo.addComponent(button2, 2, 0);
+        }
 
         paneOne.addComponent(paneTwo, 0, 2);
 
@@ -96,21 +130,6 @@ public class GUIListener implements Listener {
 
         gui.setReopenOnClose(reopen);
         return gui;
-    }
-
-    @EventHandler
-    public void onPlayerInteractF(InventoryClickEvent e) {
-        if (!(e.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        Inventory inv = e.getInventory();
-        if (!(inv.getHolder() instanceof Gui)) {
-            return;
-        }
-
-        Gui gui = (Gui) inv.getHolder();
-        gui.onClick(e);
     }
 
     // @EventHandler

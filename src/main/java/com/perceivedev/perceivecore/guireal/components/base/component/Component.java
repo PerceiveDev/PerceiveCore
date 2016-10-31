@@ -26,6 +26,8 @@ public interface Component {
 
     /**
      * Reacts to a click event
+     *
+     * @param clickEvent The {@link ClickEvent}
      */
     void onClick(ClickEvent clickEvent);
 
@@ -65,6 +67,13 @@ public interface Component {
      * @param gui The gui
      */
     void setGui(Gui gui);
+
+    /**
+     * Gets the Gui this component belongs to.
+     *
+     * @return The Gui this component is in. May be null
+     */
+    Gui getGui();
 
     /**
      * Converts a slot to Grid coordinates

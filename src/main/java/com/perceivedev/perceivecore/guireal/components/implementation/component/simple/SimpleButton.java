@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
 
 import java.util.function.Consumer;
@@ -11,25 +8,23 @@ import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * @author Rayzr
- *
  */
 public class SimpleButton extends SimpleLabel {
 
     /**
      * The code to run when the button is clicked
      */
-    protected Consumer<ClickEvent> clickHandler;
+    private Consumer<ClickEvent> clickHandler;
 
     /**
      * Whether or not to close the inventory when the button is clicked
      */
-    protected boolean              closeOnClick = false;
+    private boolean closeOnClick = false;
 
     public SimpleButton(Dimension size, DisplayType type, DisplayColor color, String name,
-            Consumer<ClickEvent> clickHandler) {
+              Consumer<ClickEvent> clickHandler) {
         super(size, type, color, name);
         this.clickHandler = clickHandler;
-        setColor(DisplayColor.LIME);
     }
 
     public SimpleButton(DisplayType type, DisplayColor color, String name, Consumer<ClickEvent> clickHandler) {
@@ -54,6 +49,7 @@ public class SimpleButton extends SimpleLabel {
 
     /**
      * @param clickHandler the clickHandler to set
+     *
      * @return this button (useful for chaining method calls)
      */
     public SimpleButton setClickHandler(Consumer<ClickEvent> clickHandler) {
@@ -64,29 +60,31 @@ public class SimpleButton extends SimpleLabel {
     /**
      * This calls the {@link #clickHandler} if it is present, and if
      * {@link #closeOnClick} is true then it closes the inventory.
-     * 
-     * @param e the ClickEvent
+     *
+     * @param event the ClickEvent
+     *
      * @see Component#onClick(ClickEvent)
      */
     @Override
-    public void onClick(ClickEvent e) {
+    public void onClick(ClickEvent event) {
         if (clickHandler != null) {
-            clickHandler.accept(e);
+            clickHandler.accept(event);
         }
         if (closeOnClick) {
-            e.getPlayer().closeInventory();
+            ownerGui.close();
         }
     }
 
     /**
      * @return Whether or not to {@link #closeOnClick}
      */
-    public boolean closeOnClick() {
+    public boolean isCloseOnClick() {
         return closeOnClick;
     }
 
     /**
-     * @param set if it this button should {@link #closeOnClick}
+     * @param closeOnClick if it this button should {@link #closeOnClick}
+     *
      * @return this button (useful for chaining method calls)
      */
     public SimpleButton setCloseOnClick(boolean closeOnClick) {

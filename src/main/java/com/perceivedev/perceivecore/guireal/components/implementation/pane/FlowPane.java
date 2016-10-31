@@ -79,6 +79,7 @@ public class FlowPane extends AbstractPane {
             return false;
         }
         components.add(component);
+        updateComponentHierarchy(component);
         return true;
     }
 
