@@ -450,6 +450,10 @@ public class I18N implements MessageProvider {
                         if (Files.exists(copyTo) && !overwrite) {
                             continue;
                         }
+                        if (Files.isDirectory(copyTo)) {
+                            continue;
+                        }
+
                         Files.copy(jarFile.getInputStream(entry), copyTo, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
