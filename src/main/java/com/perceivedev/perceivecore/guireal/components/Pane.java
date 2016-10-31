@@ -1,9 +1,7 @@
-package com.perceivedev.perceivecore.guireal.components.base.pane;
+package com.perceivedev.perceivecore.guireal.components;
 
 import java.util.Collection;
 import java.util.Optional;
-
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
 
 /**
  * The base class for Panes.

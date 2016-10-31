@@ -7,8 +7,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.guisystem.component.Component;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
  * A simple button

@@ -1,7 +1,7 @@
-package com.perceivedev.perceivecore.guireal.components.base.component;
+package com.perceivedev.perceivecore.guireal.components;
 
 import com.perceivedev.perceivecore.guireal.Gui;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * A Skeleton class for {@link Component}

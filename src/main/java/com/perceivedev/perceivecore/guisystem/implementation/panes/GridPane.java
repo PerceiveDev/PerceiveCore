@@ -6,8 +6,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.guisystem.component.Component;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
  * A Grid pane

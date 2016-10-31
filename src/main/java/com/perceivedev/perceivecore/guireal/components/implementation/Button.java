@@ -1,24 +1,18 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.component;
+package com.perceivedev.perceivecore.guireal.components.implementation;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * A simple button
  */
-public class Button extends AbstractComponent {
+public class Button extends Label {
 
-    private ItemStack            itemStack;
     private Consumer<ClickEvent> clickHandler;
-    private Dimension            size;
 
     /**
      * Constructs a button
@@ -30,13 +24,9 @@ public class Button extends AbstractComponent {
      * @throws NullPointerException if any parameter is null
      */
     public Button(ItemStack itemStack, Consumer<ClickEvent> clickHandler, Dimension size) {
-        super(size);
-        Objects.requireNonNull(itemStack);
-        Objects.requireNonNull(clickHandler);
+        super(itemStack, size);
 
-        this.itemStack = itemStack.clone();
         this.clickHandler = clickHandler;
-        this.size = size;
     }
 
     /**
@@ -92,20 +82,6 @@ public class Button extends AbstractComponent {
     public Dimension getSize() {
         // Dimension is immutable
         return size;
-    }
-
-    @Override
-    public void render(Inventory inventory, Player player, int xOffset, int yOffset) {
-        iterateOver2DRange(0, getSize().getWidth(), 0, getSize().getHeight(), (x, y) -> {
-            int slot = gridToSlot(x + xOffset, y + yOffset);
-            if (slot < 0 || slot >= inventory.getSize()) {
-                // can't happen *normally*
-                System.err.println("Button: An item was placed outside the inventory size. Size: " + inventory.getSize()
-                        + " Slot: " + slot);
-            } else {
-                inventory.setItem(slot, itemStack);
-            }
-        });
     }
 
     /**

@@ -1,10 +1,10 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.pane;
+package com.perceivedev.perceivecore.guireal.components.implementation;
 
 import java.util.List;
 import java.util.Objects;
 
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.components.base.pane.AbstractPane;
+import com.perceivedev.perceivecore.guireal.components.AbstractPane;
+import com.perceivedev.perceivecore.guireal.components.Component;
 
 /**
  * A simple anchor pane
@@ -78,23 +78,22 @@ public class AnchorPane extends AbstractPane {
      * @throws NullPointerException if component is null
      */
     public boolean addComponent(Component component, int x, int y) {
-        Objects.requireNonNull(component);
+        Objects.requireNonNull(component, "component can not be null");
+        
+        if (containsComponent(component)) {
+            return false;
+        }
 
         if (!getInventoryMap().hasEnoughSpace(x, y, component.getSize())) {
             return false;
         }
 
-        if (containsComponent(component)) {
-            return false;
-        }
-
-        boolean result = getInventoryMap().addComponent(x, y, component);
-
-        if (result) {
+        if (getInventoryMap().addComponent(x, y, component)) {
             components.add(component);
+            return true;
         }
 
-        return result;
+        return false;
     }
 
     @Override

@@ -1,12 +1,12 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.pane;
+package com.perceivedev.perceivecore.guireal.components.implementation;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.components.base.pane.AbstractPane;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
+import com.perceivedev.perceivecore.guireal.components.AbstractPane;
+import com.perceivedev.perceivecore.guireal.components.Component;
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * A pane that just throws the children in as they fit.
@@ -84,7 +84,7 @@ public class FlowPane extends AbstractPane {
 
     @Override
     public boolean removeComponent(Component component) {
-        Objects.requireNonNull(component);
+        Objects.requireNonNull(component, "component can not be null");
 
         if (!containsComponent(component)) {
             return true;

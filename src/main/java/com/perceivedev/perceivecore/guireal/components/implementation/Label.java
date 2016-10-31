@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.component;
+package com.perceivedev.perceivecore.guireal.components.implementation;
 
 import java.util.Objects;
 
@@ -7,16 +7,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
+import com.perceivedev.perceivecore.guireal.components.AbstractComponent;
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * A Label. Like a button, but does nothing on click
  */
 public class Label extends AbstractComponent {
 
-    private ItemStack itemStack;
-    private Dimension size;
+    protected ItemStack itemStack;
+    protected Dimension size;
 
     /**
      * Constructs a Label
@@ -59,16 +59,12 @@ public class Label extends AbstractComponent {
 
     @Override
     public void render(Inventory inventory, Player player, int xOffset, int yOffset) {
-        System.out.println(xOffset + " " + yOffset);
         iterateOver2DRange(0, getSize().getWidth(), 0, getSize().getHeight(), (x, y) -> {
             int slot = gridToSlot(x + xOffset, y + yOffset);
             if (slot < 0 || slot >= inventory.getSize()) {
                 // can't happen *normally*
-                System.err.println("Label: An item was placed outside the inventory size. "
-                          + "Size: "
-                          + inventory.getSize()
-                          + " Slot: "
-                          + slot);
+                System.err.println("Label: An item was placed outside the inventory size. " + "Size: "
+                        + inventory.getSize() + " Slot: " + slot);
             } else {
                 inventory.setItem(slot, itemStack);
             }
@@ -76,8 +72,9 @@ public class Label extends AbstractComponent {
     }
 
     /**
-     * The returned Label will be logically equal to this, but equals will return false.
-     * This is because of a hidden ID assigned, to distinguish instances.
+     * The returned Label will be logically equal to this, but equals will
+     * return false. This is because of a hidden ID assigned, to distinguish
+     * instances.
      *
      * @return A clone of this label
      */

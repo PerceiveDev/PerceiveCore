@@ -3,8 +3,8 @@ package com.perceivedev.perceivecore.guisystem.implementation.panes;
 import java.util.List;
 import java.util.Objects;
 
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.guisystem.component.Component;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
  * A simple anchor pane

@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.guisystem.component.Component;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
 
 /**
  * A pane that just throws the children in as they fit.

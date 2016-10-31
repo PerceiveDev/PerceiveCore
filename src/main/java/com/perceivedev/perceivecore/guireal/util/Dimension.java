@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guisystem.util;
+package com.perceivedev.perceivecore.guireal.util;
 
 import java.util.Objects;
 
@@ -9,7 +9,9 @@ import com.perceivedev.perceivecore.guisystem.component.Component;
  */
 public class Dimension implements Cloneable {
 
-    private int width, height;
+    public static final Dimension ONE = new Dimension(1, 1);
+
+    private int                   width, height;
 
     /**
      * @param width The width
@@ -82,8 +84,7 @@ public class Dimension implements Cloneable {
         if (!(o instanceof Dimension))
             return false;
         Dimension dimension = (Dimension) o;
-        return width == dimension.width &&
-                  height == dimension.height;
+        return width == dimension.width && height == dimension.height;
     }
 
     @Override
@@ -93,9 +94,6 @@ public class Dimension implements Cloneable {
 
     @Override
     public String toString() {
-        return "Dimension{" +
-                  "width=" + width +
-                  ", height=" + height +
-                  '}';
+        return "Dimension{" + "width=" + width + ", height=" + height + '}';
     }
 }

@@ -1,16 +1,18 @@
 package com.perceivedev.perceivecore.guireal;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
+import com.perceivedev.perceivecore.guireal.components.Pane;
 
 /**
  * A Click Event
  */
 public class ClickEvent {
     private InventoryClickEvent raw;
+    private Player              player;
     private Pane                lastPane;
     private int                 offsetX, offsetY;
 
@@ -24,6 +26,7 @@ public class ClickEvent {
      */
     public ClickEvent(InventoryClickEvent raw, Pane lastPane, int offsetX, int offsetY) {
         this.raw = raw;
+        this.player = (Player) raw.getWhoClicked();
         this.lastPane = lastPane;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
@@ -113,8 +116,8 @@ public class ClickEvent {
 
     /**
      * The slot number that was clicked, ready for passing to
-     * {@link Inventory#getItem(int)}. Note that there may be two slots with
-     * the same slot number, since a view links two different inventories.
+     * {@link Inventory#getItem(int)}. Note that there may be two slots with the
+     * same slot number, since a view links two different inventories.
      *
      * @return The slot number.
      */
@@ -123,10 +126,19 @@ public class ClickEvent {
     }
 
     /**
+     * The player that clicked the slot
+     * 
+     * @return The player who clicked
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
      * Gets whether or not this event is cancelled. This is based off of the
-     * Result value returned by {@link InventoryClickEvent#getResult()}.  Result.ALLOW and
-     * Result.DEFAULT will result in a returned value of false, but
-     * Result.DENY will result in a returned value of true.
+     * Result value returned by {@link InventoryClickEvent#getResult()}.
+     * Result.ALLOW and Result.DEFAULT will result in a returned value of false,
+     * but Result.DENY will result in a returned value of true.
      * <p>
      * {@inheritDoc}
      *
@@ -137,9 +149,10 @@ public class ClickEvent {
     }
 
     /**
-     * Proxy method to {@link InventoryClickEvent#setResult(Event.Result)} for the Cancellable
-     * interface. {@link InventoryClickEvent#setResult(Event.Result)} is preferred, as it allows
-     * you to specify the Result beyond Result.DENY and Result.ALLOW.
+     * Proxy method to {@link InventoryClickEvent#setResult(Event.Result)} for
+     * the Cancellable interface.
+     * {@link InventoryClickEvent#setResult(Event.Result)} is preferred, as it
+     * allows you to specify the Result beyond Result.DENY and Result.ALLOW.
      * <p>
      * {@inheritDoc}
      *
@@ -151,11 +164,7 @@ public class ClickEvent {
 
     @Override
     public String toString() {
-        return "ClickEvent{" +
-                  "offsetX=" + offsetX +
-                  ", offsetY=" + offsetY +
-                  ", slot=" + getSlot() +
-                  ", cancelled=" + isCancelled() +
-                  '}';
+        return "ClickEvent{" + "offsetX=" + offsetX + ", offsetY=" + offsetY + ", slot=" + getSlot() + ", cancelled="
+                + isCancelled() + '}';
     }
 }

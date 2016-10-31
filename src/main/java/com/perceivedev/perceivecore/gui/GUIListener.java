@@ -17,10 +17,10 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.guireal.Gui;
-import com.perceivedev.perceivecore.guireal.components.implementation.component.Button;
-import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
-import com.perceivedev.perceivecore.guireal.components.implementation.pane.GridPane;
-import com.perceivedev.perceivecore.guisystem.util.Dimension;
+import com.perceivedev.perceivecore.guireal.components.implementation.AnchorPane;
+import com.perceivedev.perceivecore.guireal.components.implementation.Button;
+import com.perceivedev.perceivecore.guireal.components.implementation.GridPane;
+import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 
 /**
