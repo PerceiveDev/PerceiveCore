@@ -44,13 +44,15 @@ public class GUIListener implements Listener {
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Gui gui = createGui("Hello", event.getPlayer(), false);
-            gui.open(event.getPlayer());
+            gui.push(event.getPlayer());
 
             gui = createGui("NOPE", event.getPlayer(), true);
-            gui.open(event.getPlayer());
+            gui.push(event.getPlayer());
 
             gui = createGui("OH YEA", event.getPlayer(), false);
-            gui.open(event.getPlayer());
+            gui.push(event.getPlayer());
+            
+            Gui.openFirst(event.getPlayer());
         }
     }
 
@@ -65,17 +67,20 @@ public class GUIListener implements Listener {
         // ), 3, 0);
 
         {
-            int displayType = 0;
+            int index = 0;
             for (StandardDisplayTypes type : StandardDisplayTypes.values()) {
-                rootAnchorPane.addComponent(new SimpleButton(type, DisplayColor.BLUE, "&3&lBUKKIT!",
-                        event -> System.out.println(name + " Bukkit to the rescue!")), displayType, 0);
-                displayType++;
+                rootAnchorPane.addComponent(new SimpleButton(type, DisplayColor.BLUE, "&3&lBUKKIT!", event -> {
+                    System.out.println(name + " Bukkit to the rescue!");
+                }), index, 0);
+                index++;
             }
 
             SimpleButton button = new SimpleButton(color -> ItemFactory.builder(Material.LAVA_BUCKET),
-                    DisplayColor.BLUE, "&3&lBUKKIT!", event -> System.out.println(name + " - Bukkit to the rescue!"));
+                    DisplayColor.BLUE, "&3&lBUKKIT!", event -> {
+                        System.out.println(name + " - Bukkit to the rescue!");
+                    });
             button.setCloseOnClick(true);
-            rootAnchorPane.addComponent(button, displayType, 0);
+            rootAnchorPane.addComponent(button, index, 0);
         }
 
         AnchorPane paneOne = new AnchorPane(9, 3);
