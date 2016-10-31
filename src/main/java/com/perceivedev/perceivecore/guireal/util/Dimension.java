@@ -11,7 +11,7 @@ public class Dimension implements Cloneable {
 
     public static final Dimension ONE = new Dimension(1, 1);
 
-    private int                   width, height;
+    private int width, height;
 
     /**
      * @param width The width
@@ -63,7 +63,7 @@ public class Dimension implements Cloneable {
      *
      * @throws IllegalArgumentException if width or height <= 0
      */
-    public static void ensureValidDimension(int width, int height) {
+    private static void ensureValidDimension(int width, int height) {
         if (width <= 0) {
             throw new IllegalArgumentException("Width must be > 0 (" + width + ")");
         }
@@ -94,6 +94,11 @@ public class Dimension implements Cloneable {
 
     @Override
     public String toString() {
-        return "Dimension{" + "width=" + width + ", height=" + height + '}';
+        // @formatter:off
+        return "Dimension{"
+                  + "width=" + width
+                  + ", height=" + height
+                  + '}';
+        // @formatter:on
     }
 }

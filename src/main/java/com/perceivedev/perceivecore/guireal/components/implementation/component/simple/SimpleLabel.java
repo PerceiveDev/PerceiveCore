@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.perceivedev.perceivecore.guireal.components.implementation;
+package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,10 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.DisplayColor;
-import com.perceivedev.perceivecore.guireal.DisplayType;
-import com.perceivedev.perceivecore.guireal.components.AbstractComponent;
-import com.perceivedev.perceivecore.guireal.components.Component;
+import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
+import com.perceivedev.perceivecore.guireal.components.base.component.Component;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 import com.perceivedev.perceivecore.util.ListUtils;
@@ -134,7 +132,7 @@ public class SimpleLabel extends AbstractComponent {
      * (non-Javadoc)
      * 
      * @see
-     * com.perceivedev.perceivecore.guireal.components.Component#render(org.
+     * com.perceivedev.perceivecore.guireal.components.base.component.Component#render(org.
      * bukkit.inventory.Inventory, org.bukkit.entity.Player, int, int)
      */
     @Override
@@ -156,7 +154,7 @@ public class SimpleLabel extends AbstractComponent {
      * (non-Javadoc)
      * 
      * @see
-     * com.perceivedev.perceivecore.guireal.components.Component#onClick(com.
+     * com.perceivedev.perceivecore.guireal.components.base.component.Component#onClick(com.
      * perceivedev.perceivecore.guireal.ClickEvent)
      */
     @Override
@@ -167,7 +165,7 @@ public class SimpleLabel extends AbstractComponent {
      * (non-Javadoc)
      * 
      * @see
-     * com.perceivedev.perceivecore.guireal.components.Component#deepClone()
+     * com.perceivedev.perceivecore.guireal.components.base.component.Component#deepClone()
      */
     @Override
     public Component deepClone() {

@@ -1,14 +1,12 @@
 /**
  * 
  */
-package com.perceivedev.perceivecore.guireal.components.implementation;
+package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
 
 import java.util.function.Consumer;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.DisplayColor;
-import com.perceivedev.perceivecore.guireal.DisplayType;
-import com.perceivedev.perceivecore.guireal.components.Component;
+import com.perceivedev.perceivecore.guireal.components.base.component.Component;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**

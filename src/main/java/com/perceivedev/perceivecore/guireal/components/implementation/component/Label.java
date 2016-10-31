@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components.implementation;
+package com.perceivedev.perceivecore.guireal.components.implementation.component;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.components.AbstractComponent;
+import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
@@ -15,8 +15,7 @@ import com.perceivedev.perceivecore.guireal.util.Dimension;
  */
 public class Label extends AbstractComponent {
 
-    protected ItemStack itemStack;
-    protected Dimension size;
+    private ItemStack itemStack;
 
     /**
      * Constructs a Label
@@ -31,7 +30,6 @@ public class Label extends AbstractComponent {
         Objects.requireNonNull(itemStack);
 
         this.itemStack = itemStack.clone();
-        this.size = size;
     }
 
     /**
@@ -63,8 +61,11 @@ public class Label extends AbstractComponent {
             int slot = gridToSlot(x + xOffset, y + yOffset);
             if (slot < 0 || slot >= inventory.getSize()) {
                 // can't happen *normally*
-                System.err.println("Label: An item was placed outside the inventory size. " + "Size: "
-                        + inventory.getSize() + " Slot: " + slot);
+                // @formatter:off
+                System.err.println("Label: An item was placed outside the inventory size."
+                          + " Size: " + inventory.getSize()
+                          + " Slot: " + slot);
+                // @formatter:on
             } else {
                 inventory.setItem(slot, itemStack);
             }
@@ -81,7 +82,7 @@ public class Label extends AbstractComponent {
     @Override
     public Label deepClone() {
         try {
-            return new Label(itemStack.clone(), size.clone());
+            return new Label(itemStack.clone(), getSize().clone());
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

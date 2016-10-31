@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components.implementation;
+package com.perceivedev.perceivecore.guireal.components.implementation.component;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ public class Button extends Label {
      * Constructs a button
      *
      * @param itemStack The ItemStack to display
-     * @param runnable The Runnable to run on click
+     * @param clickHandler The click handler to run on click
      * @param size The size of the button
      *
      * @throws NullPointerException if any parameter is null
@@ -36,29 +36,11 @@ public class Button extends Label {
      * @param size The size of the button
      *
      * @throws NullPointerException if any parameter is null
-     * @see #Button(ItemStack, Runnable, Dimension)
+     * @see #Button(ItemStack, Consumer, Dimension)
      */
     public Button(ItemStack itemStack, Dimension size) {
         this(itemStack, e -> {
         }, size);
-    }
-
-    /**
-     * Sets the item
-     *
-     * @param itemStack The new itemstack
-     */
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack.clone();
-    }
-
-    /**
-     * Returns the {@link ItemStack} of this button
-     *
-     * @return The {@link ItemStack}
-     */
-    public ItemStack getItemStack() {
-        return itemStack.clone();
     }
 
     /**
@@ -73,15 +55,6 @@ public class Button extends Label {
     @Override
     public void onClick(ClickEvent clickEvent) {
         clickHandler.accept(clickEvent);
-        // TODO: @i_al_istannen: They can cancel this from within the
-        // clickHandler if they want. We shouldn't force it cancelled :P
-        // clickEvent.setCancelled(true);
-    }
-
-    @Override
-    public Dimension getSize() {
-        // Dimension is immutable
-        return size;
     }
 
     /**
@@ -93,11 +66,6 @@ public class Button extends Label {
      */
     @Override
     public Button deepClone() {
-        try {
-            return new Button(itemStack.clone(), clickHandler, size.clone());
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new Button(getItemStack(), clickHandler, getSize());
     }
 }

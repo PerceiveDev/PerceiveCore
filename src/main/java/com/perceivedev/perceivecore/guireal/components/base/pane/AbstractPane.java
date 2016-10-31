@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components;
+package com.perceivedev.perceivecore.guireal.components.base.pane;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.guireal.ClickEvent;
+import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
+import com.perceivedev.perceivecore.guireal.components.base.component.Component;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**

@@ -5,14 +5,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.guireal.components.Pane;
+import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
 
 /**
  * A Click Event
  */
 public class ClickEvent {
     private InventoryClickEvent raw;
-    private Player              player;
     private Pane                lastPane;
     private int                 offsetX, offsetY;
 
@@ -26,7 +25,6 @@ public class ClickEvent {
      */
     public ClickEvent(InventoryClickEvent raw, Pane lastPane, int offsetX, int offsetY) {
         this.raw = raw;
-        this.player = (Player) raw.getWhoClicked();
         this.lastPane = lastPane;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
@@ -127,11 +125,11 @@ public class ClickEvent {
 
     /**
      * The player that clicked the slot
-     * 
+     *
      * @return The player who clicked
      */
     public Player getPlayer() {
-        return player;
+        return (Player) getRaw().getWhoClicked();
     }
 
     /**
@@ -164,7 +162,13 @@ public class ClickEvent {
 
     @Override
     public String toString() {
-        return "ClickEvent{" + "offsetX=" + offsetX + ", offsetY=" + offsetY + ", slot=" + getSlot() + ", cancelled="
-                + isCancelled() + '}';
+        // @formatter:off
+        return "ClickEvent{" +
+                  "offsetX=" + offsetX +
+                  ", offsetY=" + offsetY +
+                  ", slot=" + getSlot() +
+                  ", cancelled=" + isCancelled()
+                  + '}';
+        // @formatter:on
     }
 }

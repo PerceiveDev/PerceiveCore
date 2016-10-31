@@ -11,8 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.guireal.components.Pane;
-import com.perceivedev.perceivecore.guireal.components.implementation.AnchorPane;
+import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
+import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
 import com.perceivedev.perceivecore.util.TextUtils;
 
 /**

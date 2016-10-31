@@ -1,12 +1,12 @@
-package com.perceivedev.perceivecore.guireal.components.implementation;
+package com.perceivedev.perceivecore.guireal.components.implementation.pane;
 
 import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.perceivedev.perceivecore.guireal.components.AbstractPane;
-import com.perceivedev.perceivecore.guireal.components.Component;
+import com.perceivedev.perceivecore.guireal.components.base.component.Component;
+import com.perceivedev.perceivecore.guireal.components.base.pane.AbstractPane;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
@@ -26,13 +26,13 @@ public class GridPane extends AbstractPane {
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
      * @param columns The columns. It will leave spaces empty, if this isn't
-     *            chosen in a fashion compatible with the inventory.
+     * chosen in a fashion compatible with the inventory.
      * @param rows The rows. It will leave spaces empty, if this isn't chosen in
-     *            a fashion compatible with the inventory.
+     * a fashion compatible with the inventory.
      *
      * @throws NullPointerException if any parameter is null
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
-     *             not equal size
+     * not equal size
      */
     public GridPane(int width, int height, InventoryMap inventoryMap, int columns, int rows) {
         super(Collections.emptyList(), width, height, inventoryMap);
@@ -73,7 +73,7 @@ public class GridPane extends AbstractPane {
      *
      * @throws NullPointerException if any parameter is null
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
-     *             not equal size
+     * not equal size
      */
     public GridPane(int width, int height, InventoryMap inventoryMap) {
         this(width, height, inventoryMap, 2, 2);
@@ -122,7 +122,7 @@ public class GridPane extends AbstractPane {
      * @param component The component to fit
      *
      * @return The free slot (0 == x, 1 == y) or null if none (or the component
-     *         doesn't fit in the gridSize)
+     * doesn't fit in the gridSize)
      */
     private int[] getNextFreeSlot(Component component) {
         if (!component.getSize().fitsInside(getGridSize())) {
@@ -145,7 +145,7 @@ public class GridPane extends AbstractPane {
      * Uses the next free grid
      *
      * @param component The component to add.You can't add the same component
-     *            twice.
+     * twice.
      *
      * @return True if the component was added
      *
@@ -156,14 +156,17 @@ public class GridPane extends AbstractPane {
         Objects.requireNonNull(component, "component can not be null");
 
         int[] freeSlot = getNextFreeSlot(component);
-        return freeSlot != null && addComponent(component, freeSlot[0], freeSlot[1]);
+        // @formatter:off
+        return freeSlot != null
+                  && addComponent(component, freeSlot[0], freeSlot[1]);
+        // @formatter:on
     }
 
     /**
      * Tries to add the given component in the given slot
      *
      * @param component The component to add. You can't add the same component
-     *            twice.
+     * twice.
      * @param slotX The x coordinate of the slot
      * @param slotY The y coordinate of the slot
      *
@@ -184,12 +187,15 @@ public class GridPane extends AbstractPane {
 
         if (slotX < 0 || slotY < 0) {
             throw new IllegalArgumentException(
-                    "slotX and slotY must be > 0. Given: '" + slotX + "' and '" + slotY + "'");
+                      "slotX and slotY must be > 0. Given: '" + slotX + "' and '" + slotY + "'");
         }
         if (slotX >= getSize().getWidth() / gridWidth || slotY >= getSize().getHeight() / gridHeight) {
+            // @formatter:off
             throw new IllegalArgumentException("slotX and slotY must be smaller than the amount of columns/rows. "
-                    + "Given: '" + slotX + "' and '" + slotY + "'. " + "Columns: " + (getSize().getWidth() / gridWidth)
-                    + "Rows: " + (slotY >= getSize().getHeight() / gridHeight));
+                      + "Given: '" + slotX + "' and '" + slotY + "'. "
+                      + "Columns: " + (getSize().getWidth() / gridWidth)
+                      + "Rows: " + (slotY >= getSize().getHeight() / gridHeight));
+            // @formatter:on
         }
 
         // already occupied
@@ -214,8 +220,13 @@ public class GridPane extends AbstractPane {
         if (!containsComponent(component)) {
             return true;
         }
-        Optional<Interval> interval = getInventoryMap().getComponentMap().entrySet().stream()
-                .filter(entry -> component.equals(entry.getValue())).map(Entry::getKey).findFirst();
+        // @formatter:off
+        Optional<Interval> interval = getInventoryMap().getComponentMap().entrySet()
+                  .stream()
+                  .filter(entry -> component.equals(entry.getValue()))
+                  .map(Entry::getKey)
+                  .findFirst();
+        // @formatter:on
 
         // Is valid, because if it couldn't find any, containsComponent would
         // return false

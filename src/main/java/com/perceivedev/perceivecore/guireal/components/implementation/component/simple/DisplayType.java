@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.perceivedev.perceivecore.guireal;
+package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
 
 import java.util.function.BiFunction;
 

@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components;
+package com.perceivedev.perceivecore.guireal.components.base.component;
 
 import com.perceivedev.perceivecore.guireal.Gui;
 import com.perceivedev.perceivecore.guireal.util.Dimension;
