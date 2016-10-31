@@ -54,14 +54,11 @@ public class Button extends Label {
 
     /**
      * Reacts to a click event
-     * <p>
-     * <b><i>The click event will be cancelled! You need to un-cancel it manually!</i></b>
      *
      * @param clickEvent The {@link ClickEvent}
      */
     @Override
     public void onClick(ClickEvent clickEvent) {
-        clickEvent.setCancelled(true);
         clickHandler.accept(clickEvent);
     }
 

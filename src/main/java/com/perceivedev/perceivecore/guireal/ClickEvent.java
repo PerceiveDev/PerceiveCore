@@ -16,7 +16,9 @@ public class ClickEvent {
     private int                 offsetX, offsetY;
 
     /**
-     * Creates a ClickEvent
+     * Creates a ClickEvent. This sets the raw InventoryClickEvent to cancelled
+     * by default, so if you have a component which needs to allow interaction,
+     * make sure to {@link #setCancelled(boolean)} to <code>false</code>!
      *
      * @param raw The raw {@link InventoryClickEvent}
      * @param lastPane The last pane it went through
@@ -28,6 +30,7 @@ public class ClickEvent {
         this.lastPane = lastPane;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+        setCancelled(true);
     }
 
     /**
@@ -35,6 +38,8 @@ public class ClickEvent {
      *
      * @param raw The raw {@link InventoryClickEvent}
      * @param lastPane The last pane it went through
+     * 
+     * @see #ClickEvent(InventoryClickEvent, Pane, int, int)
      */
     public ClickEvent(InventoryClickEvent raw, Pane lastPane) {
         this(raw, lastPane, 0, 0);
@@ -138,6 +143,10 @@ public class ClickEvent {
      * Result.ALLOW and Result.DEFAULT will result in a returned value of false,
      * but Result.DENY will result in a returned value of true.
      * <p>
+     * <b>Note: By default ClickEvents are <i>cancelled</i>, so if you want to
+     * allow interaction make sure to {@link #setCancelled(boolean)} to
+     * <code>false</code>!</b>
+     * <p>
      * {@inheritDoc}
      *
      * @return whether the event is cancelled
@@ -151,6 +160,10 @@ public class ClickEvent {
      * the Cancellable interface.
      * {@link InventoryClickEvent#setResult(Event.Result)} is preferred, as it
      * allows you to specify the Result beyond Result.DENY and Result.ALLOW.
+     * <p>
+     * <b>Note: By default ClickEvents are <i>cancelled</i>, so if you want to
+     * allow interaction make sure to {@link #setCancelled(boolean)} to
+     * <code>false</code>!</b>
      * <p>
      * {@inheritDoc}
      *

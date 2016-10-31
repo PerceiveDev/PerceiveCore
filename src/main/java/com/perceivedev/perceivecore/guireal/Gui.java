@@ -121,7 +121,7 @@ public class Gui implements InventoryHolder {
      * @param player The player to open the Gui for
      */
     public void open(Player player) {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "player can not be null");
 
         PerceiveCore.getInstance().getGuiManager().submit(player.getUniqueId(), this);
     }
