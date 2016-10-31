@@ -40,7 +40,7 @@ public interface CommandNode {
      * @param wholeChat The whole chat of him
      * @param relativeIndex The relative index to this command.
      *
-     * @return ALl possible tab completions. Null for players.
+     * @return All possible tab completions. Null for players.
      */
     List<String> tabComplete(CommandSender sender, List<String> wholeChat, int relativeIndex);
 
