@@ -22,18 +22,6 @@ import com.perceivedev.perceivecore.util.TextUtils;
  */
 public class Gui implements InventoryHolder {
     
-    /**
-     * Opens the first GUI on the stack for the player. After closing that
-     * window, the next GUI on the stack will open, etc. until the stack is
-     * empty.
-     * 
-     * @param player The player to open the GUI for
-     * @return If a GUI was actually opened for the player
-     */
-    public static boolean openFirst(Player player) {
-        return PerceiveCore.getInstance().getGuiManager().openCurrentGui(player.getUniqueId());
-    }
-
     private static int counter;
 
     private final int ID = counter++;

@@ -16,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.guireal.Gui;
+import com.perceivedev.perceivecore.guireal.GuiManager;
 import com.perceivedev.perceivecore.guireal.components.implementation.component.Button;
 import com.perceivedev.perceivecore.guireal.components.implementation.component.simple.DisplayColor;
 import com.perceivedev.perceivecore.guireal.components.implementation.component.simple.SimpleButton;
@@ -52,7 +53,7 @@ public class GUIListener implements Listener {
             gui = createGui("OH YEA", event.getPlayer(), false);
             gui.push(event.getPlayer());
             
-            Gui.openFirst(event.getPlayer());
+            GuiManager.openFirst(event.getPlayer());
         }
     }
 
