@@ -242,7 +242,7 @@ public class SerializationManager {
             if (proxy instanceof SimpleSerializationProxy) {
                 data = ((SimpleSerializationProxy) proxy).serializeSimple(object);
             } else {
-                assert proxy != null;   // will be true, checked in start if block 
+                assert proxy != null;   // will be true, checked in startTicker if block 
                 data = proxy.serialize(object);
             }
             return data;
