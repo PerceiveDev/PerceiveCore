@@ -12,13 +12,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
-/**
- * A bad test for ByteArrays
- */
+/** A bad test for ByteArrays */
 public class NBTTagByteArrayTest {
 
     private NBTTagByteArray array;
-    private byte[] data = new byte[2000];
+    private byte[]          data = new byte[2000];
 
     @Before
     public void init() {

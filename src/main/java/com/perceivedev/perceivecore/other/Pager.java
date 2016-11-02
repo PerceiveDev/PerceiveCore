@@ -18,14 +18,14 @@ import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
 
-/**
- * Pages something.
- */
+/** Pages something. */
 public class Pager {
 
     /**
      * Returns the wanted page.
-     * <p>The different language keys are explained here: {@link Page#send(CommandSender, MessageProvider)}
+     * <p>
+     * The different language keys are explained here:
+     * {@link Page#send(CommandSender, MessageProvider)}
      *
      * @param options The options.
      * @param all All the Strings
@@ -42,7 +42,9 @@ public class Pager {
 
     /**
      * Returns the wanted page.
-     * <p>The different language keys are explained here: {@link Page#send(CommandSender, MessageProvider)}
+     * <p>
+     * The different language keys are explained here:
+     * {@link Page#send(CommandSender, MessageProvider)}
      *
      * @param options The options.
      * @param all All the Strings
@@ -63,7 +65,8 @@ public class Pager {
      *
      * @param all All of the Strings
      * @param entriesPerPage The entries per page
-     * @param pageIndex Zero based page number. Will be corrected if too small or big.
+     * @param pageIndex Zero based page number. Will be corrected if too small
+     *            or big.
      *
      * @return The resulting page
      */
@@ -82,13 +85,13 @@ public class Pager {
         }
 
         List<PagerFilterable> entries = all.subList(
-                  pageIndex * entriesPerPage,
-                  Math.min((pageIndex + 1) * entriesPerPage, all.size()));
+                pageIndex * entriesPerPage,
+                Math.min((pageIndex + 1) * entriesPerPage, all.size()));
 
         return new Page(pageAmount, pageIndex,
-                  entries.stream()
-                            .flatMap(filterable -> filterable.getAllLines().stream())
-                            .collect(Collectors.toList()));
+                entries.stream()
+                        .flatMap(filterable -> filterable.getAllLines().stream())
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -103,13 +106,11 @@ public class Pager {
         Objects.requireNonNull(all, "'all' can not be null");
 
         return all.stream()
-                  .filter(pagerFilterable -> pagerFilterable.accepts(options))
-                  .collect(Collectors.toList());
+                .filter(pagerFilterable -> pagerFilterable.accepts(options))
+                .collect(Collectors.toList());
     }
 
-    /**
-     * An object filterable by the Pager
-     */
+    /** An object filterable by the Pager */
     public interface PagerFilterable {
         /**
          * @param options The options to use
@@ -118,22 +119,16 @@ public class Pager {
          */
         boolean accepts(Options options);
 
-        /**
-         * @return All the lines this object has
-         */
+        /** @return All the lines this object has */
         @Nonnull
         List<String> getAllLines();
     }
 
-    /**
-     * A small wrapper for a normal String
-     */
+    /** A small wrapper for a normal String */
     private static class StringFilterable implements PagerFilterable {
         private String string;
 
-        /**
-         * @param string The String
-         */
+        /** @param string The String */
         private StringFilterable(String string) {
             Objects.requireNonNull(string, "String can not be null!");
 
@@ -155,7 +150,8 @@ public class Pager {
     }
 
     /**
-     * The options class. Use the {@link Options.Builder} class to obtain one ({@link #builder()}).
+     * The options class. Use the {@link Options.Builder} class to obtain one (
+     * {@link #builder()}).
      */
     @SuppressWarnings("WeakerAccess")
     public static class Options {
@@ -165,7 +161,7 @@ public class Pager {
         private String          searchPattern;
 
         private Options(int entriesPerPage, int pageIndex,
-                  @Nonnull Set<SearchMode> searchModes, @Nonnull String searchPattern) {
+                @Nonnull Set<SearchMode> searchModes, @Nonnull String searchPattern) {
 
             Objects.requireNonNull(searchModes, "SearchModes can not be null");
             Objects.requireNonNull(searchPattern, "searchPattern can not be null");
@@ -222,16 +218,14 @@ public class Pager {
         @Override
         public String toString() {
             return "Options{" +
-                      "entriesPerPage=" + entriesPerPage +
-                      ", pageIndex=" + pageIndex +
-                      ", searchModes=" + searchModes +
-                      ", searchPattern='" + searchPattern + '\'' +
-                      '}';
+                    "entriesPerPage=" + entriesPerPage +
+                    ", pageIndex=" + pageIndex +
+                    ", searchModes=" + searchModes +
+                    ", searchPattern='" + searchPattern + '\'' +
+                    '}';
         }
 
-        /**
-         * The Builder of the {@link Options} object.
-         */
+        /** The Builder of the {@link Options} object. */
         public static final class Builder {
 
             private int             entriesPerPage = 10;
@@ -239,9 +233,7 @@ public class Pager {
             private Set<SearchMode> searchModes    = EnumSet.of(SearchMode.CONTAINS);
             private String          searchPattern  = "";
 
-            /**
-             * No instantiation from outside
-             */
+            /** No instantiation from outside */
             private Builder() {
             }
 
@@ -274,7 +266,8 @@ public class Pager {
             }
 
             /**
-             * Sets the {@link SearchMode}s. If any of these match, it will be shown.
+             * Sets the {@link SearchMode}s. If any of these match, it will be
+             * shown.
              *
              * @param searchModes The {@link SearchMode}s. Must not be empty.
              *
@@ -296,7 +289,8 @@ public class Pager {
             }
 
             /**
-             * Sets the {@link SearchMode}s. If any of these match, it will be shown.
+             * Sets the {@link SearchMode}s. If any of these match, it will be
+             * shown.
              *
              * @param first The first search mode
              * @param rest The other search modes
@@ -317,7 +311,8 @@ public class Pager {
             }
 
             /**
-             * Adds a {@link SearchMode}. If any of these match, it will be shown.
+             * Adds a {@link SearchMode}. If any of these match, it will be
+             * shown.
              *
              * @param mode The {@link SearchMode} to add
              *
@@ -335,7 +330,8 @@ public class Pager {
             }
 
             /**
-             * The pattern to search. Will be searched for using the specified {@link SearchMode}s
+             * The pattern to search. Will be searched for using the specified
+             * {@link SearchMode}s
              *
              * @param searchPattern The pattern to search
              *
@@ -362,60 +358,44 @@ public class Pager {
         }
     }
 
-    /**
-     * The search mode
-     */
+    /** The search mode */
     @SuppressWarnings("WeakerAccess")
     public enum SearchMode {
-        /**
-         * The string is contained
-         */
+        /** The string is contained */
         CONTAINS(String::contains),
-        /**
-         * The string is contained, ignoring case
-         */
+        /** The string is contained, ignoring case */
         CONTAINS_IGNORE_CASE((test, pattern) -> test.toLowerCase().contains(pattern.toLowerCase())),
-        /**
-         * The strings are equal
-         */
+        /** The strings are equal */
         EQUALS(String::equals),
-        /**
-         * The strings are equal, ignoring case
-         */
+        /** The strings are equal, ignoring case */
         EQUALS_IGNORE_CASE(String::equalsIgnoreCase),
-        /**
-         * The regular expression matches
-         */
+        /** The regular expression matches */
         REGEX_MATCHES(String::matches),
-        /**
-         * The regular expression matches, no matter the case
-         */
+        /** The regular expression matches, no matter the case */
         REGEX_MATCHES_CASE_INSENSITIVE((test, pattern) -> Pattern
-                  .compile(pattern, Pattern.CASE_INSENSITIVE)
-                  .matcher(test)
-                  .matches()),
-        /**
-         * The regular expression can be found in the string
-         */
+                .compile(pattern, Pattern.CASE_INSENSITIVE)
+                .matcher(test)
+                .matches()),
+        /** The regular expression can be found in the string */
         REGEX_FIND((test, pattern) -> Pattern
-                  .compile(pattern)
-                  .matcher(test)
-                  .find()),
+                .compile(pattern)
+                .matcher(test)
+                .find()),
         /**
-         * The regular expression can be found in the string, no matter the case
+         * The regular expression can be found in the string, no matter the
+         * case
          */
         REGEX_FIND_CASE_INSENSITIVE((test, pattern) -> Pattern
-                  .compile(pattern, Pattern.CASE_INSENSITIVE)
-                  .matcher(test)
-                  .find());
+                .compile(pattern, Pattern.CASE_INSENSITIVE)
+                .matcher(test)
+                .find());
 
-        /**
-         * The first one is the String to test, the second the pattern
-         */
+        /** The first one is the String to test, the second the pattern */
         private BiFunction<String, String, Boolean> accept;
 
         /**
-         * @param accept Whether the String is accepted, using the second param as pattern
+         * @param accept Whether the String is accepted, using the second param
+         *            as pattern
          */
         SearchMode(BiFunction<String, String, Boolean> accept) {
             this.accept = accept;
@@ -439,9 +419,7 @@ public class Pager {
         }
     }
 
-    /**
-     * A displayable page
-     */
+    /** A displayable page */
     public static class Page {
         private final int          maxPages;
         private final int          pageIndex;
@@ -450,21 +428,24 @@ public class Pager {
         private final String       footerKey;
 
         /**
-         * The language Keys can be found in the {@link #send(CommandSender, MessageProvider)} method
+         * The language Keys can be found in the
+         * {@link #send(CommandSender, MessageProvider)} method
          *
          * @param maxPages The amount of pages it would give, at this depth
          * @param pageIndex The page number of this page
          * @param entries The entries of this page
          *
          * @throws NullPointerException if any parameter is null
-         * @see #Page(int, int, List, String, String) #Page(int, int, List, String, String) with the default header and footer
+         * @see #Page(int, int, List, String, String) #Page(int, int, List,
+         *      String, String) with the default header and footer
          */
         private Page(int maxPages, int pageIndex, @Nonnull List<String> entries) {
             this(maxPages, pageIndex, entries, "pager_header", "pager_footer");
         }
 
         /**
-         * The language Keys can be found in the {@link #send(CommandSender, MessageProvider)} method
+         * The language Keys can be found in the
+         * {@link #send(CommandSender, MessageProvider)} method
          *
          * @param maxPages The amount of pages it would give, at this depth
          * @param pageIndex The page number of this page
@@ -519,17 +500,20 @@ public class Pager {
          * <ul>
          * <li>Defaults:
          * <ul>
-         * <li>"pager_header" ==> The header. The key can be customized via the constructor.</li>
+         * <li>"pager_header" ==> The header. The key can be customized via the
+         * constructor.</li>
          * <ul>
          * <li>{0} ==> The current page</li>
          * <li>{1} ==> The amount of pages</li>
          * </ul>
-         * <li>"pager_footer" ==> The footer. The key can be customized via the constructor.</li>
+         * <li>"pager_footer" ==> The footer. The key can be customized via the
+         * constructor.</li>
          * <ul>
          * <li>{0} ==> The current page</li>
          * <li>{1} ==> The amount of pages</li>
          * </ul>
-         * </ul></li>
+         * </ul>
+         * </li>
          * </ul>
          *
          * @param sender The {@link CommandSender} to send to
@@ -542,12 +526,12 @@ public class Pager {
             Objects.requireNonNull(language, "Language can not be null");
 
             sender.sendMessage(language.trOrDefault(headerKey,
-                      "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
-                      pageIndex + 1, maxPages));
+                    "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
+                    pageIndex + 1, maxPages));
             entries.forEach(s -> sender.sendMessage(colorize(s)));
             sender.sendMessage(language.trOrDefault(footerKey,
-                      "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
-                      pageIndex + 1, maxPages));
+                    "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
+                    pageIndex + 1, maxPages));
         }
     }
 }

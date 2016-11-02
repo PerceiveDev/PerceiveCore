@@ -10,14 +10,12 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagDouble;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * A bad test for doubles
- */
+/** A bad test for doubles */
 public class NBTTagDoubleTest {
 
     private NBTTagDouble nbtTagDouble = new NBTTagDouble(1);
 
-    private final int AMOUNT = 10000;
+    private final int    AMOUNT       = 10000;
 
     @Test
     public void set() throws Exception {

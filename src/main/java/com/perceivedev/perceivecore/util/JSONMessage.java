@@ -23,7 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
- * This is a complete JSON message builder class. To create a new JSONMessage do
+ * This is a complete JSON message builder class. To create a new JSONMessage
+ * do
  * {@link #create(String)}
  *
  * @author Rayzr
@@ -41,15 +42,15 @@ public class JSONMessage {
 
             String styleName;
             switch (style) {
-            case MAGIC:
-                styleName = "obfuscated";
-                break;
-            case UNDERLINE:
-                styleName = "underlined";
-                break;
-            default:
-                styleName = style.name().toLowerCase();
-                break;
+                case MAGIC:
+                    styleName = "obfuscated";
+                    break;
+                case UNDERLINE:
+                    styleName = "underlined";
+                    break;
+                default:
+                    styleName = style.name().toLowerCase();
+                    break;
             }
 
             builder.put(style, styleName);
@@ -77,9 +78,7 @@ public class JSONMessage {
         return new JSONMessage(text);
     }
 
-    /**
-     * Creates a new JSONChat object
-     */
+    /** Creates a new JSONChat object */
     public static JSONMessage create() {
         return create("");
     }
@@ -137,7 +136,8 @@ public class JSONMessage {
     }
 
     /**
-     * Converts this JSONMessage object to the legacy formatting system, which uses formatting codes (like &6, &l, &4, etc.)
+     * Converts this JSONMessage object to the legacy formatting system, which
+     * uses formatting codes (like &6, &l, &4, etc.)
      */
     public String toLegacy() {
         StringBuilder output = new StringBuilder();
@@ -172,9 +172,6 @@ public class JSONMessage {
     /**
      * Sends this as a subtitle to all the players specified
      *
-     * @param fadeIn how many ticks to fade in
-     * @param stay how many ticks to stay
-     * @param fadeOut how many ticks to fade out
      * @param players the players to send it to
      */
     public void subtitle(Player... players) {
@@ -313,7 +310,7 @@ public class JSONMessage {
     /**
      * Adds another part to this JSONChat
      *
-     * @param text the next part
+     * @param nextPart the next part
      *
      * @return this
      */
@@ -352,12 +349,12 @@ public class JSONMessage {
         return then("\n");
     }
 
-    //<editor-fold desc="Utility Classes">
+    // <editor-fold desc="Utility Classes">
     ///////////////////////////
     // BEGIN UTILITY CLASSES //
     ///////////////////////////
 
-    //<editor-fold desc="MessagePart">
+    // <editor-fold desc="MessagePart">
     /**
      * Defines a section of the message.
      *
@@ -365,11 +362,11 @@ public class JSONMessage {
      */
     public class MessagePart {
 
-        private MessageEvent onClick;
-        private MessageEvent onHover;
+        private MessageEvent    onClick;
+        private MessageEvent    onHover;
         private List<ChatColor> styles = new ArrayList<>();
-        private ChatColor color;
-        private String    text;
+        private ChatColor       color;
+        private String          text;
 
         public MessagePart(String text) {
             this.text = text == null ? "null" : text;
@@ -401,9 +398,7 @@ public class JSONMessage {
 
         }
 
-        /**
-         * @return
-         */
+        /** @return */
         public String toLegacy() {
             StringBuilder output = new StringBuilder();
             if (color != null) {
@@ -415,44 +410,32 @@ public class JSONMessage {
             return output.append(text).toString();
         }
 
-        /**
-         * @return the onClick event
-         */
+        /** @return the onClick event */
         public MessageEvent getOnClick() {
             return onClick;
         }
 
-        /**
-         * @param onClick the onClick event to set
-         */
+        /** @param onClick the onClick event to set */
         public void setOnClick(MessageEvent onClick) {
             this.onClick = onClick;
         }
 
-        /**
-         * @return the onHover event
-         */
+        /** @return the onHover event */
         public MessageEvent getOnHover() {
             return onHover;
         }
 
-        /**
-         * @param onHover the onHover event to set
-         */
+        /** @param onHover the onHover event to set */
         public void setOnHover(MessageEvent onHover) {
             this.onHover = onHover;
         }
 
-        /**
-         * @return the color
-         */
+        /** @return the color */
         public ChatColor getColor() {
             return color;
         }
 
-        /**
-         * @param color the color to set
-         */
+        /** @param color the color to set */
         public void setColor(ChatColor color) {
             if (!color.isColor()) {
                 throw new IllegalArgumentException(color.name() + " is not a color!");
@@ -460,9 +443,7 @@ public class JSONMessage {
             this.color = color;
         }
 
-        /**
-         * @return the styles
-         */
+        /** @return the styles */
         public List<ChatColor> getStyles() {
             return styles;
         }
@@ -482,24 +463,20 @@ public class JSONMessage {
             styles.add(style);
         }
 
-        /**
-         * @return the text
-         */
+        /** @return the text */
         public String getText() {
             return text;
         }
 
-        /**
-         * @param text the text to set
-         */
+        /** @param text the text to set */
         public void setText(String text) {
             this.text = text;
         }
 
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="MessageEvent">
+    // <editor-fold desc="MessageEvent">
     public static class MessageEvent {
 
         private String action;
@@ -512,9 +489,7 @@ public class JSONMessage {
 
         }
 
-        /**
-         * @return
-         */
+        /** @return */
         public JsonObject toJSON() {
             JsonObject obj = new JsonObject();
             obj.addProperty("action", action);
@@ -526,38 +501,30 @@ public class JSONMessage {
             return obj;
         }
 
-        /**
-         * @return the action
-         */
+        /** @return the action */
         public String getAction() {
             return action;
         }
 
-        /**
-         * @param action the action to set
-         */
+        /** @param action the action to set */
         public void setAction(String action) {
             this.action = action;
         }
 
-        /**
-         * @return the value
-         */
+        /** @return the value */
         public Object getValue() {
             return value;
         }
 
-        /**
-         * @param value the value to set
-         */
+        /** @param value the value to set */
         public void setValue(Object value) {
             this.value = value;
         }
 
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="ClickEvent">
+    // <editor-fold desc="ClickEvent">
     public static class ClickEvent {
 
         /**
@@ -605,9 +572,9 @@ public class JSONMessage {
         }
 
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="HoverEvent">
+    // <editor-fold desc="HoverEvent">
     public static class HoverEvent {
 
         /**
@@ -624,7 +591,7 @@ public class JSONMessage {
         /**
          * Shows text when you hover over it
          *
-         * @param chat the JSON message to show
+         * @param message the JSON message to show
          *
          * @return The MessageEvent
          */
@@ -647,12 +614,12 @@ public class JSONMessage {
         }
 
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="ReflectionHelper">
+    // <editor-fold desc="ReflectionHelper">
     private static class ReflectionHelper {
 
-        private static Class<?> craftPlayer;
+        private static Class<?>       craftPlayer;
 
         private static Constructor<?> chatComponentText;
         private static Class<?>       packetPlayOutChat;
@@ -660,17 +627,17 @@ public class JSONMessage {
         private static Class<?>       iChatBaseComponent;
         private static Class<?>       titleAction;
 
-        private static Field  connection;
-        private static Method getHandle;
-        private static Method sendPacket;
-        private static Method stringToChat;
+        private static Field          connection;
+        private static Method         getHandle;
+        private static Method         sendPacket;
+        private static Method         stringToChat;
 
-        private static Object actionTitle;
-        private static Object actionSubtitle;
+        private static Object         actionTitle;
+        private static Object         actionSubtitle;
 
-        private static String version;
+        private static String         version;
 
-        private static boolean SETUP = false;
+        private static boolean        SETUP = false;
 
         static {
 
@@ -859,7 +826,7 @@ public class JSONMessage {
         }
 
     }
-    //</editor-fold>
-    //</editor-fold>
+    // </editor-fold>
+    // </editor-fold>
 
 }

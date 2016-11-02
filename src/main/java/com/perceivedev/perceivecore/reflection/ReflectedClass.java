@@ -16,7 +16,6 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
  * This is inspired by <a href="https://www.github.com/phase/mirror">Mirror</a>
  * 
  * @author Rayzr
- *
  */
 public class ReflectedClass<T> {
 
@@ -46,9 +45,7 @@ public class ReflectedClass<T> {
         return clazz.getCanonicalName();
     }
 
-    /**
-     * @return the instance
-     */
+    /** @return the instance */
     public T getInstance() {
         return instance;
     }

@@ -1,8 +1,6 @@
 package com.perceivedev.perceivecore;
 
-/**
- * Some utility assert functions
- */
+/** Some utility assert functions */
 public class AssertUtil {
 
     public static void assertThrows(Runnable runnable, Class<? extends Throwable> exception) {

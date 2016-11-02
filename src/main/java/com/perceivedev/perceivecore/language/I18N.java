@@ -33,9 +33,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.util.TextUtils;
 
-/**
- * An implementation of the {@link MessageProvider} using
- */
+/** An implementation of the {@link MessageProvider} using */
 public class I18N implements MessageProvider {
 
     /**
@@ -43,30 +41,28 @@ public class I18N implements MessageProvider {
      * "Test 1234 [[path.to.other.message]]" ==> Matches
      * "[[path.to.other.message]]"
      */
-    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern        REFERENCE_PATTERN   = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
 
     private Set<String>                 categories          = new HashSet<>();
     private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
     private Map<String, ResourceBundle> jarResourceBundles  = new HashMap<>();
 
-    private Locale currentLanguage;
-    private String basePackage;
+    private Locale                      currentLanguage;
+    private String                      basePackage;
 
-    private ClassLoader callerClassLoader, fileClassLoader;
+    private ClassLoader                 callerClassLoader, fileClassLoader;
 
-    private String defaultCategory;
+    private String                      defaultCategory;
 
-    /**
-     * Cache to increase performance. May be left out.
-     */
-    private Map<String, MessageFormat> messageFormatCache = new HashMap<>();
+    /** Cache to increase performance. May be left out. */
+    private Map<String, MessageFormat>  messageFormatCache  = new HashMap<>();
 
     /**
      * @param currentLanguage The current language
      * @param basePackage The base package in the jar to read from
      * @param savePath The save path
      * @param callerClassLoader Your class loader. Needed to query packages from
-     * your jar file
+     *            your jar file
      * @param defaultCategory The default category
      * @param more More categories
      *
@@ -108,9 +104,7 @@ public class I18N implements MessageProvider {
         return null;
     }
 
-    /**
-     * Creates the bundles for all categories
-     */
+    /** Creates the bundles for all categories */
     private void createBundles() {
         ResourceBundle.clearCache(callerClassLoader);
         ResourceBundle.clearCache(fileClassLoader);
@@ -162,7 +156,7 @@ public class I18N implements MessageProvider {
      * @return The translated String
      *
      * @throws IllegalArgumentException If the category isn't in
-     * {@link #categories}
+     *             {@link #categories}
      */
     private String translate(String key, String category) {
         Optional<String> translated = translateOrEmpty(key, category);
@@ -181,7 +175,7 @@ public class I18N implements MessageProvider {
      * @return The translated String OR an empty Optional if not found
      *
      * @throws IllegalArgumentException If the category isn't in
-     * {@link #categories}
+     *             {@link #categories}
      */
     private Optional<String> translateOrEmpty(String key, String category) {
         if (!categories.contains(category)) {
@@ -374,16 +368,12 @@ public class I18N implements MessageProvider {
         createBundles();
     }
 
-    /**
-     * A classloader reading from a directory
-     */
+    /** A classloader reading from a directory */
     private static class FileClassLoader extends ClassLoader {
 
         private Path path;
 
-        /**
-         * @param path The base path to read from
-         */
+        /** @param path The base path to read from */
         FileClassLoader(Path path) {
             if (!Files.isDirectory(path)) {
                 throw new IllegalArgumentException("Path can only be a directory.");
@@ -428,7 +418,7 @@ public class I18N implements MessageProvider {
      * @return True if the files were written, false otherwise.
      *
      * @throws NullPointerException If defaultPackage, targetDir or jarFile is
-     * null
+     *             null
      */
     public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
         Objects.requireNonNull(defaultPackage, "defaultPackage can not be null");
@@ -450,6 +440,10 @@ public class I18N implements MessageProvider {
                         if (Files.exists(copyTo) && !overwrite) {
                             continue;
                         }
+                        if (Files.isDirectory(copyTo)) {
+                            continue;
+                        }
+
                         Files.copy(jarFile.getInputStream(entry), copyTo, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
@@ -469,7 +463,8 @@ public class I18N implements MessageProvider {
      *
      * @return True if the files were written, false otherwise.
      *
-     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is
+     *             null
      */
     public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
         File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();

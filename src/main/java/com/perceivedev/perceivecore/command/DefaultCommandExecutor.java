@@ -22,11 +22,12 @@ public class DefaultCommandExecutor implements CommandExecutor {
 
     private static final String LANGUAGE_PREFIX = "command.executor.";
 
-    private CommandTree     tree;
-    private MessageProvider language;
+    private CommandTree         tree;
+    private MessageProvider     language;
 
     /**
-     * Creates a Default command executor. It has some language keys to modify it's messages, look at the class javadoc for them.
+     * Creates a Default command executor. It has some language keys to modify
+     * it's messages, look at the class javadoc for them.
      *
      * @param tree The {@link CommandTree} to use
      * @param language The {@link MessageProvider} to use
@@ -55,22 +56,22 @@ public class DefaultCommandExecutor implements CommandExecutor {
             result = CommandResult.ERROR;
         }
         switch (result) {
-        case NO_PERMISSION: {
-            commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "no.permission", "&cNo permission!"));
-            return true;
-        }
-        case ERROR: {
-            commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "error.invoking", "&cAn internal error occurred!"));
-            return true;
-        }
-        case SEND_USAGE: {
-            commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "usage", "&cUsage: {0}", (Object) findResult.getCommandNode().getUsage()));
-            return true;
-        }
-        case SUCCESSFULLY_INVOKED: {
-            // fallthrough
-        }
-        default:
+            case NO_PERMISSION: {
+                commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "no.permission", "&cNo permission!"));
+                return true;
+            }
+            case ERROR: {
+                commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "error.invoking", "&cAn internal error occurred!"));
+                return true;
+            }
+            case SEND_USAGE: {
+                commandSender.sendMessage(language.trOrDefault(LANGUAGE_PREFIX + "usage", "&cUsage: {0}", (Object) findResult.getCommandNode().getUsage()));
+                return true;
+            }
+            case SUCCESSFULLY_INVOKED: {
+                // fallthrough
+            }
+            default:
         }
         return true;
     }

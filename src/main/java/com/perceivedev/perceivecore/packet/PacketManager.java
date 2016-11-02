@@ -16,21 +16,19 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 
-/**
- * Manages PacketListeners and stuff
- */
+/** Manages PacketListeners and stuff */
 public class PacketManager implements Listener {
 
-    private static PacketManager instance;
+    private static PacketManager            instance;
 
     private final Map<UUID, PacketInjector> injectorMap = new HashMap<>();
 
     {
         PerceiveCore.getInstance().getDisableManager()
-                  .addListener(() -> {
-                      shutdown();
-                      instance = null;
-                  });
+                .addListener(() -> {
+                    shutdown();
+                    instance = null;
+                });
     }
 
     /**
@@ -54,7 +52,8 @@ public class PacketManager implements Listener {
         Objects.requireNonNull(listener, "listener can not be null");
         Objects.requireNonNull(player, "player can not be null");
 
-        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        // no modifications during checks or the result may be wrong! (it
+        // changes depending on the current state)
         synchronized (injectorMap) {
             if (injectorMap.containsKey(player.getUniqueId())) {
                 injectorMap.get(player.getUniqueId()).addPacketListener(listener);
@@ -79,7 +78,8 @@ public class PacketManager implements Listener {
         Objects.requireNonNull(listener, "listener can not be null");
         Objects.requireNonNull(player, "player can not be null");
 
-        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        // no modifications during checks or the result may be wrong! (it
+        // changes depending on the current state)
         synchronized (injectorMap) {
             if (!injectorMap.containsKey(player.getUniqueId())) {
                 return;
@@ -103,7 +103,8 @@ public class PacketManager implements Listener {
     public void removeAllListeners(UUID uuid) {
         Objects.requireNonNull(uuid, "uuid can not be null");
 
-        // no modifications during checks or the result may be wrong! (it changes depending on the current state)
+        // no modifications during checks or the result may be wrong! (it
+        // changes depending on the current state)
         synchronized (injectorMap) {
             if (injectorMap.containsKey(uuid)) {
                 injectorMap.get(uuid).detach();
@@ -136,7 +137,7 @@ public class PacketManager implements Listener {
      *
      * @return An instance of the PacketManager
      */
-    public static PacketManager getInstance() {
+    public static synchronized PacketManager getInstance() {
         if (instance == null) {
             instance = new PacketManager(PerceiveCore.getInstance());
         }

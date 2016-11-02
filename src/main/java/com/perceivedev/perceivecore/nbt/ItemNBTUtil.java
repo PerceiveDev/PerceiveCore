@@ -9,9 +9,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.Modifier;
 
-/**
- * A Util to save NBT data to ItemStacks
- */
+/** A Util to save NBT data to ItemStacks */
 @SuppressWarnings({ "unused", "WeakerAccess" })
 public class ItemNBTUtil {
 
@@ -25,9 +23,9 @@ public class ItemNBTUtil {
      */
     private static Object asNMSCopy(ItemStack itemStack) {
         return ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate()
-                            .withName("asNMSCopy")
-                            .withParameters(ItemStack.class),
-                  null, itemStack).getValue();
+                .withName("asNMSCopy")
+                .withParameters(ItemStack.class),
+                null, itemStack).getValue();
     }
 
     /**
@@ -39,8 +37,8 @@ public class ItemNBTUtil {
      */
     private static ItemStack asBukkitCopy(Object nmsItem) {
         return (ItemStack) ReflectionUtil.invokeMethod(CRAFT_ITEM_STACK_CLASS, new MethodPredicate()
-                            .withName("asBukkitCopy").withModifiers(Modifier.PUBLIC, Modifier.STATIC),
-                  null, nmsItem).getValue();
+                .withName("asBukkitCopy").withModifiers(Modifier.PUBLIC, Modifier.STATIC),
+                null, nmsItem).getValue();
     }
 
     /**
@@ -55,8 +53,8 @@ public class ItemNBTUtil {
         Object nbtTag = tag.toNBT();
         Object nmsItem = asNMSCopy(itemStack);
         ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate()
-                  .withName("setTag")
-                  .withModifiers(Modifier.PUBLIC), nmsItem, nbtTag);
+                .withName("setTag")
+                .withModifiers(Modifier.PUBLIC), nmsItem, nbtTag);
 
         return asBukkitCopy(nmsItem);
     }
@@ -66,12 +64,13 @@ public class ItemNBTUtil {
      *
      * @param itemStack The ItemStack to get the tag for
      *
-     * @return The NBTTagCompound of the ItemStack or a new one if it had none or an error occurred
+     * @return The NBTTagCompound of the ItemStack or a new one if it had none
+     *         or an error occurred
      */
     public static NBTTagCompound getTag(ItemStack itemStack) {
         Object nmsItem = asNMSCopy(itemStack);
         Object tag = ReflectionUtil.invokeMethod(nmsItem.getClass(), new MethodPredicate()
-                  .withName("getTag").withParameters(), nmsItem).getValue();
+                .withName("getTag").withParameters(), nmsItem).getValue();
         if (tag == null) {
             return new NBTTagCompound();
         }
@@ -83,4 +82,3 @@ public class ItemNBTUtil {
         return (NBTTagCompound) base;
     }
 }
-

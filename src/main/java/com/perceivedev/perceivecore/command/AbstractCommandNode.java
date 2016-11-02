@@ -30,12 +30,10 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.Modifier;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
-/**
- * A skeleton implementation for {@link CommandNode}
- */
+/** A skeleton implementation for {@link CommandNode} */
 public abstract class AbstractCommandNode implements CommandNode {
 
-    private List<AbstractCommandNode> children = new ArrayList<>();
+    private List<AbstractCommandNode>     children = new ArrayList<>();
     private Permission                    permission;
     private Collection<CommandSenderType> acceptedSenders;
 
@@ -78,11 +76,7 @@ public abstract class AbstractCommandNode implements CommandNode {
         this(new Permission(permission), acceptedSenders);
     }
 
-    /* ********************************************************************
-     *  
-     *                            Child handling
-     * 
-     **********************************************************************/
+    // -------------------- Child Handling -------------------- //
 
     @Override
     public List<CommandNode> getChildren() {
@@ -184,13 +178,8 @@ public abstract class AbstractCommandNode implements CommandNode {
 
         return chosenOne;
     }
-    
-    
-    /* ********************************************************************
-     * 
-     *                         Pre execution checks 
-     * 
-     **********************************************************************/
+
+    // -------------------- Pre execution checks -------------------- //
 
     @Override
     public boolean hasPermission(Permissible permissible) {
@@ -207,11 +196,7 @@ public abstract class AbstractCommandNode implements CommandNode {
         return acceptedSenders.stream().anyMatch(senderType -> senderType.isThisType(commandSender));
     }
 
-    /* ********************************************************************
-     * 
-     *                             Execution 
-     * 
-     **********************************************************************/
+    // -------------------- Execution -------------------- //
 
     /**
      * Finds and then invokes a command
@@ -228,13 +213,12 @@ public abstract class AbstractCommandNode implements CommandNode {
         }
 
         CommandResult result = commandFindResult.getCommandNode().execute(
-                  sender,
-                  commandFindResult.getRestArgs().toArray(new String[commandFindResult.getRestArgs().size()])
-        );
+                sender,
+                commandFindResult.getRestArgs().toArray(new String[commandFindResult.getRestArgs().size()]));
 
         if (result == null) {
             PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                      "Plugin returns null in on command " + commandFindResult.getCommandNode().getClass().getName());
+                    "Plugin returns null in on command " + commandFindResult.getCommandNode().getClass().getName());
         }
         return result == null ? CommandResult.ERROR : result;
     }
@@ -295,18 +279,18 @@ public abstract class AbstractCommandNode implements CommandNode {
             // one for sender, one for String[] args
             if (convertedParams.targetClasses().length != method.getParameterCount() - 2) {
 
-                // now, if it has an additional String at the end, don't sweat it
+                // now, if it has an additional String at the end, don't sweat
+                // it
                 if (convertedParams.targetClasses().length != method.getParameterCount() - 3
-                          || method.getParameterTypes()[method.getParameterCount() - 1] != String[].class) {
+                        || method.getParameterTypes()[method.getParameterCount() - 1] != String[].class) {
 
                     PerceiveCore.getInstance().getLogger()
-                              .log(Level.SEVERE, "Argument length mismatch! Expected "
-                                        + convertedParams.targetClasses().length
-                                        + " params, got "
-                                        + method.getParameterTypes().length
-                                        + " in class "
-                                        + getClass().getName()
-                              );
+                            .log(Level.SEVERE, "Argument length mismatch! Expected "
+                                    + convertedParams.targetClasses().length
+                                    + " params, got "
+                                    + method.getParameterTypes().length
+                                    + " in class "
+                                    + getClass().getName());
                     return CommandResult.ERROR;
                 } else {
                     wantsWholeChat = true;
@@ -316,13 +300,12 @@ public abstract class AbstractCommandNode implements CommandNode {
             for (int i = 0; i < convertedParams.targetClasses().length; i++) {
                 if (method.getParameterTypes()[i + 1] != convertedParams.targetClasses()[i]) {
                     PerceiveCore.getInstance().getLogger()
-                              .log(Level.SEVERE, "Argument type mismatch! Expected "
-                                        + convertedParams.targetClasses()[i].getName()
-                                        + " got "
-                                        + method.getParameterTypes()[i].getName()
-                                        + " in class "
-                                        + getClass().getName()
-                              );
+                            .log(Level.SEVERE, "Argument type mismatch! Expected "
+                                    + convertedParams.targetClasses()[i].getName()
+                                    + " got "
+                                    + method.getParameterTypes()[i].getName()
+                                    + " in class "
+                                    + getClass().getName());
                     return CommandResult.ERROR;
                 }
             }
@@ -330,7 +313,9 @@ public abstract class AbstractCommandNode implements CommandNode {
             for (int counter = 0; !queue.isEmpty(); counter++) {
 
                 if (counter >= convertedParams.targetClasses().length) {
-                    // haven't got any more classes to convert. Got plenty arguments left though. They will be added to the array for the end.
+                    // haven't got any more classes to convert. Got plenty
+                    // arguments left though. They will be added to the array
+                    // for the end.
                     break;
                 }
 
@@ -338,8 +323,8 @@ public abstract class AbstractCommandNode implements CommandNode {
                 Optional<ArgumentMapper<?>> mapperOptional = ArgumentMappers.getMapper(clazz);
                 if (!mapperOptional.isPresent()) {
                     PerceiveCore.getInstance().getLogger()
-                              .log(Level.SEVERE, "No ArgumentMapper for '" + clazz.getName() + "' in class " + getClass().getName()
-                                        + ". Aborting command!");
+                            .log(Level.SEVERE, "No ArgumentMapper for '" + clazz.getName() + "' in class " + getClass().getName()
+                                    + ". Aborting command!");
                     // Well, the dev screwed up. Now, let's abort this.
                     return CommandResult.ERROR;
                 }
@@ -349,7 +334,7 @@ public abstract class AbstractCommandNode implements CommandNode {
                 // user made an error...
                 if (!mapped.isPresent()) {
                     objectList.add(null);
-                    //                    return CommandResult.SEND_USAGE;
+                    // return CommandResult.SEND_USAGE;
                 } else {
                     objectList.add(mapped.get());
                 }
@@ -357,7 +342,7 @@ public abstract class AbstractCommandNode implements CommandNode {
 
             // not enough params given. Send the usage
             if ((!wantsWholeChat && objectList.size() < method.getParameterCount() - 2)
-                      || (wantsWholeChat && objectList.size() < method.getParameterCount() - 3)) {
+                    || (wantsWholeChat && objectList.size() < method.getParameterCount() - 3)) {
                 return CommandResult.SEND_USAGE;
             }
         }
@@ -380,11 +365,11 @@ public abstract class AbstractCommandNode implements CommandNode {
 
     private Stream<Method> getMappedMethods(CommandSender sender) {
         return ReflectionUtil.getMethods(this.getClass(), new MethodPredicate()
-                  .withModifiers(Modifier.PUBLIC)
-                  .withReturnType(CommandResult.class)
-                  .and(method -> method.isAnnotationPresent(ConvertedParams.class))
-                  .and(method -> method.getParameterCount() > 0)
-                  .and(method -> method.getParameterTypes()[0].isAssignableFrom(sender.getClass())));
+                .withModifiers(Modifier.PUBLIC)
+                .withReturnType(CommandResult.class)
+                .and(method -> method.isAnnotationPresent(ConvertedParams.class))
+                .and(method -> method.getParameterCount() > 0)
+                .and(method -> method.getParameterTypes()[0].isAssignableFrom(sender.getClass())));
     }
 
     /**
@@ -412,7 +397,8 @@ public abstract class AbstractCommandNode implements CommandNode {
      * <br>
      * <b>Will be called when:</b>
      * <ul>
-     * <li>{@link #getAcceptedCommandSenders()} contains only one element, PLAYER</li>
+     * <li>{@link #getAcceptedCommandSenders()} contains only one element,
+     * PLAYER</li>
      * </ul>
      *
      * @param player The {@link Player} to execute it as
@@ -430,7 +416,8 @@ public abstract class AbstractCommandNode implements CommandNode {
      * <br>
      * <b>Will be called when:</b>
      * <ul>
-     * <li>{@link #getAcceptedCommandSenders()} contains only one element, BLOCK</li>
+     * <li>{@link #getAcceptedCommandSenders()} contains only one element, BLOCK
+     * </li>
      * </ul>
      *
      * @param block The {@link BlockCommandSender} to execute it as
@@ -441,13 +428,8 @@ public abstract class AbstractCommandNode implements CommandNode {
     protected CommandResult executeBlock(BlockCommandSender block, String... args) {
         return CommandResult.SEND_USAGE;
     }
-    
-    
-    /* ********************************************************************
-     * 
-     *                           Tab completion 
-     * 
-     **********************************************************************/
+
+    // -------------------- Tab completion -------------------- //
 
     /**
      * Finds a command, then tab completes it.
@@ -455,7 +437,8 @@ public abstract class AbstractCommandNode implements CommandNode {
      * @param sender The CommandSender to tab complete for
      * @param userChat The user chat
      *
-     * @return The tab completion of the command or an empty optional if the command was not found or tab complete returned null.
+     * @return The tab completion of the command or an empty optional if the
+     *         command was not found or tab complete returned null.
      */
     public Optional<List<String>> findAndTabComplete(CommandSender sender, List<String> userChat) {
         CommandFindResult commandFindResult = find(sender, userChat);
@@ -473,13 +456,11 @@ public abstract class AbstractCommandNode implements CommandNode {
         }
 
         return Optional.ofNullable(
-                  commandFindResult.getCommandNode()
-                            .tabComplete(
-                                      sender,
-                                      new ArrayList<>(userChat),
-                                      index
-                            )
-        );
+                commandFindResult.getCommandNode()
+                        .tabComplete(
+                                sender,
+                                new ArrayList<>(userChat),
+                                index));
     }
 
     /**
@@ -488,7 +469,8 @@ public abstract class AbstractCommandNode implements CommandNode {
      * @param sender The CommandSender to tab complete for
      * @param userChat The user chat
      *
-     * @return The tab completion of the command or an empty optional if the command was not found or tab complete returned null.
+     * @return The tab completion of the command or an empty optional if the
+     *         command was not found or tab complete returned null.
      *
      * @see #findAndTabComplete(CommandSender, List)
      */
@@ -496,11 +478,7 @@ public abstract class AbstractCommandNode implements CommandNode {
         return findAndTabComplete(sender, Arrays.asList(userChat.split(" ")));
     }
 
-    /* ********************************************************************
-     * 
-     *                       Shared utility methods 
-     * 
-     **********************************************************************/
+    // -------------------- Shared utility methods -------------------- //
 
     /**
      * Returns the names of all players the CommandSender can see
@@ -512,13 +490,13 @@ public abstract class AbstractCommandNode implements CommandNode {
     protected List<String> getOnlinePlayerNames(CommandSender commandSender) {
         if (!(commandSender instanceof Player)) {
             return Bukkit.getOnlinePlayers().stream()
-                      .map(Player::getName)
-                      .collect(Collectors.toList());
+                    .map(Player::getName)
+                    .collect(Collectors.toList());
         }
 
         return Bukkit.getOnlinePlayers().stream()
-                  .filter(((Player) commandSender)::canSee)
-                  .map(Player::getName)
-                  .collect(Collectors.toList());
+                .filter(((Player) commandSender)::canSee)
+                .map(Player::getName)
+                .collect(Collectors.toList());
     }
 }

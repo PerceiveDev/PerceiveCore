@@ -12,7 +12,8 @@ public class TextUtils {
     /**
      * Colors the text
      * <p>
-     * Uses {@link ChatColor#translateAlternateColorCodes(char, String)} with '&' as color char
+     * Uses {@link ChatColor#translateAlternateColorCodes(char, String)} with
+     * '&' as color char
      *
      * @param text The text to color
      *

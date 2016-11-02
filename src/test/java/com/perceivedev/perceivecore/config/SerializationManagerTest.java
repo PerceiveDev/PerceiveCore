@@ -9,9 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * A basic test for the {@link SerializationManager}
- */
+/** A basic test for the {@link SerializationManager} */
 public class SerializationManagerTest {
 
     @Test

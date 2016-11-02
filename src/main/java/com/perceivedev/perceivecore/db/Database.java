@@ -9,9 +9,9 @@ import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Database {
-	
-	private List<Table> tables = new ArrayList<>();
-    private SQLite sqLite;
+
+    private List<Table> tables = new ArrayList<>();
+    private SQLite      sqLite;
 
     public Database(JavaPlugin plugin, String dbName, Table table) {
         this.tables.add(table);

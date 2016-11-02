@@ -2,9 +2,7 @@ package com.perceivedev.perceivecore.packet;
 
 import org.bukkit.entity.Player;
 
-/**
- * A packet event
- */
+/** A packet event */
 public class PacketEvent {
 
     private Packet              packet;
@@ -18,7 +16,8 @@ public class PacketEvent {
      * @param direction The direction the packet is travelling
      * @param player The involved Player
      *
-     * @throws IllegalStateException if it couldn't find the NMS base class "Packet" (You are screwed)
+     * @throws IllegalStateException if it couldn't find the NMS base class
+     *             "Packet" (You are screwed)
      * @throws IllegalArgumentException if 'object' isn't a packet.
      */
     protected PacketEvent(Object packet, boolean cancelled, ConnectionDirection direction, Player player) {
@@ -96,9 +95,7 @@ public class PacketEvent {
         return player;
     }
 
-    /**
-     * The direction the packet was travelling
-     */
+    /** The direction the packet was travelling */
     public enum ConnectionDirection {
         TO_CLIENT,
         TO_SERVER

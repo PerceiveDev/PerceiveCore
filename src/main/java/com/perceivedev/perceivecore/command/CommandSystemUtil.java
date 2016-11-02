@@ -25,17 +25,11 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ExecutablePredicat
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MemberPredicate;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
-/**
- * Some utility functions for the command system
- */
+/** Some utility functions for the command system */
 public class CommandSystemUtil {
 
-    //<editor-fold desc="Register">
-    /* *****************************************************************************************
-     * 
-     *                                        Register
-     * 
-     *******************************************************************************************/
+    // <editor-fold desc="Register">
+    // -------------------- Register -------------------- //
 
     /**
      * Registers a command
@@ -67,7 +61,8 @@ public class CommandSystemUtil {
         if (command == null) {
             return;
         }
-        // lower case, as the commands will be converted to lower case, when being looked up
+        // lower case, as the commands will be converted to lower case, when
+        // being looked up
         command.setAliases(aliases.stream().map(String::toLowerCase).collect(Collectors.toList()));
         command.setExecutor(executor);
         command.setTabCompleter(tabCompleter);
@@ -94,14 +89,10 @@ public class CommandSystemUtil {
         // use the plugins name as fallback, as that is the default behaviour
         map.register(command.getName(), owner.getName(), command);
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Unregister">
-    /* *****************************************************************************************
-     * 
-     *                                       Unregister
-     * 
-     *******************************************************************************************/
+    // <editor-fold desc="Unregister">
+    // -------------------- Unregister -------------------- //
 
     /**
      * Unregisters a command
@@ -136,14 +127,10 @@ public class CommandSystemUtil {
             }
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Utility Methods">
-    /* *****************************************************************************************
-     * 
-     *                                    Utility Methods
-     * 
-     *******************************************************************************************/
+    // <editor-fold desc="Utility Methods">
+    // -------------------- Utility Methods -------------------- //
 
     /**
      * Instantiates a {@link PluginCommand} (has Protected access)
@@ -155,11 +142,10 @@ public class CommandSystemUtil {
      */
     private static PluginCommand instantiateCommand(String commandName, Plugin owner) {
         ReflectResponse<?> response = ReflectionUtil
-                  .instantiate(PluginCommand.class,
-                            new ExecutablePredicate<Constructor<?>>()
-                                      .withParameters(String.class, Plugin.class),
-                            commandName, owner
-                  );
+                .instantiate(PluginCommand.class,
+                        new ExecutablePredicate<Constructor<?>>()
+                                .withParameters(String.class, Plugin.class),
+                        commandName, owner);
 
         if (printError(response, "Couldn't instantiate PluginCommand (%s)")) {
             return null;
@@ -175,7 +161,7 @@ public class CommandSystemUtil {
     private static CommandMap getCommandMap() {
         Server server = Bukkit.getServer();
         ReflectResponse<Object> response = ReflectionUtil
-                  .getFieldValue(server.getClass(), server, field -> field.getType() == SimpleCommandMap.class);
+                .getFieldValue(server.getClass(), server, field -> field.getType() == SimpleCommandMap.class);
 
         if (printError(response, "Couldn't find the CommandMap (%s)")) {
             return null;
@@ -194,9 +180,8 @@ public class CommandSystemUtil {
     @SuppressWarnings("unchecked")
     private static Map<String, Command> getMapFromCommandMap(CommandMap commandMap) {
         ReflectResponse<Object> response = ReflectionUtil.getFieldValue(commandMap.getClass(),
-                  commandMap,
-                  new MemberPredicate<Field>().withName("knownCommands")
-        );
+                commandMap,
+                new MemberPredicate<Field>().withName("knownCommands"));
         if (printError(response, "Couldn't obtain knownCommands map. (%s)")) {
             return null;
         }
@@ -207,7 +192,8 @@ public class CommandSystemUtil {
      * Prints the error, if any
      *
      * @param response The {@link ReflectResponse}
-     * @param message The message to send. Formatted using String.format. %s is the result type
+     * @param message The message to send. Formatted using String.format. %s is
+     *            the result type
      *
      * @return True if an error occurred
      */
@@ -215,16 +201,16 @@ public class CommandSystemUtil {
         if (!response.isValuePresent()) {
             if (response.getException() != null) {
                 PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                          String.format(message, response.getResultType().toString()),
-                          response.getException());
+                        String.format(message, response.getResultType().toString()),
+                        response.getException());
             } else {
                 PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                          String.format(message, response.getResultType().toString()));
+                        String.format(message, response.getResultType().toString()));
             }
 
             return true;
         }
         return false;
     }
-    //</editor-fold>
+    // </editor-fold>
 }
