@@ -9,10 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
 
 /**
- * Adds the ability for {@link ConfigManager} to serialize and deserialize
+ * Adds the ability for {@link SerializationManager} to serialize and deserialize
  * objects of type {@link Location}
  * 
  * @author Rayzr

@@ -18,7 +18,7 @@ public class ReflectedField {
 
     /**
      * @param instance
-     * @param value
+     * @param field
      */
     protected ReflectedField(Object instance, Field field) {
         this.instance = instance;

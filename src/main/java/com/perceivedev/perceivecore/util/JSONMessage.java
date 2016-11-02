@@ -311,7 +311,7 @@ public class JSONMessage {
     /**
      * Adds another part to this JSONChat
      *
-     * @param text the next part
+     * @param nextPart the next part
      *
      * @return this
      */
@@ -622,7 +622,7 @@ public class JSONMessage {
         /**
          * Shows text when you hover over it
          *
-         * @param chat the JSON message to show
+         * @param message the JSON message to show
          *
          * @return The MessageEvent
          */
