@@ -1,11 +1,11 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.component;
+package com.perceivedev.perceivecore.gui.components.implementation.component;
 
 import java.util.function.Consumer;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.util.Dimension;
+import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /**
  * A simple button

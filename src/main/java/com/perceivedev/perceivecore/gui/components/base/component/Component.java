@@ -1,13 +1,13 @@
-package com.perceivedev.perceivecore.guireal.components.base.component;
+package com.perceivedev.perceivecore.gui.components.base.component;
 
 import java.util.function.BiConsumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.Gui;
-import com.perceivedev.perceivecore.guireal.util.Dimension;
+import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.Gui;
+import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /**
  * A Component

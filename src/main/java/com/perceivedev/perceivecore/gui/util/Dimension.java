@@ -1,8 +1,8 @@
-package com.perceivedev.perceivecore.guireal.util;
+package com.perceivedev.perceivecore.gui.util;
 
 import java.util.Objects;
 
-import com.perceivedev.perceivecore.guisystem.component.Component;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
 
 /**
  * The dimension of a {@link Component}

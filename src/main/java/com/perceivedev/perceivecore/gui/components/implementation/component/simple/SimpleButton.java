@@ -1,10 +1,10 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
+package com.perceivedev.perceivecore.gui.components.implementation.component.simple;
 
 import java.util.function.Consumer;
 
-import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.util.Dimension;
+import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /**
  * @author Rayzr
@@ -19,10 +19,10 @@ public class SimpleButton extends SimpleLabel {
     /**
      * Whether or not to close the inventory when the button is clicked
      */
-    private boolean closeOnClick = false;
+    private boolean              closeOnClick = false;
 
     public SimpleButton(Dimension size, DisplayType type, DisplayColor color, String name,
-              Consumer<ClickEvent> clickHandler) {
+            Consumer<ClickEvent> clickHandler) {
         super(size, type, color, name);
         this.clickHandler = clickHandler;
     }
@@ -35,9 +35,13 @@ public class SimpleButton extends SimpleLabel {
         super(name);
     }
 
-    public SimpleButton(Consumer<ClickEvent> clickHandler) {
-        this("Button");
+    public SimpleButton(String name, Consumer<ClickEvent> clickHandler) {
+        this(name);
         setClickHandler(clickHandler);
+    }
+
+    public SimpleButton(Consumer<ClickEvent> clickHandler) {
+        this("Button", clickHandler);
     }
 
     /**

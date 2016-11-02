@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal;
+package com.perceivedev.perceivecore.gui;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,8 +11,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
-import com.perceivedev.perceivecore.guireal.components.implementation.pane.AnchorPane;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.components.base.pane.Pane;
+import com.perceivedev.perceivecore.gui.components.implementation.pane.AnchorPane;
 import com.perceivedev.perceivecore.util.TextUtils;
 
 /**
@@ -21,16 +22,16 @@ import com.perceivedev.perceivecore.util.TextUtils;
  * Contains the Inventory and the Player
  */
 public class Gui implements InventoryHolder {
-    
+
     private static int counter;
 
-    private final int ID = counter++;
+    private final int  ID = counter++;
 
-    private UUID      playerID;
-    private Inventory inventory;
-    private Pane      rootPane;
-    private boolean   reopenOnClose;
-    private boolean   killMe;
+    private UUID       playerID;
+    private Inventory  inventory;
+    private Pane       rootPane;
+    private boolean    reopenOnClose;
+    private boolean    killMe;
 
     /**
      * @param name The name of the Gui
@@ -54,7 +55,8 @@ public class Gui implements InventoryHolder {
      * @param name The name of the Gui
      * @param rows The amount of rows (each has 9 slots) in the gui
      *
-     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} -> passes an AnchorPane
+     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} -> passes an
+     *      AnchorPane
      */
     public Gui(String name, int rows) {
         this(name, rows, new AnchorPane(9, rows));
@@ -67,6 +69,10 @@ public class Gui implements InventoryHolder {
      */
     public Pane getRootPane() {
         return rootPane;
+    }
+
+    public boolean addComponent(Component component) {
+        return getRootPane().addComponent(component);
     }
 
     /**
@@ -101,7 +107,8 @@ public class Gui implements InventoryHolder {
     /**
      * Re-Renders the Gui.
      *
-     * @return False if the player is not online or an error occurred. True if it was re-rendered.
+     * @return False if the player is not online or an error occurred. True if
+     *         it was re-rendered.
      */
     public boolean reRender() {
         Optional<Player> player = getPlayer();
@@ -173,7 +180,8 @@ public class Gui implements InventoryHolder {
     /**
      * Closes the Inventory
      *
-     * @throws IllegalStateException If player is null or the player doesn't have this Gui opened
+     * @throws IllegalStateException If player is null or the player doesn't
+     *             have this Gui opened
      */
     public void close() {
         if (!getPlayer().isPresent()) {
@@ -217,10 +225,7 @@ public class Gui implements InventoryHolder {
 
     @Override
     public String toString() {
-        return "Gui{" +
-                  "name=" + inventory.getName() +
-                  ", id=" + ID +
-                  '}';
+        return "Gui{" + "name=" + inventory.getName() + ", id=" + ID + '}';
     }
 
     @Override

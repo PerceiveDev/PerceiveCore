@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal;
+package com.perceivedev.perceivecore.gui;
 
 import java.util.HashMap;
 import java.util.Map;

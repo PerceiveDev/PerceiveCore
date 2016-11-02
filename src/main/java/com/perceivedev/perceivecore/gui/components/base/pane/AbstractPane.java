@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components.base.pane;
+package com.perceivedev.perceivecore.gui.components.base.pane;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.guireal.ClickEvent;
-import com.perceivedev.perceivecore.guireal.components.base.component.AbstractComponent;
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.util.Dimension;
+import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.components.base.component.AbstractComponent;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /**
  * A Skeleton implementation for the {@link Pane} class

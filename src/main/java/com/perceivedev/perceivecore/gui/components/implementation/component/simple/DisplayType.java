@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.component.simple;
+package com.perceivedev.perceivecore.gui.components.implementation.component.simple;
 
 import com.perceivedev.perceivecore.util.ItemFactory;
 

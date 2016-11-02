@@ -1,9 +1,9 @@
-package com.perceivedev.perceivecore.guireal.components.base.pane;
+package com.perceivedev.perceivecore.gui.components.base.pane;
 
 import java.util.Collection;
 import java.util.Optional;
 
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
 
 /**
  * The base class for Panes.
@@ -15,7 +15,7 @@ public interface Pane extends Component {
      *
      * @param component The {@link Component} to add
      *
-     * @return true if the component could be added
+     * @return <code>true</code> if the component could be added
      */
     boolean addComponent(Component component);
 
@@ -24,7 +24,7 @@ public interface Pane extends Component {
      *
      * @param component The {@link Component} to remove
      *
-     * @return True if the {@link Component} was removed
+     * @return <code>true</code> if the {@link Component} was removed
      */
     boolean removeComponent(Component component);
 
@@ -57,7 +57,7 @@ public interface Pane extends Component {
     /**
      * Re-renders this pane
      *
-     * @return True if it was re-rendered
+     * @return <code>true</code> if it was re-rendered
      */
     boolean requestReRender();
 

@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.perceivedev.perceivecore.guireal.GuiManager;
+import com.perceivedev.perceivecore.gui.GuiManager;
 import com.perceivedev.perceivecore.other.DisableManager;
 
 public class PerceiveCore extends JavaPlugin {

@@ -1,10 +1,10 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.pane;
+package com.perceivedev.perceivecore.gui.components.implementation.pane;
 
 import java.util.List;
 import java.util.Objects;
 
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.components.base.pane.AbstractPane;
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.components.base.pane.AbstractPane;
 
 /**
  * A simple anchor pane

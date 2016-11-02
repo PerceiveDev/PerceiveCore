@@ -1,11 +1,12 @@
-package com.perceivedev.perceivecore.guireal;
+package com.perceivedev.perceivecore.gui;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.guireal.components.base.pane.Pane;
+import com.perceivedev.perceivecore.gui.components.base.pane.Pane;
 
 /**
  * A Click Event
@@ -126,6 +127,18 @@ public class ClickEvent {
      */
     public int getSlot() {
         return raw.getSlot();
+    }
+
+    /**
+     * The type of the click. Useful for checking shift-clicking, right
+     * clicking, middle clicking, etc.
+     * 
+     * @return The click type.
+     * 
+     * @see ClickType
+     */
+    public ClickType getClickType() {
+        return raw.getClick();
     }
 
     /**

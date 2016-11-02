@@ -1,13 +1,14 @@
-package com.perceivedev.perceivecore.guireal.components.implementation.pane;
+package com.perceivedev.perceivecore.gui.components.implementation.pane;
 
 import java.util.Collections;
 import java.util.Map.Entry;
+
+import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.components.base.pane.AbstractPane;
+import com.perceivedev.perceivecore.gui.util.Dimension;
+
 import java.util.Objects;
 import java.util.Optional;
-
-import com.perceivedev.perceivecore.guireal.components.base.component.Component;
-import com.perceivedev.perceivecore.guireal.components.base.pane.AbstractPane;
-import com.perceivedev.perceivecore.guireal.util.Dimension;
 
 /**
  * A Grid pane
