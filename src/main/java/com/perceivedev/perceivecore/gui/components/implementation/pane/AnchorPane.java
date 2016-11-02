@@ -56,14 +56,15 @@ public class AnchorPane extends AbstractPane {
      *
      * @param component The component to add. You can't add the same component twice.
      *
-     * @return False. Every time.
+     * @return It throws
      *
+     * @throws UnsupportedOperationException As this method can not be supported
      * @see #addComponent(Component, int, int)
      * @deprecated Use {@link #addComponent(Component, int, int)}
      */
     @Override
     public boolean addComponent(Component component) {
-        return false;
+        throw new UnsupportedOperationException("AnchorPane doesn't support adding without coordinates given");
     }
 
     /**
@@ -79,7 +80,7 @@ public class AnchorPane extends AbstractPane {
      */
     public boolean addComponent(Component component, int x, int y) {
         Objects.requireNonNull(component, "component can not be null");
-        
+
         if (containsComponent(component)) {
             return false;
         }
