@@ -4,14 +4,10 @@ import java.util.function.Supplier;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 
-/**
- * Holds some standard implementations of {@link Ticker}
- */
+/** Holds some standard implementations of {@link Ticker} */
 public enum StandardTicker {
 
-    /**
-     * Uses the Bukkit scheduler to dispatch a Sync runnable
-     */
+    /** Uses the Bukkit scheduler to dispatch a Sync runnable */
     BUKKIT_SYNC_RUNNABLE(() -> new BukkitRunnableTicker(5) {
         @Override
         protected void startRunnable(long ticksDelay) {
@@ -19,8 +15,8 @@ public enum StandardTicker {
         }
     }),
     /**
-     * Uses the Bukkit scheduler to dispatch an async runnable
-     * <b>Be careful!</b>
+     * Uses the Bukkit scheduler to dispatch an async runnable <b>Be
+     * careful!</b>
      */
     ASYNC_BUKKIT_RUNNABLE(() -> new BukkitRunnableTicker(5) {
         @Override
@@ -28,16 +24,12 @@ public enum StandardTicker {
             runnable.runTaskTimerAsynchronously(PerceiveCore.getInstance(), 0, ticksDelay);
         }
     }),
-    /**
-     * Creates a new Thread. As async as it gets. Be careful!
-     */
+    /** Creates a new Thread. As async as it gets. Be careful! */
     THREAD(() -> new TickerThread(50));
 
     private Supplier<Ticker> tickerSupplier;
 
-    /**
-     * @param tickerSupplier The ticker supplier
-     */
+    /** @param tickerSupplier The ticker supplier */
     StandardTicker(Supplier<Ticker> tickerSupplier) {
         this.tickerSupplier = tickerSupplier;
     }

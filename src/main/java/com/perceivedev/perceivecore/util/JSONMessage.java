@@ -23,7 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
- * This is a complete JSON message builder class. To create a new JSONMessage do
+ * This is a complete JSON message builder class. To create a new JSONMessage
+ * do
  * {@link #create(String)}
  *
  * @author Rayzr
@@ -41,15 +42,15 @@ public class JSONMessage {
 
             String styleName;
             switch (style) {
-            case MAGIC:
-                styleName = "obfuscated";
-                break;
-            case UNDERLINE:
-                styleName = "underlined";
-                break;
-            default:
-                styleName = style.name().toLowerCase();
-                break;
+                case MAGIC:
+                    styleName = "obfuscated";
+                    break;
+                case UNDERLINE:
+                    styleName = "underlined";
+                    break;
+                default:
+                    styleName = style.name().toLowerCase();
+                    break;
             }
 
             builder.put(style, styleName);
@@ -77,9 +78,7 @@ public class JSONMessage {
         return new JSONMessage(text);
     }
 
-    /**
-     * Creates a new JSONChat object
-     */
+    /** Creates a new JSONChat object */
     public static JSONMessage create() {
         return create("");
     }
@@ -399,9 +398,7 @@ public class JSONMessage {
 
         }
 
-        /**
-         * @return
-         */
+        /** @return */
         public String toLegacy() {
             StringBuilder output = new StringBuilder();
             if (color != null) {
@@ -413,44 +410,32 @@ public class JSONMessage {
             return output.append(text).toString();
         }
 
-        /**
-         * @return the onClick event
-         */
+        /** @return the onClick event */
         public MessageEvent getOnClick() {
             return onClick;
         }
 
-        /**
-         * @param onClick the onClick event to set
-         */
+        /** @param onClick the onClick event to set */
         public void setOnClick(MessageEvent onClick) {
             this.onClick = onClick;
         }
 
-        /**
-         * @return the onHover event
-         */
+        /** @return the onHover event */
         public MessageEvent getOnHover() {
             return onHover;
         }
 
-        /**
-         * @param onHover the onHover event to set
-         */
+        /** @param onHover the onHover event to set */
         public void setOnHover(MessageEvent onHover) {
             this.onHover = onHover;
         }
 
-        /**
-         * @return the color
-         */
+        /** @return the color */
         public ChatColor getColor() {
             return color;
         }
 
-        /**
-         * @param color the color to set
-         */
+        /** @param color the color to set */
         public void setColor(ChatColor color) {
             if (!color.isColor()) {
                 throw new IllegalArgumentException(color.name() + " is not a color!");
@@ -458,9 +443,7 @@ public class JSONMessage {
             this.color = color;
         }
 
-        /**
-         * @return the styles
-         */
+        /** @return the styles */
         public List<ChatColor> getStyles() {
             return styles;
         }
@@ -480,16 +463,12 @@ public class JSONMessage {
             styles.add(style);
         }
 
-        /**
-         * @return the text
-         */
+        /** @return the text */
         public String getText() {
             return text;
         }
 
-        /**
-         * @param text the text to set
-         */
+        /** @param text the text to set */
         public void setText(String text) {
             this.text = text;
         }
@@ -510,9 +489,7 @@ public class JSONMessage {
 
         }
 
-        /**
-         * @return
-         */
+        /** @return */
         public JsonObject toJSON() {
             JsonObject obj = new JsonObject();
             obj.addProperty("action", action);
@@ -524,30 +501,22 @@ public class JSONMessage {
             return obj;
         }
 
-        /**
-         * @return the action
-         */
+        /** @return the action */
         public String getAction() {
             return action;
         }
 
-        /**
-         * @param action the action to set
-         */
+        /** @param action the action to set */
         public void setAction(String action) {
             this.action = action;
         }
 
-        /**
-         * @return the value
-         */
+        /** @return the value */
         public Object getValue() {
             return value;
         }
 
-        /**
-         * @param value the value to set
-         */
+        /** @param value the value to set */
         public void setValue(Object value) {
             this.value = value;
         }

@@ -6,15 +6,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A skeleton implementation for ticker
- */
+/** A skeleton implementation for ticker */
 public abstract class AbstractTicker implements Ticker {
 
-    private volatile   long          delayNano;
-    /**
-     * Is a concurrent set
-     */
+    private volatile long            delayNano;
+    /** Is a concurrent set */
     protected volatile Set<Tickable> tickableSet;
 
     /**

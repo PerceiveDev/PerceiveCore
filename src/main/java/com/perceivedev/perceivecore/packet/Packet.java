@@ -173,9 +173,7 @@ public class Packet {
         }
     }
 
-    /**
-     * @return the NMS packet
-     */
+    /** @return the NMS packet */
     public Object getNMSPacket() {
         return obj;
     }
@@ -212,9 +210,7 @@ public class Packet {
         }
     }
 
-    /**
-     * @return the packet's class
-     */
+    /** @return the packet's class */
     public Class<?> getPacketClass() {
         return packetClass;
     }

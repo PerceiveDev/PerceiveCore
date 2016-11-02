@@ -8,10 +8,7 @@ import java.util.HashMap;
 import com.perceivedev.perceivecore.util.Converter;
 import com.perceivedev.perceivecore.util.Pair;
 
-/**
- * @author Rayzr
- *
- */
+/** @author Rayzr */
 public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?, ?>> {
 
     /**
@@ -79,7 +76,8 @@ public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?,
      * 
      * @param a the first class
      * @param b the second class
-     * @return Whether or not a converter exists for the given pair of classes
+     * @return Whether or not a converter exists for the given pair of
+     *         classes
      */
     public boolean hasConverter(Class<?> a, Class<?> b) {
         return containsKey(new Pair<Class<?>, Class<?>>(a, b)) || containsKey(new Pair<Class<?>, Class<?>>(b, a));

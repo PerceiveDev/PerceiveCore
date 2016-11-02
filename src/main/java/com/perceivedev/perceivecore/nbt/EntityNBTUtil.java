@@ -18,21 +18,22 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 
 /**
- * A utility to modify Entities NBT-tags. Uses reflection and scans through all methods to find the right ones,
- * so it might change in future releases.
+ * A utility to modify Entities NBT-tags. Uses reflection and scans through all
+ * methods to find the right ones, so it might change in future releases.
  * <p>
- * The methods must only be called when at least one world is loaded, as it needs to spawn a sample entity (ArmorStand).
- * <br>It will be enforced by throwing an {@link IllegalStateException}.
+ * The methods must only be called when at least one world is loaded, as it
+ * needs to spawn a sample entity (ArmorStand). <br>
+ * It will be enforced by throwing an {@link IllegalStateException}.
  * <p>
  * <br>
- * <i><b>DISCLAIMER: </b></i>
- * <br>Doesn't allow for the addition of new tags. You can modify the tags of the TileEntity, but not add new ones.
- * This is a limitation of minecraft.
+ * <i><b>DISCLAIMER: </b></i> <br>
+ * Doesn't allow for the addition of new tags. You can modify the tags of the
+ * TileEntity, but not add new ones. This is a limitation of minecraft.
  */
 @SuppressWarnings("unused") // just by me...
 public class EntityNBTUtil {
 
-    private static Method loadFromNbtMethod, saveToNbtMethod, getHandle;
+    private static Method  loadFromNbtMethod, saveToNbtMethod, getHandle;
     private static boolean error = false;
 
     static {
@@ -42,13 +43,13 @@ public class EntityNBTUtil {
             System.out.println("Can't find CraftEntity class! @EntityNBTUtil static block");
         } else {
             ReflectionUtil.ReflectResponse<Method> getHandleMethod = ReflectionUtil
-                      .getMethod(craftEntityClass.get(), new ReflectionUtil.MethodPredicate().withName("getHandle"));
+                    .getMethod(craftEntityClass.get(), new ReflectionUtil.MethodPredicate().withName("getHandle"));
 
             if (getHandleMethod.isValuePresent()) {
                 getHandle = getHandleMethod.getValue();
             } else {
                 System.out.println("getHandle not found: "
-                          + Bukkit.getServer().getClass().getName());
+                        + Bukkit.getServer().getClass().getName());
                 error = true;
             }
         }
@@ -69,9 +70,7 @@ public class EntityNBTUtil {
         return ReflectionUtil.invokeMethod(getHandle, entity).getValue();
     }
 
-    /**
-     * @throws IllegalStateException If {@link #error} is true
-     */
+    /** @throws IllegalStateException If {@link #error} is true */
     private static void ensureNoError() {
         if (error) {
             throw new IllegalStateException("A critical, non recoverable error occurred earlier.");
@@ -86,7 +85,8 @@ public class EntityNBTUtil {
      * @return The NBTTag of the entity
      *
      * @throws NullPointerException if {@code entity} is null
-     * @throws IllegalStateException if a critical, non recoverable error occurred earlier (loading methods).
+     * @throws IllegalStateException if a critical, non recoverable error
+     *             occurred earlier (loading methods).
      */
     @SuppressWarnings("WeakerAccess") // util,...
     public static NBTTagCompound getNbtTag(Entity entity) {
@@ -102,7 +102,7 @@ public class EntityNBTUtil {
             ReflectionUtil.invokeMethod(saveToNbtMethod, nmsEntity, nbtNMS);
             if (nbtNMS == null) {
                 throw new NullPointerException("SaveToNBT method set Nbt tag to null. Version incompatible?"
-                          + nmsEntity.getClass());
+                        + nmsEntity.getClass());
             }
             entityNBT = (NBTTagCompound) INBTBase.fromNBT(nbtNMS);
         }
@@ -116,8 +116,10 @@ public class EntityNBTUtil {
      * @param entity The entity to modify the nbt tag
      * @param compound The {@link NBTTagCompound} to set it to
      *
-     * @throws NullPointerException if {@code entity} or {@code compound} is null
-     * @throws IllegalStateException if a critical, non recoverable error occurred earlier (loading methods).
+     * @throws NullPointerException if {@code entity} or {@code compound} is
+     *             null
+     * @throws IllegalStateException if a critical, non recoverable error
+     *             occurred earlier (loading methods).
      */
     @SuppressWarnings("WeakerAccess") // util...
     public static void setNbtTag(Entity entity, NBTTagCompound compound) {
@@ -132,13 +134,16 @@ public class EntityNBTUtil {
     }
 
     /**
-     * Appends the {@link NBTTagCompound} to the entities NBT tag, overwriting already set values
+     * Appends the {@link NBTTagCompound} to the entities NBT tag, overwriting
+     * already set values
      *
      * @param entity The entity whose NbtTag to change
      * @param compound The {@link NBTTagCompound} whose values you want to add
      *
-     * @throws NullPointerException if {@code entity} or {@code compound} is null
-     * @throws IllegalStateException if a critical, non recoverable error occurred earlier (loading methods).
+     * @throws NullPointerException if {@code entity} or {@code compound} is
+     *             null
+     * @throws IllegalStateException if a critical, non recoverable error
+     *             occurred earlier (loading methods).
      */
     public static void appendNbtTag(Entity entity, NBTTagCompound compound) {
         // yes, getNbtTag would throw them as well.
@@ -162,7 +167,7 @@ public class EntityNBTUtil {
             throw new IllegalStateException("Called me before at least one world was loaded...");
         }
         Entity sample = Bukkit.getWorlds().get(0)
-                  .spawnEntity(Bukkit.getWorlds().get(0).getSpawnLocation(), EntityType.ARMOR_STAND);
+                .spawnEntity(Bukkit.getWorlds().get(0).getSpawnLocation(), EntityType.ARMOR_STAND);
 
         Object nmsSample = ReflectionUtil.invokeMethod(getHandle, sample).getValue();
 
@@ -182,9 +187,9 @@ public class EntityNBTUtil {
 
         if (saveToNbtMethod == null || loadFromNbtMethod == null) {
             System.out.println("Couldn't find the methods. This could help: "
-                      + entityClass.get().getName()
-                      + " save " + (saveToNbtMethod == null)
-                      + " load " + (loadFromNbtMethod == null));
+                    + entityClass.get().getName()
+                    + " save " + (saveToNbtMethod == null)
+                    + " load " + (loadFromNbtMethod == null));
             error = true;
         }
         sample.remove();
@@ -196,12 +201,13 @@ public class EntityNBTUtil {
         initializeLowerThan1_9(entityClass, sample, nmsSample);
 
         for (Method method : entityClass.getMethods()) {
-            // the save method : "public NBTTagCompound(final NBTTagCompound compound)"
+            // the save method : "public NBTTagCompound(final NBTTagCompound
+            // compound)"
             if (method.getReturnType().equals(ReflectionUtil.getClass(NMS, "NBTTagCompound").get())
-                      && method.getParameterTypes().length == 1
-                      && method.getParameterTypes()[0].equals(ReflectionUtil.getClass(NMS, "NBTTagCompound").get())
-                      && Modifier.isPublic(method.getModifiers())
-                      && !Modifier.isStatic(method.getModifiers())) {
+                    && method.getParameterTypes().length == 1
+                    && method.getParameterTypes()[0].equals(ReflectionUtil.getClass(NMS, "NBTTagCompound").get())
+                    && Modifier.isPublic(method.getModifiers())
+                    && !Modifier.isStatic(method.getModifiers())) {
 
                 Object testCompound = new NBTTagCompound().toNBT();
                 ReflectionUtil.invokeMethod(method, nmsSample, testCompound);
@@ -216,7 +222,7 @@ public class EntityNBTUtil {
                     if (saveToNbtMethod != null) {
                         saveToNbtMethod = null;
                         System.out.println("Couldn't find the saving method for an entity. This should help: "
-                                  + entityClass.getName());
+                                + entityClass.getName());
                         error = true;
                         return;
                     }
@@ -231,10 +237,10 @@ public class EntityNBTUtil {
 
         for (Method method : entityClass.getMethods()) {
             if (method.getReturnType().equals(Void.TYPE)
-                      && method.getParameterTypes().length == 1
-                      && method.getParameterTypes()[0].equals(ReflectionUtil.getClass(NMS, "NBTTagCompound").get())
-                      && Modifier.isPublic(method.getModifiers())
-                      && !Modifier.isStatic(method.getModifiers())) {
+                    && method.getParameterTypes().length == 1
+                    && method.getParameterTypes()[0].equals(ReflectionUtil.getClass(NMS, "NBTTagCompound").get())
+                    && Modifier.isPublic(method.getModifiers())
+                    && !Modifier.isStatic(method.getModifiers())) {
 
                 Object testCompound = new NBTTagCompound().toNBT();
                 ReflectionUtil.invokeMethod(method, nmsSample, testCompound);
@@ -247,8 +253,8 @@ public class EntityNBTUtil {
                 if (compound.isEmpty()) {
                     if (loadFromNbtMethod != null) {
                         System.out.println("Couldn't find the loading method for an entity. This should help: "
-                                  + entityClass.getName()
-                                  + " found methods: " + loadFromNbtMethod + " " + method);
+                                + entityClass.getName()
+                                + " found methods: " + loadFromNbtMethod + " " + method);
                         loadFromNbtMethod = null;
                         error = true;
                         return;
@@ -257,8 +263,8 @@ public class EntityNBTUtil {
                 } else {
                     if (saveToNbtMethod != null) {
                         System.out.println("Couldn't find the saving method for an entity. This should help: "
-                                  + entityClass.getName()
-                                  + " found methods: " + saveToNbtMethod + " " + method);
+                                + entityClass.getName()
+                                + " found methods: " + saveToNbtMethod + " " + method);
                         error = true;
                         saveToNbtMethod = null;
                         return;

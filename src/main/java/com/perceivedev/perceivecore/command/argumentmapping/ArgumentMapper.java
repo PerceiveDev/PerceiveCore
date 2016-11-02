@@ -3,9 +3,7 @@ package com.perceivedev.perceivecore.command.argumentmapping;
 import java.util.Optional;
 import java.util.Queue;
 
-/**
- * An argument mapper
- */
+/** An argument mapper */
 public interface ArgumentMapper<T> {
 
     /**
@@ -18,7 +16,8 @@ public interface ArgumentMapper<T> {
     /**
      * Maps an object
      *
-     * @param strings The Strings to get the information from. Remove what you need, it will be passed to the next mapper afterwards
+     * @param strings The Strings to get the information from. Remove what you
+     *            need, it will be passed to the next mapper afterwards
      *
      * @return The Mapped object
      */

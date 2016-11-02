@@ -10,9 +10,7 @@ import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.components.base.component.AbstractComponent;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A Label. Like a button, but does nothing on click
- */
+/** A Label. Like a button, but does nothing on click */
 public class Label extends AbstractComponent {
 
     private ItemStack itemStack;

@@ -8,9 +8,7 @@ import com.perceivedev.perceivecore.util.ticker.StandardTicker;
 import com.perceivedev.perceivecore.util.ticker.Ticker;
 import com.perceivedev.perceivecore.util.ticker.Ticker.Tickable;
 
-/**
- * A particle effect that replays itself
- */
+/** A particle effect that replays itself */
 public abstract class RecurringParticleEffect implements ParticleEffect, Tickable {
 
     private Ticker   ticker;
@@ -58,16 +56,12 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
         this.center = center;
     }
 
-    /**
-     * Stops this particle effect
-     */
+    /** Stops this particle effect */
     public void stop() {
         ticker.stopTicker();
     }
 
-    /**
-     * Starts this particle effect
-     */
+    /** Starts this particle effect */
     public void start(Location center) {
         ticker.startTicker();
     }

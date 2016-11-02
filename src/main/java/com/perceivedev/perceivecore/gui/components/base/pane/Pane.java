@@ -5,9 +5,7 @@ import java.util.Optional;
 
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 
-/**
- * The base class for Panes.
- */
+/** The base class for Panes. */
 public interface Pane extends Component {
 
     /**

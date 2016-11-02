@@ -9,9 +9,7 @@ import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
 
-/**
- * Allows DisableListeners to be added
- */
+/** Allows DisableListeners to be added */
 public class DisableManager {
 
     // FIXME: 21.10.2016 Not thread safe
@@ -56,8 +54,9 @@ public class DisableManager {
     /**
      * Calls onDisable for all Listeners.
      * <p>
-     * Should ideally not be visible from the outside, but it is in a different package than PerceiveCore.class.
-     * Hope they will add super-packages sometime
+     * Should ideally not be visible from the outside, but it is in a different
+     * package than PerceiveCore.class. Hope they will add super-packages
+     * sometime
      */
     public void disable() {
         listeners.forEach(DisableListener::onDisable);

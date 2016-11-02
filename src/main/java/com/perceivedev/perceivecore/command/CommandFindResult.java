@@ -5,14 +5,16 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * The result of searching a command. Contains basic data and the arguments you will still need to pass it.
+ * The result of searching a command. Contains basic data and the arguments you
+ * will still need to pass it.
  */
 public class CommandFindResult {
     private CommandNode  commandNode;
     private List<String> restArgs;
 
     /**
-     * @param commandNode The {@link CommandNode}. May be null, indicating none found.
+     * @param commandNode The {@link CommandNode}. May be null, indicating none
+     *            found.
      * @param restArgs The remaining arguments
      */
     public CommandFindResult(CommandNode commandNode, Collection<String> restArgs) {
@@ -50,9 +52,9 @@ public class CommandFindResult {
     @Override
     public String toString() {
         return "CommandFindResult{" +
-                  "commandNode=" + commandNode +
-                  ", restArgs=" + restArgs +
-                  ", wasFound=" + wasFound() +
-                  '}';
+                "commandNode=" + commandNode +
+                ", restArgs=" + restArgs +
+                ", wasFound=" + wasFound() +
+                '}';
     }
 }

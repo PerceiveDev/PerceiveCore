@@ -7,9 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A simple button
- */
+/** A simple button */
 public class Button extends Label {
 
     private Consumer<ClickEvent> clickHandler;

@@ -15,7 +15,8 @@ import javax.annotation.Nonnull;
 public class ArrayUtils {
 
     /**
-     * Concatenates all objects in the array with the given filler. Example:<br>
+     * Concatenates all objects in the array with the given filler. Example:
+     * <br>
      * <br>
      * <code>ArrayUtils.concat(new String[] {"Hello", "world!", "How", "are", "you?"}, "_");</code>
      * <br>

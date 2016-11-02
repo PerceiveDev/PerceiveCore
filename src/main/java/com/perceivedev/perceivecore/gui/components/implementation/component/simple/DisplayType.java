@@ -5,7 +5,8 @@ import com.perceivedev.perceivecore.util.ItemFactory;
 /**
  * Displays an item in the given color.
  * <p>
- * There are standard implementations available in {@link StandardDisplayTypes}
+ * There are standard implementations available in
+ * {@link StandardDisplayTypes}
  */
 @FunctionalInterface
 public interface DisplayType {

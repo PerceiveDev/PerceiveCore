@@ -8,9 +8,7 @@ import com.perceivedev.perceivecore.gui.components.base.component.Component;
 import com.perceivedev.perceivecore.gui.components.base.pane.AbstractPane;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A pane that just throws the children in as they fit.
- */
+/** A pane that just throws the children in as they fit. */
 @SuppressWarnings("WeakerAccess")
 public class FlowPane extends AbstractPane {
 
@@ -25,7 +23,8 @@ public class FlowPane extends AbstractPane {
      * @param inventoryMap The {@link InventoryMap} to use
      *
      * @throws NullPointerException if any parameter is null
-     * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does not equal size
+     * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
+     *             not equal size
      */
     protected FlowPane(List<Component> components, int width, int height, FlowInventoryMap inventoryMap) {
         super(components, width, height, inventoryMap);
@@ -57,7 +56,8 @@ public class FlowPane extends AbstractPane {
     /**
      * Adds a component
      *
-     * @param component The component to add. You can't add the same component twice.
+     * @param component The component to add. You can't add the same component
+     *            twice.
      *
      * @return True if the component was added
      */
@@ -101,9 +101,7 @@ public class FlowPane extends AbstractPane {
         return (FlowPane) super.deepClone();
     }
 
-    /**
-     * Maps components to their coordinates
-     */
+    /** Maps components to their coordinates */
     protected static class FlowInventoryMap extends InventoryMap {
 
         protected FlowInventoryMap(Dimension dimension) {
@@ -115,7 +113,8 @@ public class FlowPane extends AbstractPane {
          *
          * @param dimension The Dimension of the component
          *
-         * @return The starting location for the component. <code>null</code> if none. 0 == x, 1 == y
+         * @return The starting location for the component. <code>null</code> if
+         *         none. 0 == x, 1 == y
          */
         protected int[] getNextComponentStartingLocation(Dimension dimension) {
             for (int y = 0; y < lines.length; y++) {

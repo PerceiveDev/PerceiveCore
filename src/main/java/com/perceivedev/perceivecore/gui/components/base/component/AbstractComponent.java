@@ -3,31 +3,29 @@ package com.perceivedev.perceivecore.gui.components.base.component;
 import com.perceivedev.perceivecore.gui.Gui;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A Skeleton class for {@link Component}
- */
+/** A Skeleton class for {@link Component} */
 public abstract class AbstractComponent implements Component, Cloneable {
 
     /**
-     * The counter is used to distinguish instances, no matter if the internal variables change.
-     * As you can't validate real equality for some components (Runnable) the equals method can't check for logic equality.
-     * Besides that you may want functionally identical components in a Gui, but not the same one twice (bugs may occur)
+     * The counter is used to distinguish instances, no matter if the internal
+     * variables change. As you can't validate real equality for some components
+     * (Runnable) the equals method can't check for logic equality. Besides that
+     * you may want functionally identical components in a Gui, but not the same
+     * one twice (bugs may occur)
      */
     private static int counter = 0;
 
     /**
-     * This variable is expected to be final. Cloning prohibits actually doing this, but to communicate the fact,
-     * it is written in CAPS
+     * This variable is expected to be final. Cloning prohibits actually doing
+     * this, but to communicate the fact, it is written in CAPS
      */
-    private int ID = counter++;
+    private int        ID      = counter++;
 
-    protected Gui ownerGui;
+    protected Gui      ownerGui;
 
-    private Dimension size;
+    private Dimension  size;
 
-    /**
-     * @param size The size of the component
-     */
+    /** @param size The size of the component */
     public AbstractComponent(Dimension size) {
         this.size = size;
     }
@@ -73,11 +71,14 @@ public abstract class AbstractComponent implements Component, Cloneable {
     }
 
     /**
-     * A counter is used to distinguish instances, no matter if the internal variables change.
+     * A counter is used to distinguish instances, no matter if the internal
+     * variables change.
      * <p>
-     * As you can't validate real equality for some components (Runnable) the equals method can't check for logic equality.
+     * As you can't validate real equality for some components (Runnable) the
+     * equals method can't check for logic equality.
      * <p>
-     * Besides that you may want functionally identical components in a Gui, but not the same one twice (bugs may occur)
+     * Besides that you may want functionally identical components in a Gui, but
+     * not the same one twice (bugs may occur)
      *
      * @return True if they are the same instance
      */

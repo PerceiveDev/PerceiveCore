@@ -10,9 +10,7 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * A Grid pane
- */
+/** A Grid pane */
 public class GridPane extends AbstractPane {
 
     private boolean[][] slots;
@@ -27,13 +25,13 @@ public class GridPane extends AbstractPane {
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
      * @param columns The columns. It will leave spaces empty, if this isn't
-     * chosen in a fashion compatible with the inventory.
+     *            chosen in a fashion compatible with the inventory.
      * @param rows The rows. It will leave spaces empty, if this isn't chosen in
-     * a fashion compatible with the inventory.
+     *            a fashion compatible with the inventory.
      *
      * @throws NullPointerException if any parameter is null
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
-     * not equal size
+     *             not equal size
      */
     public GridPane(int width, int height, InventoryMap inventoryMap, int columns, int rows) {
         super(Collections.emptyList(), width, height, inventoryMap);
@@ -74,7 +72,7 @@ public class GridPane extends AbstractPane {
      *
      * @throws NullPointerException if any parameter is null
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
-     * not equal size
+     *             not equal size
      */
     public GridPane(int width, int height, InventoryMap inventoryMap) {
         this(width, height, inventoryMap, 2, 2);
@@ -123,7 +121,7 @@ public class GridPane extends AbstractPane {
      * @param component The component to fit
      *
      * @return The free slot (0 == x, 1 == y) or null if none (or the component
-     * doesn't fit in the gridSize)
+     *         doesn't fit in the gridSize)
      */
     private int[] getNextFreeSlot(Component component) {
         if (!component.getSize().fitsInside(getGridSize())) {
@@ -146,7 +144,7 @@ public class GridPane extends AbstractPane {
      * Uses the next free grid
      *
      * @param component The component to add.You can't add the same component
-     * twice.
+     *            twice.
      *
      * @return True if the component was added
      *
@@ -167,7 +165,7 @@ public class GridPane extends AbstractPane {
      * Tries to add the given component in the given slot
      *
      * @param component The component to add. You can't add the same component
-     * twice.
+     *            twice.
      * @param slotX The x coordinate of the slot
      * @param slotY The y coordinate of the slot
      *
@@ -188,7 +186,7 @@ public class GridPane extends AbstractPane {
 
         if (slotX < 0 || slotY < 0) {
             throw new IllegalArgumentException(
-                      "slotX and slotY must be > 0. Given: '" + slotX + "' and '" + slotY + "'");
+                    "slotX and slotY must be > 0. Given: '" + slotX + "' and '" + slotY + "'");
         }
         if (slotX >= getSize().getWidth() / gridWidth || slotY >= getSize().getHeight() / gridHeight) {
             // @formatter:off

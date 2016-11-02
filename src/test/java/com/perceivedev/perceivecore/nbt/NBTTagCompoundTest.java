@@ -21,9 +21,7 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagInt;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagShort;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagString;
 
-/**
- * A bad test for Compounds
- */
+/** A bad test for Compounds */
 public class NBTTagCompoundTest {
 
     private NBTTagCompound compound = new NBTTagCompound();
@@ -261,24 +259,24 @@ public class NBTTagCompoundTest {
     private void setRandomValues() {
         INBTBase type = new NBTTagInt(0);
         switch (ThreadLocalRandom.current().nextInt(5)) {
-        case 0:
-            type = new NBTTagInt(1);
-            break;
-        case 1:
-            type = new NBTTagString("");
-            break;
-        case 2:
-            type = new NBTTagDouble(20);
-            break;
-        case 3:
-            type = new NBTTagShort((short) 0);
-            break;
-        case 4:
-            type = new NBTTagByte((byte) 0);
-            break;
-        default:
-            // This is to stop FindBugs from being angry
-            break;
+            case 0:
+                type = new NBTTagInt(1);
+                break;
+            case 1:
+                type = new NBTTagString("");
+                break;
+            case 2:
+                type = new NBTTagDouble(20);
+                break;
+            case 3:
+                type = new NBTTagShort((short) 0);
+                break;
+            case 4:
+                type = new NBTTagByte((byte) 0);
+                break;
+            default:
+                // This is to stop FindBugs from being angry
+                break;
         }
 
         compound = new NBTTagCompound();

@@ -8,15 +8,13 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagInt;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * A bad test for Ints
- */
+/** A bad test for Ints */
 public class NBTTagIntTest {
 
     private NBTTagInt nbtTagInt = new NBTTagInt(1);
-    private int value;
+    private int       value;
 
-    private final int AMOUNT = 10000;
+    private final int AMOUNT    = 10000;
 
     @Test
     public void set() throws Exception {

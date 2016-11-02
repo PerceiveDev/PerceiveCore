@@ -89,7 +89,8 @@ public class Gui implements InventoryHolder {
     /**
      * Sets whether the Gui reopens if the player closes it
      *
-     * @param reopenOnClose if true, the Gui will reopen if the player closes it
+     * @param reopenOnClose if true, the Gui will reopen if the player closes
+     *            it
      */
     public void setReopenOnClose(boolean reopenOnClose) {
         this.reopenOnClose = reopenOnClose;

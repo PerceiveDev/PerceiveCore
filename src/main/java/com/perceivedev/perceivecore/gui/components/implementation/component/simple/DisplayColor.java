@@ -7,12 +7,11 @@ import org.bukkit.Material;
 
 import com.perceivedev.perceivecore.util.ItemFactory;
 
-/**
- * The different colours you can display
- */
+/** The different colours you can display */
 public enum DisplayColor {
 
-    // follows glass + glass panes + + stained clay + wool ids + carpet ids. Dye (INK_SACK) is (15 - dataValue).
+    // follows glass + glass panes + + stained clay + wool ids + carpet ids. Dye
+    // (INK_SACK) is (15 - dataValue).
     WHITE(true, Material.STAINED_GLASS_PANE, 0),
     ORANGE(true, Material.STAINED_GLASS_PANE, 1),
     MAGENTA(true, Material.STAINED_GLASS_PANE, 2),
@@ -33,19 +32,20 @@ public enum DisplayColor {
     CLEAR(false, Material.THIN_GLASS);
 
     private static Set<Material> COLOURABLE = EnumSet.of(Material.STAINED_CLAY,
-              Material.STAINED_GLASS, Material.STAINED_GLASS_PANE,
-              Material.WOOL,
-              Material.INK_SACK,
-              Material.CARPET);
+            Material.STAINED_GLASS, Material.STAINED_GLASS_PANE,
+            Material.WOOL,
+            Material.INK_SACK,
+            Material.CARPET);
 
-    private boolean  isDyeColor;
-    private Material material;
-    private short    dataValue;
+    private boolean              isDyeColor;
+    private Material             material;
+    private short                dataValue;
 
     /**
      * @param isDyeColor Whether this is a dye color
      * @param material A base material that can be coloured with this
-     * @param dataValue The data value. Has the range of a short. This constructor is only for convenience.
+     * @param dataValue The data value. Has the range of a short. This
+     *            constructor is only for convenience.
      */
     DisplayColor(boolean isDyeColor, Material material, int dataValue) {
         this.isDyeColor = isDyeColor;
@@ -63,23 +63,17 @@ public enum DisplayColor {
         this(isDyeColor, material, 0);
     }
 
-    /**
-     * @return whether this is a dye color
-     */
+    /** @return whether this is a dye color */
     public boolean isDyeColor() {
         return isDyeColor;
     }
 
-    /**
-     * @return the material
-     */
+    /** @return the material */
     public Material getMaterial() {
         return material;
     }
 
-    /**
-     * @return the data value
-     */
+    /** @return the data value */
     public short getDataValue() {
         return dataValue;
     }
@@ -102,9 +96,11 @@ public enum DisplayColor {
      *
      * @param type The type of the item you want coloured
      *
-     * @return The {@link ItemFactory}. If {@link #isDyeColor()} is false, it will return the {@link #getBaseItemFactory()}
+     * @return The {@link ItemFactory}. If {@link #isDyeColor()} is false, it
+     *         will return the {@link #getBaseItemFactory()}
      *
-     * @throws IllegalArgumentException If type is not colourable and {@link #isDyeColor()} returns true
+     * @throws IllegalArgumentException If type is not colourable and
+     *             {@link #isDyeColor()} returns true
      */
     public ItemFactory getItemFactory(Material type) {
         if (!isDyeColor()) {

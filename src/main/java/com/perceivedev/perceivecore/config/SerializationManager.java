@@ -29,9 +29,7 @@ import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
 
-/**
- * Manages the serialization
- */
+/** Manages the serialization */
 public class SerializationManager {
 
     private static final int           MAX_DEPTH              = 20;
@@ -242,7 +240,8 @@ public class SerializationManager {
             if (proxy instanceof SimpleSerializationProxy) {
                 data = ((SimpleSerializationProxy) proxy).serializeSimple(object);
             } else {
-                assert proxy != null;   // will be true, checked in startTicker if block 
+                assert proxy != null;   // will be true, checked in startTicker
+                                        // if block
                 data = proxy.serialize(object);
             }
             return data;
@@ -415,9 +414,7 @@ public class SerializationManager {
         throw new IllegalArgumentException("No deserialize method found for type " + type.getName());
     }
 
-    /**
-     * @param section the ConfigurationSection to convert
-     */
+    /** @param section the ConfigurationSection to convert */
     private static Map<String, Object> convertToMap(ConfigurationSection section) {
         if (section == null) {
             return null;

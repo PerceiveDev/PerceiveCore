@@ -261,9 +261,7 @@ public class ItemFactory implements Cloneable {
         return this;
     }
 
-    /**
-     * @see #setSkullOwner(String)
-     */
+    /** @see #setSkullOwner(String) */
     @Nonnull
     public ItemFactory setSkullOwner(@Nonnull OfflinePlayer player) {
         Objects.requireNonNull(player, "player can not be null");
@@ -280,7 +278,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not colourable
+     * @throws IllegalStateException If the {@link ItemStack} is not
+     *             colourable
      */
     @Nonnull
     @SuppressWarnings("deprecation")
@@ -371,9 +370,7 @@ public class ItemFactory implements Cloneable {
         return this;
     }
 
-    /**
-     * @see #setPages(List)
-     */
+    /** @see #setPages(List) */
     @Nonnull
     public ItemFactory setPages(@Nonnull String... pages) {
         Objects.requireNonNull(pages, "pages can not be null");
@@ -499,9 +496,7 @@ public class ItemFactory implements Cloneable {
         return new ItemFactory(new ItemStack(type));
     }
 
-    /**
-     * @return The finished ItemStack.
-     */
+    /** @return The finished ItemStack. */
     @Nonnull
     public ItemStack build() {
         return itemStack.clone();

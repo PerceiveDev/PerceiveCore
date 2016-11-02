@@ -10,11 +10,10 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
 
 /**
- * Adds the ability for {@link SerializationManager} to serialize and deserialize
- * objects of type {@link Vector}
+ * Adds the ability for {@link SerializationManager} to serialize and
+ * deserialize objects of type {@link Vector}
  * 
  * @author Rayzr
- *
  */
 public class VectorSerializer implements SerializationProxy<Vector> {
 

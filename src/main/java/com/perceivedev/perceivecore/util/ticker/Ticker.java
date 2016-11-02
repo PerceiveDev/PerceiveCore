@@ -3,19 +3,13 @@ package com.perceivedev.perceivecore.util.ticker;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Ticks {@link Tickable}s at some interval :)
- */
+/** Ticks {@link Tickable}s at some interval :) */
 public interface Ticker {
 
-    /**
-     * Starts the ticking
-     */
+    /** Starts the ticking */
     Ticker startTicker();
 
-    /**
-     * Stops the ticking
-     */
+    /** Stops the ticking */
     Ticker stopTicker();
 
     /**
@@ -63,14 +57,10 @@ public interface Ticker {
      */
     void removeTickable(Tickable tickable);
 
-    /**
-     * Removes all {@link Tickable}s
-     */
+    /** Removes all {@link Tickable}s */
     void removeAllTickables();
 
-    /**
-     * Represents a class that can be ticked
-     */
+    /** Represents a class that can be ticked */
     @FunctionalInterface
     interface Tickable {
 

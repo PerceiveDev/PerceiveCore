@@ -20,11 +20,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 
-/**
- * Manages the {@link Gui}s
- */
+/** Manages the {@link Gui}s */
 public class GuiManager implements Listener {
-    
+
     /**
      * Opens the first GUI on the stack for the player. After closing that
      * window, the next GUI on the stack will open, etc. until the stack is
@@ -73,7 +71,8 @@ public class GuiManager implements Listener {
      *
      * @param playerID The {@link UUID} of the player
      *
-     * @return True if the Gui was opened, false if an error occurred or it was put back to later open it
+     * @return True if the Gui was opened, false if an error occurred or it was
+     *         put back to later open it
      */
     public boolean openCurrentGui(UUID playerID) {
         return getOrCreatePlayerData(playerID).openNextGui();
@@ -114,9 +113,7 @@ public class GuiManager implements Listener {
         private UUID       playerID;
         private Stack<Gui> guis;
 
-        /**
-         * @param playerID The {@link UUID} of the player
-         */
+        /** @param playerID The {@link UUID} of the player */
         private PlayerGuiData(UUID playerID) {
             this.playerID = playerID;
             this.guis = new Stack<>();
@@ -145,15 +142,14 @@ public class GuiManager implements Listener {
                 InventoryHolder holder = playerOptional.get().getOpenInventory().getTopInventory().getHolder();
 
                 if (gui.equals(holder)) {
-                    // it may be called in the PlayerCloseInventoryEvent, which could introduce bugs without this line
+                    // it may be called in the PlayerCloseInventoryEvent, which
+                    // could introduce bugs without this line
                     runLater(this::closeCurrentInventory);
                 }
             }
         }
 
-        /**
-         * Removes and closes all {@link Gui}s
-         */
+        /** Removes and closes all {@link Gui}s */
         private void removeAllGuis() {
             guis.clear();
             closeOpenedGui();
@@ -243,16 +239,12 @@ public class GuiManager implements Listener {
             }.runTaskLater(PerceiveCore.getInstance(), 2L);
         }
 
-        /**
-         * Closes the currently open Inventory for the player
-         */
+        /** Closes the currently open Inventory for the player */
         private void closeCurrentInventory() {
             getPlayer().ifPresent(Player::closeInventory);
         }
 
-        /**
-         * @return The Player if he is online
-         */
+        /** @return The Player if he is online */
         private Optional<Player> getPlayer() {
             return Optional.ofNullable(Bukkit.getPlayer(playerID));
         }

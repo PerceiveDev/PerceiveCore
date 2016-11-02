@@ -9,9 +9,7 @@ import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.Gui;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A Component
- */
+/** A Component */
 public interface Component {
 
     /**
@@ -62,7 +60,8 @@ public interface Component {
     /**
      * Sets the Gui this Component belongs to
      * <p>
-     * <b><i>You shall not call this method. Ideally it would only be visible inside the package, but being Java this doesn't work</i></b>
+     * <b><i>You shall not call this method. Ideally it would only be visible
+     * inside the package, but being Java this doesn't work</i></b>
      *
      * @param gui The gui
      */
@@ -99,7 +98,8 @@ public interface Component {
     }
 
     /**
-     * Iterates over a 2 dimensional range and passes the results to the consumer
+     * Iterates over a 2 dimensional range and passes the results to the
+     * consumer
      *
      * @param minX The min X (inclusive)
      * @param maxX The max X (exclusive)

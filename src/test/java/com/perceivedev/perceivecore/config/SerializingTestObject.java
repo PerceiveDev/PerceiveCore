@@ -7,33 +7,31 @@ import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-/**
- * A small testobject
- */
+/** A small testobject */
 public class SerializingTestObject implements ConfigSerializable {
 
-    private String testString;
-    private byte   testByte;
-    private short  testShort;
-    private int    testInt;
-    private long   testLong;
-    private float  testFloat;
-    private double testDouble;
+    private String              testString;
+    private byte                testByte;
+    private short               testShort;
+    private int                 testInt;
+    private long                testLong;
+    private float               testFloat;
+    private double              testDouble;
 
-    private transient String transientString;
+    private transient String    transientString;
 
     private Map<Object, Object> testMap;
     private NestedObjectClass   nestedObjectClass;
     private ConfigurationTest   configurationTest;
-    
-    private UUID testUUID;
+
+    private UUID                testUUID;
 
     public SerializingTestObject() {
     }
 
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
-              float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
-              NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID) {
+            float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
+            NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID) {
         this.testString = testString;
         this.testByte = testByte;
         this.testShort = testShort;
@@ -91,7 +89,7 @@ public class SerializingTestObject implements ConfigSerializable {
     public ConfigurationTest getConfigurationTest() {
         return configurationTest;
     }
-    
+
     public UUID getTestUUID() {
         return testUUID;
     }
@@ -109,37 +107,37 @@ public class SerializingTestObject implements ConfigSerializable {
         SerializingTestObject object = (SerializingTestObject) o;
 
         System.out.println("Equal SerializingTestObject: " +
-                  (testByte == object.testByte) + " " +
-                  (testShort == object.testShort) + " " +
-                  (testInt == object.testInt) + " " +
-                  (testLong == object.testLong) + " " +
-                  (Float.compare(object.testFloat, testFloat) == 0) + " " +
-                  (Double.compare(object.testDouble, testDouble) == 0) + " " +
-                  (Objects.equals(testString, object.testString)) + " " +
-                  (Objects.equals(transientString, object.transientString)) + " " +
-                  (Objects.equals(testMap, object.testMap)) + " " +
-                  (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
-                  (Objects.equals(configurationTest, object.configurationTest)) + " " +
-                  (Objects.equals(testUUID, object.testUUID)));
+                (testByte == object.testByte) + " " +
+                (testShort == object.testShort) + " " +
+                (testInt == object.testInt) + " " +
+                (testLong == object.testLong) + " " +
+                (Float.compare(object.testFloat, testFloat) == 0) + " " +
+                (Double.compare(object.testDouble, testDouble) == 0) + " " +
+                (Objects.equals(testString, object.testString)) + " " +
+                (Objects.equals(transientString, object.transientString)) + " " +
+                (Objects.equals(testMap, object.testMap)) + " " +
+                (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
+                (Objects.equals(configurationTest, object.configurationTest)) + " " +
+                (Objects.equals(testUUID, object.testUUID)));
 
         return testByte == object.testByte &&
-                  testShort == object.testShort &&
-                  testInt == object.testInt &&
-                  testLong == object.testLong &&
-                  Float.compare(object.testFloat, testFloat) == 0 &&
-                  Double.compare(object.testDouble, testDouble) == 0 &&
-                  Objects.equals(testString, object.testString) &&
-                  Objects.equals(transientString, object.transientString) &&
-                  Objects.equals(testMap, object.testMap) &&
-                  Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
-                  Objects.equals(configurationTest, object.configurationTest) &&
-                  Objects.equals(testUUID, object.testUUID);
+                testShort == object.testShort &&
+                testInt == object.testInt &&
+                testLong == object.testLong &&
+                Float.compare(object.testFloat, testFloat) == 0 &&
+                Double.compare(object.testDouble, testDouble) == 0 &&
+                Objects.equals(testString, object.testString) &&
+                Objects.equals(transientString, object.transientString) &&
+                Objects.equals(testMap, object.testMap) &&
+                Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
+                Objects.equals(configurationTest, object.configurationTest) &&
+                Objects.equals(testUUID, object.testUUID);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString,
-                  testMap, nestedObjectClass, configurationTest);
+                testMap, nestedObjectClass, configurationTest);
     }
 
     public static class NestedObjectClass implements ConfigSerializable {
@@ -210,7 +208,7 @@ public class SerializingTestObject implements ConfigSerializable {
                 return false;
             ConfigurationTest that = (ConfigurationTest) o;
             return age == that.age &&
-                      Objects.equals(name, that.name);
+                    Objects.equals(name, that.name);
         }
 
         @Override

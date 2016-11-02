@@ -7,10 +7,7 @@ import java.lang.reflect.Field;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
-/**
- * @author Rayzr
- *
- */
+/** @author Rayzr */
 public class ReflectedField {
 
     protected Object instance;
@@ -25,16 +22,12 @@ public class ReflectedField {
         this.field = field;
     }
 
-    /**
-     * @return the instance
-     */
+    /** @return the instance */
     public Object getInstance() {
         return instance;
     }
 
-    /**
-     * @return the field
-     */
+    /** @return the field */
     public Field getField() {
         return field;
     }

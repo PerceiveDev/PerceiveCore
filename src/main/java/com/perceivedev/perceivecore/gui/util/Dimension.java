@@ -4,14 +4,12 @@ import java.util.Objects;
 
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 
-/**
- * The dimension of a {@link Component}
- */
+/** The dimension of a {@link Component} */
 public class Dimension implements Cloneable {
 
     public static final Dimension ONE = new Dimension(1, 1);
 
-    private int width, height;
+    private int                   width, height;
 
     /**
      * @param width The width

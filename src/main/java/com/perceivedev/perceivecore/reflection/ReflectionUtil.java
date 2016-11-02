@@ -23,15 +23,13 @@ import org.bukkit.entity.Player;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
-/**
- * Provides utility methods for reflection
- */
+/** Provides utility methods for reflection */
 @SuppressWarnings({ "WeakerAccess", "unused" })
 public class ReflectionUtil {
 
     private static final String SERVER_VERSION;
 
-    //<editor-fold desc="INIT">
+    // <editor-fold desc="INIT">
     // ==== INIT SERVER VERSION ====
 
     static {
@@ -41,9 +39,9 @@ public class ReflectionUtil {
 
         SERVER_VERSION = name;
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Version Validation Methods">
+    // <editor-fold desc="Version Validation Methods">
     // ==== VERSION VALIDATION METHODS ===
 
     /**
@@ -91,9 +89,9 @@ public class ReflectionUtil {
         }
         return Integer.parseInt(splitted[2]);
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Class Search Functions">
+    // <editor-fold desc="Class Search Functions">
     // ==== CLASS SEARCH FUNCTIONS ====
 
     /**
@@ -101,7 +99,7 @@ public class ReflectionUtil {
      *
      * @param nameSpace The {@link NameSpace} of the class
      * @param qualifiedName The qualified name of the class inside the
-     * {@link NameSpace}
+     *            {@link NameSpace}
      *
      * @return The Class, if found
      *
@@ -119,14 +117,14 @@ public class ReflectionUtil {
      * Returns the class with the given name in the given package
      *
      * @param nameWithIdentifier The qualified name of the class inside the
-     * {@link NameSpace}, prefixed with the {@link NameSpace}
-     * identifier.
+     *            {@link NameSpace}, prefixed with the {@link NameSpace}
+     *            identifier.
      *
      * @return The Class, if found
      *
      * @throws NullPointerException if nameWithIdentifier is null
      * @see #getClass(NameSpace, String) #getClass(NameSpace, String) with the
-     * resolved NameSpace and name
+     *      resolved NameSpace and name
      */
     public static Optional<Class<?>> getClass(String nameWithIdentifier) {
         Objects.requireNonNull(nameWithIdentifier, "nameWithIdentifier can not be null");
@@ -168,7 +166,7 @@ public class ReflectionUtil {
         return getClass(className);
     }
 
-    // TODO: 30.10.2016 Needed? @Rayzr? Can it be generalised? 
+    // TODO: 30.10.2016 Needed? @Rayzr? Can it be generalised?
 
     /**
      * Gets a Wrapper for a {@link Player}
@@ -201,9 +199,9 @@ public class ReflectionUtil {
         }
         return Optional.empty();
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Fields">
+    // <editor-fold desc="Fields">
     // ==== FIELDS ====
 
     /**
@@ -236,7 +234,7 @@ public class ReflectionUtil {
      * @param predicate The Predicate to use to filter the fields
      *
      * @return The fields of the class. No {@link ReflectResponse}, as the only
-     * error that can occur is a SecurityException.
+     *         error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -256,8 +254,7 @@ public class ReflectionUtil {
      */
     private static Stream<Field> getFields(Class<?> clazz) {
         return Stream.concat(
-                  Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields())
-        ).distinct();
+                Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields())).distinct();
     }
 
     /**
@@ -336,7 +333,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if field is null
      */
@@ -364,7 +361,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if clazz or selector is null
      * @see #setFieldValue(Field, Object, Object)
@@ -390,7 +387,7 @@ public class ReflectionUtil {
      * @param value The value to set it to
      *
      * @return The result if setting it. Will just be SUCCESSFUL but not have a
-     * value.
+     *         value.
      *
      * @throws NullPointerException if clazz or selector is null
      * @see #setFieldValue(Field, Object, Object)
@@ -401,9 +398,9 @@ public class ReflectionUtil {
 
         return setFieldValue(clazz, new MemberPredicate<Field>().withName(selector), handle, value);
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Methods">
+    // <editor-fold desc="Methods">
     // ==== METHODS ====
 
     /**
@@ -507,7 +504,7 @@ public class ReflectionUtil {
      * @param handle The class to get the method from
      * @param name The name of the method.
      * @param parameterClasses The classes of the parameters. Empty array for
-     * none, {@code null} is <b>NOT</b> permitted.
+     *            none, {@code null} is <b>NOT</b> permitted.
      * @param params The parameters of the method
      *
      * @return The result of invoking the method.
@@ -532,7 +529,7 @@ public class ReflectionUtil {
      * @param predicate The predicate to use to filter
      *
      * @return All the methods in the class. No {@link ReflectResponse}, as the
-     * only error that can occur is a SecurityException.
+     *         only error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -553,9 +550,9 @@ public class ReflectionUtil {
     private static Stream<Method> getMethods(Class<?> clazz) {
         return Stream.concat(Arrays.stream(clazz.getMethods()), Arrays.stream(clazz.getDeclaredMethods())).distinct();
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Constructor">
+    // <editor-fold desc="Constructor">
     // ==== CONSTRUCTORS ====
 
     /**
@@ -658,7 +655,7 @@ public class ReflectionUtil {
      * @param predicate The predicate to use to filter
      *
      * @return All the constructors in the class. No {@link ReflectResponse}, as
-     * the only error that can occur is a SecurityException.
+     *         the only error that can occur is a SecurityException.
      *
      * @throws NullPointerException if any parameter is null
      */
@@ -679,9 +676,9 @@ public class ReflectionUtil {
     private static Stream<Constructor<?>> getAllConstructors(Class<?> clazz) {
         return Stream.concat(Arrays.stream(clazz.getConstructors()), Arrays.stream(clazz.getDeclaredConstructors())).distinct();
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Enums">
+    // <editor-fold desc="Enums">
     // ==== ENUMS ====
 
     /**
@@ -726,24 +723,18 @@ public class ReflectionUtil {
     public static ReflectResponse<Enum<?>> getEnumConstant(Class<?> clazz, String name) {
         return getEnumConstant(clazz, anEnum -> anEnum.name().equals(name));
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Utility Classes">
+    // <editor-fold desc="Utility Classes">
     // ==== UTILITY CLASSES ====
 
-    //<editor-fold desc="NameSpace">
+    // <editor-fold desc="NameSpace">
 
-    /**
-     * The namespaces
-     */
+    /** The namespaces */
     public enum NameSpace {
-        /**
-         * The {@code net.minecraft.server} namespace
-         */
+        /** The {@code net.minecraft.server} namespace */
         NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
-        /**
-         * The {@code org.bukkit.craftbukkit} namespace
-         */
+        /** The {@code org.bukkit.craftbukkit} namespace */
         OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
 
         private Pattern                  detectionPattern;
@@ -802,7 +793,7 @@ public class ReflectionUtil {
          * Returns the {@link NameSpace} which contains the identifier
          *
          * @param input The input string, containing the identifier (and what
-         * else it wants)
+         *            else it wants)
          *
          * @return The NameSpace which has this identifier
          */
@@ -815,9 +806,9 @@ public class ReflectionUtil {
             return Optional.empty();
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="ReflectResponse">
+    // <editor-fold desc="ReflectResponse">
 
     /**
      * The response to a reflective Operation.
@@ -896,7 +887,7 @@ public class ReflectionUtil {
          * Returns the thrown exception
          *
          * @return The exception. Only set if {@link #getResultType()} is
-         * {@link ResultType#ERROR}
+         *         {@link ResultType#ERROR}
          */
         public Throwable getException() {
             return exception;
@@ -925,28 +916,20 @@ public class ReflectionUtil {
             return "ReflectResponse{" + "=" + get() + ", successful=" + isSuccessful() + ", valuePresent=" + isValuePresent() + '}';
         }
 
-        /**
-         * The result of the operation
-         */
+        /** The result of the operation */
         public enum ResultType {
-            /**
-             * All went well
-             */
+            /** All went well */
             SUCCESSFUL,
-            /**
-             * If the method/field was not found
-             */
+            /** If the method/field was not found */
             NOT_FOUND,
-            /**
-             * An error occurred
-             */
+            /** An error occurred */
             ERROR
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Predicates">
-    //<editor-fold desc="Member Predicate">
+    // <editor-fold desc="Predicates">
+    // <editor-fold desc="Member Predicate">
 
     /**
      * A member predicate
@@ -955,16 +938,16 @@ public class ReflectionUtil {
      */
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
-        private String name;
+        private String               name;
         private Collection<Modifier> modifiers       = Collections.emptyList();
         private Collection<Modifier> withoutModifier = Collections.emptyList();
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param withoutModifier The modifiers it must not have. Empty list for
-         * don't check
+         *            don't check
          */
         public MemberPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier) {
             this.name = name;
@@ -972,9 +955,7 @@ public class ReflectionUtil {
             this.withoutModifier = withoutModifier;
         }
 
-        /**
-         * Accepts anything
-         */
+        /** Accepts anything */
         public MemberPredicate() {
 
         }
@@ -1033,7 +1014,7 @@ public class ReflectionUtil {
          * Sets the name of the method
          *
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          *
          * @return This predicate
          */
@@ -1060,23 +1041,21 @@ public class ReflectionUtil {
             return true;
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Field Predicate">
+    // <editor-fold desc="Field Predicate">
 
-    /**
-     * A predicate for {@link Field}s
-     */
+    /** A predicate for {@link Field}s */
     public static class FieldPredicate extends MemberPredicate<Field> {
 
         private Class<?> type;
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param withoutModifier The modifiers it must not have. Empty list for
-         * don't check
+         *            don't check
          * @param type The type of the Field. Null for don't check
          */
         public FieldPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?> type) {
@@ -1084,9 +1063,7 @@ public class ReflectionUtil {
             this.type = type;
         }
 
-        /**
-         * @param type The class of the type
-         */
+        /** @param type The class of the type */
         public FieldPredicate(Class<?> type) {
             super();
             this.type = type;
@@ -1106,7 +1083,7 @@ public class ReflectionUtil {
             return this;
         }
 
-        //<editor-fold desc="Overwritten methods to change return type">
+        // <editor-fold desc="Overwritten methods to change return type">
         @Override
         public FieldPredicate withName(String name) {
             return (FieldPredicate) super.withName(name);
@@ -1131,7 +1108,7 @@ public class ReflectionUtil {
         public FieldPredicate withoutModifiers(Modifier... modifiers) {
             return (FieldPredicate) super.withoutModifiers(modifiers);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         @Override
         public boolean test(Member member) {
@@ -1143,9 +1120,9 @@ public class ReflectionUtil {
             return type == null || field.getType() == type;
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="ExecutablePredicate">
+    // <editor-fold desc="ExecutablePredicate">
 
     /**
      * A {@link Predicate} for an {@link Executable}
@@ -1158,10 +1135,10 @@ public class ReflectionUtil {
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param withoutModifier The modifiers it must not have. Empty list for
-         * don't check
+         *            don't check
          * @param parameters The parameters. Null for don't check
          */
         public ExecutablePredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?>[] parameters) {
@@ -1169,9 +1146,7 @@ public class ReflectionUtil {
             this.parameters = parameters;
         }
 
-        /**
-         * An empty one. Just returns true.
-         */
+        /** An empty one. Just returns true. */
         public ExecutablePredicate() {
             super();
         }
@@ -1188,7 +1163,7 @@ public class ReflectionUtil {
             return this;
         }
 
-        //<editor-fold desc="Overwritten methods to change Return type">
+        // <editor-fold desc="Overwritten methods to change Return type">
         // there must be a nicer way!
         @Override
         public ExecutablePredicate<T> withModifiers(Collection<Modifier> modifiers) {
@@ -1214,7 +1189,7 @@ public class ReflectionUtil {
         public ExecutablePredicate<T> withName(String name) {
             return (ExecutablePredicate<T>) super.withName(name);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         @Override
         public boolean test(Member member) {
@@ -1231,23 +1206,21 @@ public class ReflectionUtil {
             return true;
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Method Predicate">
+    // <editor-fold desc="Method Predicate">
 
-    /**
-     * A Predicate for a method
-     */
+    /** A Predicate for a method */
     public static class MethodPredicate extends ExecutablePredicate<Method> {
 
         private Class<?> returnType;
 
         /**
          * @param name The name of the method. Null for don't check. Is a
-         * <b>RegEx</b>
+         *            <b>RegEx</b>
          * @param modifiers The modifiers. Empty list for don't check
          * @param withoutModifier The modifiers it must not have. Empty list for
-         * don't check
+         *            don't check
          * @param parameters The parameters. Null for don't check
          * @param returnType The return type. Null for don't check
          */
@@ -1256,9 +1229,7 @@ public class ReflectionUtil {
             this.returnType = returnType;
         }
 
-        /**
-         * An empty one. Just returns true.
-         */
+        /** An empty one. Just returns true. */
         public MethodPredicate() {
             super();
         }
@@ -1275,7 +1246,7 @@ public class ReflectionUtil {
             return this;
         }
 
-        //<editor-fold desc="Overwritten methods to change return type">
+        // <editor-fold desc="Overwritten methods to change return type">
         // there must be a nicer way!
         @Override
         public MethodPredicate withParameters(Class<?>... parameters) {
@@ -1306,7 +1277,7 @@ public class ReflectionUtil {
         public MethodPredicate withName(String name) {
             return (MethodPredicate) super.withName(name);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         @Override
         public boolean test(Member member) {
@@ -1317,14 +1288,12 @@ public class ReflectionUtil {
             return returnType == null || returnType.equals(method.getReturnType());
         }
     }
-    //</editor-fold>
-    //</editor-fold>
+    // </editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Modifier">
+    // <editor-fold desc="Modifier">
 
-    /**
-     * The possible modifiers
-     */
+    /** The possible modifiers */
     public enum Modifier {
         PUBLIC(1),
         PRIVATE(2),
@@ -1341,9 +1310,7 @@ public class ReflectionUtil {
 
         private int bitMask;
 
-        /**
-         * @param bitMask The bitmask of the modifier
-         */
+        /** @param bitMask The bitmask of the modifier */
         Modifier(int bitMask) {
             this.bitMask = bitMask;
         }
@@ -1364,6 +1331,6 @@ public class ReflectionUtil {
             return "Modifier{" + "bitMask=" + bitMask + '}';
         }
     }
-    //</editor-fold>
-    //</editor-fold>
+    // </editor-fold>
+    // </editor-fold>
 }

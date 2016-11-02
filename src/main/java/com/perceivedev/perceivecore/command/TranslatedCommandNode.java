@@ -19,15 +19,17 @@ import com.perceivedev.perceivecore.language.MessageProvider;
  */
 public abstract class TranslatedCommandNode extends AbstractCommandNode {
 
-    private String keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
+    private String          keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
     private MessageProvider messageProvider;
 
     /**
-     * <b>Some language keys are needed. Look at the {@link TranslatedCommandNode} javadoc</b>
+     * <b>Some language keys are needed. Look at the
+     * {@link TranslatedCommandNode} javadoc</b>
      *
      * @param permission The Permission
      * @param keywordKey The key in the language file for the keyword
-     * @param keywordRegExKey The key in the language file for the regex to match the keyword
+     * @param keywordRegExKey The key in the language file for the regex to
+     *            match the keyword
      * @param usageKey The key in the language file for the usage
      * @param descriptionKey The key in the language file for the description
      * @param nameKey The key in the language file for the name
@@ -35,8 +37,8 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
      * @param acceptedSenders The accepted sender types
      */
     public TranslatedCommandNode(Permission permission, String keywordKey, String keywordRegExKey, String usageKey, String descriptionKey,
-              String nameKey,
-              MessageProvider messageProvider, CommandSenderType... acceptedSenders) {
+            String nameKey,
+            MessageProvider messageProvider, CommandSenderType... acceptedSenders) {
         super(permission, acceptedSenders);
 
         this.keywordKey = keywordKey;
@@ -47,17 +49,19 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
     }
 
     /**
-     * <b>Some language keys are needed. Look at the {@link TranslatedCommandNode} javadoc</b>
+     * <b>Some language keys are needed. Look at the
+     * {@link TranslatedCommandNode} javadoc</b>
      *
      * @param permission The Permission
      * @param baseKey The base key.
      * @param messageProvider The {@link MessageProvider}
      * @param acceptedSenders The accepted sender types
      *
-     * @see #TranslatedCommandNode(Permission, String, String, String, String, String, MessageProvider, CommandSenderType...)
+     * @see #TranslatedCommandNode(Permission, String, String, String, String,
+     *      String, MessageProvider, CommandSenderType...)
      */
     public TranslatedCommandNode(Permission permission, String baseKey, MessageProvider messageProvider,
-              CommandSenderType... acceptedSenders) {
+            CommandSenderType... acceptedSenders) {
         super(permission, acceptedSenders);
         this.messageProvider = messageProvider;
 

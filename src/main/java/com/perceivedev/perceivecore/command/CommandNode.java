@@ -6,14 +6,10 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
-/**
- * A command
- */
+/** A command */
 public interface CommandNode {
 
-    /**
-     * Returns the children of this command
-     */
+    /** Returns the children of this command */
     List<CommandNode> getChildren();
 
     /**
@@ -87,12 +83,8 @@ public interface CommandNode {
      * @return True if this is the keyword of this command
      */
     boolean isYourKeyword(String string);
-    
-    /* **********************************************************************************
-     *
-     *                                      Cosmetic
-     *
-     ************************************************************************************/
+
+    // -------------------- Cosmetic -------------------- //
 
     /**
      * Returns the command usage

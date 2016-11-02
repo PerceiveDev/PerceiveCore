@@ -14,16 +14,14 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ListUtils;
 import com.perceivedev.perceivecore.util.TextUtils;
 
-/**
- * @author Rayzr
- */
+/** @author Rayzr */
 public class SimpleLabel extends AbstractComponent {
 
-    private   DisplayType  displayType;
+    private DisplayType    displayType;
     protected DisplayColor color;
 
     protected String       name = "Label";
-    private   List<String> lore = Collections.emptyList();
+    private List<String>   lore = Collections.emptyList();
 
     public SimpleLabel(Dimension size, DisplayType type, DisplayColor color, String name, String... lore) {
         super(size);
@@ -53,9 +51,7 @@ public class SimpleLabel extends AbstractComponent {
         this(Dimension.ONE, DisplayColor.WHITE, name, lore);
     }
 
-    /**
-     * @return the name
-     */
+    /** @return the name */
     public String getName() {
         return name;
     }
@@ -69,9 +65,7 @@ public class SimpleLabel extends AbstractComponent {
         this.name = TextUtils.colorize(name);
     }
 
-    /**
-     * @return the lore
-     */
+    /** @return the lore */
     public List<String> getLore() {
         return lore;
     }
@@ -94,9 +88,7 @@ public class SimpleLabel extends AbstractComponent {
         setLore(Arrays.asList(lore));
     }
 
-    /**
-     * @return the displayType
-     */
+    /** @return the displayType */
     public DisplayType getDisplayType() {
         return displayType;
     }
@@ -119,9 +111,7 @@ public class SimpleLabel extends AbstractComponent {
         return color;
     }
 
-    /**
-     * @param color the color to set
-     */
+    /** @param color the color to set */
     public void setColor(DisplayColor color) {
         this.color = color;
     }
@@ -133,10 +123,10 @@ public class SimpleLabel extends AbstractComponent {
             if (slot < 0 || slot >= inventory.getSize()) {
                 // can't happen *normally*
                 System.err.println("Button: An item was placed outside the inventory size. Size: " + inventory.getSize()
-                          + " Slot: " + slot);
+                        + " Slot: " + slot);
             } else {
                 inventory.setItem(slot,
-                          displayType.getColouredItem(color).setName(name).setLore(lore).build());
+                        displayType.getColouredItem(color).setName(name).setLore(lore).build());
             }
         });
     }

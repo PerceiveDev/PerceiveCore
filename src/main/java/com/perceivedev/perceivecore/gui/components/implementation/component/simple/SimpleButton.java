@@ -6,19 +6,13 @@ import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * @author Rayzr
- */
+/** @author Rayzr */
 public class SimpleButton extends SimpleLabel {
 
-    /**
-     * The code to run when the button is clicked
-     */
+    /** The code to run when the button is clicked */
     private Consumer<ClickEvent> clickHandler;
 
-    /**
-     * Whether or not to close the inventory when the button is clicked
-     */
+    /** Whether or not to close the inventory when the button is clicked */
     private boolean              closeOnClick = false;
 
     public SimpleButton(Dimension size, DisplayType type, DisplayColor color, String name,
@@ -44,9 +38,7 @@ public class SimpleButton extends SimpleLabel {
         this("Button", clickHandler);
     }
 
-    /**
-     * @return the clickHandler
-     */
+    /** @return the clickHandler */
     public Consumer<ClickEvent> getClickHandler() {
         return clickHandler;
     }
@@ -79,9 +71,7 @@ public class SimpleButton extends SimpleLabel {
         }
     }
 
-    /**
-     * @return Whether or not to {@link #closeOnClick}
-     */
+    /** @return Whether or not to {@link #closeOnClick} */
     public boolean isCloseOnClick() {
         return closeOnClick;
     }

@@ -7,33 +7,24 @@ import java.lang.reflect.Method;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
-/**
- * @author Rayzr
- *
- */
+/** @author Rayzr */
 public class ReflectedMethod {
 
     protected Method method;
     protected Object instance;
 
-    /**
-     * @param method
-     */
+    /** @param method */
     protected ReflectedMethod(Object instance, Method method) {
         this.instance = instance;
         this.method = method;
     }
 
-    /**
-     * @return the method
-     */
+    /** @return the method */
     public Method getMethod() {
         return method;
     }
 
-    /**
-     * @return the instance
-     */
+    /** @return the instance */
     public Object getInstance() {
         return instance;
     }

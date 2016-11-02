@@ -4,18 +4,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * A Thread that ticks!
- */
+/** A Thread that ticks! */
 class TickerThread extends AbstractTicker {
 
-    private Thread ticker;
+    private Thread                 ticker;
     private volatile AtomicBoolean started  = new AtomicBoolean(false);
     private volatile AtomicLong    lastTick = new AtomicLong(System.nanoTime());
 
-    /**
-     * @param sleepMillis the time to sleep
-     */
+    /** @param sleepMillis the time to sleep */
     TickerThread(long sleepMillis) {
         super(TimeUnit.MILLISECONDS.toNanos(sleepMillis));
     }

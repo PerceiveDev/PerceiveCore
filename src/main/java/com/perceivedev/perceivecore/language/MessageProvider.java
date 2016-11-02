@@ -7,9 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.bukkit.ChatColor;
 
-/**
- * Provides translations
- */
+/** Provides translations */
 public interface MessageProvider {
 
     /**
@@ -28,7 +26,7 @@ public interface MessageProvider {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(category, "category can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
-        
+
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, category, formattingObjects));
     }
 
@@ -41,13 +39,13 @@ public interface MessageProvider {
      * @return The translated, colored String
      *
      * @see #tr(String, String, Object...) #tr(String, String, Object...) with
-     * the default category
+     *      the default category
      */
     @Nonnull
     default String tr(@Nonnull String key, @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
-        
+
         return ChatColor.translateAlternateColorCodes('&', trUncolored(key, formattingObjects));
     }
 
@@ -73,14 +71,15 @@ public interface MessageProvider {
      *
      * @return The translated String
      *
-     * @see #trOrDefault(String, String, String, Object...) #trOrDefault(String, String, String, Object...) with the #getDefaultCategory()
+     * @see #trOrDefault(String, String, String, Object...) #trOrDefault(String,
+     *      String, String, Object...) with the #getDefaultCategory()
      */
     @Nonnull
     default String trOrDefault(@Nonnull String key, @Nonnull String defaultString, @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(defaultString, "defaultString can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
-        
+
         return trOrDefault(key, getDefaultCategory(), defaultString, formattingObjects);
     }
 
@@ -105,13 +104,13 @@ public interface MessageProvider {
      * @return The translated, uncolored String
      *
      * @see #trUncolored(String, String, Object...) #trUncolored(String, String,
-     * Object...) with the default category
+     *      Object...) with the default category
      */
     @Nonnull
     default String trUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
-        
+
         return trUncolored(key, getDefaultCategory(), formattingObjects);
     }
 

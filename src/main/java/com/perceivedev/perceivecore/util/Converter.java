@@ -3,10 +3,7 @@
  */
 package com.perceivedev.perceivecore.util;
 
-/**
- * @author Rayzr
- *
- */
+/** @author Rayzr */
 public interface Converter<A, B> {
 
     B convert(A input);

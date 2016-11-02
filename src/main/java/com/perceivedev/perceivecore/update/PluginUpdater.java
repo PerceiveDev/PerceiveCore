@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PluginUpdater {
 
     private JavaPlugin plugin;
-    private Updater updater;
+    private Updater    updater;
 
     /**
      * Constructor for a SpigotMC plugin.
@@ -22,7 +22,7 @@ public class PluginUpdater {
      */
     public PluginUpdater(JavaPlugin plugin, long resourceId) {
         this.plugin = plugin;
-        //this.updater = new SpigetUpdater();
+        // this.updater = new SpigetUpdater();
     }
 
     /**
@@ -44,9 +44,7 @@ public class PluginUpdater {
         return updater.updateAvailable();
     }
 
-    /**
-     * Updates the plugin and sends response/output to Console only.
-     */
+    /** Updates the plugin and sends response/output to Console only. */
     public void update() {
         updater.update(updater.getLatestVersion(), Bukkit.getConsoleSender());
     }
@@ -54,7 +52,8 @@ public class PluginUpdater {
     /**
      * Updates the plugin and sends response/output to all senders
      *
-     * @param senders Each ({@link CommandSender}) you want to send the output to
+     * @param senders Each ({@link CommandSender}) you want to send the output
+     *            to
      */
     public void update(CommandSender... senders) {
         updater.update(updater.getLatestVersion(), senders);

@@ -14,8 +14,8 @@ import com.perceivedev.perceivecore.config.SerializationProxy;
 import com.perceivedev.perceivecore.util.Pair;
 
 /**
- * Adds the ability for {@link SerializationManager} to serialize and deserialize
- * objects of type {@link Map}
+ * Adds the ability for {@link SerializationManager} to serialize and
+ * deserialize objects of type {@link Map}
  */
 @SuppressWarnings("rawtypes")
 public class MapSerializer implements SerializationProxy<Map> {
@@ -46,13 +46,11 @@ public class MapSerializer implements SerializationProxy<Map> {
         List<Map<String, Object>> pairs = new ArrayList<>(inputMap.size());
 
         pairs.addAll(entrySet.stream()
-                  .map(entry -> new Pair<>(
-                            entry.getKey(),
-                            entry.getValue())
-                  )
-                  .map(Pair::serialize)
-                  .collect(Collectors.toList())
-        );
+                .map(entry -> new Pair<>(
+                        entry.getKey(),
+                        entry.getValue()))
+                .map(Pair::serialize)
+                .collect(Collectors.toList()));
 
         output.put("pairs", pairs);
         return output;

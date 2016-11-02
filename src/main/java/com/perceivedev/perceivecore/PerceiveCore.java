@@ -11,10 +11,10 @@ import com.perceivedev.perceivecore.other.DisableManager;
 public class PerceiveCore extends JavaPlugin {
     private static PerceiveCore instance;
 
-    private Logger logger;
+    private Logger              logger;
 
-    private GuiManager     guiManager;
-    private DisableManager disableManager;
+    private GuiManager          guiManager;
+    private DisableManager      disableManager;
 
     @Override
     public void onEnable() {
@@ -41,16 +41,12 @@ public class PerceiveCore extends JavaPlugin {
         return getName() + " v" + getDescription().getVersion();
     }
 
-    /**
-     * @return The {@link DisableManager}
-     */
+    /** @return The {@link DisableManager} */
     public DisableManager getDisableManager() {
         return disableManager;
     }
 
-    /**
-     * @return The {@link GuiManager}
-     */
+    /** @return The {@link GuiManager} */
     public GuiManager getGuiManager() {
         return guiManager;
     }

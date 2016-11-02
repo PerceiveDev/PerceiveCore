@@ -129,7 +129,8 @@ public class TileEntityNBTUtil {
     }
 
     /**
-     * Appends the {@link NBTTagCompound} to the Nbt tag of a {@link BlockState}
+     * Appends the {@link NBTTagCompound} to the Nbt tag of a
+     * {@link BlockState}
      * .
      * <p>
      * Changes will appear.
@@ -185,7 +186,8 @@ public class TileEntityNBTUtil {
     /**
      * @param state The {@link BlockState} to check. Non null.
      *
-     * @throws IllegalArgumentException If the state doesn't have a TileEntity
+     * @throws IllegalArgumentException If the state doesn't have a
+     *             TileEntity
      */
     private static void ensureCorrectClass(BlockState state) {
         if (!isValidClass(state)) {
@@ -193,9 +195,7 @@ public class TileEntityNBTUtil {
         }
     }
 
-    /**
-     * @throws IllegalStateException If {@link #error} is true
-     */
+    /** @throws IllegalStateException If {@link #error} is true */
     private static void ensureNoError() {
         if (error) {
             throw new IllegalStateException("A critical, non recoverable error occurred earlier.");

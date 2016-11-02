@@ -10,9 +10,7 @@ import org.bukkit.entity.Player;
 import com.perceivedev.perceivecore.packet.Packet;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 
-/**
- * @author Rayzr
- */
+/** @author Rayzr */
 public class PlayerWrapper extends ReflectedClass<Player> {
 
     private static Method GET_HANDLE_METHOD;

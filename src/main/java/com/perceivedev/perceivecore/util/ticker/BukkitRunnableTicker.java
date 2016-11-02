@@ -4,12 +4,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * Uses a BukkitRunnable to tick
- */
+/** Uses a BukkitRunnable to tick */
 abstract class BukkitRunnableTicker extends AbstractTicker {
 
-    BukkitRunnable runnable;
+    BukkitRunnable  runnable;
     private long    lastTick = System.nanoTime();
     private boolean started  = false;
 

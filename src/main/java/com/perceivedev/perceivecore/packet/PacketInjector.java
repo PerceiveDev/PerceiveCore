@@ -19,14 +19,12 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
-/**
- * A simple packet injector, to modify the packets sent and received
- */
+/** A simple packet injector, to modify the packets sent and received */
 class PacketInjector extends ChannelDuplexHandler {
 
-    private boolean isClosed;
-    private Channel channel;
-    private List<PacketListener> packetListeners = new ArrayList<>();
+    private boolean               isClosed;
+    private Channel               channel;
+    private List<PacketListener>  packetListeners = new ArrayList<>();
     private WeakReference<Player> playerWeakReference;
 
     /**
@@ -46,7 +44,8 @@ class PacketInjector extends ChannelDuplexHandler {
      */
     private void attach(Player player) {
 
-        // Lengthy way of doing: ( (CraftPlayer) handle ).getHandle().playerConnection.networkManager.channel
+        // Lengthy way of doing: ( (CraftPlayer) handle
+        // ).getHandle().playerConnection.networkManager.channel
 
         ReflectResponse<Object> playerConnectionResponse = $(player).getHandle().getField("playerConnection").get();
         if (!playerConnectionResponse.isValuePresent()) {
@@ -75,9 +74,7 @@ class PacketInjector extends ChannelDuplexHandler {
         channel.pipeline().addBefore("packet_handler", "perceiveHandler", this);
     }
 
-    /**
-     * Removes this handler
-     */
+    /** Removes this handler */
     void detach() {
         if (isClosed || !channel.isOpen()) {
             return;
@@ -85,7 +82,8 @@ class PacketInjector extends ChannelDuplexHandler {
         isClosed = true;
         channel.eventLoop().submit(() -> channel.pipeline().remove(this));
 
-        // clear references. Probably not needed, but I am not sure about the channel.
+        // clear references. Probably not needed, but I am not sure about the
+        // channel.
         playerWeakReference.clear();
         packetListeners.clear();
         channel = null;
@@ -142,7 +140,7 @@ class PacketInjector extends ChannelDuplexHandler {
                 packetListener.onPacketSend(event);
             } catch (Exception e) {
                 PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                          "Error in a Packet Listener (send). This is not the fault of PerceiveCore!", e);
+                        "Error in a Packet Listener (send). This is not the fault of PerceiveCore!", e);
             }
         }
 
@@ -161,7 +159,7 @@ class PacketInjector extends ChannelDuplexHandler {
                 packetListener.onPacketReceived(event);
             } catch (Exception e) {
                 PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                          "Error in a Packet Listener (receive). This is not the fault of PerceiveCore!", e);
+                        "Error in a Packet Listener (receive). This is not the fault of PerceiveCore!", e);
             }
         }
 

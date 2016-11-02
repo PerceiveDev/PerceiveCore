@@ -19,13 +19,11 @@ import com.perceivedev.perceivecore.gui.components.base.component.AbstractCompon
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/**
- * A Skeleton implementation for the {@link Pane} class
- */
+/** A Skeleton implementation for the {@link Pane} class */
 public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     protected List<Component> components;
-    private   InventoryMap    inventoryMap;
+    private InventoryMap      inventoryMap;
 
     /**
      * Creates a pane with the given components
@@ -38,7 +36,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * @param inventoryMap The {@link InventoryMap} to use
      *
      * @throws NullPointerException if any parameter is null
-     * @throws IllegalArgumentException if the size of the InventoryMap is different than the size of this Pane
+     * @throws IllegalArgumentException if the size of the InventoryMap is
+     *             different than the size of this Pane
      */
     public AbstractPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
         super(new Dimension(width, height));
@@ -108,9 +107,12 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * <p>
      * <b><i>Must update the {@link #getInventoryMap()} itself.</i></b>
      * <p>
-     * <b>You should call upon successful add {@link #updateComponentHierarchy(Component)} or perform the tasks yourself</b>
+     * <b>You should call upon successful add
+     * {@link #updateComponentHierarchy(Component)} or perform the tasks
+     * yourself</b>
      *
-     * @param component The component to add. You can't add the same component twice.
+     * @param component The component to add. You can't add the same component
+     *            twice.
      *
      * @return True if the component was added
      */
@@ -154,7 +156,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return false;
         }
 
-        // TODO: 29.10.2016 Continue here! Currently re-renders the Whole Gui 
+        // TODO: 29.10.2016 Continue here! Currently re-renders the Whole Gui
         return ownerGui.reRender();
     }
 
@@ -174,7 +176,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         Optional<Component> componentOptional = getInventoryMap().getComponent(x, y);
         if (componentOptional.isPresent()) {
             Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(componentOptional.get());
-            // Adjust the offsets you pass one, to make the calculations for the next pane work
+            // Adjust the offsets you pass one, to make the calculations for the
+            // next pane work
             intervalOpt.ifPresent(interval -> {
                 clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
                 clickEvent.setOffsetY(clickEvent.getOffsetY() + interval.getMinY());
@@ -201,15 +204,13 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         // if the item is out of x bounds (>= and the > as the max is exclusive)
         if ((interval.getMinX() + xOffset) >= inventoryWidth
-                  || (interval.getMaxX() + xOffset) > inventoryWidth) {
+                || (interval.getMaxX() + xOffset) > inventoryWidth) {
             return false;
         }
 
         // out of y bounds (>= and the > as the max is exclusive)
-        return !(
-                  ((interval.getMinY() + yOffset) >= inventoryHeight)
-                            || ((interval.getMaxY() + yOffset) > inventoryHeight)
-        );
+        return !(((interval.getMinY() + yOffset) >= inventoryHeight)
+                || ((interval.getMaxY() + yOffset) > inventoryHeight));
     }
 
     /**
@@ -225,28 +226,19 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         superClone.inventoryMap = inventoryMap.clone();
         superClone.components = new ArrayList<>();
         superClone.components.addAll(components
-                  .stream()
-                  .map(Component::deepClone)
-                  .collect(Collectors.toList())
-        );
+                .stream()
+                .map(Component::deepClone)
+                .collect(Collectors.toList()));
         return superClone;
     }
 
-    //<editor-fold desc="Utility Classes">
-    /* *************************************************************************
-     *                                                                         *
-     *                           Utility Classes                               *
-     *                                                                         *
-     **************************************************************************/
+    // <editor-fold desc="Utility Classes">
+    // -------------------- Utility Classes -------------------- //
 
-    //<editor-fold desc="Interval">
-    /* *************************************************************************
-     *                               Interval
-     ***************************************************************************/
+    // <editor-fold desc="Interval">
+    // -------------------- Interval -------------------- //
 
-    /**
-     * An Interval
-     */
+    /** An Interval */
     public static class Interval implements Cloneable {
         private int minX, maxX;
         private int minY, maxY;
@@ -266,37 +258,29 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             this.maxY = maxY;
         }
 
-        /**
-         * @return The min x. Inclusive.
-         */
+        /** @return The min x. Inclusive. */
         public int getMinX() {
             return minX;
         }
 
-        /**
-         * @return The max x. Exclusive.
-         */
+        /** @return The max x. Exclusive. */
         public int getMaxX() {
             return maxX;
         }
 
-        /**
-         * @return The min y. Inclusive.
-         */
+        /** @return The min y. Inclusive. */
         public int getMinY() {
             return minY;
         }
 
-        /**
-         * @return The max y. Exclusive.
-         */
+        /** @return The max y. Exclusive. */
         public int getMaxY() {
             return maxY;
         }
 
         public boolean isInside(int x, int y) {
             return x >= minX && x < maxX
-                      && y >= minY && y < maxY;
+                    && y >= minY && y < maxY;
         }
 
         @Override
@@ -307,11 +291,11 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         @Override
         public String toString() {
             return "Interval{" +
-                      "minX=" + minX +
-                      ", maxX=" + maxX +
-                      ", minY=" + minY +
-                      ", maxY=" + maxY +
-                      '}';
+                    "minX=" + minX +
+                    ", maxX=" + maxX +
+                    ", minY=" + minY +
+                    ", maxY=" + maxY +
+                    '}';
         }
 
         @Override
@@ -322,9 +306,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
                 return false;
             Interval interval = (Interval) o;
             return minX == interval.minX &&
-                      maxX == interval.maxX &&
-                      minY == interval.minY &&
-                      maxY == interval.maxY;
+                    maxX == interval.maxX &&
+                    minY == interval.minY &&
+                    maxY == interval.maxY;
         }
 
         @Override
@@ -332,19 +316,17 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return Objects.hash(minX, maxX, minY, maxY);
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Inventory Map">
-    /* *************************************************************************
-     *                             Inventory Map
-     ***************************************************************************/
+    // <editor-fold desc="Inventory Map">
+    // -------------------- Inventory Map -------------------- //
 
     /**
-     * Maps components to their coordinates
-     * You may pass your own to a map, if you really want. Could be useful if you make a optimised version
+     * Maps components to their coordinates You may pass your own to a map, if
+     * you really want. Could be useful if you make a optimised version
      */
     public static class InventoryMap implements Cloneable {
-        protected boolean[][] lines;
+        protected boolean[][]              lines;
         protected Map<Interval, Component> componentMap = new HashMap<>();
 
         /**
@@ -376,15 +358,18 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         }
 
         /**
-         * Adds a component starting with the given upper left corner, if the space is enough
+         * Adds a component starting with the given upper left corner, if the
+         * space is enough
          *
          * @param x The x coordinate of the upper left corner
          * @param y The y coordinate of the upper left corner
          * @param component The component to add
          *
-         * @return True if could be added, false if the space was not enough or something else went wrong.
+         * @return True if could be added, false if the space was not enough or
+         *         something else went wrong.
          *
-         * @throws IllegalArgumentException if <code>x < 0 or y < 0 or x > width or y > height</code>
+         * @throws IllegalArgumentException if
+         *             <code>x < 0 or y < 0 or x > width or y > height</code>
          * @throws NullPointerException if component is null
          */
         public boolean addComponent(int x, int y, Component component) {
@@ -412,7 +397,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param x The x coordinate
          * @param y The y coordinate
          *
-         * @throws IllegalArgumentException if <code>x < 0 or y < 0 or x > width or y > height</code>
+         * @throws IllegalArgumentException if
+         *             <code>x < 0 or y < 0 or x > width or y > height</code>
          */
         protected void ensureInSize(int x, int y) {
             if (x < 0) {
@@ -441,9 +427,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
             // check if it is inside. Yes, this is slow.
             Optional<Interval> componentEntry = componentMap.entrySet().stream()
-                      .filter(entry -> entry.getValue().equals(component))
-                      .map(Entry::getKey)
-                      .findFirst();
+                    .filter(entry -> entry.getValue().equals(component))
+                    .map(Entry::getKey)
+                    .findFirst();
 
             // not inside
             if (!componentEntry.isPresent()) {
@@ -464,7 +450,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param maxY The max y (exclusive)
          * @param value The value to fill it with
          *
-         * @throws IllegalArgumentException if <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * @throws IllegalArgumentException if
+         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
          * or minX > maxX or minY > maxY</code>
          */
         protected void fillInterval(int minX, int maxX, int minY, int maxY, boolean value) {
@@ -492,7 +479,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param interval The interval to fill
          * @param value The value to fill it with
          *
-         * @throws IllegalArgumentException if <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * @throws IllegalArgumentException if
+         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
          * or minX > maxX or minY > maxY</code>
          * @see #fillInterval(int, int, int, int, boolean)
          */
@@ -508,7 +496,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          *
          * @return The Component at the given location, if any
          *
-         * @throws IllegalArgumentException if <code>x < 0 or y < 0 or x > width or y > height</code>
+         * @throws IllegalArgumentException if
+         *             <code>x < 0 or y < 0 or x > width or y > height</code>
          */
         public Optional<Component> getComponent(int x, int y) {
             ensureInSize(x, y);
@@ -550,7 +539,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          *
          * @return True if there is enum space
          *
-         * @throws IllegalArgumentException if <code>x < 0 or y < 0 or x > width or y > height</code>
+         * @throws IllegalArgumentException if
+         *             <code>x < 0 or y < 0 or x > width or y > height</code>
          */
         public boolean hasEnoughSpace(int x, int y, Dimension dimension) {
             ensureInSize(x, y);
@@ -594,7 +584,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return null;
         }
 
-        // TODO: 02.10.2016 Remove these visualizing methods 
+        // TODO: 02.10.2016 Remove these visualizing methods
 
         protected void printLines() {
             Status[][] array = new Status[lines.length][];
@@ -657,17 +647,17 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             @Override
             public String toString() {
                 switch (this) {
-                case FREE:
-                    return "free";
-                case MAYBE:
-                    return "maybe";
-                default:
-                    return "taken";
+                    case FREE:
+                        return "free";
+                    case MAYBE:
+                        return "maybe";
+                    default:
+                        return "taken";
                 }
             }
         }
 
     }
-    //</editor-fold>
-    //</editor-fold>
+    // </editor-fold>
+    // </editor-fold>
 }

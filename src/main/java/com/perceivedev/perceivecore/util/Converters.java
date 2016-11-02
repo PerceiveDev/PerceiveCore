@@ -12,10 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.packet.Packet;
 
-/**
- * @author Rayzr
- *
- */
+/** @author Rayzr */
 public class Converters {
 
     private static Class<?> OBC_ITEM;

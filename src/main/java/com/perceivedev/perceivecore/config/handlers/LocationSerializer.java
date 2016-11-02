@@ -13,11 +13,10 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
 
 /**
- * Adds the ability for {@link SerializationManager} to serialize and deserialize
- * objects of type {@link Location}
+ * Adds the ability for {@link SerializationManager} to serialize and
+ * deserialize objects of type {@link Location}
  * 
  * @author Rayzr
- *
  */
 public class LocationSerializer implements SerializationProxy<Location> {
 

@@ -8,9 +8,7 @@ import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.gui.components.base.pane.Pane;
 
-/**
- * A Click Event
- */
+/** A Click Event */
 public class ClickEvent {
     private InventoryClickEvent raw;
     private Pane                lastPane;

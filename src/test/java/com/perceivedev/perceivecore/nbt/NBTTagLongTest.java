@@ -8,15 +8,13 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagLong;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * A bad test for longs
- */
+/** A bad test for longs */
 public class NBTTagLongTest {
 
     private NBTTagLong nbtTagLong = new NBTTagLong(1);
-    private long value;
+    private long       value;
 
-    private final int AMOUNT = 10000;
+    private final int  AMOUNT     = 10000;
 
     @Test
     public void set() throws Exception {

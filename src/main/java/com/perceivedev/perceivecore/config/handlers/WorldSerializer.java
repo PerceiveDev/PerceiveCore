@@ -12,11 +12,10 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
 
 /**
- * Adds the ability for {@link SerializationManager} to serialize and deserialize
- * objects of type {@link World}
+ * Adds the ability for {@link SerializationManager} to serialize and
+ * deserialize objects of type {@link World}
  * 
  * @author Rayzr
- *
  */
 public class WorldSerializer implements SerializationProxy<World> {
 

@@ -10,14 +10,12 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagFloat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * A bad test for floats
- */
+/** A bad test for floats */
 public class NBTTagFloatTest {
 
     private NBTTagFloat nbtTagFloat = new NBTTagFloat(1);
 
-    private final int AMOUNT = 10000;
+    private final int   AMOUNT      = 10000;
 
     @Test
     public void set() throws Exception {

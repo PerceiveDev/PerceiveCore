@@ -18,9 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * A bad test for lists.
- */
+/** A bad test for lists. */
 public class NBTTagListTest {
 
     private NBTTagList     list   = new NBTTagList();
@@ -41,21 +39,21 @@ public class NBTTagListTest {
     private void toRandomType() {
         list = new NBTTagList();
         switch (ThreadLocalRandom.current().nextInt(4)) {
-        case 0:
-            type = new NBTTagInt(1);
-            break;
-        case 1:
-            type = new NBTTagString("");
-            break;
-        case 2:
-            type = new NBTTagDouble(20);
-            break;
-        case 3:
-            type = new NBTTagShort((short) 0);
-            break;
-        default:
-            // FindBugs yells at us without this...
-            break;
+            case 0:
+                type = new NBTTagInt(1);
+                break;
+            case 1:
+                type = new NBTTagString("");
+                break;
+            case 2:
+                type = new NBTTagDouble(20);
+                break;
+            case 3:
+                type = new NBTTagShort((short) 0);
+                break;
+            default:
+                // FindBugs yells at us without this...
+                break;
         }
 
         toType(type);

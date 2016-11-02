@@ -6,9 +6,7 @@ import java.util.Objects;
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 import com.perceivedev.perceivecore.gui.components.base.pane.AbstractPane;
 
-/**
- * A simple anchor pane
- */
+/** A simple anchor pane */
 public class AnchorPane extends AbstractPane {
 
     /**
@@ -22,7 +20,8 @@ public class AnchorPane extends AbstractPane {
      * @param inventoryMap The {@link InventoryMap} to use
      *
      * @throws NullPointerException if any parameter is null
-     * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does not equal size
+     * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
+     *             not equal size
      */
     protected AnchorPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
         super(components, width, height, inventoryMap);
@@ -52,9 +51,11 @@ public class AnchorPane extends AbstractPane {
     }
 
     /**
-     * <i>Does nothing. Use the {@link #addComponent(Component, int, int)} method.</i>
+     * <i>Does nothing. Use the {@link #addComponent(Component, int, int)}
+     * method.</i>
      *
-     * @param component The component to add. You can't add the same component twice.
+     * @param component The component to add. You can't add the same component
+     *            twice.
      *
      * @return It throws
      *
@@ -70,7 +71,8 @@ public class AnchorPane extends AbstractPane {
     /**
      * Adds a component at the desired location.
      *
-     * @param component The component to add. You can't add the same component twice.
+     * @param component The component to add. You can't add the same component
+     *            twice.
      * @param x The x coordinate of the upper left corner
      * @param y The y coordinate of the upper left corner
      *
