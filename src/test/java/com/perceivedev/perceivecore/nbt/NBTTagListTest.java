@@ -23,11 +23,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class NBTTagListTest {
 
-    private NBTTagList list = new NBTTagList();
+    private NBTTagList     list   = new NBTTagList();
     private INBTBase       type;
     private List<INBTBase> values;
 
-    private final int AMOUNT = 1000;
+    private final int      AMOUNT = 1000;
 
     @Test
     public void add() throws Exception {
@@ -43,12 +43,19 @@ public class NBTTagListTest {
         switch (ThreadLocalRandom.current().nextInt(4)) {
         case 0:
             type = new NBTTagInt(1);
+            break;
         case 1:
             type = new NBTTagString("");
+            break;
         case 2:
             type = new NBTTagDouble(20);
+            break;
         case 3:
             type = new NBTTagShort((short) 0);
+            break;
+        default:
+            // FindBugs yells at us without this...
+            break;
         }
 
         toType(type);

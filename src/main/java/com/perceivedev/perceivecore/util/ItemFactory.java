@@ -26,7 +26,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  * @author ZP4RKER
  */
 @SuppressWarnings("WeakerAccess")
-public class ItemFactory {
+public class ItemFactory implements Cloneable {
 
     private static final Set<Material> COLOURABLE     = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
               Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);

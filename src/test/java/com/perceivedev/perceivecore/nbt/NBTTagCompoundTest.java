@@ -28,7 +28,7 @@ public class NBTTagCompoundTest {
 
     private NBTTagCompound compound = new NBTTagCompound();
 
-    private final int AMOUNT = 10000;
+    private final int      AMOUNT   = 10000;
 
     @Test
     public void remove() throws Exception {
@@ -263,14 +263,22 @@ public class NBTTagCompoundTest {
         switch (ThreadLocalRandom.current().nextInt(5)) {
         case 0:
             type = new NBTTagInt(1);
+            break;
         case 1:
             type = new NBTTagString("");
+            break;
         case 2:
             type = new NBTTagDouble(20);
+            break;
         case 3:
             type = new NBTTagShort((short) 0);
+            break;
         case 4:
             type = new NBTTagByte((byte) 0);
+            break;
+        default:
+            // This is to stop FindBugs from being angry
+            break;
         }
 
         compound = new NBTTagCompound();
