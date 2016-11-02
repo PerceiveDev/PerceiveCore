@@ -29,11 +29,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class ItemFactory implements Cloneable {
 
     private static final Set<Material> COLOURABLE     = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
-              Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
+            Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
     private static final Set<Material> LEATHER_ARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
-              Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+            Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 
-    private ItemStack itemStack;
+    private ItemStack                  itemStack;
 
     private ItemFactory(ItemStack itemStack) {
         Objects.requireNonNull(itemStack, "itemStack can not be null");
@@ -41,7 +41,7 @@ public class ItemFactory implements Cloneable {
         this.itemStack = itemStack.clone();
     }
 
-    //<editor-fold desc="General Methods">
+    // <editor-fold desc="General Methods">
     // === GENERAL METHODS ===
 
     /**
@@ -232,9 +232,9 @@ public class ItemFactory implements Cloneable {
         itemStack.removeEnchantment(enchantment);
         return this;
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Skulls">
+    // <editor-fold desc="Skulls">
     // ==== SKULLS ====
 
     /**
@@ -244,7 +244,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#SKULL_ITEM}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#SKULL_ITEM}
      */
     @Nonnull
     public ItemFactory setSkullOwner(@Nonnull String name) {
@@ -301,7 +302,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a type of leather armour
+     * @throws IllegalStateException If the {@link ItemStack} is not a type of
+     *             leather armour
      */
     @Nonnull
     public ItemFactory setArmourColour(@Nonnull Color colour) {
@@ -316,9 +318,9 @@ public class ItemFactory implements Cloneable {
         }
         return this;
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Books">
+    // <editor-fold desc="Books">
     // ==== BOOKS ====
 
     /**
@@ -328,7 +330,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory setAuthor(@Nonnull String author) {
@@ -351,7 +354,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory setPages(@Nonnull List<String> pages) {
@@ -384,7 +388,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory addPage(@Nonnull String page) {
@@ -409,7 +414,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory addPages(@Nonnull String... pages) {
@@ -434,7 +440,8 @@ public class ItemFactory implements Cloneable {
      *
      * @return This ItemFactory instance
      *
-     * @throws IllegalStateException If the {@link ItemStack} is not a {@link Material#WRITTEN_BOOK}
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory setTitle(@Nonnull String title) {
@@ -449,9 +456,9 @@ public class ItemFactory implements Cloneable {
         }
         return this;
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Build and create">
+    // <editor-fold desc="Build and create">
     // === BUILD AND CREATE ====
 
     /**
@@ -499,6 +506,6 @@ public class ItemFactory implements Cloneable {
     public ItemStack build() {
         return itemStack.clone();
     }
-    //</editor-fold>
+    // </editor-fold>
 
 }
