@@ -136,7 +136,7 @@ public class PacketManager implements Listener {
      *
      * @return An instance of the PacketManager
      */
-    public static PacketManager getInstance() {
+    public static synchronized PacketManager getInstance() {
         if (instance == null) {
             instance = new PacketManager(PerceiveCore.getInstance());
         }
