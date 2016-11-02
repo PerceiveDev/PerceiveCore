@@ -16,12 +16,11 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
  * This is inspired by <a href="https://www.github.com/phase/mirror">Mirror</a>
  * 
  * @author Rayzr
- *
  */
-public class ReflectedClass<T extends Object> {
+public class ReflectedClass<T> {
 
-    protected T                       instance;
-    protected Class<? extends Object> clazz;
+    protected T        instance;
+    protected Class<?> clazz;
 
     protected ReflectedClass(T instance) {
         this.instance = instance;
@@ -46,9 +45,7 @@ public class ReflectedClass<T extends Object> {
         return clazz.getCanonicalName();
     }
 
-    /**
-     * @return the instance
-     */
+    /** @return the instance */
     public T getInstance() {
         return instance;
     }

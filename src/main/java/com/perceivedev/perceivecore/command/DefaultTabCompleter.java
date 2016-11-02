@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-/**
- * The default tab completer
- */
+/** The default tab completer */
 public class DefaultTabCompleter implements TabCompleter {
 
     private CommandTree tree;
 
-    /**
-     * @param tree The {@link CommandTree} to use
-     */
+    /** @param tree The {@link CommandTree} to use */
     public DefaultTabCompleter(CommandTree tree) {
         this.tree = tree;
     }
@@ -31,6 +28,9 @@ public class DefaultTabCompleter implements TabCompleter {
         if (!tabComplete.isPresent()) {
             return null;
         }
-        return tabComplete.get();
+        return tabComplete.get().stream()
+                .sorted()     // sort and filter it...
+                .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

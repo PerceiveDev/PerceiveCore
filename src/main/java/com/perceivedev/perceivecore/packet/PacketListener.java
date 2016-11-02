@@ -1,8 +1,6 @@
 package com.perceivedev.perceivecore.packet;
 
-/**
- * Listens for a Packet
- */
+/** Listens for a Packet */
 public interface PacketListener {
 
     /**

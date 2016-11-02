@@ -6,14 +6,10 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
-/**
- * A command
- */
-interface CommandNode {
+/** A command */
+public interface CommandNode {
 
-    /**
-     * Returns the children of this command
-     */
+    /** Returns the children of this command */
     List<CommandNode> getChildren();
 
     /**
@@ -40,7 +36,7 @@ interface CommandNode {
      * @param wholeChat The whole chat of him
      * @param relativeIndex The relative index to this command.
      *
-     * @return ALl possible tab completions. Null for players.
+     * @return All possible tab completions. Null for players.
      */
     List<String> tabComplete(CommandSender sender, List<String> wholeChat, int relativeIndex);
 
@@ -87,12 +83,8 @@ interface CommandNode {
      * @return True if this is the keyword of this command
      */
     boolean isYourKeyword(String string);
-    
-    /* **********************************************************************************
-     *
-     *                                      Cosmetic
-     *
-     ************************************************************************************/
+
+    // -------------------- Cosmetic -------------------- //
 
     /**
      * Returns the command usage

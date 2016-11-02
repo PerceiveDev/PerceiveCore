@@ -107,6 +107,7 @@ public class Packet {
 
     private Packet(Object packet) {
         this.obj = packet;
+        this.packetClass = packet.getClass();
     }
 
     /**
@@ -150,7 +151,7 @@ public class Packet {
      * @throws IllegalArgumentException if it isn't a packet.
      */
     public static Packet createFromObject(Object obj) {
-        Objects.requireNonNull(obj);
+        Objects.requireNonNull(obj, "obj can not be null");
 
         if (obj instanceof Packet) {
             return (Packet) obj;
@@ -165,16 +166,14 @@ public class Packet {
         }
 
         try {
-            return new Packet(obj.getClass());
+            return new Packet(obj);
         } catch (Exception e) {
             PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to create packet!", e);
             return null;
         }
     }
 
-    /**
-     * @return the NMS packet
-     */
+    /** @return the NMS packet */
     public Object getNMSPacket() {
         return obj;
     }
@@ -209,6 +208,11 @@ public class Packet {
         for (Player player : players) {
             $(player).sendPacket(this);
         }
+    }
+
+    /** @return the packet's class */
+    public Class<?> getPacketClass() {
+        return packetClass;
     }
 
 }

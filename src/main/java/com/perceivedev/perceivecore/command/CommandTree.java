@@ -17,16 +17,12 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
 
-/**
- * A Command tree
- */
+/** A Command tree */
 public class CommandTree {
 
     private TreeRoot root;
 
-    /**
-     * Creates a new Command Tree
-     */
+    /** Creates a new Command Tree */
     public CommandTree() {
         this.root = new TreeRoot();
     }
@@ -126,15 +122,14 @@ public class CommandTree {
      * @param sender The CommandSender to tab complete for
      * @param userChat The user chat
      *
-     * @return The tab completion of the command or an empty optional if the command was not found or tab complete returned null.
+     * @return The tab completion of the command or an empty optional if the
+     *         command was not found or tab complete returned null.
      */
     public Optional<List<String>> findAndTabComplete(CommandSender sender, List<String> userChat) {
         return root.findAndTabComplete(sender, userChat);
     }
 
-    /**
-     * A private transparent tree root
-     */
+    /** A private transparent tree root */
     private static class TreeRoot extends AbstractCommandNode {
 
         private List<CommandNode> children = new ArrayList<>();
@@ -167,7 +162,7 @@ public class CommandTree {
 
             // now, is there any child that can continue
             for (CommandNode child : getChildren()) {
-                // clone to prevent recursion to interfere with each other
+                // deepClone to prevent recursion to interfere with each other
                 CommandFindResult findRes = child.find(sender, joinedQuery);
 
                 if (findRes.wasFound()) {

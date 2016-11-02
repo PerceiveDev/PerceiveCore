@@ -8,15 +8,13 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagString;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * A bad tes for strings
- */
+/** A bad tes for strings */
 public class NBTTagStringTest {
 
     private NBTTagString nbtTagString = new NBTTagString("");
-    private String value;
+    private String       value;
 
-    private final int AMOUNT = 10000;
+    private final int    AMOUNT       = 10000;
 
     @Test
     public void setString() throws Exception {

@@ -11,31 +11,29 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * A test for the duration parser
- */
+/** A test for the duration parser */
 public class DurationParserTest {
 
     private static long getSuffixValue(long value, String suffix) {
         switch (suffix) {
-        case "S": {
-            return value;
-        }
-        case "t": {
-            return value * 50;
-        }
-        case "s": {
-            return (value * 1000);
-        }
-        case "m": {
-            return TimeUnit.MINUTES.toMillis(value);
-        }
-        case "h": {
-            return TimeUnit.HOURS.toMillis(value);
-        }
-        case "d": {
-            return TimeUnit.DAYS.toMillis(value);
-        }
+            case "S": {
+                return value;
+            }
+            case "t": {
+                return value * 50;
+            }
+            case "s": {
+                return (value * 1000);
+            }
+            case "m": {
+                return TimeUnit.MINUTES.toMillis(value);
+            }
+            case "h": {
+                return TimeUnit.HOURS.toMillis(value);
+            }
+            case "d": {
+                return TimeUnit.DAYS.toMillis(value);
+            }
         }
         return 0;
     }
@@ -74,9 +72,9 @@ public class DurationParserTest {
             String suffix = suffixList.get(ThreadLocalRandom.current().nextInt(suffixList.size()));
             long tmpNumber = ThreadLocalRandom.current().nextLong(100);
             expression
-                      .append(StringUtils.repeat(" ", ThreadLocalRandom.current().nextInt(20)))
-                      .append(tmpNumber)
-                      .append(suffix);
+                    .append(StringUtils.repeat(" ", ThreadLocalRandom.current().nextInt(20)))
+                    .append(tmpNumber)
+                    .append(suffix);
 
             number += getSuffixValue(tmpNumber, suffix);
         } while (ThreadLocalRandom.current().nextInt(10) < 8);

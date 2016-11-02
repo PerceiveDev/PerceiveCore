@@ -23,24 +23,25 @@ import org.bukkit.entity.Player;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
-/**
- * Provides utility methods for reflection
- */
+/** Provides utility methods for reflection */
+@SuppressWarnings({ "WeakerAccess", "unused" })
 public class ReflectionUtil {
 
     private static final String SERVER_VERSION;
 
+    // <editor-fold desc="INIT">
     // ==== INIT SERVER VERSION ====
 
     static {
         String name = Bukkit.getServer() == null ? "org.bukkit.craftbukkit.v1_10_R1" : Bukkit.getServer().getClass().getPackage().getName();
-        // String name = "org.bukkit.craftbukkit.v1_8_R3.CraftServer;";
         String[] split = name.split("\\.");
         name = split[split.length - 1];
 
         SERVER_VERSION = name;
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Version Validation Methods">
     // ==== VERSION VALIDATION METHODS ===
 
     /**
@@ -64,6 +65,7 @@ public class ReflectionUtil {
      */
     public static int getMinorVersion() {
         String name = Bukkit.getVersion();
+
         name = name.substring(name.indexOf("MC: ") + "MC: ".length());
         name = name.replace(")", "");
 
@@ -77,6 +79,7 @@ public class ReflectionUtil {
      */
     public static int getPatchVersion() {
         String name = Bukkit.getVersion();
+
         name = name.substring(name.indexOf("MC: ") + "MC: ".length());
         name = name.replace(")", "");
 
@@ -86,7 +89,9 @@ public class ReflectionUtil {
         }
         return Integer.parseInt(splitted[2]);
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Class Search Functions">
     // ==== CLASS SEARCH FUNCTIONS ====
 
     /**
@@ -101,8 +106,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static Optional<Class<?>> getClass(NameSpace nameSpace, String qualifiedName) {
-        Objects.requireNonNull(nameSpace);
-        Objects.requireNonNull(qualifiedName);
+        Objects.requireNonNull(nameSpace, "nameSpace can not be null");
+        Objects.requireNonNull(qualifiedName, "qualifiedName can not be null");
 
         String fullyQualifiedName = nameSpace.resolve(qualifiedName);
         return classForName(fullyQualifiedName);
@@ -122,7 +127,7 @@ public class ReflectionUtil {
      *      resolved NameSpace and name
      */
     public static Optional<Class<?>> getClass(String nameWithIdentifier) {
-        Objects.requireNonNull(nameWithIdentifier);
+        Objects.requireNonNull(nameWithIdentifier, "nameWithIdentifier can not be null");
 
         Optional<NameSpace> fromIdentifier = NameSpace.getFromIdentifier(nameWithIdentifier);
         if (!fromIdentifier.isPresent()) {
@@ -133,27 +138,48 @@ public class ReflectionUtil {
 
     /**
      * Gets a {@link ReflectedClass} from the object
-     * 
+     *
      * @param object the object
+     *
      * @return the ReflectedClass, this will be null if the object is null
+     *
+     * @throws NullPointerException if <code>object</code> is null
      */
     public static <T> ReflectedClass<T> $(T object) {
-        Objects.requireNonNull(object);
-        return new ReflectedClass<T>(object);
+        Objects.requireNonNull(object, "object can not be null");
+
+        return new ReflectedClass<>(object);
     }
 
     /**
      * Alias of {@link #getClass(String)}
-     * 
+     *
      * @param className the class name
+     *
      * @return the optional class
+     *
+     * @throws NullPointerException if <code>className</code> is null
      */
     public static Optional<Class<?>> $(String className) {
+        Objects.requireNonNull(className, "className can not be null");
+
         return getClass(className);
     }
 
+    // TODO: 30.10.2016 Needed? @Rayzr? Can it be generalised?
+
+    /**
+     * Gets a Wrapper for a {@link Player}
+     *
+     * @param player The player to get the Wrapper for
+     *
+     * @return The wrapper for the player
+     *
+     * @throws NullPointerException if <code>player</code> is null
+     */
     public static PlayerWrapper $(Player player) {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "player can not be null");
+
         return new PlayerWrapper(player);
     }
 
@@ -173,7 +199,9 @@ public class ReflectionUtil {
         }
         return Optional.empty();
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Fields">
     // ==== FIELDS ====
 
     /**
@@ -187,8 +215,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static ReflectResponse<Field> getField(Class<?> clazz, Predicate<Field> selector) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
         Optional<Field> first = getFields(clazz).filter(selector).findFirst();
 
@@ -211,8 +239,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static Stream<Field> getFields(Class<?> clazz, Predicate<Field> predicate) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(predicate);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(predicate, "predicate can not be null");
 
         return getFields(clazz).filter(predicate);
     }
@@ -225,7 +253,8 @@ public class ReflectionUtil {
      * @return The fields of the class
      */
     private static Stream<Field> getFields(Class<?> clazz) {
-        return Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields())).distinct();
+        return Stream.concat(
+                Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getFields())).distinct();
     }
 
     /**
@@ -241,8 +270,8 @@ public class ReflectionUtil {
      * @see #getFieldValue(Field, Object)
      */
     public static ReflectResponse<Object> getFieldValue(Class<?> clazz, Object handle, Predicate<Field> selector) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
         ReflectResponse<Field> field = getField(clazz, selector);
         if (!field.isValuePresent()) {
@@ -265,8 +294,8 @@ public class ReflectionUtil {
      * @see #getFieldValue(Class, Object, Predicate)
      */
     public static ReflectResponse<Object> getFieldValue(String name, Class<?> clazz, Object handle) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(name);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(name, "name can not be null");
 
         return getFieldValue(clazz, handle, new MemberPredicate<Field>().withName(name));
     }
@@ -283,7 +312,7 @@ public class ReflectionUtil {
      * @throws NullPointerException If field is null
      */
     public static ReflectResponse<Object> getFieldValue(Field field, Object handle) {
-        Objects.requireNonNull(field);
+        Objects.requireNonNull(field, "field can not be null");
 
         try {
             field.setAccessible(true);
@@ -309,7 +338,7 @@ public class ReflectionUtil {
      * @throws NullPointerException if field is null
      */
     public static ReflectResponse<Void> setFieldValue(Field field, Object handle, Object value) {
-        Objects.requireNonNull(field);
+        Objects.requireNonNull(field, "field can not be null");
 
         try {
             field.setAccessible(true);
@@ -338,8 +367,8 @@ public class ReflectionUtil {
      * @see #setFieldValue(Field, Object, Object)
      */
     public static ReflectResponse<Void> setFieldValue(Class<?> clazz, Predicate<Field> selector, Object handle, Object value) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
         ReflectResponse<Field> field = getField(clazz, selector);
         if (!field.isValuePresent()) {
@@ -364,12 +393,14 @@ public class ReflectionUtil {
      * @see #setFieldValue(Field, Object, Object)
      */
     public static ReflectResponse<Void> setFieldValue(String selector, Class<?> clazz, Object handle, Object value) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
         return setFieldValue(clazz, new MemberPredicate<Field>().withName(selector), handle, value);
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Methods">
     // ==== METHODS ====
 
     /**
@@ -383,8 +414,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static ReflectResponse<Method> getMethod(Class<?> clazz, Predicate<Method> selector) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
         Optional<Method> firstMethod = getMethods(clazz).filter(selector).findFirst();
 
@@ -406,8 +437,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter (except handle) is null
      */
     public static ReflectResponse<Object> invokeMethod(Method method, Object handle, Object... params) {
-        Objects.requireNonNull(method);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(method, "method can not be null");
+        Objects.requireNonNull(params, "params can not be null");
 
         try {
             method.setAccessible(true);
@@ -436,9 +467,9 @@ public class ReflectionUtil {
      * @see #invokeMethod(Method, Object, Object...)
      */
     public static ReflectResponse<Object> invokeMethod(Class<?> clazz, Predicate<Method> selector, Object handle, Object... params) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
+        Objects.requireNonNull(params, "params can not be null");
 
         ReflectResponse<Method> method = getMethod(clazz, selector);
         if (!method.isValuePresent()) {
@@ -461,9 +492,9 @@ public class ReflectionUtil {
      * @see #invokeMethod(Class, Predicate, Object, Object...)
      */
     public static ReflectResponse<Object> invokeInstanceMethod(Object handle, Predicate<Method> selector, Object... params) {
-        Objects.requireNonNull(handle);
-        Objects.requireNonNull(selector);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(handle, "handle can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
+        Objects.requireNonNull(params, "params can not be null");
         return invokeMethod(handle.getClass(), selector, params);
     }
 
@@ -482,12 +513,12 @@ public class ReflectionUtil {
      * @see #invokeMethod(Class, Predicate, Object, Object...)
      */
     public static ReflectResponse<Object> invokeInstanceMethod(Object handle, String name, Class<?>[] parameterClasses, Object... params) {
-        Objects.requireNonNull(handle);
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(parameterClasses);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(handle, "handle can not be null");
+        Objects.requireNonNull(name, "name can not be null");
+        Objects.requireNonNull(parameterClasses, "parameterClasses can not be null");
+        Objects.requireNonNull(params, "params can not be null");
 
-        return invokeMethod(handle.getClass(), new MethodPredicate().withParameters(parameterClasses).withName(name), params);
+        return invokeMethod(handle.getClass(), new MethodPredicate().withParameters(parameterClasses).withName(name), handle, params);
     }
 
     /**
@@ -503,8 +534,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static Stream<Method> getMethods(Class<?> clazz, Predicate<Method> predicate) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(predicate);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(predicate, "predicate can not be null");
 
         return getMethods(clazz).filter(predicate);
     }
@@ -519,7 +550,9 @@ public class ReflectionUtil {
     private static Stream<Method> getMethods(Class<?> clazz) {
         return Stream.concat(Arrays.stream(clazz.getMethods()), Arrays.stream(clazz.getDeclaredMethods())).distinct();
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Constructor">
     // ==== CONSTRUCTORS ====
 
     /**
@@ -533,10 +566,10 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static ReflectResponse<Constructor<?>> getConstructor(Class<?> clazz, Predicate<Constructor<?>> selector) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
 
-        Optional<? extends Constructor<?>> firstConstructor = getAllConstructors(clazz).filter(selector).findFirst();
+        Optional<Constructor<?>> firstConstructor = getAllConstructors(clazz).filter(selector).findFirst();
 
         if (!firstConstructor.isPresent()) {
             return new ReflectResponse<>(ResultType.NOT_FOUND);
@@ -557,8 +590,8 @@ public class ReflectionUtil {
      * @see #getConstructor(Class, Predicate)
      */
     public static ReflectResponse<Constructor<?>> getConstructor(Class<?> clazz, Class<?>... params) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(params, "params can not be null");
         return getConstructor(clazz, new ExecutablePredicate<Constructor<?>>().withParameters(params));
     }
 
@@ -574,8 +607,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static <T> ReflectResponse<T> instantiate(Constructor<T> constructor, Object... params) {
-        Objects.requireNonNull(constructor);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(constructor, "constructor can not be null");
+        Objects.requireNonNull(params, "params can not be null");
 
         try {
             constructor.setAccessible(true);
@@ -601,9 +634,9 @@ public class ReflectionUtil {
      * @see #instantiate(Constructor, Object...)
      */
     public static ReflectResponse<?> instantiate(Class<?> clazz, Predicate<Constructor<?>> selector, Object... params) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(selector);
-        Objects.requireNonNull(params);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(selector, "selector can not be null");
+        Objects.requireNonNull(params, "params can not be null");
 
         ReflectResponse<Constructor<?>> constructor = getConstructor(clazz, selector);
 
@@ -627,8 +660,8 @@ public class ReflectionUtil {
      * @throws NullPointerException if any parameter is null
      */
     public static Stream<Constructor<?>> getAllConstructors(Class<?> clazz, Predicate<Constructor<?>> predicate) {
-        Objects.requireNonNull(clazz);
-        Objects.requireNonNull(predicate);
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(predicate, "predicate can not be null");
 
         return getAllConstructors(clazz).filter(predicate);
     }
@@ -643,7 +676,9 @@ public class ReflectionUtil {
     private static Stream<Constructor<?>> getAllConstructors(Class<?> clazz) {
         return Stream.concat(Arrays.stream(clazz.getConstructors()), Arrays.stream(clazz.getDeclaredConstructors())).distinct();
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Enums">
     // ==== ENUMS ====
 
     /**
@@ -655,9 +690,12 @@ public class ReflectionUtil {
      * @return The found constant.
      *
      * @throws NullPointerException if any parameter is null
-     * @throws IllegalArgumentException if 'clazz' is not an enum
+     * @throws IllegalArgumentException if <code>clazz</code> is not an enum
      */
     public static ReflectResponse<Enum<?>> getEnumConstant(Class<?> clazz, Predicate<Enum<?>> predicate) {
+        Objects.requireNonNull(clazz, "clazz can not be null");
+        Objects.requireNonNull(predicate, "predicate can not be null");
+
         if (!clazz.isEnum()) {
             throw new IllegalArgumentException("The class is no enum: " + clazz.getName());
         }
@@ -685,20 +723,18 @@ public class ReflectionUtil {
     public static ReflectResponse<Enum<?>> getEnumConstant(Class<?> clazz, String name) {
         return getEnumConstant(clazz, anEnum -> anEnum.name().equals(name));
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Utility Classes">
     // ==== UTILITY CLASSES ====
 
-    /**
-     * The namespaces
-     */
+    // <editor-fold desc="NameSpace">
+
+    /** The namespaces */
     public enum NameSpace {
-        /**
-         * The {@code net.minecraft.server} namespace
-         */
+        /** The {@code net.minecraft.server} namespace */
         NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
-        /**
-         * The {@code org.bukkit.craftbukkit} namespace
-         */
+        /** The {@code org.bukkit.craftbukkit} namespace */
         OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
 
         private Pattern                  detectionPattern;
@@ -770,6 +806,9 @@ public class ReflectionUtil {
             return Optional.empty();
         }
     }
+    // </editor-fold>
+
+    // <editor-fold desc="ReflectResponse">
 
     /**
      * The response to a reflective Operation.
@@ -877,25 +916,26 @@ public class ReflectionUtil {
             return "ReflectResponse{" + "=" + get() + ", successful=" + isSuccessful() + ", valuePresent=" + isValuePresent() + '}';
         }
 
-        /**
-         * The result of the operation
-         */
+        /** The result of the operation */
         public enum ResultType {
-            /**
-             * All went well
-             */
+            /** All went well */
             SUCCESSFUL,
-            /**
-             * If the method/field was not found
-             */
+            /** If the method/field was not found */
             NOT_FOUND,
-            /**
-             * An error occurred
-             */
+            /** An error occurred */
             ERROR
         }
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Predicates">
+    // <editor-fold desc="Member Predicate">
+
+    /**
+     * A member predicate
+     *
+     * @param <T> The type of the member
+     */
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
         private String               name;
@@ -915,9 +955,7 @@ public class ReflectionUtil {
             this.withoutModifier = withoutModifier;
         }
 
-        /**
-         * Accepts anything
-         */
+        /** Accepts anything */
         public MemberPredicate() {
 
         }
@@ -1003,7 +1041,94 @@ public class ReflectionUtil {
             return true;
         }
     }
+    // </editor-fold>
 
+    // <editor-fold desc="Field Predicate">
+
+    /** A predicate for {@link Field}s */
+    public static class FieldPredicate extends MemberPredicate<Field> {
+
+        private Class<?> type;
+
+        /**
+         * @param name The name of the method. Null for don't check. Is a
+         *            <b>RegEx</b>
+         * @param modifiers The modifiers. Empty list for don't check
+         * @param withoutModifier The modifiers it must not have. Empty list for
+         *            don't check
+         * @param type The type of the Field. Null for don't check
+         */
+        public FieldPredicate(String name, Collection<Modifier> modifiers, Collection<Modifier> withoutModifier, Class<?> type) {
+            super(name, modifiers, withoutModifier);
+            this.type = type;
+        }
+
+        /** @param type The class of the type */
+        public FieldPredicate(Class<?> type) {
+            super();
+            this.type = type;
+        }
+
+        public FieldPredicate() {
+            super();
+        }
+
+        /**
+         * Sets the type of the {@link Field}
+         *
+         * @param type The type of the {@link Field}
+         */
+        public FieldPredicate setType(Class<?> type) {
+            this.type = type;
+            return this;
+        }
+
+        // <editor-fold desc="Overwritten methods to change return type">
+        @Override
+        public FieldPredicate withName(String name) {
+            return (FieldPredicate) super.withName(name);
+        }
+
+        @Override
+        public FieldPredicate withModifiers(Collection<Modifier> modifiers) {
+            return (FieldPredicate) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public FieldPredicate withModifiers(Modifier... modifiers) {
+            return (FieldPredicate) super.withModifiers(modifiers);
+        }
+
+        @Override
+        public FieldPredicate withoutModifiers(Collection<Modifier> modifiers) {
+            return (FieldPredicate) super.withoutModifiers(modifiers);
+        }
+
+        @Override
+        public FieldPredicate withoutModifiers(Modifier... modifiers) {
+            return (FieldPredicate) super.withoutModifiers(modifiers);
+        }
+        // </editor-fold>
+
+        @Override
+        public boolean test(Member member) {
+            if (!(member instanceof Field) || !super.test(member)) {
+                return false;
+            }
+            Field field = (Field) member;
+
+            return type == null || field.getType() == type;
+        }
+    }
+    // </editor-fold>
+
+    // <editor-fold desc="ExecutablePredicate">
+
+    /**
+     * A {@link Predicate} for an {@link Executable}
+     *
+     * @param <T> The type of the {@link Executable}
+     */
     public static class ExecutablePredicate<T extends Executable> extends MemberPredicate<T> {
 
         private Class<?>[] parameters;
@@ -1021,9 +1146,7 @@ public class ReflectionUtil {
             this.parameters = parameters;
         }
 
-        /**
-         * An empty one. Just returns true.
-         */
+        /** An empty one. Just returns true. */
         public ExecutablePredicate() {
             super();
         }
@@ -1040,6 +1163,7 @@ public class ReflectionUtil {
             return this;
         }
 
+        // <editor-fold desc="Overwritten methods to change Return type">
         // there must be a nicer way!
         @Override
         public ExecutablePredicate<T> withModifiers(Collection<Modifier> modifiers) {
@@ -1065,6 +1189,7 @@ public class ReflectionUtil {
         public ExecutablePredicate<T> withName(String name) {
             return (ExecutablePredicate<T>) super.withName(name);
         }
+        // </editor-fold>
 
         @Override
         public boolean test(Member member) {
@@ -1081,10 +1206,11 @@ public class ReflectionUtil {
             return true;
         }
     }
+    // </editor-fold>
 
-    /**
-     * A Predicate for a method
-     */
+    // <editor-fold desc="Method Predicate">
+
+    /** A Predicate for a method */
     public static class MethodPredicate extends ExecutablePredicate<Method> {
 
         private Class<?> returnType;
@@ -1103,9 +1229,7 @@ public class ReflectionUtil {
             this.returnType = returnType;
         }
 
-        /**
-         * An empty one. Just returns true.
-         */
+        /** An empty one. Just returns true. */
         public MethodPredicate() {
             super();
         }
@@ -1122,6 +1246,7 @@ public class ReflectionUtil {
             return this;
         }
 
+        // <editor-fold desc="Overwritten methods to change return type">
         // there must be a nicer way!
         @Override
         public MethodPredicate withParameters(Class<?>... parameters) {
@@ -1152,6 +1277,7 @@ public class ReflectionUtil {
         public MethodPredicate withName(String name) {
             return (MethodPredicate) super.withName(name);
         }
+        // </editor-fold>
 
         @Override
         public boolean test(Member member) {
@@ -1162,10 +1288,12 @@ public class ReflectionUtil {
             return returnType == null || returnType.equals(method.getReturnType());
         }
     }
+    // </editor-fold>
+    // </editor-fold>
 
-    /**
-     * The possible modifiers
-     */
+    // <editor-fold desc="Modifier">
+
+    /** The possible modifiers */
     public enum Modifier {
         PUBLIC(1),
         PRIVATE(2),
@@ -1182,9 +1310,7 @@ public class ReflectionUtil {
 
         private int bitMask;
 
-        /**
-         * @param bitMask The bitmask of the modifier
-         */
+        /** @param bitMask The bitmask of the modifier */
         Modifier(int bitMask) {
             this.bitMask = bitMask;
         }
@@ -1205,4 +1331,6 @@ public class ReflectionUtil {
             return "Modifier{" + "bitMask=" + bitMask + '}';
         }
     }
+    // </editor-fold>
+    // </editor-fold>
 }

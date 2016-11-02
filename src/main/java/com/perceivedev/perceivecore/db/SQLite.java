@@ -12,11 +12,11 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SQLite {
-	
-	private String dbName;
-    private String query;
-    private boolean inDF = true;
-    private String dir;
+
+    private String     dbName;
+    private String     query;
+    private boolean    inDF = true;
+    private String     dir;
     private JavaPlugin plugin;
     private Connection connection;
 
@@ -35,7 +35,6 @@ public class SQLite {
         this.dir = directory;
         this.connection = getSQLConnection();
     }
-
 
     public Connection getSQLConnection() {
         File file;

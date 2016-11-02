@@ -1,11 +1,11 @@
 package com.perceivedev.perceivecore.db;
 
 public class Column {
-	
-	public String name;
+
+    public String   name;
     public DataType dataType;
-    public int limit = 0;
-    private Object value;
+    public int      limit = 0;
+    private Object  value;
 
     public Column(String name, DataType dataType, int limit) {
         this.name = name;

@@ -5,21 +5,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Table {
-	
-	private String name;
+
+    private String       name;
     private List<Column> columns = new ArrayList<>();
-    private Column primaryKey;
-    private SQLite sqLite;
+    private Column       primaryKey;
+    private SQLite       sqLite;
 
     public Table(String name, Column primaryKey, Column... columns) {
         this.name = name;
         this.primaryKey = primaryKey;
-        for (Column column : columns) {
-            this.columns.add(column);
-        }
+        Collections.addAll(this.columns, columns);
     }
 
     public Table(String name, Collection<Column> columns, Column primaryKey) {
@@ -30,9 +29,7 @@ public class Table {
 
     public Table(String name, Column... columns) {
         this.name = name;
-        for (Column column : columns) {
-            this.columns.add(column);
-        }
+        Collections.addAll(this.columns, columns);
         this.primaryKey = this.columns.get(0);
     }
 
@@ -67,11 +64,15 @@ public class Table {
     }
 
     private static String getStringType(DataType dataType) {
-        switch(dataType) {
-            case STRING: return "VARCHAR";
-            case INTEGER: return "INT";
-            case FLOAT: return "FLOAT";
-            default: return null;
+        switch (dataType) {
+            case STRING:
+                return "VARCHAR";
+            case INTEGER:
+                return "INT";
+            case FLOAT:
+                return "FLOAT";
+            default:
+                return null;
         }
     }
 
@@ -80,38 +81,38 @@ public class Table {
     }
 
     public String getQuery() {
-        String query = "CREATE TABLE IF NOT EXISTS " + getName() + " (";
+        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS " + getName() + " (");
         for (Column column : getColumns()) {
-            query += "`" + column.name + "` ";
-            query += Table.getStringType(column.dataType);
-            query += (column.limit > 0 ? " (" + column.limit + "), " : ", ");
+            query.append("`").append(column.name).append("` ");
+            query.append(Table.getStringType(column.dataType));
+            query.append((column.limit > 0 ? " (" + column.limit + "), " : ", "));
         }
-        query += "PRIMARY KEY (`" + primaryKey.getName() + "`)";
-        query += ");";
-        return query;
+        query.append("PRIMARY KEY (`").append(primaryKey.getName()).append("`)");
+        query.append(");");
+        return query.toString();
     }
-    
+
     public void insert(List<Column> columns) {
         if (getExact(columns.get(0)) == null) {
-            String query = "INSERT INTO " + getName() + " (";
+            StringBuilder query = new StringBuilder("INSERT INTO ").append(getName()).append(" (");
             for (Column column : columns) {
                 if (columns.indexOf(column) < columns.size() - 1) {
-                    query += "`" + column.getName() + "`, ";
+                    query.append("`").append(column.getName()).append("`, ");
                 } else {
-                    query += "`" + column.getName() + "`) ";
+                    query.append("`").append(column.getName()).append("`) ");
                 }
             }
-            query += "VALUES (";
+            query.append("VALUES (");
             for (int i = 0; i < columns.size(); i++) {
                 if (i < columns.size() - 1) {
-                    query += "?, ";
+                    query.append("?, ");
                 } else {
-                    query += "?)";
+                    query.append("?)");
                 }
             }
-            query += ";";
+            query.append(";");
             try {
-                PreparedStatement s = sqLite.getSQLConnection().prepareStatement(query);
+                PreparedStatement s = sqLite.getSQLConnection().prepareStatement(query.toString());
                 for (int i = 0; i < columns.size(); i++) {
                     if (columns.get(i).dataType == DataType.STRING) {
                         s.setString(i + 1, columns.get(i).getValue().toString());
@@ -130,7 +131,7 @@ public class Table {
             System.out.println("A row with that name already exists!");
         }
     }
-    
+
     public List<Column> getExact(Column column) {
         List<Column> result = new ArrayList<>();
         String query = "SELECT * FROM " + getName() + " WHERE `" + column.getName() + "`=?";
@@ -146,8 +147,7 @@ public class Table {
             ResultSet rs = s.executeQuery();
             try {
                 for (int i = 0; i < getColumns().size(); i++) {
-                    Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType,
-                            getColumns().get(i).limit);
+                    Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType, getColumns().get(i).limit);
                     if (rCol.dataType == DataType.STRING) {
                         rCol.setValue(rs.getString(i + 1));
                     } else if (rCol.dataType == DataType.INTEGER) {
@@ -167,7 +167,7 @@ public class Table {
         }
         return result;
     }
-    
+
     public List<List<Column>> search(Column column) {
         List<List<Column>> results = new ArrayList<>();
         if (!column.getName().equalsIgnoreCase(primaryKey.getName())) {
@@ -185,8 +185,7 @@ public class Table {
                 while (rs.next()) {
                     List<Column> result = new ArrayList<>();
                     for (int i = 0; i < getColumns().size(); i++) {
-                        Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType,
-                                getColumns().get(i).limit);
+                        Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType, getColumns().get(i).limit);
                         if (getColumns().get(i).dataType == DataType.STRING) {
                             rCol.setValue(rs.getString(i + 1));
                         } else if (getColumns().get(i).dataType == DataType.INTEGER) {
@@ -207,7 +206,7 @@ public class Table {
             return null;
         }
     }
-    
+
     public List<List<Column>> getAll() {
         List<List<Column>> results = new ArrayList<>();
         String query = "SELECT * FROM " + getName();
@@ -217,8 +216,7 @@ public class Table {
             while (rs.next()) {
                 List<Column> result = new ArrayList<>();
                 for (int i = 0; i < getColumns().size(); i++) {
-                    Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType,
-                            getColumns().get(i).limit);
+                    Column rCol = new Column(getColumns().get(i).getName(), getColumns().get(i).dataType, getColumns().get(i).limit);
                     if (getColumns().get(i).dataType == DataType.STRING) {
                         s.setString(1, getColumns().get(i).getValue().toString());
                     } else if (getColumns().get(i).dataType == DataType.INTEGER) {
@@ -261,27 +259,27 @@ public class Table {
 
     public void update(Column primaryKey, List<Column> columns) {
         if (!containsKey(columns)) {
-            String query = "UPDATE " + getName() + " SET ";
+            StringBuilder query = new StringBuilder("UPDATE ").append(getName()).append(" SET ");
             for (Column column : columns) {
                 if (column.dataType == DataType.STRING) {
-                    query += "`" + column.getName() + "`='" + column.getValue().toString() + "'";
+                    query.append("`").append(column.getName()).append("`='").append(column.getValue().toString()).append("'");
                 } else {
-                    query += "`" + column.getName() + "`=" + column.getValue().toString();
+                    query.append("`").append(column.getName()).append("`=").append(column.getValue().toString());
                 }
                 if (columns.indexOf(column) == columns.size() - 1) {
-                    query += " ";
+                    query.append(" ");
                 } else {
-                    query += ", ";
+                    query.append(", ");
                 }
             }
-            query += "WHERE `" + primaryKey.getName() + "`=";
+            query.append("WHERE `").append(primaryKey.getName()).append("`=");
             if (primaryKey.dataType == DataType.STRING) {
-                query += "'" + primaryKey.getValue().toString() + "'";
+                query.append("'").append(primaryKey.getValue().toString()).append("'");
             } else {
-                query += primaryKey.getValue().toString();
+                query.append(primaryKey.getValue().toString());
             }
             try {
-                PreparedStatement s = sqLite.getSQLConnection().prepareStatement(query);
+                PreparedStatement s = sqLite.getSQLConnection().prepareStatement(query.toString());
                 s.executeUpdate();
                 s.close();
             } catch (SQLException e) {

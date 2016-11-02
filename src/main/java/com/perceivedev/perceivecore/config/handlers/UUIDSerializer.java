@@ -1,41 +1,27 @@
 
 package com.perceivedev.perceivecore.config.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import com.perceivedev.perceivecore.config.SerializationProxy;
+import com.perceivedev.perceivecore.config.SerializationManager;
+import com.perceivedev.perceivecore.config.SimpleSerializationProxy;
 
 /**
- * Adds the ability for {@link ConfigManager} to serialize and deserialize
- * objects of type {@link UUID}
+ * Adds the ability for {@link SerializationManager} to serialize and
+ * deserialize objects of type {@link UUID}
  * 
  * @author Rayzr
- *
  */
-public class UUIDSerializer implements SerializationProxy<UUID> {
+public class UUIDSerializer implements SimpleSerializationProxy<UUID> {
 
     @Override
-    public Map<String, Object> serialize(UUID obj) {
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("id", obj);
-
-        return map;
+    public Object serializeSimple(UUID object) {
+        return object.toString();
     }
 
     @Override
-    public UUID deserialize(Map<String, Object> map) {
-
-        try {
-            return UUID.fromString(map.get("id").toString());
-        } catch (IllegalArgumentException e) {
-            // Ignore
-            return null;
-        }
-
+    public UUID deserializeSimple(Object data) {
+        return UUID.fromString(data.toString());
     }
 
 }

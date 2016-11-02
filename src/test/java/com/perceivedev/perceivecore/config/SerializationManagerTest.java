@@ -2,28 +2,27 @@ package com.perceivedev.perceivecore.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * A basic test for the {@link SerializationManager}
- */
+/** A basic test for the {@link SerializationManager} */
 public class SerializationManagerTest {
-
-    private SerializationManager serializationManager = new SerializationManager();
 
     @Test
     public void addSerializationProxy() throws Exception {
         String string = "this is a test";
-        Map<String, Object> serialize = serializationManager.serialize(new SerializableString(string));
-        SerializableString deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        Map<String, Object> serialize = SerializationManager.serialize(new SerializableString(string));
+        SerializableString deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
         Assert.assertEquals(string, deserialize.getData());
 
         SerializationManager.addSerializationProxy(String.class, new StringProxy());
 
-        serialize = serializationManager.serialize(new SerializableString(string));
-        deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        serialize = SerializationManager.serialize(new SerializableString(string));
+        deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string + "-proxy", deserialize.getData());
 
@@ -36,15 +35,15 @@ public class SerializationManagerTest {
         String string = "this is a test";
         SerializationManager.addSerializationProxy(String.class, new StringProxy());
 
-        Map<String, Object> serialize = serializationManager.serialize(new SerializableString(string));
-        SerializableString deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        Map<String, Object> serialize = SerializationManager.serialize(new SerializableString(string));
+        SerializableString deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string + "-proxy", deserialize.getData());
 
         SerializationManager.removeSerializationProxy(String.class);
 
-        serialize = serializationManager.serialize(new SerializableString(string));
-        deserialize = serializationManager.deserialize(SerializableString.class, serialize);
+        serialize = SerializationManager.serialize(new SerializableString(string));
+        deserialize = SerializationManager.deserialize(SerializableString.class, serialize);
 
         Assert.assertEquals(string, deserialize.getData());
     }
@@ -61,26 +60,55 @@ public class SerializationManagerTest {
 
         String testTransient = "transient :)";
 
+        Map<Object, Object> testMap = new HashMap<>();
+        testMap.put("value123", "test");
+        testMap.put("integer", 30);
+        testMap.put(200, "IntKey");
+        testMap.put(new SerializableString("something"), "Serializable key");
+
         SerializingTestObject.NestedObjectClass nestedObjectClass = new SerializingTestObject.NestedObjectClass("nested test");
         SerializingTestObject.ConfigurationTest configurationTest = new SerializingTestObject.ConfigurationTest("I Al Istannen", 99);
 
-        SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient,
-                  nestedObjectClass, configurationTest);
+        UUID testUUID = UUID.randomUUID();
 
-        Map<String, Object> serialized = serializationManager.serialize(object);
-        SerializingTestObject deserialized = serializationManager.deserialize(SerializingTestObject.class, serialized);
+        SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient, testMap, nestedObjectClass,
+                configurationTest, testUUID);
+
+        Map<String, Object> serialized = SerializationManager.serialize(object);
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.createSection("test", serialized);
+
+        System.out.println(configuration.saveToString());
+
+        // SerializingTestObject deserialized =
+        // SerializationManager.deserialize(SerializingTestObject.class,
+        // serialized);
+        SerializingTestObject deserialized = SerializationManager.deserialize(SerializingTestObject.class, configuration.getConfigurationSection("test"));
 
         Assert.assertEquals(object.cloneWithoutTransient(), deserialized);
+        Assert.assertEquals(deserialized.getTestMap().get("value123").getClass(), String.class);
+        Assert.assertEquals(deserialized.getTestMap().get("integer").getClass(), Integer.class);
+        Assert.assertEquals(deserialized.getTestUUID(), testUUID);
+
+        System.out.println("Test UUID: " + testUUID + "\nAfter deserialization: " + deserialized.getTestUUID());
+
     }
 
     @Test
     public void deserialize() throws Exception {
-        // Not much to do here, as it is tested in the serialize method. Just validate edge cases.
+        // Not much to do here, as it is tested in the serialize method. Just
+        // validate edge cases.
 
-        Map<String, Object> serialize = serializationManager.serialize(new UnSerializableString("nothing"));
-        Assert.assertNull("No default constructor given", serializationManager.deserialize(UnSerializableString.class, serialize));
+        Map<String, Object> serialize = SerializationManager.serialize(new UnSerializableString("nothing"));
+        UnSerializableString unserializable = null;
+        try {
+            unserializable = SerializationManager.deserialize(UnSerializableString.class, serialize);
+        } catch (IllegalArgumentException ignore) {
 
-        serializationManager.serialize(null);
+        }
+        Assert.assertNull("No default constructor", unserializable);
+
+        SerializationManager.serialize(null);
     }
 
     private static class UnSerializableString implements ConfigSerializable {
@@ -102,6 +130,26 @@ public class SerializationManagerTest {
 
         private String getData() {
             return data;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (!(o instanceof SerializableString))
+                return false;
+            SerializableString that = (SerializableString) o;
+            return Objects.equals(data, that.data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(data);
+        }
+
+        @Override
+        public String toString() {
+            return "SerializableString{" + "data='" + data + '\'' + '}';
         }
     }
 

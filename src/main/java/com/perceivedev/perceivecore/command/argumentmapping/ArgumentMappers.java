@@ -10,9 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-/**
- * Contains all ArgumentMappers
- */
+/** Contains all ArgumentMappers */
 public class ArgumentMappers {
 
     private static Map<Class<?>, ArgumentMapper<?>> mappers = new HashMap<>();
@@ -50,9 +48,7 @@ public class ArgumentMappers {
         return Optional.ofNullable(mappers.get(clazz));
     }
 
-    /**
-     * Adds the default handles
-     */
+    /** Adds the default handles */
     private static void addDefaults() {
         // ==== PLAYER ====
         ArgumentMappers.addMapper(new ArgumentMapper<Player>() {
@@ -70,8 +66,8 @@ public class ArgumentMappers {
                 String name = strings.poll();
 
                 return Bukkit.getOnlinePlayers().stream()
-                          .filter(player -> player.getName().equals(name) || player.getDisplayName().equals(name))
-                          .findFirst();
+                        .filter(player -> player.getName().equals(name) || player.getDisplayName().equals(name))
+                        .findFirst();
             }
         });
 
@@ -84,7 +80,7 @@ public class ArgumentMappers {
             }
 
             @Override
-            public Optional<? extends EntityType> map(Queue<String> strings) {
+            public Optional<EntityType> map(Queue<String> strings) {
                 if (strings.isEmpty()) {
                     return Optional.empty();
                 }

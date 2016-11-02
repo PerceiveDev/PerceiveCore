@@ -1,23 +1,23 @@
 package com.perceivedev.perceivecore.time;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Allows the parsing of a duration
- */
+/** Allows the parsing of a duration */
 @SuppressWarnings("unused")
 public class DurationParser {
 
     /**
-     * Small recursive parser by I Al Istannen. Bug me about it, I know it is bad!
+     * Small recursive parser by I Al Istannen. Bug me about it, I know it is
+     * bad!
      * <p>
-     * Format:
-     * <br>"xxS" ==> milliseconds
-     * <br>"xxt" ==> ticks
-     * <br>"xxs" ==> seconds
-     * <br>"xxm" ==> minutes
-     * <br>"xxh" ==> hours
-     * <br>"xxd" ==> days
+     * Format: <br>
+     * "xxS" ==> milliseconds <br>
+     * "xxt" ==> ticks <br>
+     * "xxs" ==> seconds <br>
+     * "xxm" ==> minutes <br>
+     * "xxh" ==> hours <br>
+     * "xxd" ==> days
      *
      * @param input The input string
      *
@@ -26,19 +26,22 @@ public class DurationParser {
      * @throws RuntimeException If an error occurred while parsing.
      */
     public static long parseDurationToTicks(String input) throws RuntimeException {
+        Objects.requireNonNull(input, "input can not be null");
+
         return parseDuration(input) / 50;
     }
 
     /**
-     * Small recursive parser by I Al Istannen. Bug me about it, I know it is bad!
+     * Small recursive parser by I Al Istannen. Bug me about it, I know it is
+     * bad!
      * <p>
-     * Format:
-     * <br>"xxS" ==> milliseconds
-     * <br>"xxt" ==> ticks
-     * <br>"xxs" ==> seconds
-     * <br>"xxm" ==> minutes
-     * <br>"xxh" ==> hours
-     * <br>"xxd" ==> days
+     * Format: <br>
+     * "xxS" ==> milliseconds <br>
+     * "xxt" ==> ticks <br>
+     * "xxs" ==> seconds <br>
+     * "xxm" ==> minutes <br>
+     * "xxh" ==> hours <br>
+     * "xxd" ==> days
      *
      * @param input The input string
      *
@@ -48,13 +51,13 @@ public class DurationParser {
      */
     @SuppressWarnings("WeakerAccess")
     public static long parseDuration(String input) throws RuntimeException {
+        Objects.requireNonNull(input, "input can not be null");
+
         return new Object() {
 
             private int pos = -1, ch;
 
-            /**
-             * Goes to the next char
-             */
+            /** Goes to the next char */
             private void nextChar() {
                 ch = ++pos < input.length() ? input.charAt(pos) : -1;
             }
@@ -102,7 +105,7 @@ public class DurationParser {
                     }
                     number = Long.parseLong(input.substring(start, pos));
 
-                    //noinspection StatementWithEmptyBody
+                    // noinspection StatementWithEmptyBody
                     if (eat('S')) {
                         // well, it is already in ms
                     } else if (eat('s')) {
@@ -128,4 +131,3 @@ public class DurationParser {
         }.parse();
     }
 }
-

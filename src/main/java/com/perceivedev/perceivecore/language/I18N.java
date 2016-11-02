@@ -25,15 +25,15 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.util.TextUtils;
 
-/**
- * An implementation of the {@link MessageProvider} using
- */
+/** An implementation of the {@link MessageProvider} using */
 public class I18N implements MessageProvider {
 
     /**
@@ -41,30 +41,28 @@ public class I18N implements MessageProvider {
      * "Test 1234 [[path.to.other.message]]" ==> Matches
      * "[[path.to.other.message]]"
      */
-    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern        REFERENCE_PATTERN   = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
 
     private Set<String>                 categories          = new HashSet<>();
     private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
     private Map<String, ResourceBundle> jarResourceBundles  = new HashMap<>();
 
-    private Locale currentLanguage;
-    private String basePackage;
+    private Locale                      currentLanguage;
+    private String                      basePackage;
 
-    private ClassLoader callerClassLoader, fileClassLoader;
+    private ClassLoader                 callerClassLoader, fileClassLoader;
 
-    private String defaultCategory;
+    private String                      defaultCategory;
 
-    /**
-     * Cache to increase performance. May be left out.
-     */
-    private Map<String, MessageFormat> messageFormatCache = new HashMap<>();
+    /** Cache to increase performance. May be left out. */
+    private Map<String, MessageFormat>  messageFormatCache  = new HashMap<>();
 
     /**
      * @param currentLanguage The current language
      * @param basePackage The base package in the jar to read from
      * @param savePath The save path
      * @param callerClassLoader Your class loader. Needed to query packages from
-     * your jar file
+     *            your jar file
      * @param defaultCategory The default category
      * @param more More categories
      *
@@ -72,12 +70,12 @@ public class I18N implements MessageProvider {
      */
     public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, String defaultCategory, String... more) {
 
-        Objects.requireNonNull(currentLanguage);
-        Objects.requireNonNull(basePackage);
-        Objects.requireNonNull(savePath);
-        Objects.requireNonNull(callerClassLoader);
-        Objects.requireNonNull(defaultCategory);
-        Objects.requireNonNull(more);
+        Objects.requireNonNull(currentLanguage, "currentLanguage can not be null");
+        Objects.requireNonNull(basePackage, "basePackage can not be null");
+        Objects.requireNonNull(savePath, "savePath can not be null");
+        Objects.requireNonNull(callerClassLoader, "callerClassLoader can not be null");
+        Objects.requireNonNull(defaultCategory, "defaultCategory can not be null");
+        Objects.requireNonNull(more, "more can not be null");
 
         this.currentLanguage = currentLanguage;
         this.basePackage = basePackage;
@@ -106,9 +104,7 @@ public class I18N implements MessageProvider {
         return null;
     }
 
-    /**
-     * Creates the bundles for all categories
-     */
+    /** Creates the bundles for all categories */
     private void createBundles() {
         ResourceBundle.clearCache(callerClassLoader);
         ResourceBundle.clearCache(fileClassLoader);
@@ -160,7 +156,7 @@ public class I18N implements MessageProvider {
      * @return The translated String
      *
      * @throws IllegalArgumentException If the category isn't in
-     * {@link #categories}
+     *             {@link #categories}
      */
     private String translate(String key, String category) {
         Optional<String> translated = translateOrEmpty(key, category);
@@ -179,7 +175,7 @@ public class I18N implements MessageProvider {
      * @return The translated String OR an empty Optional if not found
      *
      * @throws IllegalArgumentException If the category isn't in
-     * {@link #categories}
+     *             {@link #categories}
      */
     private Optional<String> translateOrEmpty(String key, String category) {
         if (!categories.contains(category)) {
@@ -240,7 +236,8 @@ public class I18N implements MessageProvider {
     }
 
     @Override
-    public String trOrDefault(String key, String category, String defaultString, Object... formattingObjects) {
+    @Nonnull
+    public String trOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, @Nonnull Object... formattingObjects) {
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
         }
@@ -263,10 +260,11 @@ public class I18N implements MessageProvider {
      * @throws NullPointerException If any parameter is null
      */
     @Override
-    public String trUncolored(String key, String category, Object... formattingObjects) {
-        Objects.requireNonNull(key);
-        Objects.requireNonNull(category);
-        Objects.requireNonNull(formattingObjects);
+    @Nonnull
+    public String trUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null");
+        Objects.requireNonNull(category, "category can not be null");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
@@ -288,13 +286,14 @@ public class I18N implements MessageProvider {
      * @see #trUncolored(String, String, Object...)
      */
     @Override
-    public String trUncolored(String key, Object... formattingObjects) {
+    @Nonnull
+    public String trUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
         return trUncolored(key, defaultCategory, formattingObjects);
     }
 
     @Override
-    public boolean setDefaultCategory(String categoryName) {
-        Objects.requireNonNull(categoryName);
+    public boolean setDefaultCategory(@Nonnull String categoryName) {
+        Objects.requireNonNull(categoryName, "categoryName can not be null");
         if (!categories.contains(categoryName)) {
             return false;
         }
@@ -309,8 +308,8 @@ public class I18N implements MessageProvider {
     }
 
     @Override
-    public void addCategory(String category) {
-        Objects.requireNonNull(category);
+    public void addCategory(@Nonnull String category) {
+        Objects.requireNonNull(category, "category can not be null");
         if (categories.contains(category)) {
             return;
         }
@@ -348,8 +347,8 @@ public class I18N implements MessageProvider {
      * @throws NullPointerException If locale is null
      */
     @Override
-    public boolean setLanguage(Locale locale) {
-        Objects.requireNonNull(locale);
+    public boolean setLanguage(@Nonnull Locale locale) {
+        Objects.requireNonNull(locale, "locale can not be null");
 
         if (tryLanguage(locale)) {
             currentLanguage = locale;
@@ -369,16 +368,12 @@ public class I18N implements MessageProvider {
         createBundles();
     }
 
-    /**
-     * A classloader reading from a directory
-     */
+    /** A classloader reading from a directory */
     private static class FileClassLoader extends ClassLoader {
 
         private Path path;
 
-        /**
-         * @param path The base path to read from
-         */
+        /** @param path The base path to read from */
         FileClassLoader(Path path) {
             if (!Files.isDirectory(path)) {
                 throw new IllegalArgumentException("Path can only be a directory.");
@@ -423,10 +418,10 @@ public class I18N implements MessageProvider {
      * @return True if the files were written, false otherwise.
      *
      * @throws NullPointerException If defaultPackage, targetDir or jarFile is
-     * null
+     *             null
      */
     public static boolean copyDefaultFiles(String defaultPackage, Path targetDir, boolean overwrite, File file) {
-        Objects.requireNonNull(defaultPackage);
+        Objects.requireNonNull(defaultPackage, "defaultPackage can not be null");
         Objects.requireNonNull(targetDir);
         Objects.requireNonNull(file);
 
@@ -445,6 +440,10 @@ public class I18N implements MessageProvider {
                         if (Files.exists(copyTo) && !overwrite) {
                             continue;
                         }
+                        if (Files.isDirectory(copyTo)) {
+                            continue;
+                        }
+
                         Files.copy(jarFile.getInputStream(entry), copyTo, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
@@ -464,7 +463,8 @@ public class I18N implements MessageProvider {
      *
      * @return True if the files were written, false otherwise.
      *
-     * @throws NullPointerException If defaultPackage, targetDir or jarFile is null
+     * @throws NullPointerException If defaultPackage, targetDir or jarFile is
+     *             null
      */
     public static boolean copyDefaultFiles(JavaPlugin plugin, boolean overwrite, String basePackage) {
         File pluginJar = (File) ReflectionUtil.invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin).getValue();

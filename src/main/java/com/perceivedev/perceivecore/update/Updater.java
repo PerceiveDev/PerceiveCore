@@ -8,15 +8,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.util.TextUtils;
 
-/**
- * @author ZP4RKER
- */
+/** @author ZP4RKER */
 public abstract class Updater {
 
     private JavaPlugin plugin;
@@ -44,16 +43,16 @@ public abstract class Updater {
             connection.connect();
             int response = connection.getResponseCode();
             switch (response) {
-            case 200:
-            case 201:
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                br.close();
-                return sb.toString();
+                case 200:
+                case 201:
+                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    br.close();
+                    return sb.toString();
             }
         } catch (Exception e) {
         } finally {
@@ -143,7 +142,7 @@ public abstract class Updater {
      */
     boolean updateAvailable() {
         String currentVersion = plugin.getDescription().getVersion();
-        if (getLatestVersion() != currentVersion) {
+        if (!Objects.equals(getLatestVersion(), currentVersion)) {
             if (Double.parseDouble(currentVersion) < Double.parseDouble(getLatestVersion())) {
                 return true;
             }

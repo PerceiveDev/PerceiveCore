@@ -30,7 +30,8 @@ public class BukgetUpdater extends Updater {
             JSONParser parser = new JSONParser();
             try {
                 jsonObject = (JSONObject) parser.parse(data);
-            } catch (Exception localException) {}
+            } catch (Exception localException) {
+            }
         }
         String version = null;
         if ((jsonObject.get("versions") instanceof JSONArray)) {
@@ -38,7 +39,7 @@ public class BukgetUpdater extends Updater {
             for (int i = 0; i < versions.size(); i++) {
                 if (version != null) {
                     if ((((JSONArray) ((JSONObject) versions.get(i)).get("game_versions")).get(0).toString().contains(getMCVersion())) &&
-                              (Long.parseLong(version) < Long.parseLong(((JSONObject) versions.get(i)).get("version").toString()))) {
+                            (Long.parseLong(version) < Long.parseLong(((JSONObject) versions.get(i)).get("version").toString()))) {
                         version = ((JSONObject) versions.get(i)).get("version").toString();
                     }
                 } else if (((JSONArray) ((JSONObject) versions.get(i)).get("game_versions")).get(0).toString().contains(getMCVersion())) {
@@ -61,7 +62,7 @@ public class BukgetUpdater extends Updater {
             }
         }
         JSONArray versions = (JSONArray) jsonObject.get("versions");
-        List<JSONObject> validVersions = new ArrayList();
+        List<JSONObject> validVersions = new ArrayList<>();
         for (Object versionObj : versions) {
             JSONObject version = (JSONObject) versionObj;
             if (((JSONArray) version.get("game_versions")).get(0).toString().contains(getMCVersion())) {

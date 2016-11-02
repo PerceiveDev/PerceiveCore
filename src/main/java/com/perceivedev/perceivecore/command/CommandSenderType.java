@@ -7,9 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * The different CommandSender types
- */
+/** The different CommandSender types */
 public enum CommandSenderType {
 
     ALL(sender -> true),
@@ -17,8 +15,8 @@ public enum CommandSenderType {
     BLOCK(sender -> sender instanceof BlockCommandSender),
     PLAYER(sender -> sender instanceof Player),
     UNKNOWN(sender -> !CONSOLE.isThisType(sender)
-              && !BLOCK.isThisType(sender)
-              && !PLAYER.isThisType(sender));
+            && !BLOCK.isThisType(sender)
+            && !PLAYER.isThisType(sender));
 
     private Predicate<CommandSender> isYou;
 

@@ -76,11 +76,12 @@ import com.perceivedev.perceivecore.util.TextUtils;
 public class DefaultHelpCommand extends TranslatedCommandNode {
 
     private OptionsParser parser = new OptionsParser();
-    private CommandTree commandTree;
+    private CommandTree   commandTree;
 
     /**
-     * The base key will be "command.help".
-     * <br>For all keys used by this command, look at the class javadoc: {@link DefaultHelpCommand}
+     * The base key will be "command.help". <br>
+     * For all keys used by this command, look at the class javadoc:
+     * {@link DefaultHelpCommand}
      *
      * @param permission The Permission to use
      * @param messageProvider The {@link MessageProvider} to use
@@ -94,7 +95,8 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
     @Override
     public List<String> tabComplete(CommandSender sender, List<String> wholeChat, int relativeIndex) {
         return Arrays.asList("--depth=", "--page=", "--entriesPerPage=", "--showUsage=",
-                  "--search=", "--regex="); // , "--contains=", "--regexFind=", "--regexMatch=", "--regexMatchCI="
+                "--search=", "--regex="); // , "--contains=", "--regexFind=",
+                                          // "--regexMatch=", "--regexMatchCI="
     }
 
     @Override
@@ -140,17 +142,18 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
      * @param language The language to use for the key translation
      * @param node The CommandNode to start with
      * @param withUsage If true, the usage will be shown
-     * @param maxDepth The maximum depth. Index based. 0 ==> Just this command, 1 ==> Command and children
+     * @param maxDepth The maximum depth. Index based. 0 ==> Just this command,
+     *            1 ==> Command and children
      * @param counter The current counter. Just supply 0. Used for recursion.
      */
     private static List<PagerFilterable> getCommandFilterable(MessageProvider language, CommandNode node, CommandTree tree,
-              boolean withUsage, int maxDepth,
-              int counter) {
+            boolean withUsage, int maxDepth,
+            int counter) {
         List<PagerFilterable> list = new ArrayList<>();
 
         if (!tree.isRoot(node)) {
             PagerFilterable filterable = new CommandFilterable(node, withUsage, node.getChildren().size(),
-                      language, counter);
+                    language, counter);
             list.add(filterable);
         } else {
             counter--;
@@ -175,10 +178,10 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
         private MessageProvider language;
         private int             depth;
 
-        private List<String> allLines;
+        private List<String>    allLines;
 
         CommandFilterable(CommandNode node, boolean showUsage, int childrenAmount,
-                  MessageProvider language, int depth) {
+                MessageProvider language, int depth) {
             this.node = node;
             this.showUsage = showUsage;
             this.childrenAmount = childrenAmount == 0 ? "" : Integer.toString(childrenAmount);
@@ -208,19 +211,20 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
             return ChatColor.stripColor(coloredString);
         }
 
+        @SuppressWarnings("StringConcatenationInLoop")
         private void calculateAllLines() {
             String finalString;
             {
                 if (showUsage) {
                     String key = "command.help.format.with.usage";
                     finalString = language.trOrDefault(key,
-                              "&3{0}&9: &7{1} &7<&6{2}&7><newline>  &cUsage: {3}",
-                              new Object[] { node.getName(), node.getDescription(), childrenAmount, node.getUsage() });
+                            "&3{0}&9: &7{1} &7<&6{2}&7><newline>  &cUsage: {3}",
+                            new Object[] { node.getName(), node.getDescription(), childrenAmount, node.getUsage() });
                 } else {
                     String key = "command.help.format.without.usage";
                     finalString = language.trOrDefault(key,
-                              "&3{0}&9: &7{1} &7<&6{2}&7>",
-                              new Object[] { node.getName(), node.getDescription(), childrenAmount, node.getUsage() });
+                            "&3{0}&9: &7{1} &7<&6{2}&7>",
+                            new Object[] { node.getName(), node.getDescription(), childrenAmount, node.getUsage() });
                 }
                 finalString = colorize(finalString);
             }
@@ -244,9 +248,7 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
         }
 
         @Override
-        public
-        @Nonnull
-        List<String> getAllLines() {
+        public @Nonnull List<String> getAllLines() {
             return allLines;
         }
 
@@ -270,18 +272,16 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
         @Override
         public String toString() {
             return "CommandFilterable{" +
-                      "node=" + node.getName() +
-                      ", showUsage=" + showUsage +
-                      ", childrenAmount='" + childrenAmount + '\'' +
-                      ", depth=" + depth +
-                      ", allLines=" + getAllLines() +
-                      '}';
+                    "node=" + node.getName() +
+                    ", showUsage=" + showUsage +
+                    ", childrenAmount='" + childrenAmount + '\'' +
+                    ", depth=" + depth +
+                    ", allLines=" + getAllLines() +
+                    '}';
         }
     }
 
-    /**
-     * Parses the Builder options
-     */
+    /** Parses the Builder options */
     private static class OptionsParser {
         private Map<Pattern, BiConsumer<String, Options.Builder>> optionsParserMap = new HashMap<>();
 

@@ -2,8 +2,11 @@ package com.perceivedev.perceivecore.packet;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
@@ -16,23 +19,22 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
-/**
- * A simple packet injector, to modify the packets sent and received
- */
-public class PacketInjector extends ChannelDuplexHandler {
+/** A simple packet injector, to modify the packets sent and received */
+class PacketInjector extends ChannelDuplexHandler {
 
-    private boolean isClosed;
-    private Channel channel;
-    private List<PacketListener> packetListeners = new ArrayList<>();
+    private boolean               isClosed;
+    private Channel               channel;
+    private List<PacketListener>  packetListeners = new ArrayList<>();
+    private WeakReference<Player> playerWeakReference;
 
     /**
+     * Must be detached manually!
+     *
      * @param player The player to attach into
      */
-    public PacketInjector(Player player) {
+    PacketInjector(Player player) {
         attach(player);
-
-        // Detach on onDisable
-        PerceiveCore.getInstance().getDisableManager().addListener(this::detach);
+        playerWeakReference = new WeakReference<>(player);
     }
 
     /**
@@ -42,7 +44,8 @@ public class PacketInjector extends ChannelDuplexHandler {
      */
     private void attach(Player player) {
 
-        // Lengthy way of doing: ( (CraftPlayer) handle ).getHandle().playerConnection.networkManager.channel
+        // Lengthy way of doing: ( (CraftPlayer) handle
+        // ).getHandle().playerConnection.networkManager.channel
 
         ReflectResponse<Object> playerConnectionResponse = $(player).getHandle().getField("playerConnection").get();
         if (!playerConnectionResponse.isValuePresent()) {
@@ -71,15 +74,19 @@ public class PacketInjector extends ChannelDuplexHandler {
         channel.pipeline().addBefore("packet_handler", "perceiveHandler", this);
     }
 
-    /**
-     * Removes this handler
-     */
-    public void detach() {
+    /** Removes this handler */
+    void detach() {
         if (isClosed || !channel.isOpen()) {
             return;
         }
         isClosed = true;
-        getChannel().eventLoop().submit(() -> getChannel().pipeline().remove(this));
+        channel.eventLoop().submit(() -> channel.pipeline().remove(this));
+
+        // clear references. Probably not needed, but I am not sure about the
+        // channel.
+        playerWeakReference.clear();
+        packetListeners.clear();
+        channel = null;
     }
 
     /**
@@ -87,25 +94,22 @@ public class PacketInjector extends ChannelDuplexHandler {
      *
      * @return True if the handler is closed
      */
-    public boolean isClosed() {
+    boolean isClosed() {
         return isClosed;
-    }
-
-    /**
-     * Returns the channel
-     *
-     * @return The channel
-     */
-    public Channel getChannel() {
-        return channel;
     }
 
     /**
      * Adds a {@link PacketListener}
      *
      * @param packetListener The {@link PacketListener} to add
+     *
+     * @throws IllegalStateException if the channel is already closed
      */
-    public void addPacketListener(PacketListener packetListener) {
+    void addPacketListener(PacketListener packetListener) {
+        Objects.requireNonNull(packetListener, "packetListener can not be null");
+        if (isClosed()) {
+            throw new IllegalStateException("Channel already closed. Adding of listener invalid");
+        }
         packetListeners.add(packetListener);
     }
 
@@ -114,15 +118,31 @@ public class PacketInjector extends ChannelDuplexHandler {
      *
      * @param packetListener The {@link PacketListener} to remove
      */
-    public void removePacketListener(PacketListener packetListener) {
+    void removePacketListener(PacketListener packetListener) {
         packetListeners.remove(packetListener);
+    }
+
+    /**
+     * Returns the amount of listeners
+     *
+     * @return The amount of listeners
+     */
+    int getListenerAmount() {
+        return packetListeners.size();
     }
 
     @Override
     public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise) throws Exception {
-        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_CLIENT);
+        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_CLIENT, playerWeakReference.get());
 
-        packetListeners.forEach((packetListener) -> packetListener.onPacketSend(event));
+        for (PacketListener packetListener : packetListeners) {
+            try {
+                packetListener.onPacketSend(event);
+            } catch (Exception e) {
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING,
+                        "Error in a Packet Listener (send). This is not the fault of PerceiveCore!", e);
+            }
+        }
 
         // let it through
         if (!event.isCancelled()) {
@@ -132,9 +152,16 @@ public class PacketInjector extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_SERVER);
+        PacketEvent event = new PacketEvent(packet, ConnectionDirection.TO_SERVER, playerWeakReference.get());
 
-        packetListeners.forEach(packetListener -> packetListener.onPacketReceived(event));
+        for (PacketListener packetListener : packetListeners) {
+            try {
+                packetListener.onPacketReceived(event);
+            } catch (Exception e) {
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING,
+                        "Error in a Packet Listener (receive). This is not the fault of PerceiveCore!", e);
+            }
+        }
 
         // let it through
         if (!event.isCancelled()) {
