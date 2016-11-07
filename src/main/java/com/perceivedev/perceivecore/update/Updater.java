@@ -71,9 +71,8 @@ public abstract class Updater {
     abstract String getLatestVersion();
 
     /**
-     * Gets the download url for version.
+     * Gets the download url for the latest version.
      *
-     * @param version The version to get the url for
      * @return The download url
      */
     abstract String getDownload();
@@ -81,7 +80,6 @@ public abstract class Updater {
     /**
      * Updates the plugin.
      *
-     * @param version The version to update to
      * @param senders The ({@link CommandSender})s to send the output to
      */
     void update(CommandSender... senders) {
