@@ -1,8 +1,5 @@
 package com.perceivedev.perceivecore.update;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,16 +12,22 @@ import org.json.simple.parser.JSONParser;
  */
 public class BukgetUpdater extends Updater {
 
-    private String name;
+    private String slug;
 
-    public BukgetUpdater(JavaPlugin plugin, String pluginName) {
+    /**
+     * Default Constructor
+     * 
+     * @param plugin JavaPlugin instance
+     * @param slug The plugin slug on BukkitDev
+     */
+    public BukgetUpdater(JavaPlugin plugin, String slug) {
         super(plugin);
-        this.name = pluginName;
+        this.slug = slug;
     }
 
     @Override
     String getLatestVersion() {
-        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + name);
+        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug);
         JSONObject jsonObject = null;
         if (data != null) {
             JSONParser parser = new JSONParser();
@@ -38,11 +41,10 @@ public class BukgetUpdater extends Updater {
             JSONArray versions = (JSONArray) jsonObject.get("versions");
             for (int i = 0; i < versions.size(); i++) {
                 if (version != null) {
-                    if ((((JSONArray) ((JSONObject) versions.get(i)).get("game_versions")).get(0).toString().contains(getMCVersion())) &&
-                            (Long.parseLong(version) < Long.parseLong(((JSONObject) versions.get(i)).get("version").toString()))) {
+                    if ((Long.parseLong(version) < Long.parseLong(((JSONObject) versions.get(i)).get("version").toString()))) {
                         version = ((JSONObject) versions.get(i)).get("version").toString();
                     }
-                } else if (((JSONArray) ((JSONObject) versions.get(i)).get("game_versions")).get(0).toString().contains(getMCVersion())) {
+                } else {
                     version = ((JSONObject) versions.get(i)).get("version").toString();
                 }
             }
@@ -52,7 +54,7 @@ public class BukgetUpdater extends Updater {
 
     @Override
     String getDownload(String versionString) {
-        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + name);
+        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug);
         JSONObject jsonObject = null;
         if (data != null) {
             JSONParser parser = new JSONParser();
@@ -62,20 +64,28 @@ public class BukgetUpdater extends Updater {
             }
         }
         JSONArray versions = (JSONArray) jsonObject.get("versions");
-        List<JSONObject> validVersions = new ArrayList<>();
+        /*List<JSONObject> validVersions = new ArrayList<>();
         for (Object versionObj : versions) {
             JSONObject version = (JSONObject) versionObj;
             if (((JSONArray) version.get("game_versions")).get(0).toString().contains(getMCVersion())) {
                 validVersions.add(version);
             }
-        }
+        }*/
         JSONObject latest = null;
-        for (JSONObject version : validVersions) {
+        /*for (JSONObject version : validVersions) {
             if (latest == null) {
                 latest = version;
             }
             if (Long.parseLong(version.get("version").toString()) > Long.parseLong(latest.get("version").toString())) {
                 latest = version;
+            }
+        }*/
+        for (Object versionObj : versions) {
+            if (latest == null) {
+                latest = (JSONObject) versionObj;
+            }
+            if (Long.parseLong(((JSONObject) versionObj).get("version").toString()) > Long.parseLong(latest.get("version").toString())) {
+                latest = (JSONObject) versionObj;
             }
         }
         return latest.get("download").toString();

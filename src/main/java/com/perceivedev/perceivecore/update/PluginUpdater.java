@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.update;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,28 +12,21 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PluginUpdater {
 
-    private JavaPlugin plugin;
     private Updater    updater;
-
+    
     /**
-     * Constructor for a SpigotMC plugin.
-     *
+     * Default Constructor
+     * 
      * @param plugin JavaPlugin instance
-     * @param resourceId SpigotMC resource ID
+     * @param slug Slug of plugin on SpigotMC or BukkitDev
      */
-    public PluginUpdater(JavaPlugin plugin, long resourceId) {
-        this.plugin = plugin;
-        // this.updater = new SpigetUpdater();
-    }
-
-    /**
-     * Constructor for a BukkitDev plugin.
-     *
-     * @param plugin JavaPlugin instance
-     */
-    public PluginUpdater(JavaPlugin plugin) {
-        this.plugin = plugin;
-        this.updater = new BukgetUpdater(plugin, plugin.getDescription().getName());
+    public PluginUpdater(JavaPlugin plugin, String slug) {
+    	if (NumberUtils.isNumber(slug)) {
+    		// SpigotMC plugin
+    	} else {
+    		// BukkitDev Plugin
+    		this.updater = new BukgetUpdater(plugin, slug);
+    	}
     }
 
     /**
