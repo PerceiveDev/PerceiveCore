@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -106,9 +105,9 @@ public abstract class Updater {
                 to.delete();
             }
             tmp.renameTo(to);
-            sendMessages(TextUtils.colorize("§2Restart server to update!"));
+            sendMessages(TextUtils.colorize("&2Restart server to update!"));
         } catch (Exception e) {
-            sendMessages(TextUtils.colorize("§4Failed to update!"), senders);
+            sendMessages(TextUtils.colorize("&4Failed to update!"), senders);
         }
     }
 

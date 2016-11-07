@@ -12,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PluginUpdater {
 
-    private Updater    updater;
-    
+    private Updater updater;
+
     /**
      * Default Constructor
      * 
@@ -21,12 +21,12 @@ public class PluginUpdater {
      * @param slug Slug of plugin on SpigotMC or BukkitDev
      */
     public PluginUpdater(JavaPlugin plugin, String slug) {
-    	if (NumberUtils.isNumber(slug)) {
-    		// SpigotMC plugin
-    	} else {
-    		// BukkitDev Plugin
-    		this.updater = new BukgetUpdater(plugin, slug);
-    	}
+        if (NumberUtils.isNumber(slug)) {
+            // SpigotMC plugin
+        } else {
+            // BukkitDev Plugin
+            this.updater = new BukgetUpdater(plugin, slug);
+        }
     }
 
     /**
@@ -40,7 +40,7 @@ public class PluginUpdater {
 
     /** Updates the plugin and sends response/output to Console only. */
     public void update() {
-        updater.update(updater.getLatestVersion(), Bukkit.getConsoleSender());
+        updater.update(Bukkit.getConsoleSender());
     }
 
     /**
@@ -50,7 +50,7 @@ public class PluginUpdater {
      *            to
      */
     public void update(CommandSender... senders) {
-        updater.update(updater.getLatestVersion(), senders);
+        updater.update(senders);
     }
 
 }
