@@ -76,7 +76,7 @@ public abstract class Updater {
      * @param version The version to get the url for
      * @return The download url
      */
-    abstract String getDownload(String version);
+    abstract String getDownload();
 
     /**
      * Updates the plugin.
@@ -84,8 +84,8 @@ public abstract class Updater {
      * @param version The version to update to
      * @param senders The ({@link CommandSender})s to send the output to
      */
-    void update(String version, CommandSender... senders) {
-        String updateURL = getDownload(version);
+    void update(CommandSender... senders) {
+        String updateURL = getDownload();
         try {
             File to = new File(this.plugin.getServer().getUpdateFolderFile(), updateURL.substring(updateURL.lastIndexOf('/') + 1, updateURL.length()));
             File tmp = new File(to.getPath() + ".au");
@@ -127,27 +127,12 @@ public abstract class Updater {
     }
 
     /**
-     * Gets the Minecraft version of the server.
-     *
-     * @return The Minecraft version
-     */
-    String getMCVersion() {
-        return this.plugin.getServer().getBukkitVersion().substring(0, 3);
-    }
-
-    /**
      * Checks if there is an update available.
      *
      * @return Whether or not an update is available
      */
     boolean updateAvailable() {
-        String currentVersion = plugin.getDescription().getVersion();
-        if (!Objects.equals(getLatestVersion(), currentVersion)) {
-            if (Double.parseDouble(currentVersion) < Double.parseDouble(getLatestVersion())) {
-                return true;
-            }
-        }
-        return false;
+        return plugin.getDescription().getVersion() != getLatestVersion();
     }
 
 }
