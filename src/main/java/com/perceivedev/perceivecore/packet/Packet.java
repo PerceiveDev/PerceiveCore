@@ -33,10 +33,14 @@ public class Packet {
     }
 
     /**
-     * @param a
-     * @param b
-     * @param converter
-     * @return
+     * Attempts to add a converter. This will return false if there was already
+     * a converter for that class pair. This ignores the ordering of {@code a}
+     * and {@code b}
+     * 
+     * @param a the first class
+     * @param b the second class
+     * @param converter the converter to add
+     * @return Whether or not it actually added anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#addConverter(java.lang.Class,
      *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
      */
@@ -45,10 +49,13 @@ public class Packet {
     }
 
     /**
-     * @param a
-     * @param b
-     * @param converter
-     * @return
+     * Attempts to remove a converter. This ignores the ordering of {@code a}
+     * and {@code b}
+     * 
+     * @param a the first class
+     * @param b the second class
+     * @param converter the converter itself
+     * @return Whether or not it actually removed anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
      *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
      */
@@ -57,9 +64,13 @@ public class Packet {
     }
 
     /**
-     * @param a
-     * @param b
-     * @return
+     * Attempts to remove a converter. This ignores the ordering of {@code a}
+     * and {@code b}
+     * 
+     * @param a the first class
+     * @param b the second class
+     * @param converter the converter itself
+     * @return Whether or not it actually removed anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
      *      java.lang.Class)
      */
@@ -68,11 +79,13 @@ public class Packet {
     }
 
     /**
-     * @param a
-     * @param b
-     * @return
-     * @see com.perceivedev.perceivecore.packet.ConverterMap#hasConverter(java.lang.Class,
-     *      java.lang.Class)
+     * Returns whether or not a converter is provided for the given class pair.
+     * This ignores the ordering of {@code a} and {@code b}
+     * 
+     * @param a the first class
+     * @param b the second class
+     * @return Whether or not a converter exists for the given pair of
+     *         classes
      */
     public static <A, B> boolean hasConverter(Class<A> a, Class<B> b) {
         return converters.hasConverter(a, b);

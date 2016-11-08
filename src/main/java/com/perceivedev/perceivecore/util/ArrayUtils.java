@@ -39,7 +39,8 @@ public class ArrayUtils {
     /**
      * Remove the first element from an array
      *
-     * @param original the original array
+     * @param original The original array
+     * @param <T> The type of the array
      *
      * @return The reduced array
      */

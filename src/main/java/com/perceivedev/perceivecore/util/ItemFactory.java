@@ -240,7 +240,7 @@ public class ItemFactory implements Cloneable {
     /**
      * Sets the owner of a player head.
      *
-     * @param name the name of the player
+     * @param name The name of the player
      *
      * @return This ItemFactory instance
      *
@@ -261,7 +261,11 @@ public class ItemFactory implements Cloneable {
         return this;
     }
 
-    /** @see #setSkullOwner(String) */
+    /**
+     * @param player The player to use for the skull
+     * @return This ItemFactory instance
+     * @see #setSkullOwner(String)
+     */
     @Nonnull
     public ItemFactory setSkullOwner(@Nonnull OfflinePlayer player) {
         Objects.requireNonNull(player, "player can not be null");
@@ -370,7 +374,18 @@ public class ItemFactory implements Cloneable {
         return this;
     }
 
-    /** @see #setPages(List) */
+    /**
+     * Sets the contents of a ({@link Material#WRITTEN_BOOK}).
+     *
+     * @param pages Lines to set in the book
+     *
+     * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not a
+     *             {@link Material#WRITTEN_BOOK}
+     * 
+     * @see #setPages(List)
+     */
     @Nonnull
     public ItemFactory setPages(@Nonnull String... pages) {
         Objects.requireNonNull(pages, "pages can not be null");
