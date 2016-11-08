@@ -3,6 +3,9 @@ package com.perceivedev.perceivecore.update;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.Conversable;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -13,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PluginUpdater {
 
 	private Updater updater;
+	private JavaPlugin plugin;
 
 	/**
      * Default Constructor
@@ -21,6 +25,7 @@ public class PluginUpdater {
      * @param slug Slug of plugin on SpigotMC/BukkitDev
      */
     public PluginUpdater(JavaPlugin plugin, String slug) {
+    	this.plugin = plugin;
     	if (NumberUtils.isNumber(slug)) {
     		// SpigotMC Plugin
     		this.updater = new SpigetUpdater(plugin, slug);
@@ -52,6 +57,20 @@ public class PluginUpdater {
 	 */
 	public void update(CommandSender... senders) {
 		updater.update(senders);
+	}
+	
+	/**
+	 * Asks the sender to confirm before updating
+	 * 
+	 * @param sender The {@link CommandSender} to ask
+	 */
+	public void updateWithConfirmation(CommandSender sender) {
+		ConversationFactory cf = new ConversationFactory(plugin);
+		ConfirmConversation confirm = new ConfirmConversation(this);
+		Conversation conv = cf.withFirstPrompt(confirm)
+							.withLocalEcho(true)
+							.buildConversation((Conversable) sender);
+		conv.begin();
 	}
 
 }
