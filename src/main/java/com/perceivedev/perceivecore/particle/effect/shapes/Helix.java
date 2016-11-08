@@ -90,7 +90,7 @@ public class Helix extends AbstractParticleShape {
 
             Vector vector;
 
-            if (getOrientation() == Orientation.HORIZONTAL) {
+            if (getOrientation() == Orientation.VERTICAL) {
                 vector = new Vector(x, y, z);
             } else {
                 vector = new Vector(x, z, y);
