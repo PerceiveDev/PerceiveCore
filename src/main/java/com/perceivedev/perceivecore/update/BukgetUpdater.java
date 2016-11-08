@@ -26,30 +26,34 @@ public class BukgetUpdater extends Updater {
 
     @Override
     String getLatestVersion() {
-        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug);
-        JSONObject latest = null;
+    	String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug + "/latest");
+        JSONObject json = null;
         if (data != null) {
             JSONParser parser = new JSONParser();
             try {
-                latest = (JSONObject) parser.parse(data);
-            } catch (Exception localException) {
+                json = (JSONObject) parser.parse(data);
+                return json.get("version").toString();
+            } catch (Exception e) {
+            	e.printStackTrace();
             }
         }
-        return latest.get("version").toString();
+        return null;
     }
 
     @Override
     String getDownload() {
         String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug + "/latest");
-        JSONObject latest = null;
+        JSONObject json = null;
         if (data != null) {
             JSONParser parser = new JSONParser();
             try {
-                latest = (JSONObject) parser.parse(data);
-            } catch (Exception localException) {
+                json = (JSONObject) parser.parse(data);
+                return json.get("download").toString();
+            } catch (Exception e) {
+            	e.printStackTrace();
             }
         }
-        return latest.get("download").toString();
+        return null;
     }
 
 }

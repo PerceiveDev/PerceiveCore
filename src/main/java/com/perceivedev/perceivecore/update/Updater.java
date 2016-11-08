@@ -70,7 +70,7 @@ public abstract class Updater {
     abstract String getLatestVersion();
 
     /**
-     * Gets the download url for the latest version.
+     * Gets the download url.
      *
      * @return The download url
      */
@@ -129,7 +129,7 @@ public abstract class Updater {
      * @return Whether or not an update is available
      */
     boolean updateAvailable() {
-        return plugin.getDescription().getVersion() != getLatestVersion();
+        return getLatestVersion() != plugin.getDescription().getVersion();
     }
 
 }
