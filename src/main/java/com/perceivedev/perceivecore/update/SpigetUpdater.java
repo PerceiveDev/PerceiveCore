@@ -42,7 +42,8 @@ public class SpigetUpdater extends Updater {
 			JSONParser parser = new JSONParser();
 			try {
 				json = (JSONObject) parser.parse(data);
-				return "https://spigotmc.org/" + json.get("url").toString();
+				JSONObject file = (JSONObject) json.get("file");
+				return "https://spigotmc.org/" + file.get("url").toString();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
