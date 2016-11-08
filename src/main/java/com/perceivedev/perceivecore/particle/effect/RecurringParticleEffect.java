@@ -64,5 +64,6 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
     /** Starts this particle effect */
     public void start(Location center) {
         ticker.startTicker();
+        setCenter(center);
     }
 }
