@@ -23,6 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
 
+import com.perceivedev.perceivecore.config.handlers.EnumSerializer;
 import com.perceivedev.perceivecore.config.handlers.LocationSerializer;
 import com.perceivedev.perceivecore.config.handlers.MapSerializer;
 import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
@@ -72,6 +73,7 @@ public class SerializationManager {
         addSerializationProxy(World.class, new WorldSerializer());
         addSerializationProxy(UUID.class, new UUIDSerializer());
         addSerializationProxy(Map.class, new MapSerializer());
+        addSerializationProxy(Enum.class, new EnumSerializer());
     }
 
     /**

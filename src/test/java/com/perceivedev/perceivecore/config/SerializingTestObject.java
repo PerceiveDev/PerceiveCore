@@ -25,13 +25,15 @@ public class SerializingTestObject implements ConfigSerializable {
     private ConfigurationTest   configurationTest;
 
     private UUID                testUUID;
+    private TestEnum            testEnum;
 
     public SerializingTestObject() {
     }
 
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
             float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
-            NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID) {
+            NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID,
+            TestEnum testEnum) {
         this.testString = testString;
         this.testByte = testByte;
         this.testShort = testShort;
@@ -44,6 +46,7 @@ public class SerializingTestObject implements ConfigSerializable {
         this.nestedObjectClass = nestedObjectClass;
         this.configurationTest = configurationTest;
         this.testUUID = testUUID;
+        this.testEnum = testEnum;
     }
 
     public String getTestString() {
@@ -94,8 +97,13 @@ public class SerializingTestObject implements ConfigSerializable {
         return testUUID;
     }
 
+    public TestEnum getTestEnum() {
+        return testEnum;
+    }
+
     public SerializingTestObject cloneWithoutTransient() {
-        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, null, testMap, nestedObjectClass, configurationTest, testUUID);
+        return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble,
+                null, testMap, nestedObjectClass, configurationTest, testUUID, testEnum);
     }
 
     @Override
@@ -118,7 +126,8 @@ public class SerializingTestObject implements ConfigSerializable {
                 (Objects.equals(testMap, object.testMap)) + " " +
                 (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
                 (Objects.equals(configurationTest, object.configurationTest)) + " " +
-                (Objects.equals(testUUID, object.testUUID)));
+                (Objects.equals(testUUID, object.testUUID)) + " " +
+                (Objects.equals(testEnum, object.testEnum)));
 
         return testByte == object.testByte &&
                 testShort == object.testShort &&
@@ -131,13 +140,14 @@ public class SerializingTestObject implements ConfigSerializable {
                 Objects.equals(testMap, object.testMap) &&
                 Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
                 Objects.equals(configurationTest, object.configurationTest) &&
-                Objects.equals(testUUID, object.testUUID);
+                Objects.equals(testUUID, object.testUUID) &&
+                Objects.equals(testEnum, testEnum);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, transientString,
-                testMap, nestedObjectClass, configurationTest);
+                testMap, nestedObjectClass, configurationTest, testUUID, testEnum);
     }
 
     public static class NestedObjectClass implements ConfigSerializable {
@@ -215,5 +225,11 @@ public class SerializingTestObject implements ConfigSerializable {
         public int hashCode() {
             return Objects.hash(name, age);
         }
+    }
+
+    public enum TestEnum {
+        ONE,
+        TWO,
+        THREE
     }
 }

@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.perceivedev.perceivecore.config.SerializingTestObject.TestEnum;
 
 /** A basic test for the {@link SerializationManager} */
 public class SerializationManagerTest {
@@ -57,6 +60,7 @@ public class SerializationManagerTest {
         long testLong = 5656565656L;
         float testFloat = (float) (253 + Math.pow(2, -4));
         double testDouble = 253 + Math.pow(2, -8);
+        TestEnum testEnum = TestEnum.values()[ThreadLocalRandom.current().nextInt(TestEnum.values().length)];
 
         String testTransient = "transient :)";
 
@@ -72,7 +76,7 @@ public class SerializationManagerTest {
         UUID testUUID = UUID.randomUUID();
 
         SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient, testMap, nestedObjectClass,
-                configurationTest, testUUID);
+                configurationTest, testUUID, testEnum);
 
         Map<String, Object> serialized = SerializationManager.serialize(object);
         YamlConfiguration configuration = new YamlConfiguration();
