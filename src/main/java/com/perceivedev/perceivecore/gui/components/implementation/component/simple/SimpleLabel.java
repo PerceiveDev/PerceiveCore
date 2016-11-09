@@ -11,6 +11,7 @@ import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.components.base.component.AbstractComponent;
 import com.perceivedev.perceivecore.gui.components.base.component.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
+import com.perceivedev.perceivecore.util.ItemFactory;
 import com.perceivedev.perceivecore.util.ListUtils;
 import com.perceivedev.perceivecore.util.TextUtils;
 
@@ -118,6 +119,13 @@ public class SimpleLabel extends AbstractComponent {
 
     @Override
     public void render(Inventory inventory, Player player, int offsetX, int offsetY) {
+        ItemFactory display = displayType.getColouredItem(color);
+        if (name != null && name.length() > 1) {
+            display.setName(name);
+        }
+        if (lore != null && lore.size() > 1) {
+            display.setLore(lore);
+        }
         iterateOver2DRange(0, getSize().getWidth(), 0, getSize().getHeight(), (x, y) -> {
             int slot = gridToSlot(x + offsetX, y + offsetY);
             if (slot < 0 || slot >= inventory.getSize()) {
@@ -125,8 +133,7 @@ public class SimpleLabel extends AbstractComponent {
                 System.err.println("Button: An item was placed outside the inventory size. Size: " + inventory.getSize()
                         + " Slot: " + slot);
             } else {
-                inventory.setItem(slot,
-                        displayType.getColouredItem(color).setName(name).setLore(lore).build());
+                inventory.setItem(slot, display.build());
             }
         });
     }
