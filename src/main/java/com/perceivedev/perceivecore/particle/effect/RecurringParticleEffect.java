@@ -18,6 +18,7 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * Adds this {@link Tickable} too
      *
      * @param ticker The ticker to use
+     * @param center The center location
      */
     public RecurringParticleEffect(Ticker ticker, Location center) {
         Objects.requireNonNull(center, "center location can't be null");
@@ -44,7 +45,7 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * @return The current center
      */
     protected Location getCenter() {
-        return center;
+        return center.clone();
     }
 
     /**
@@ -53,7 +54,7 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * @param center The new center
      */
     protected void setCenter(Location center) {
-        this.center = center;
+        this.center = center.clone();
     }
 
     /** Stops this particle effect */
