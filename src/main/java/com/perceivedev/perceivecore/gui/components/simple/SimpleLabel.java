@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.gui.components.implementation.component.simple;
+package com.perceivedev.perceivecore.gui.components.simple;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
-import com.perceivedev.perceivecore.gui.components.base.component.AbstractComponent;
-import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.base.AbstractComponent;
+import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 import com.perceivedev.perceivecore.util.ListUtils;

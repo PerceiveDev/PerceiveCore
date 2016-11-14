@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.gui.components.base.component;
+package com.perceivedev.perceivecore.gui.base;
 
 import com.perceivedev.perceivecore.gui.Gui;
 import com.perceivedev.perceivecore.gui.util.Dimension;

@@ -1,9 +1,9 @@
-package com.perceivedev.perceivecore.gui.components.implementation.component.simple;
+package com.perceivedev.perceivecore.gui.components.simple;
 
 import java.util.function.Consumer;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
-import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /** @author Rayzr */

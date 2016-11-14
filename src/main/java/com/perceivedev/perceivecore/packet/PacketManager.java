@@ -24,11 +24,10 @@ public class PacketManager implements Listener {
     private final Map<UUID, PacketInjector> injectorMap = new HashMap<>();
 
     {
-        PerceiveCore.getInstance().getDisableManager()
-                .addListener(() -> {
-                    shutdown();
-                    instance = null;
-                });
+        PerceiveCore.getInstance().getDisableManager().addListener(() -> {
+            shutdown();
+            instance = null;
+        });
     }
 
     /**

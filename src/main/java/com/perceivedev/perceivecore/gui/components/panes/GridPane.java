@@ -1,10 +1,10 @@
-package com.perceivedev.perceivecore.gui.components.implementation.pane;
+package com.perceivedev.perceivecore.gui.components.panes;
 
 import java.util.Collections;
 import java.util.Map.Entry;
 
-import com.perceivedev.perceivecore.gui.components.base.component.Component;
-import com.perceivedev.perceivecore.gui.components.base.pane.AbstractPane;
+import com.perceivedev.perceivecore.gui.base.AbstractPane;
+import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
 import java.util.Objects;

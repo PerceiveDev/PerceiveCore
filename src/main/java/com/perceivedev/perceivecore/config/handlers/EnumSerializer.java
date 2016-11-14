@@ -20,10 +20,10 @@ public class EnumSerializer implements SerializationProxy<Enum> {
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Enum deserialize(Map<String, Object> data) {
         try {
-            @SuppressWarnings("unchecked")
             Class<? extends Enum> clazz = (Class<? extends Enum>) Class.forName((String) data.get("class"));
 
             return Enum.valueOf(clazz, (String) data.get("constant"));

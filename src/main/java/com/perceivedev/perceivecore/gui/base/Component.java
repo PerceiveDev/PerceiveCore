@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.gui.components.base.component;
+package com.perceivedev.perceivecore.gui.base;
 
 import java.util.function.BiConsumer;
 

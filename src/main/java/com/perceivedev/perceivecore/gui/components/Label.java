@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.gui.components.implementation.component;
+package com.perceivedev.perceivecore.gui.components;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
-import com.perceivedev.perceivecore.gui.components.base.component.AbstractComponent;
+import com.perceivedev.perceivecore.gui.base.AbstractComponent;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /** A Label. Like a button, but does nothing on click */

@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.gui.components.implementation.component;
+package com.perceivedev.perceivecore.gui.components;
 
 import java.util.function.Consumer;
 
