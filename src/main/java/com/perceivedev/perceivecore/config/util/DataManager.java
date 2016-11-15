@@ -197,7 +197,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
 
     /**
      * Checks to make sure that a path is valid for this {@link DataManager} to
-     * save and load from
+     * save and load from. This check is used inside of {@link #setPath(Path)}
+     * and the constructor to ensure that the inputed paths point towards
+     * files/folders that are valid for the {@link #save()} and {@link #load()}
+     * methods to use.
      * 
      * @param path The path to check
      */
