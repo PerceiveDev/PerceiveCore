@@ -108,12 +108,10 @@ public class SerializingTestObject implements ConfigSerializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o)
             return true;
-        }
-        if (!(o instanceof SerializingTestObject)) {
+        if (!(o instanceof SerializingTestObject))
             return false;
-        }
         SerializingTestObject object = (SerializingTestObject) o;
 
         System.out.println("Equal SerializingTestObject: " +
@@ -168,12 +166,10 @@ public class SerializingTestObject implements ConfigSerializable {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
+            if (this == o)
                 return true;
-            }
-            if (!(o instanceof NestedObjectClass)) {
+            if (!(o instanceof NestedObjectClass))
                 return false;
-            }
             NestedObjectClass that = (NestedObjectClass) o;
             return Objects.equals(testStringNested, that.testStringNested);
         }
@@ -216,12 +212,10 @@ public class SerializingTestObject implements ConfigSerializable {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
+            if (this == o)
                 return true;
-            }
-            if (!(o instanceof ConfigurationTest)) {
+            if (!(o instanceof ConfigurationTest))
                 return false;
-            }
             ConfigurationTest that = (ConfigurationTest) o;
             return age == that.age &&
                     Objects.equals(name, that.name);

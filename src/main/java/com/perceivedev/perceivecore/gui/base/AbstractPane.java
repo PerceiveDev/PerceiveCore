@@ -299,12 +299,10 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
+            if (this == o)
                 return true;
-            }
-            if (!(o instanceof Interval)) {
+            if (!(o instanceof Interval))
                 return false;
-            }
             Interval interval = (Interval) o;
             return minX == interval.minX &&
                     maxX == interval.maxX &&

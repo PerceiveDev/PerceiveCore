@@ -138,12 +138,10 @@ public class SerializationManagerTest {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
+            if (this == o)
                 return true;
-            }
-            if (!(o instanceof SerializableString)) {
+            if (!(o instanceof SerializableString))
                 return false;
-            }
             SerializableString that = (SerializableString) o;
             return Objects.equals(data, that.data);
         }
