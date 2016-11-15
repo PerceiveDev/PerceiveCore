@@ -25,12 +25,12 @@ import com.perceivedev.perceivecore.config.SerializationManager;
  * A {@link DataManager} that saves data in one file per player in the
  * specified folder
  */
-public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends DataManager<K, V> {
+public class DataFileManager<K, V extends ConfigSerializable> extends DataManager<K, V> {
 
     private final Class<K> keyClass;
 
     /**
-     * Creates a new {@link PerPlayerFileDataManager} that saves and loads data
+     * Creates a new {@link DataFileManager} that saves and loads data
      * class of the
      * type specified, and stores them in the given map.
      *
@@ -38,10 +38,10 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
      * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
-     *            must return true.
+     *            must return true when given this.
      * @param map The map to store the data in
      */
-    public PerPlayerFileDataManager(Path path, Class<V> dataClass, Class<K> keyClass, Map<K, V> map) {
+    public DataFileManager(Path path, Class<V> dataClass, Class<K> keyClass, Map<K, V> map) {
         super(path, dataClass, map);
         this.keyClass = keyClass;
 
@@ -52,17 +52,17 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
     }
 
     /**
-     * Creates a new {@link PerPlayerFileDataManager} that uses a
+     * Creates a new {@link DataFileManager} that uses a
      * {@link HashMap}
      *
      * @param path The path to the data file/folder
      * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
-     *            must return true.
-     * @see #PerPlayerFileDataManager(Path, Class, Class, Map)
+     *            must return true when given this.
+     * @see #DataFileManager(Path, Class, Class, Map)
      */
-    public PerPlayerFileDataManager(Path path, Class<V> dataClass, Class<K> keyClass) {
+    public DataFileManager(Path path, Class<V> dataClass, Class<K> keyClass) {
         this(path, dataClass, keyClass, new HashMap<>());
     }
 
@@ -74,10 +74,10 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
      * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
-     *            must return true.
-     * @see #PerPlayerFileDataManager(Path, Class, Class)
+     *            must return true when given this.
+     * @see #DataFileManager(Path, Class, Class)
      */
-    public PerPlayerFileDataManager(Plugin plugin, String path, Class<V> dataClass, Class<K> keyClass) {
+    public DataFileManager(Plugin plugin, String path, Class<V> dataClass, Class<K> keyClass) {
         this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), dataClass, keyClass);
     }
 
@@ -88,8 +88,6 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
 
     @Override
     public void save() {
-        Map<K, V> map = getMap();
-
         for (Map.Entry<K, V> entry : map.entrySet()) {
             YamlConfiguration configuration = new YamlConfiguration();
 
@@ -106,7 +104,7 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
             configuration.createSection((String) serializedKey, serializedValue);
 
             try {
-                configuration.save(getPath().resolve((String) serializedKey).toString() + ".yml");
+                configuration.save(getPath().resolve((String) serializedKey + ".yml").toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -116,7 +114,7 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
     @Override
     public void load() {
         try {
-            Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), 1, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), 0, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file.toFile());
@@ -132,8 +130,9 @@ public class PerPlayerFileDataManager<K, V extends ConfigSerializable> extends D
                 }
             });
         } catch (IOException e) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                    "Failed to read a File in DataManager. This is most likely not the fault of this plugin.",
+            PerceiveCore.getInstance().getLogger().log(
+                    Level.WARNING,
+                    "Failed to read a File in DataFileManager. This is most likely not the fault of this plugin.",
                     e);
         }
     }
