@@ -63,6 +63,7 @@ public class AnchorPane extends AbstractPane {
      * @see #addComponent(Component, int, int)
      * @deprecated Use {@link #addComponent(Component, int, int)}
      */
+    @Deprecated
     @Override
     public boolean addComponent(Component component) {
         throw new UnsupportedOperationException("AnchorPane doesn't support adding without coordinates given");

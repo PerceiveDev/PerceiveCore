@@ -1,5 +1,9 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +17,6 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagInt;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagList;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagShort;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagString;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /** A bad test for lists. */
 public class NBTTagListTest {

@@ -36,6 +36,7 @@ public enum StandardDisplayTypes implements DisplayType {
      *
      * @return The colored item
      */
+    @Override
     public ItemFactory getColouredItem(DisplayColor color) {
         return colorFunction.apply(color);
     }

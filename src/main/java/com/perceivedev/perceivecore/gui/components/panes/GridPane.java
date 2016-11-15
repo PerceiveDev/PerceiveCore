@@ -2,13 +2,12 @@ package com.perceivedev.perceivecore.gui.components.panes;
 
 import java.util.Collections;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.perceivedev.perceivecore.gui.base.AbstractPane;
 import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
-
-import java.util.Objects;
-import java.util.Optional;
 
 /** A Grid pane */
 public class GridPane extends AbstractPane {

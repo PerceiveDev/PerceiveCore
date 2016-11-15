@@ -478,6 +478,7 @@ public class ItemFactory implements Cloneable {
      *
      * @return A clones ItemFactory
      */
+    @Override
     @Nonnull
     public ItemFactory clone() {
         return new ItemFactory(itemStack.clone());

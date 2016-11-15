@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
+import com.perceivedev.perceivecore.other.Pager.Options;
 
 /** Pages something. */
 public class Pager {

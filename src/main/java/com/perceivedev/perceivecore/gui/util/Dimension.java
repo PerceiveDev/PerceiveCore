@@ -77,10 +77,12 @@ public class Dimension implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof Dimension))
+        }
+        if (!(o instanceof Dimension)) {
             return false;
+        }
         Dimension dimension = (Dimension) o;
         return width == dimension.width && height == dimension.height;
     }

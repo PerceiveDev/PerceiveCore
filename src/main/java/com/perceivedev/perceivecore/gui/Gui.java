@@ -82,6 +82,7 @@ public class Gui implements InventoryHolder {
      *
      * @return The inventory this Gui uses.
      */
+    @Override
     public Inventory getInventory() {
         return inventory;
     }
@@ -231,10 +232,12 @@ public class Gui implements InventoryHolder {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof Gui))
+        }
+        if (!(o instanceof Gui)) {
             return false;
+        }
         Gui gui = (Gui) o;
         return gui.ID == ID;
     }

@@ -1,12 +1,12 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagInt;
-
-import static junit.framework.Assert.assertEquals;
 
 /** A bad test for Ints */
 public class NBTTagIntTest {

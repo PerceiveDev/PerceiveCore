@@ -80,10 +80,12 @@ public class SQLite {
 
     public void close(PreparedStatement ps, ResultSet rs) {
         try {
-            if (ps != null)
+            if (ps != null) {
                 ps.close();
-            if (rs != null)
+            }
+            if (rs != null) {
                 rs.close();
+            }
         } catch (SQLException ex) {
             Error.close(plugin, ex);
         }
