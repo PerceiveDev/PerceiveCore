@@ -1,5 +1,9 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Before;
@@ -7,10 +11,6 @@ import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagByteArray;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 
 /** A bad test for ByteArrays */
 public class NBTTagByteArrayTest {

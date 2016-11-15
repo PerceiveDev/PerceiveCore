@@ -82,6 +82,7 @@ public class Gui implements InventoryHolder {
      *
      * @return The inventory this Gui uses.
      */
+    @Override
     public Inventory getInventory() {
         return inventory;
     }

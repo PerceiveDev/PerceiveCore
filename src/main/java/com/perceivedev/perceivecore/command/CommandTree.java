@@ -155,6 +155,7 @@ public class CommandTree {
          *
          * @return The found command node or null if none found.
          */
+        @Override
         protected CommandFindResult impl_find(CommandSender sender, Queue<String> query) {
             CommandFindResult chosenOne = new CommandFindResult(null, Collections.emptyList());
 

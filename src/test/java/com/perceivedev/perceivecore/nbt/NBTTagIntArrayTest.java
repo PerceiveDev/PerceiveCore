@@ -1,5 +1,8 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -7,9 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagIntArray;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 /** A bad test for an IntArray */
 public class NBTTagIntArrayTest {

@@ -28,6 +28,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
     /**
      * @return The {@link Orientation}
      */
+    @Override
     public Orientation getOrientation() {
         return orientation;
     }
@@ -35,6 +36,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
     /**
      * @param orientation The new {@link Orientation}
      */
+    @Override
     public void setOrientation(Orientation orientation) {
         Objects.requireNonNull(orientation, "orientation can not be null!");
 
@@ -46,6 +48,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
      *
      * @return The granularity
      */
+    @Override
     public double getGranularity() {
         return granularity;
     }
@@ -55,6 +58,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
      *
      * @param granularity The granularity
      */
+    @Override
     public void setGranularity(double granularity) {
         this.granularity = granularity;
     }
@@ -62,6 +66,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
     /**
      * @return The particle that is used to display the square
      */
+    @Override
     public Particle getParticle() {
         return particle;
     }
@@ -69,6 +74,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
     /**
      * @param particle The particle that is used to display the square
      */
+    @Override
     public void setParticle(Particle particle) {
         Objects.requireNonNull(particle, "particle can not be null!");
 
