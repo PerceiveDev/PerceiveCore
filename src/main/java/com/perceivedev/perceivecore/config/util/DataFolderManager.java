@@ -27,28 +27,20 @@ import com.perceivedev.perceivecore.config.SerializationManager;
  */
 public class DataFolderManager<K, V extends ConfigSerializable> extends DataManager<K, V> {
 
-    private final Class<K> keyClass;
-
     /**
      * Creates a new {@link DataFolderManager} that saves and loads data
      * class of the
      * type specified, and stores them in the given map.
      *
      * @param path The path to the data file/folder
-     * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
+     * @param dataClass The data class that this {@link DataManager} handles
      * @param map The map to store the data in
      */
-    public DataFolderManager(Path path, Class<V> dataClass, Class<K> keyClass, Map<K, V> map) {
-        super(path, dataClass, map);
-        this.keyClass = keyClass;
-
-        if (!SerializationManager.isSerializableToString(keyClass)) {
-            throw new IllegalArgumentException(String.format("KeyClass '%s' is not serializable to a String. "
-                    + "Consider adding a SimpleSerializationProxy for it.", keyClass.getName()));
-        }
+    public DataFolderManager(Path path, Class<K> keyClass, Class<V> dataClass, Map<K, V> map) {
+        super(path, keyClass, dataClass, map);
     }
 
     /**
@@ -56,14 +48,14 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
      * {@link HashMap}
      *
      * @param path The path to the data file/folder
-     * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
-     * @see #DataFileManager(Path, Class, Class, Map)
+     * @param dataClass The data class that this {@link DataManager} handles
+     * @see #DataFolderManager(Path, Class, Class, Map)
      */
-    public DataFolderManager(Path path, Class<V> dataClass, Class<K> keyClass) {
-        this(path, dataClass, keyClass, new HashMap<>());
+    public DataFolderManager(Path path, Class<K> keyClass, Class<V> dataClass) {
+        this(path, keyClass, dataClass, new HashMap<>());
     }
 
     /**
@@ -71,14 +63,14 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
      *
      * @param plugin The plugin to get the Data folder from
      * @param path The path to the data file/folder
-     * @param dataClass The data class that this {@link DataManager} handles
      * @param keyClass The class for the key.
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
-     * @see #DataFileManager(Path, Class, Class)
+     * @param dataClass The data class that this {@link DataManager} handles
+     * @see #DataFolderManager(Path, Class, Class)
      */
-    public DataFolderManager(Plugin plugin, String path, Class<V> dataClass, Class<K> keyClass) {
-        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), dataClass, keyClass);
+    public DataFolderManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
+        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);
     }
 
     @Override
@@ -132,7 +124,7 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
         } catch (IOException e) {
             PerceiveCore.getInstance().getLogger().log(
                     Level.WARNING,
-                    "Failed to read a File in DataFileManager. This is most likely not the fault of this plugin.",
+                    "Failed to read a File in DataFolderManager. This is most likely not the fault of this plugin.",
                     e);
         }
     }

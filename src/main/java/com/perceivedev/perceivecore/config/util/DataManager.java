@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.config.ConfigSerializable;
+import com.perceivedev.perceivecore.config.SerializationManager;
 
 /**
  * DataManager is an extension of a Map that supports saving and loading
@@ -30,7 +31,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     private static final String ERROR_MESSAGE = "The path failed the `isValidPath` check for your DataManager instance";
 
     protected Path              path;
-    protected Class<V>          dataClass;
+    protected final Class<K>    keyClass;
+    protected final Class<V>    dataClass;
     protected Map<K, V>         map;
 
     /**
@@ -38,14 +40,22 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * type specified, and stores them in the given map.
      * 
      * @param path The path to the data file/folder
+     * @param keyClass The class for the key.
+     *            {@link SerializationManager#isSerializableToString(Class)}
+     *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
      * @param map The map to store the data in
      */
-    public DataManager(Path path, Class<V> dataClass, Map<K, V> map) {
+    public DataManager(Path path, Class<K> keyClass, Class<V> dataClass, Map<K, V> map) {
         if (!isValidPath(path)) {
             throw new InvalidPathException(path.toString(), ERROR_MESSAGE);
         }
+        if (!SerializationManager.isSerializableToString(keyClass)) {
+            throw new IllegalArgumentException(String.format("keyClass '%s' is not serializable to a String. "
+                    + "Consider adding a SimpleSerializationProxy for it.", keyClass.getName()));
+        }
         this.path = path;
+        this.keyClass = keyClass;
         this.dataClass = dataClass;
         this.map = map;
     }
@@ -54,11 +64,14 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * Creates a new {@link DataManager} that uses a {@link LinkedHashMap}
      * 
      * @param path The path to the data file/folder
+     * @param keyClass The class for the key.
+     *            {@link SerializationManager#isSerializableToString(Class)}
+     *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
      * @see #DataManager(Path, Class, Map)
      */
-    public DataManager(Path path, Class<V> dataClass) {
-        this(path, dataClass, new LinkedHashMap<>());
+    public DataManager(Path path, Class<K> keyClass, Class<V> dataClass) {
+        this(path, keyClass, dataClass, new LinkedHashMap<>());
     }
 
     /**
@@ -66,11 +79,14 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * 
      * @param plugin The plugin to get the Data folder from
      * @param path The path to the data file/folder
+     * @param keyClass The class for the key.
+     *            {@link SerializationManager#isSerializableToString(Class)}
+     *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
      * @see #DataManager(Path, Class)
      */
-    public DataManager(Plugin plugin, String path, Class<V> dataClass) {
-        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), dataClass);
+    public DataManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
+        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);
     }
 
     /**
