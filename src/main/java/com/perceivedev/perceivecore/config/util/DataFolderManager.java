@@ -80,6 +80,12 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
 
     @Override
     public void save() {
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to create directory at path '" + path.toAbsolutePath().toString() + "'. "
+                    + "This is most likely not the fault of this plugin.", e);
+        }
         for (Map.Entry<K, V> entry : map.entrySet()) {
             YamlConfiguration configuration = new YamlConfiguration();
 
@@ -122,10 +128,8 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
                 }
             });
         } catch (IOException e) {
-            PerceiveCore.getInstance().getLogger().log(
-                    Level.WARNING,
-                    "Failed to read a File in DataFolderManager. This is most likely not the fault of this plugin.",
-                    e);
+            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to read a File in DataFolderManager. "
+                    + "This is most likely not the fault of this plugin.", e);
         }
     }
 }
