@@ -75,8 +75,6 @@ public class ClickEvent {
     public void setLastPane(Pane lastPane) {
         this.lastPane = lastPane;
     }
-    
-    
 
     /**
      * Returns the component that was clicked

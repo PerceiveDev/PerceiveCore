@@ -19,13 +19,13 @@ public class Line3D extends AxisAlignedLine {
 
     /**
      * @param granularity The granularity. The granularity is the distance
-     * between each spawned particle
+     *            between each spawned particle
      * @param particle The Particle to use
      * @param first The first end point of the line
      * @param second The second end point of the line
      *
      * @throws IllegalArgumentException If the worlds do not match or it covers
-     * more than one axis
+     *             more than one axis
      */
     public Line3D(double granularity, Particle particle, Location first, Location second) {
         super(granularity, particle, first, second);

@@ -12,38 +12,38 @@ import org.bukkit.conversations.ValidatingPrompt;
  *
  */
 public class ConfirmConversation extends ValidatingPrompt {
-	
-	private boolean conversing = true;
-	private PluginUpdater updater;
-	
-	public ConfirmConversation(PluginUpdater updater) {
-		this.updater = updater;
-	}
 
-	@Override
-	public String getPromptText(ConversationContext context) {
-		context.getForWhom().sendRawMessage("WARNING: If you are not using the latest Spigot/Bukkit"
-				+ " server build then this plugin could break!");
-		return "Would you like to confirm the update? (Yes/No)";
-	}
+    private boolean       conversing = true;
+    private PluginUpdater updater;
 
-	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String input) {
-		if (input.equalsIgnoreCase("yes")) {
-			// Confirmed update
-			updater.update((CommandSender) context.getForWhom());
-		}
-		conversing = false;
-		return Prompt.END_OF_CONVERSATION;
-	}
+    public ConfirmConversation(PluginUpdater updater) {
+        this.updater = updater;
+    }
 
-	@Override
-	protected boolean isInputValid(ConversationContext context, String input) {
-		return (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("no"));
-	}
-	
-	public boolean isConversing() {
-		return conversing;
-	}
+    @Override
+    public String getPromptText(ConversationContext context) {
+        context.getForWhom().sendRawMessage("WARNING: If you are not using the latest Spigot/Bukkit"
+                + " server build then this plugin could break!");
+        return "Would you like to confirm the update? (Yes/No)";
+    }
+
+    @Override
+    protected Prompt acceptValidatedInput(ConversationContext context, String input) {
+        if (input.equalsIgnoreCase("yes")) {
+            // Confirmed update
+            updater.update((CommandSender) context.getForWhom());
+        }
+        conversing = false;
+        return Prompt.END_OF_CONVERSATION;
+    }
+
+    @Override
+    protected boolean isInputValid(ConversationContext context, String input) {
+        return (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("no"));
+    }
+
+    public boolean isConversing() {
+        return conversing;
+    }
 
 }

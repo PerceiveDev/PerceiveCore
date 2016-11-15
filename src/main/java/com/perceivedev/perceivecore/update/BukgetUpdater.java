@@ -26,7 +26,7 @@ public class BukgetUpdater extends Updater {
 
     @Override
     String getLatestVersion() {
-    	String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug + "/latest");
+        String data = getJSON("http://api.bukget.org/3/plugins/bukkit/" + slug + "/latest");
         JSONObject json = null;
         if (data != null) {
             JSONParser parser = new JSONParser();
@@ -34,7 +34,7 @@ public class BukgetUpdater extends Updater {
                 json = (JSONObject) parser.parse(data);
                 return json.get("version").toString();
             } catch (Exception e) {
-            	e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return null;
@@ -50,7 +50,7 @@ public class BukgetUpdater extends Updater {
                 json = (JSONObject) parser.parse(data);
                 return json.get("download").toString();
             } catch (Exception e) {
-            	e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return null;

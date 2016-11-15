@@ -11,44 +11,44 @@ import org.json.simple.parser.JSONParser;
  */
 public class SpigetUpdater extends Updater {
 
-	private long id;
+    private long id;
 
-	public SpigetUpdater(JavaPlugin plugin, String slug) {
-		super(plugin);
-		this.id = Long.parseLong(slug);
-	}
+    public SpigetUpdater(JavaPlugin plugin, String slug) {
+        super(plugin);
+        this.id = Long.parseLong(slug);
+    }
 
-	@Override
-	String getLatestVersion() {
-		String data = getJSON("https://api.spiget.org/v2/resources/" + id + "/versions?spiget__ua=SpigetDocs");
-		JSONObject json = null;
-		if (data != null) {
-			JSONParser parser = new JSONParser();
-			try {
-				json = (JSONObject) parser.parse(data);
-				return json.get("name").toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+    @Override
+    String getLatestVersion() {
+        String data = getJSON("https://api.spiget.org/v2/resources/" + id + "/versions?spiget__ua=SpigetDocs");
+        JSONObject json = null;
+        if (data != null) {
+            JSONParser parser = new JSONParser();
+            try {
+                json = (JSONObject) parser.parse(data);
+                return json.get("name").toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
-	@Override
-	String getDownload() {
-		String data = getJSON("https://api.spiget.org/v2/resources/" + id + "?spiget__ua=SpigetDocs");
-		JSONObject json = null;
-		if (data != null) {
-			JSONParser parser = new JSONParser();
-			try {
-				json = (JSONObject) parser.parse(data);
-				JSONObject file = (JSONObject) json.get("file");
-				return "https://spigotmc.org/" + file.get("url").toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+    @Override
+    String getDownload() {
+        String data = getJSON("https://api.spiget.org/v2/resources/" + id + "?spiget__ua=SpigetDocs");
+        JSONObject json = null;
+        if (data != null) {
+            JSONParser parser = new JSONParser();
+            try {
+                json = (JSONObject) parser.parse(data);
+                JSONObject file = (JSONObject) json.get("file");
+                return "https://spigotmc.org/" + file.get("url").toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
 }
