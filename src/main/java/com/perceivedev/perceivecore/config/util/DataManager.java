@@ -3,7 +3,8 @@
  */
 package com.perceivedev.perceivecore.config.util;
 
-import java.io.File;
+import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
+
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -26,7 +27,7 @@ import com.perceivedev.perceivecore.config.ConfigSerializable;
  * @param <V> The value type
  */
 public abstract class DataManager<K, V extends ConfigSerializable> {
-    private static final String ERROR_MESSAGE = "The path failed the `validatePath` check for your DataManager instance";
+    private static final String ERROR_MESSAGE = "The path failed the `isValidPath` check for your DataManager instance";
 
     protected Path              path;
     protected Class<V>          dataClass;
@@ -41,7 +42,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * @param map The map to store the data in
      */
     public DataManager(Path path, Class<V> dataClass, Map<K, V> map) {
-        if (!validatePath(path)) {
+        if (!isValidPath(path)) {
             throw new InvalidPathException(path.toString(), ERROR_MESSAGE);
         }
         this.path = path;
@@ -61,14 +62,15 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
-     * Creates a new {@link DataManager} that uses a {@link LinkedHashMap}
+     * Creates a new {@link DataManager}
      * 
+     * @param plugin The plugin to get the Data folder from
      * @param path The path to the data file/folder
      * @param dataClass The data class that this {@link DataManager} handles
-     * @see #DataManager(Path, Class, Map)
+     * @see #DataManager(Path, Class)
      */
     public DataManager(Plugin plugin, String path, Class<V> dataClass) {
-        this(plugin.getDataFolder().toPath().resolve(path.replace('/', File.separatorChar)), dataClass, new LinkedHashMap<>());
+        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), dataClass);
     }
 
     /**
@@ -189,22 +191,11 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * @param path The new path to set for the config file/folder
      */
     public void setPath(Path path) {
-        if (!validatePath(path)) {
+        if (!isValidPath(path)) {
             throw new InvalidPathException(path.toString(), ERROR_MESSAGE);
         }
         this.path = path;
     }
-
-    /**
-     * Checks to make sure that a path is valid for this {@link DataManager} to
-     * save and load from. This check is used inside of {@link #setPath(Path)}
-     * and the constructor to ensure that the inputed paths point towards
-     * files/folders that are valid for the {@link #save()} and {@link #load()}
-     * methods to use.
-     * 
-     * @param path The path to check
-     */
-    public abstract boolean validatePath(Path path);
 
     /**
      * Gets raw data map that is used for storing the information associated
@@ -231,6 +222,17 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * Checks to make sure that a path is valid for this {@link DataManager} to
+     * save and load from. This check is used inside of {@link #setPath(Path)}
+     * and the constructor to ensure that the inputted paths point towards
+     * files/folders that are valid for the {@link #save()} and {@link #load()}
+     * methods to use.
+     *
+     * @param path The path to check
+     */
+    public abstract boolean isValidPath(Path path);
+
+    /**
      * Saves all the data in the data map to the config file/folder (implemented
      * by child classes)
      * 
@@ -245,5 +247,4 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * @see #getMap()
      */
     public abstract void load();
-
 }

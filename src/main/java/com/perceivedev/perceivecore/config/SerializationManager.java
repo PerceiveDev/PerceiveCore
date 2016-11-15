@@ -145,6 +145,21 @@ public class SerializationManager {
     }
 
     /**
+     * Checks if a class is serializable to a String
+     * 
+     * This is true if and only if the class is insertable as a RAW value (e.g.
+     * int, float, String, byte)
+     * OR a {@link SimpleSerializationProxy} is in place
+     *
+     * @param clazz The class to check
+     *
+     * @return True if the class is serializable to a String
+     */
+    public static boolean isSerializableToString(Class<?> clazz) {
+        return RAW_INSERTABLE_CLASSES.contains(clazz) || getSerializationProxy(clazz) instanceof SimpleSerializationProxy;
+    }
+
+    /**
      * Serializes a class
      *
      * @param configSerializable The {@link ConfigSerializable} to serialize
