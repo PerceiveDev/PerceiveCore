@@ -70,7 +70,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
 
     @Override
     public boolean isValidPath(Path path) {
-        return Files.notExists(path) || Files.isDirectory(path);
+        return Files.notExists(path) || Files.isRegularFile(path);
     }
 
     @Override

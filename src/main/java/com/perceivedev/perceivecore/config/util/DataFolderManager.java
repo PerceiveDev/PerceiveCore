@@ -105,6 +105,9 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
 
     @Override
     public void load() {
+        if (!Files.exists(path)) {
+            return;
+        }
         try {
             Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), 0, new SimpleFileVisitor<Path>() {
                 @Override
