@@ -22,6 +22,8 @@ import com.perceivedev.perceivecore.config.ConfigSerializable;
  * of any {@link ConfigSerializable} data class.
  * 
  * @author Rayzr
+ * @param <K> The key type
+ * @param <V> The value type
  */
 public abstract class DataManager<K, V extends ConfigSerializable> {
     private static final String ERROR_MESSAGE = "The path failed the `validatePath` check for your DataManager instance";
