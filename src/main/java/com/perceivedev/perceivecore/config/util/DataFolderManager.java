@@ -25,12 +25,12 @@ import com.perceivedev.perceivecore.config.SerializationManager;
  * A {@link DataManager} that saves data in one file per player in the
  * specified folder
  */
-public class DataFileManager<K, V extends ConfigSerializable> extends DataManager<K, V> {
+public class DataFolderManager<K, V extends ConfigSerializable> extends DataManager<K, V> {
 
     private final Class<K> keyClass;
 
     /**
-     * Creates a new {@link DataFileManager} that saves and loads data
+     * Creates a new {@link DataFolderManager} that saves and loads data
      * class of the
      * type specified, and stores them in the given map.
      *
@@ -41,7 +41,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
      *            must return true when given this.
      * @param map The map to store the data in
      */
-    public DataFileManager(Path path, Class<V> dataClass, Class<K> keyClass, Map<K, V> map) {
+    public DataFolderManager(Path path, Class<V> dataClass, Class<K> keyClass, Map<K, V> map) {
         super(path, dataClass, map);
         this.keyClass = keyClass;
 
@@ -52,7 +52,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
     }
 
     /**
-     * Creates a new {@link DataFileManager} that uses a
+     * Creates a new {@link DataFolderManager} that uses a
      * {@link HashMap}
      *
      * @param path The path to the data file/folder
@@ -62,7 +62,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
      *            must return true when given this.
      * @see #DataFileManager(Path, Class, Class, Map)
      */
-    public DataFileManager(Path path, Class<V> dataClass, Class<K> keyClass) {
+    public DataFolderManager(Path path, Class<V> dataClass, Class<K> keyClass) {
         this(path, dataClass, keyClass, new HashMap<>());
     }
 
@@ -77,7 +77,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
      *            must return true when given this.
      * @see #DataFileManager(Path, Class, Class)
      */
-    public DataFileManager(Plugin plugin, String path, Class<V> dataClass, Class<K> keyClass) {
+    public DataFolderManager(Plugin plugin, String path, Class<V> dataClass, Class<K> keyClass) {
         this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), dataClass, keyClass);
     }
 
