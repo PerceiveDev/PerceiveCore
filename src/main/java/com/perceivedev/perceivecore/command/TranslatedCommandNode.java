@@ -105,4 +105,21 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
     protected MessageProvider getMessageProvider() {
         return messageProvider;
     }
+
+    /**
+     * @see com.perceivedev.perceivecore.language.MessageProvider#tr(java.lang.String,
+     *      java.lang.String, java.lang.Object[])
+     */
+    public String tr(String key, String category, Object... formattingObjects) {
+        return messageProvider.tr(key, category, formattingObjects);
+    }
+
+    /**
+     * @see com.perceivedev.perceivecore.language.MessageProvider#tr(java.lang.String,
+     *      java.lang.Object[])
+     */
+    public String tr(String key, Object... formattingObjects) {
+        return messageProvider.tr(key, formattingObjects);
+    }
+
 }
