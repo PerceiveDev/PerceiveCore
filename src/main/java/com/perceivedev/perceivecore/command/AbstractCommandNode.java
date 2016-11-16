@@ -303,7 +303,7 @@ public abstract class AbstractCommandNode implements CommandNode {
                             .log(Level.SEVERE, "Argument type mismatch! Expected "
                                     + convertedParams.targetClasses()[i].getName()
                                     + " got "
-                                    + method.getParameterTypes()[i].getName()
+                                    + method.getParameterTypes()[i + 1].getName()
                                     + " in class "
                                     + getClass().getName());
                     return CommandResult.ERROR;

@@ -448,7 +448,7 @@ public class ReflectionUtil {
             // from it.
             e.printStackTrace();
             return new ReflectResponse<>(e);
-        } catch (InvocationTargetException e) {
+        } catch (InvocationTargetException | IllegalArgumentException e) {
             return new ReflectResponse<>(e);
         }
     }
