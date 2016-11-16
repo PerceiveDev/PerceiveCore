@@ -6,8 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -122,6 +124,36 @@ public class CommandSystemUtil {
             while (iterator.hasNext()) {
                 Entry<String, Command> commandEntry = iterator.next();
                 if (commandEntry.getValue().equals(command)) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    /**
+     * Unregisters all commands that match the given predicate
+     *
+     * @param namePredicate The predicate all commands that will be unregistered
+     *            must match
+     */
+    public static void unregisterCommand(Predicate<String> namePredicate) {
+        CommandMap commandMap = getCommandMap();
+        if (commandMap == null) {
+            return;
+        }
+
+        Map<String, Command> knownCommands = getMapFromCommandMap(commandMap);
+        if (knownCommands == null) {
+            return;
+        }
+
+        {
+            Iterator<Entry<String, Command>> iterator = knownCommands.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Entry<String, Command> commandEntry = iterator.next();
+                Command command = commandEntry.getValue();
+                if (Stream.concat(Stream.of(command.getName()), command.getAliases().stream()).anyMatch(namePredicate)) {
+                    command.unregister(commandMap);
                     iterator.remove();
                 }
             }
