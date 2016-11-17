@@ -6,7 +6,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import org.bukkit.entity.Player;
+
 import com.perceivedev.perceivecore.config.ConfigSerializable;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.EntityHealthProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.EntityLocationProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.EntityPotionEffectProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.PlayerExperienceProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.PlayerFoodProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.PlayerGamemodeProperty;
+import com.perceivedev.perceivecore.util.snapshots.implementation.player.PlayerInventoryProperty;
 
 /**
  * A snapshot
@@ -71,5 +80,23 @@ public class Snapshot<T> implements ConfigSerializable {
         Objects.requireNonNull(target, "target can not be null!");
 
         snapshotProperties.forEach(property -> property.update(target));
+    }
+
+    /**
+     * Snapshots the current state of the player.
+     * <p>
+     * You can later restore it to an arbitrary Player using
+     * {@link #restore(Object)}.
+     * <p>
+     * You can update it by using {@link #update(Object)}
+     * 
+     * @param player The player to snapshot
+     * 
+     * @return A snapshot for the player
+     */
+    public static Snapshot<Player> ofPlayer(Player player) {
+        return new Snapshot<>(player,
+                new EntityHealthProperty(), new EntityLocationProperty(), new EntityPotionEffectProperty(),
+                new PlayerExperienceProperty(), new PlayerFoodProperty(), new PlayerGamemodeProperty(), new PlayerInventoryProperty());
     }
 }
