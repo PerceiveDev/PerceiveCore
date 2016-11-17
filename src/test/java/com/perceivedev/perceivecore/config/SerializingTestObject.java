@@ -1,6 +1,7 @@
 package com.perceivedev.perceivecore.config;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class SerializingTestObject implements ConfigSerializable {
 
     private UUID                testUUID;
     private TestEnum            testEnum;
+    private List<Object>        testList;
 
     public SerializingTestObject() {
     }
@@ -33,7 +35,7 @@ public class SerializingTestObject implements ConfigSerializable {
     public SerializingTestObject(String testString, byte testByte, short testShort, int testInt, long testLong,
             float testFloat, double testDouble, String transientString, Map<Object, Object> testMap,
             NestedObjectClass nestedObjectClass, ConfigurationTest configurationTest, UUID testUUID,
-            TestEnum testEnum) {
+            TestEnum testEnum, List<Object> testList) {
         this.testString = testString;
         this.testByte = testByte;
         this.testShort = testShort;
@@ -47,6 +49,7 @@ public class SerializingTestObject implements ConfigSerializable {
         this.configurationTest = configurationTest;
         this.testUUID = testUUID;
         this.testEnum = testEnum;
+        this.testList = testList;
     }
 
     public String getTestString() {
@@ -101,9 +104,13 @@ public class SerializingTestObject implements ConfigSerializable {
         return testEnum;
     }
 
+    public List<Object> getTestList() {
+        return testList;
+    }
+
     public SerializingTestObject cloneWithoutTransient() {
         return new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble,
-                null, testMap, nestedObjectClass, configurationTest, testUUID, testEnum);
+                null, testMap, nestedObjectClass, configurationTest, testUUID, testEnum, testList);
     }
 
     @Override
@@ -127,7 +134,8 @@ public class SerializingTestObject implements ConfigSerializable {
                 (Objects.equals(nestedObjectClass, object.nestedObjectClass)) + " " +
                 (Objects.equals(configurationTest, object.configurationTest)) + " " +
                 (Objects.equals(testUUID, object.testUUID)) + " " +
-                (Objects.equals(testEnum, object.testEnum)));
+                (Objects.equals(testEnum, object.testEnum)) + " " +
+                (Objects.equals(testList, object.testList)));
 
         return testByte == object.testByte &&
                 testShort == object.testShort &&
@@ -141,7 +149,8 @@ public class SerializingTestObject implements ConfigSerializable {
                 Objects.equals(nestedObjectClass, object.nestedObjectClass) &&
                 Objects.equals(configurationTest, object.configurationTest) &&
                 Objects.equals(testUUID, object.testUUID) &&
-                Objects.equals(testEnum, testEnum);
+                Objects.equals(testEnum, testEnum) &&
+                Objects.equals(testList, testList);
     }
 
     @Override

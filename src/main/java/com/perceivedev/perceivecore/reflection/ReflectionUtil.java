@@ -201,6 +201,31 @@ public class ReflectionUtil {
     }
     // </editor-fold>
 
+    // ==== CLASS ====
+
+    /**
+     * Checks if a given class <i>somehow</i> inherits from another class
+     * 
+     * @param toCheck The class to check
+     * @param inheritedClass The inherited class, it should have
+     * 
+     * @return True if {@code toCheck} somehow inherits from
+     *         {@code inheritedClass}
+     */
+    public static boolean inheritsFrom(Class<?> toCheck, Class<?> inheritedClass) {
+        if (inheritedClass.isAssignableFrom(toCheck)) {
+            return true;
+        }
+
+        for (Class<?> implementedInterface : toCheck.getInterfaces()) {
+            if (inheritsFrom(implementedInterface, inheritedClass)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // <editor-fold desc="Fields">
     // ==== FIELDS ====
 

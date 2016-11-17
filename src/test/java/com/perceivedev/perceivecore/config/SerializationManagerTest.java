@@ -1,6 +1,8 @@
 package com.perceivedev.perceivecore.config;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -75,8 +77,10 @@ public class SerializationManagerTest {
 
         UUID testUUID = UUID.randomUUID();
 
+        List<Object> testList = Arrays.asList("StringTest", 20);
+
         SerializingTestObject object = new SerializingTestObject(testString, testByte, testShort, testInt, testLong, testFloat, testDouble, testTransient, testMap, nestedObjectClass,
-                configurationTest, testUUID, testEnum);
+                configurationTest, testUUID, testEnum, testList);
 
         Map<String, Object> serialized = SerializationManager.serialize(object);
         YamlConfiguration configuration = new YamlConfiguration();

@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ import com.perceivedev.perceivecore.config.handlers.MapSerializer;
 import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
+import com.perceivedev.perceivecore.reflection.ReflectionUtil;
+import com.perceivedev.perceivecore.util.Pair;
 
 /** Manages the serialization */
 public class SerializationManager {
@@ -102,7 +105,7 @@ public class SerializationManager {
         }
 
         Class<?> superClass = clazz;
-        while ((superClass = superClass.getSuperclass()) != Class.class && superClass != Object.class) {
+        while ((superClass = superClass.getSuperclass()) != Class.class && superClass != Object.class && superClass != null) {
             if (getProxyForClassExact(superClass) != null) {
                 return getProxyForClassExact(superClass);
             }
@@ -214,7 +217,7 @@ public class SerializationManager {
                 Object value = getField(field, object);
                 map.put(field.getName(), serializeOneLevel(value, depth + 1));
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("The field " + field.getName() + " of type " + type.getName() + " is not serializable");
+                throw new IllegalArgumentException("The field '" + field.getName() + "' of type '" + type.getName() + "' is not serializable", e);
             }
         }
 
@@ -262,11 +265,27 @@ public class SerializationManager {
                 data = proxy.serialize(object);
             }
             return data;
-        } else if (ConfigurationSerializable.class.isAssignableFrom(type)) {
+        } else if (object instanceof ConfigurationSerializable) {
             ConfigurationSerializable configurationSerializable = (ConfigurationSerializable) object;
             return configurationSerializable.serialize();
         } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
             return object;
+        } else if (object instanceof List) {
+            List<?> list = (List<?>) object;
+            if (list.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            List<Pair<String, Object>> pairs = new ArrayList<>();
+
+            for (Object element : list) {
+                if (element == null) {
+                    pairs.add(new Pair<>(null, null));
+                    continue;
+                }
+                pairs.add(new Pair<>(element.getClass().getName(), element));
+            }
+            return pairs;
         } else {
             throw new IllegalArgumentException(type.getName() + " is not serializable.");
         }
@@ -283,6 +302,9 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, ConfigurationSection data) {
+        Objects.requireNonNull(data, "data can not be null!");
+        Objects.requireNonNull(clazz, "clazz can not be null!");
+
         return deserialize(clazz, convertToMap(data), 0);
     }
 
@@ -296,6 +318,9 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, Map<String, Object> data) {
+        Objects.requireNonNull(data, "data can not be null!");
+        Objects.requireNonNull(clazz, "clazz can not be null!");
+
         return deserialize(clazz, data, 0);
     }
 
@@ -342,7 +367,7 @@ public class SerializationManager {
                 try {
                     setField(field, instance, deserializeOneLevel(serializedData, type, depth + 1));
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("No deserialize method found for field " + field.getName() + " of type " + type.getName());
+                    throw new IllegalArgumentException("No deserialize method found for field '" + field.getName() + "' of type '" + type.getName() + "'", e);
                 }
             }
         }
@@ -425,10 +450,46 @@ public class SerializationManager {
             } else {
                 return object;
             }
+        } else if (ReflectionUtil.inheritsFrom(type, List.class)) {
+            List<?> serializedList = (List<?>) object;
+
+            if (serializedList.isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            List<Object> newList = new ArrayList<>();
+
+            for (Object element : serializedList) {
+                if (element == null) {
+                    newList.add(null);
+                }
+                Pair<?, ?> pair = (Pair<?, ?>) deserializeOneLevel(element, Pair.class, depth + 1);
+                newList.add(pair == null ? null : pair.getValue());
+            }
+
+            return newList;
         } else if (RAW_INSERTABLE_CLASSES.contains(type)) {
+            // convert numbers. YML doesn't know some types. It always returns
+            // doubles for example, no floats
+            if (ReflectionUtil.inheritsFrom(object.getClass(), Number.class)) {
+                Number number = (Number) object;
+                if (type == Float.class || type == Float.TYPE) {
+                    return number.floatValue();
+                } else if (type == Double.class || type == Double.TYPE) {
+                    return number.doubleValue();
+                } else if (type == Byte.class || type == Byte.TYPE) {
+                    return number.byteValue();
+                } else if (type == Short.class || type == Short.TYPE) {
+                    return number.shortValue();
+                } else if (type == Integer.class || type == Integer.TYPE) {
+                    return number.intValue();
+                } else if (type == Long.class || type == Long.TYPE) {
+                    return number.longValue();
+                }
+            }
             return object;
         }
-        throw new IllegalArgumentException("No deserialize method found for type " + type.getName());
+        throw new IllegalArgumentException("No deserialize method found for type '" + type.getName() + "'");
     }
 
     /** @param section the ConfigurationSection to convert */
