@@ -25,13 +25,21 @@ public class SimpleButton extends SimpleLabel {
         this(Dimension.ONE, type, color, name, clickHandler);
     }
 
-    public SimpleButton(String name) {
+    public SimpleButton(Dimension size, String name) {
         super(name);
     }
 
-    public SimpleButton(String name, Consumer<ClickEvent> clickHandler) {
-        this(name);
+    public SimpleButton(String name) {
+        super(Dimension.ONE, name);
+    }
+
+    public SimpleButton(Dimension size, String name, Consumer<ClickEvent> clickHandler) {
+        this(size, name);
         setClickHandler(clickHandler);
+    }
+
+    public SimpleButton(String name, Consumer<ClickEvent> clickHandler) {
+        this(Dimension.ONE, name, clickHandler);
     }
 
     public SimpleButton(Consumer<ClickEvent> clickHandler) {

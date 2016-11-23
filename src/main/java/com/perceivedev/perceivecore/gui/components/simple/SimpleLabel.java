@@ -48,8 +48,12 @@ public class SimpleLabel extends AbstractComponent {
         this(Dimension.ONE, color, name, lore);
     }
 
+    public SimpleLabel(Dimension size, String name, String... lore) {
+        this(size, DisplayColor.WHITE, name, lore);
+    }
+
     public SimpleLabel(String name, String... lore) {
-        this(Dimension.ONE, DisplayColor.WHITE, name, lore);
+        this(Dimension.ONE, name, lore);
     }
 
     /** @return the name */
