@@ -11,9 +11,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.gui.components.base.component.Component;
-import com.perceivedev.perceivecore.gui.components.base.pane.Pane;
-import com.perceivedev.perceivecore.gui.components.implementation.pane.AnchorPane;
+import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.Pane;
+import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
 import com.perceivedev.perceivecore.util.TextUtils;
 
 /**
@@ -82,6 +82,7 @@ public class Gui implements InventoryHolder {
      *
      * @return The inventory this Gui uses.
      */
+    @Override
     public Inventory getInventory() {
         return inventory;
     }
@@ -198,7 +199,7 @@ public class Gui implements InventoryHolder {
      * @param event The {@link InventoryClickEvent}
      */
     public void onClick(InventoryClickEvent event) {
-        rootPane.onClick(new ClickEvent(event, rootPane));
+        rootPane.onClick(new ClickEvent(event, rootPane, null));
     }
 
     /**

@@ -9,20 +9,39 @@ import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
 
-/** Allows DisableListeners to be added */
-public class DisableManager {
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
 
-    // FIXME: 21.10.2016 Not thread safe
+/**
+ * Allows DisableListeners to be added
+ * 
+ * Is bound to a plugin
+ */
+public class DisableManager implements Listener {
 
-    private Collection<DisableListener> listeners    = new ArrayList<>();
-    private Set<DisableListener>        weakListener = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Collection<DisableListener> listeners    = new ArrayList<>();
+    private final Set<DisableListener>        weakListener = Collections.newSetFromMap(new WeakHashMap<>());
+
+    private Plugin                            plugin;
+
+    /**
+     * @param plugin The owning plugin
+     */
+    public DisableManager(Plugin plugin) {
+        this.plugin = plugin;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
 
     /**
      * Adds a disable listener
      *
      * @param listener The {@link DisableListener} to add
      */
-    public void addListener(@Nonnull DisableListener listener) {
+    public synchronized void addListener(@Nonnull DisableListener listener) {
         Objects.requireNonNull(listener, "listener can not be null");
 
         listeners.add(listener);
@@ -33,7 +52,7 @@ public class DisableManager {
      *
      * @param listener The {@link DisableListener} to add
      */
-    public void addWeakListener(@Nonnull DisableListener listener) {
+    public synchronized void addWeakListener(@Nonnull DisableListener listener) {
         Objects.requireNonNull(listener, "listener can not be null");
 
         weakListener.add(listener);
@@ -44,7 +63,7 @@ public class DisableManager {
      *
      * @param listener The {@link DisableListener} to remove
      */
-    public void removeListener(@Nonnull DisableListener listener) {
+    public synchronized void removeListener(@Nonnull DisableListener listener) {
         Objects.requireNonNull(listener, "listener can not be null");
 
         listeners.remove(listener);
@@ -59,7 +78,20 @@ public class DisableManager {
      * sometime
      */
     public void disable() {
-        listeners.forEach(DisableListener::onDisable);
-        weakListener.forEach(DisableListener::onDisable);
+        synchronized (listeners) {
+            listeners.forEach(DisableListener::onDisable);
+        }
+        synchronized (weakListener) {
+            weakListener.forEach(DisableListener::onDisable);
+        }
+    }
+
+    // ================= EVENTS =================
+
+    @EventHandler
+    public void onDisable(PluginDisableEvent event) {
+        if (event.getPlugin().equals(plugin)) {
+            disable();
+        }
     }
 }

@@ -37,9 +37,12 @@ public abstract class AbstractTicker implements Ticker {
     @Override
     public void setDelay(long delay, TimeUnit unit) {
         delayNano = TimeUnit.NANOSECONDS.convert(delay, unit);
-        stopTicker();
-        recreate();
-        startTicker();
+
+        if (isStarted()) {
+            stopTicker();
+            recreate();
+            startTicker();
+        }
     }
 
     @Override

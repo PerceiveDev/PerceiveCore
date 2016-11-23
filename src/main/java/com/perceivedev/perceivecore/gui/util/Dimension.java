@@ -2,7 +2,7 @@ package com.perceivedev.perceivecore.gui.util;
 
 import java.util.Objects;
 
-import com.perceivedev.perceivecore.gui.components.base.component.Component;
+import com.perceivedev.perceivecore.gui.base.Component;
 
 /** The dimension of a {@link Component} */
 public class Dimension implements Cloneable {

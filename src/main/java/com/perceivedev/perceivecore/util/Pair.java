@@ -59,11 +59,16 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        if (!SerializationManager.isSerializable(getKey().getClass())) {
-            throw new IllegalArgumentException("Key not serializable: " + getKey().getClass().getName());
+        if (key != null) {
+            if (!SerializationManager.isSerializable(getKey().getClass())) {
+                throw new IllegalArgumentException("Key not serializable: " + getKey().getClass().getName());
+            }
         }
-        if (!SerializationManager.isSerializable(getValue().getClass())) {
-            throw new IllegalArgumentException("Value not serializable: " + getValue().getClass().getName());
+
+        if (value != null) {
+            if (!SerializationManager.isSerializable(getValue().getClass())) {
+                throw new IllegalArgumentException("Value not serializable: " + getValue().getClass().getName());
+            }
         }
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("key", serializePairPart(getKey()));
@@ -73,6 +78,11 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private Object serializePairPart(Object object) {
+        if (object == null) {
+            // hacky
+            return "NULL";
+        }
+
         Object serialized = SerializationManager.serializeOneLevel(object);
         if (serialized instanceof Map) {
             ((Map) serialized).put("classNameToDeserialize", object.getClass().getName());
@@ -82,6 +92,9 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
 
     @SuppressWarnings("rawtypes")
     private Object deserializePairPart(Object part) {
+        if (part.equals("NULL")) {
+            return null;
+        }
         if (part instanceof Map) {
             String className = (String) ((Map) part).get("classNameToDeserialize");
             ((Map) part).remove("classNameToDeserialize");

@@ -303,7 +303,7 @@ public abstract class AbstractCommandNode implements CommandNode {
                             .log(Level.SEVERE, "Argument type mismatch! Expected "
                                     + convertedParams.targetClasses()[i].getName()
                                     + " got "
-                                    + method.getParameterTypes()[i].getName()
+                                    + method.getParameterTypes()[i + 1].getName()
                                     + " in class "
                                     + getClass().getName());
                     return CommandResult.ERROR;
@@ -357,7 +357,12 @@ public abstract class AbstractCommandNode implements CommandNode {
 
         ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, this, params.toArray(new Object[0]));
         if (!response.isValuePresent()) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Command returned null: " + response.getException());
+            if (response.getResultType() == ReflectResponse.ResultType.ERROR) {
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Command returned null! ", response.getException());
+            } else {
+                // include the current stack trace
+                PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Command returned null! ", new Throwable());
+            }
             return CommandResult.ERROR;
         }
         return (CommandResult) response.getValue();

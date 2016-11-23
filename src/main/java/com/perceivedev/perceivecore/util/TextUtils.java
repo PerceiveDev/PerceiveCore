@@ -1,6 +1,7 @@
 
 package com.perceivedev.perceivecore.util;
 
+import java.io.File;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -76,6 +77,18 @@ public class TextUtils {
         Objects.requireNonNull(text, "text can not be null");
 
         return ChatColor.stripColor(text);
+    }
+
+    /**
+     * Normalizes a Path name
+     *
+     * Replaces '\' and '/' to File.separator
+     *
+     * @param input The input path
+     * @return The normalized name
+     */
+    public static String normalizePathName(String input) {
+        return input.replace("/", File.separator).replace("\\", File.separator);
     }
 
     // @formatter:off

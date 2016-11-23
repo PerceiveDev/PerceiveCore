@@ -83,6 +83,11 @@ public class NbtParser {
     public static class NbtParseException extends Exception {
 
         /**
+         * 
+         */
+        private static final long serialVersionUID = -8761176772930529828L;
+
+        /**
          * Constructs a new exception with the specified detail message and
          * cause.
          * <p>

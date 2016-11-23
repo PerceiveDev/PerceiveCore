@@ -15,6 +15,7 @@ public interface SimpleSerializationProxy<T> extends SerializationProxy<T> {
      * 
      * @see SerializationProxy#deserialize(Map)
      */
+    @Override
     default Map<String, Object> serialize(T object) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("value", serializeSimple(object));
@@ -26,6 +27,7 @@ public interface SimpleSerializationProxy<T> extends SerializationProxy<T> {
      * 
      * @see SerializationProxy#deserialize(Map)
      */
+    @Override
     default T deserialize(Map<String, Object> data) {
         return deserializeSimple(data.get("value"));
     }

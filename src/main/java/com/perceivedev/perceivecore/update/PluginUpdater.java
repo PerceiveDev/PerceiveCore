@@ -1,7 +1,11 @@
 package com.perceivedev.perceivecore.update;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.Conversable;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -11,28 +15,24 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PluginUpdater {
 
-    private JavaPlugin plugin;
     private Updater    updater;
+    private JavaPlugin plugin;
 
     /**
-     * Constructor for a SpigotMC plugin.
-     *
+     * Default Constructor
+     * 
      * @param plugin JavaPlugin instance
-     * @param resourceId SpigotMC resource ID
+     * @param slug Slug of plugin on SpigotMC/BukkitDev
      */
-    public PluginUpdater(JavaPlugin plugin, long resourceId) {
+    public PluginUpdater(JavaPlugin plugin, String slug) {
         this.plugin = plugin;
-        // this.updater = new SpigetUpdater();
-    }
-
-    /**
-     * Constructor for a BukkitDev plugin.
-     *
-     * @param plugin JavaPlugin instance
-     */
-    public PluginUpdater(JavaPlugin plugin) {
-        this.plugin = plugin;
-        this.updater = new BukgetUpdater(plugin, plugin.getDescription().getName());
+        if (NumberUtils.isNumber(slug)) {
+            // SpigotMC Plugin
+            this.updater = new SpigetUpdater(plugin, slug);
+        } else {
+            // BukkitDev Plugin
+            this.updater = new BukgetUpdater(plugin, slug);
+        }
     }
 
     /**
@@ -46,17 +46,31 @@ public class PluginUpdater {
 
     /** Updates the plugin and sends response/output to Console only. */
     public void update() {
-        updater.update(updater.getLatestVersion(), Bukkit.getConsoleSender());
+        updater.update(Bukkit.getConsoleSender());
     }
 
     /**
      * Updates the plugin and sends response/output to all senders
      *
-     * @param senders Each ({@link CommandSender}) you want to send the output
-     *            to
+     * @param senders
+     *            Each ({@link CommandSender}) you want to send the output to
      */
     public void update(CommandSender... senders) {
-        updater.update(updater.getLatestVersion(), senders);
+        updater.update(senders);
+    }
+
+    /**
+     * Asks the sender to confirm before updating
+     * 
+     * @param sender The {@link CommandSender} to ask
+     */
+    public void updateWithConfirmation(CommandSender sender) {
+        ConversationFactory cf = new ConversationFactory(plugin);
+        ConfirmConversation confirm = new ConfirmConversation(this);
+        Conversation conv = cf.withFirstPrompt(confirm)
+                .withLocalEcho(true)
+                .buildConversation((Conversable) sender);
+        conv.begin();
     }
 
 }

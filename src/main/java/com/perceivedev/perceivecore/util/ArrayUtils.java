@@ -39,7 +39,8 @@ public class ArrayUtils {
     /**
      * Remove the first element from an array
      *
-     * @param original the original array
+     * @param original The original array
+     * @param <T> The type of the array
      *
      * @return The reduced array
      */
@@ -51,6 +52,19 @@ public class ArrayUtils {
             return original;
         }
         return Arrays.copyOfRange(original, 1, original.length);
+    }
+
+    /**
+     * Checks if an element is contained in the given array
+     * 
+     * @param array The array
+     * @param element The element to search
+     * @param <T> The type of the array
+     * @return True if the element is in the given array
+     */
+    public static <T> boolean contains(T[] array, T element) {
+        Objects.requireNonNull(array, "array can not be null!");
+        return Arrays.stream(array).anyMatch(element::equals);
     }
 
 }

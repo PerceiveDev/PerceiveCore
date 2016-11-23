@@ -6,12 +6,14 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.gui.components.base.pane.Pane;
+import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.Pane;
 
 /** A Click Event */
 public class ClickEvent {
     private InventoryClickEvent raw;
     private Pane                lastPane;
+    private Component           component;
     private int                 offsetX, offsetY;
 
     /**
@@ -21,12 +23,14 @@ public class ClickEvent {
      *
      * @param raw The raw {@link InventoryClickEvent}
      * @param lastPane The last pane it went through
+     * @param component The component that was clicked
      * @param offsetX The offset on the x axis
      * @param offsetY The offset on the y axis
      */
-    public ClickEvent(InventoryClickEvent raw, Pane lastPane, int offsetX, int offsetY) {
+    public ClickEvent(InventoryClickEvent raw, Pane lastPane, Component component, int offsetX, int offsetY) {
         this.raw = raw;
         this.lastPane = lastPane;
+        this.component = component;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         setCancelled(true);
@@ -37,11 +41,12 @@ public class ClickEvent {
      *
      * @param raw The raw {@link InventoryClickEvent}
      * @param lastPane The last pane it went through
+     * @param component The component that was clicked
      * 
      * @see #ClickEvent(InventoryClickEvent, Pane, int, int)
      */
-    public ClickEvent(InventoryClickEvent raw, Pane lastPane) {
-        this(raw, lastPane, 0, 0);
+    public ClickEvent(InventoryClickEvent raw, Pane lastPane, Component component) {
+        this(raw, lastPane, component, 0, 0);
     }
 
     /**
@@ -54,7 +59,7 @@ public class ClickEvent {
     }
 
     /**
-     * Returns the last pane it wen't through
+     * Returns the last pane it went through
      *
      * @return The last pane it went through
      */
@@ -63,12 +68,30 @@ public class ClickEvent {
     }
 
     /**
-     * Sets the last pane it wen't through
+     * Sets the last pane it went through
      *
      * @param lastPane The last pane it went through
      */
     public void setLastPane(Pane lastPane) {
         this.lastPane = lastPane;
+    }
+
+    /**
+     * Returns the component that was clicked
+     * 
+     * @return The component that was clicked
+     */
+    public Component getComponent() {
+        return component;
+    }
+
+    /**
+     * Sets the component that was clicked
+     * 
+     * @param component The component that was clicked
+     */
+    public void setComponent(Component component) {
+        this.component = component;
     }
 
     /**

@@ -13,18 +13,23 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
 
     private Ticker   ticker;
     private Location center;
+    private double   granularity;
 
     /**
      * Adds this {@link Tickable} too
      *
      * @param ticker The ticker to use
+     * @param center The center location
+     * @param granularity The granularity. The granularity may be the distance
+     *            between each spawned particle
      */
-    public RecurringParticleEffect(Ticker ticker, Location center) {
+    public RecurringParticleEffect(Ticker ticker, Location center, double granularity) {
         Objects.requireNonNull(center, "center location can't be null");
         Objects.requireNonNull(ticker, "ticker can't be null");
 
         this.ticker = ticker;
         this.center = center.clone();
+        this.granularity = granularity;
 
         ticker.addTickable(this);
     }
@@ -33,9 +38,13 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * Creates this particle effect.
      * <p>
      * Uses {@link StandardTicker#BUKKIT_SYNC_RUNNABLE}
+     * 
+     * @param center The center location
+     * @param granularity The granularity. The granularity may be the distance
+     *            between each spawned particle
      */
-    public RecurringParticleEffect(Location center) {
-        this(StandardTicker.BUKKIT_SYNC_RUNNABLE.createUnstartedTicker(), center);
+    public RecurringParticleEffect(Location center, double granularity) {
+        this(StandardTicker.BUKKIT_SYNC_RUNNABLE.createUnstartedTicker(), center, granularity);
     }
 
     /**
@@ -44,7 +53,7 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * @return The current center
      */
     protected Location getCenter() {
-        return center;
+        return center.clone();
     }
 
     /**
@@ -53,16 +62,47 @@ public abstract class RecurringParticleEffect implements ParticleEffect, Tickabl
      * @param center The new center
      */
     protected void setCenter(Location center) {
-        this.center = center;
+        this.center = center.clone();
     }
 
-    /** Stops this particle effect */
+    /**
+     * The granularity is the distance between each spawned particle
+     *
+     * @return The granularity
+     */
+    public double getGranularity() {
+        return granularity;
+    }
+
+    /**
+     * The granularity is the distance between each spawned particle
+     *
+     * @param granularity The granularity
+     */
+    public void setGranularity(double granularity) {
+        this.granularity = granularity;
+    }
+
+    /**
+     * Returns the current ticker
+     * 
+     * @return The ticker used
+     */
+    public Ticker getTicker() {
+        return ticker;
+    }
+
+    /**
+     * Stops this particle effect
+     */
     public void stop() {
         ticker.stopTicker();
     }
 
-    /** Starts this particle effect */
-    public void start(Location center) {
+    /**
+     * Starts this particle effect
+     */
+    public void start() {
         ticker.startTicker();
     }
 }

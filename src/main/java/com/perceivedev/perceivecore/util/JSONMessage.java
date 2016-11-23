@@ -61,24 +61,30 @@ public class JSONMessage {
     private List<MessagePart> parts = new ArrayList<>();
 
     /**
-     * Creates a new JSONChat object
+     * Creates a new JSONMessage object
      *
-     * @param text the text to start with
+     * @param text The text to start with
      */
     private JSONMessage(String text) {
         parts.add(new MessagePart(text));
     }
 
     /**
-     * Creates a new JSONChat object
+     * Creates a new JSONMessage object
      *
-     * @param text the text to start with
+     * @param text The text to start with
+     * 
+     * @return A new {@link JSONMessage} instance
      */
     public static JSONMessage create(String text) {
         return new JSONMessage(text);
     }
 
-    /** Creates a new JSONChat object */
+    /**
+     * Creates a new JSONMessage object with an empty String as the text
+     * 
+     * @return A new {@link JSONMessage} instance
+     */
     public static JSONMessage create() {
         return create("");
     }
@@ -86,7 +92,8 @@ public class JSONMessage {
     /**
      * Sends an action bar message
      *
-     * @param players the players you want to send it to
+     * @param message The message to send (using legacy formatting)
+     * @param players The players you want to send it to
      */
     public static void actionbar(String message, Player... players) {
 
@@ -107,9 +114,9 @@ public class JSONMessage {
     }
 
     /**
-     * Converts this JSONChat instance to actual JSON
+     * Converts this JSONMessage instance to actual JSON
      *
-     * @return The JSON representation of this
+     * @return The JSON representation of this JSONMessage
      */
     public JsonObject toJSON() {
 
@@ -129,6 +136,8 @@ public class JSONMessage {
     /**
      * Converts this JSONMessage object to a String representation of the JSON.
      * This is an alias of {@code toJSON().toString()}.
+     * 
+     * @return A String of the JSON of this JSONMessage
      */
     @Override
     public String toString() {
@@ -138,6 +147,8 @@ public class JSONMessage {
     /**
      * Converts this JSONMessage object to the legacy formatting system, which
      * uses formatting codes (like &6, &l, &4, etc.)
+     * 
+     * @return This JSONMessage using legacy formatting
      */
     public String toLegacy() {
         StringBuilder output = new StringBuilder();
@@ -289,7 +300,7 @@ public class JSONMessage {
      *
      * @param id the id of the achievement
      *
-     * @return
+     * @return this
      */
     public JSONMessage achievement(String id) {
         last().setOnHover(HoverEvent.showAchievement(id));
@@ -368,10 +379,18 @@ public class JSONMessage {
         private ChatColor       color;
         private String          text;
 
+        /**
+         * Creates a new {@link MessagePart} from the given text
+         * 
+         * @param text the text of the message part
+         */
         public MessagePart(String text) {
             this.text = text == null ? "null" : text;
         }
 
+        /**
+         * @return This {@link MessagePart} in JSON form
+         */
         public JsonObject toJSON() {
             Objects.requireNonNull(text, "text can not be null");
 
@@ -398,7 +417,7 @@ public class JSONMessage {
 
         }
 
-        /** @return */
+        /** @return This {@link MessagePart} in legacy format */
         public String toLegacy() {
             StringBuilder output = new StringBuilder();
             if (color != null) {
@@ -489,7 +508,9 @@ public class JSONMessage {
 
         }
 
-        /** @return */
+        /**
+         * @return This {@link MessageEvent} in JSON form
+         */
         public JsonObject toJSON() {
             JsonObject obj = new JsonObject();
             obj.addProperty("action", action);
@@ -607,7 +628,7 @@ public class JSONMessage {
          *
          * @param id the id over the achievement
          *
-         * @return
+         * @return The MessageEvent
          */
         public static MessageEvent showAchievement(String id) {
             return new MessageEvent("show_achievement", id);

@@ -2,7 +2,9 @@ package com.perceivedev.perceivecore.particle.effect;
 
 import org.bukkit.Location;
 
-/** A simple particle effect */
+/**
+ * A simple particle effect
+ */
 public interface ParticleEffect {
 
     /**

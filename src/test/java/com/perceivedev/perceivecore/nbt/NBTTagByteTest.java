@@ -1,14 +1,14 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagByte;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** A bad test for bytes */
 public class NBTTagByteTest {

@@ -1,12 +1,12 @@
 package com.perceivedev.perceivecore.nbt;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Test;
 
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagLong;
-
-import static org.junit.Assert.assertEquals;
 
 /** A bad test for longs */
 public class NBTTagLongTest {

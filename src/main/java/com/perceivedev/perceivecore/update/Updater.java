@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -71,21 +70,19 @@ public abstract class Updater {
     abstract String getLatestVersion();
 
     /**
-     * Gets the download url for version.
+     * Gets the download url.
      *
-     * @param version The version to get the url for
      * @return The download url
      */
-    abstract String getDownload(String version);
+    abstract String getDownload();
 
     /**
      * Updates the plugin.
      *
-     * @param version The version to update to
      * @param senders The ({@link CommandSender})s to send the output to
      */
-    void update(String version, CommandSender... senders) {
-        String updateURL = getDownload(version);
+    void update(CommandSender... senders) {
+        String updateURL = getDownload();
         try {
             File to = new File(this.plugin.getServer().getUpdateFolderFile(), updateURL.substring(updateURL.lastIndexOf('/') + 1, updateURL.length()));
             File tmp = new File(to.getPath() + ".au");
@@ -108,9 +105,9 @@ public abstract class Updater {
                 to.delete();
             }
             tmp.renameTo(to);
-            sendMessages(TextUtils.colorize("§2Restart server to update!"));
+            sendMessages(TextUtils.colorize("&2Restart server to update!"));
         } catch (Exception e) {
-            sendMessages(TextUtils.colorize("§4Failed to update!"), senders);
+            sendMessages(TextUtils.colorize("&4Failed to update!"), senders);
         }
     }
 
@@ -127,27 +124,12 @@ public abstract class Updater {
     }
 
     /**
-     * Gets the Minecraft version of the server.
-     *
-     * @return The Minecraft version
-     */
-    String getMCVersion() {
-        return this.plugin.getServer().getBukkitVersion().substring(0, 3);
-    }
-
-    /**
      * Checks if there is an update available.
      *
      * @return Whether or not an update is available
      */
     boolean updateAvailable() {
-        String currentVersion = plugin.getDescription().getVersion();
-        if (!Objects.equals(getLatestVersion(), currentVersion)) {
-            if (Double.parseDouble(currentVersion) < Double.parseDouble(getLatestVersion())) {
-                return true;
-            }
-        }
-        return false;
+        return getLatestVersion() != plugin.getDescription().getVersion();
     }
 
 }

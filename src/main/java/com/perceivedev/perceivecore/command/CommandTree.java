@@ -15,16 +15,53 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.language.MessageProvider;
+import com.perceivedev.perceivecore.other.DisableListener;
+import com.perceivedev.perceivecore.other.DisableManager;
 
 /** A Command tree */
 public class CommandTree {
 
     private TreeRoot root;
 
-    /** Creates a new Command Tree */
+    /**
+     * Creates a new Command Tree
+     * 
+     * Uses {@link PerceiveCore}s DisableManager
+     * 
+     * @see #CommandTree(DisableManager)
+     */
     public CommandTree() {
+        this(PerceiveCore.getInstance().getDisableManager());
+    }
+
+    /**
+     * Creates a new Command Tree
+     *
+     * Creates a new {@link DisableManager} for the given plugin
+     *
+     * @see #CommandTree(DisableManager)
+     */
+    public CommandTree(Plugin plugin) {
+        this(new DisableManager(plugin));
+    }
+
+    /**
+     * Creates a new CommandTree, which cleans up at reloads
+     * 
+     * @param disableManager The {@link DisableManager} to use
+     */
+    public CommandTree(DisableManager disableManager) {
         this.root = new TreeRoot();
+
+        DisableListener disableListener = () -> {
+            for (CommandNode node : root.getChildren()) {
+                CommandSystemUtil.unregisterCommand(node::isYourKeyword);
+            }
+        };
+
+        disableManager.addListener(disableListener);
     }
 
     /**
@@ -155,6 +192,7 @@ public class CommandTree {
          *
          * @return The found command node or null if none found.
          */
+        @Override
         protected CommandFindResult impl_find(CommandSender sender, Queue<String> query) {
             CommandFindResult chosenOne = new CommandFindResult(null, Collections.emptyList());
 

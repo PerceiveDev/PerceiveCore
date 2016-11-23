@@ -22,7 +22,7 @@ public class PerceiveCore extends JavaPlugin {
 
         logger = getLogger();
 
-        disableManager = new DisableManager();
+        disableManager = new DisableManager(this);
 
         logger.info(versionText() + " enabled");
 
@@ -31,7 +31,6 @@ public class PerceiveCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        disableManager.disable();
         logger.info(versionText() + " disabled");
         // prevent the old instance from still being around.
         instance = null;
