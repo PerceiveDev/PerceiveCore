@@ -17,7 +17,22 @@ import org.bukkit.inventory.Inventory;
 import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/** A Skeleton implementation for the {@link Pane} class */
+// @formatter:off
+/**
+ * A Skeleton implementation for the {@link Pane} class
+ * <p>
+ * A note regarding <b>adding</b>:
+ * <ul>
+ *     <li>
+ *         <b><i>It must update the {@link #getInventoryMap()} itself.</i></b>
+ *         <p>
+ *         <b>You should call upon successful add
+ *         {@link #updateComponentHierarchy(Component)} or perform the tasks
+ *         yourself</b>
+ *     </li>
+ * </ul>
+ */
+// @formatter:on
 public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     protected List<Component> components;
@@ -28,7 +43,6 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * <p>
      * Automatically calls addComponent for each
      *
-     * @param components The components to add
      * @param width The width of this pane
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
@@ -37,10 +51,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * @throws IllegalArgumentException if the size of the InventoryMap is
      *             different than the size of this Pane
      */
-    public AbstractPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
+    public AbstractPane(int width, int height, InventoryMap inventoryMap) {
         super(new Dimension(width, height));
 
-        Objects.requireNonNull(components);
         Objects.requireNonNull(inventoryMap);
 
         if (!inventoryMap.getSize().equals(getSize())) {
@@ -49,21 +62,6 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         this.components = new ArrayList<>();
         this.inventoryMap = inventoryMap;
-
-        components.forEach(this::addComponent);
-    }
-
-    /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
-     * @param width The width of this pane
-     * @param height The height of this pane
-     */
-    public AbstractPane(List<Component> components, int width, int height) {
-        this(components, width, height, new InventoryMap(new Dimension(width, height)));
     }
 
     /**
@@ -73,7 +71,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * @param height The height of this pane
      */
     public AbstractPane(int width, int height) {
-        this(Collections.emptyList(), width, height);
+        this(width, height, new InventoryMap(new Dimension(width, height)));
     }
 
     /**
@@ -99,23 +97,6 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     public Collection<Component> getChildren() {
         return Collections.unmodifiableList(components);
     }
-
-    /**
-     * Adds a component. You can't add the same pane twice.
-     * <p>
-     * <b><i>Must update the {@link #getInventoryMap()} itself.</i></b>
-     * <p>
-     * <b>You should call upon successful add
-     * {@link #updateComponentHierarchy(Component)} or perform the tasks
-     * yourself</b>
-     *
-     * @param component The component to add. You can't add the same component
-     *            twice.
-     *
-     * @return True if the component was added
-     */
-    @Override
-    public abstract boolean addComponent(Component component);
 
     // @formatter:off
     /**

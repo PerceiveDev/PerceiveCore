@@ -11,7 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
+import com.perceivedev.perceivecore.gui.base.FreeformPane;
 import com.perceivedev.perceivecore.gui.base.Pane;
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
 import com.perceivedev.perceivecore.util.TextUtils;
@@ -71,8 +72,44 @@ public class Gui implements InventoryHolder {
         return rootPane;
     }
 
-    public boolean addComponent(Component component) {
-        return getRootPane().addComponent(component);
+    /**
+     * Returns the root as a {@link FixedPositionPane}
+     * 
+     * @throws ClassCastException if the root is NOT a {@link FixedPositionPane}
+     * @return The root pane
+     */
+    public FixedPositionPane getRootAsFixedPosition() {
+        return (FixedPositionPane) rootPane;
+    }
+
+    /**
+     * Returns the root as a {@link FreeformPane}
+     * 
+     * @throws ClassCastException if the root is NOT a {@link FreeformPane}
+     * @return The root pane
+     */
+    public FreeformPane getRootAsFreeform() {
+        return (FreeformPane) rootPane;
+    }
+
+    /**
+     * Checks whether the root pane is a {@link FreeformPane}
+     * 
+     * @return True if the root pane ({@link #getRootPane()}) is a
+     *         {@link FreeformPane}
+     */
+    public boolean isRootFreeformPane() {
+        return rootPane instanceof FreeformPane;
+    }
+
+    /**
+     * Checks whether the root pane is a {@link FixedPositionPane}
+     * 
+     * @return True if the root pane ({@link #getRootPane()}) is a
+     *         {@link FixedPositionPane}
+     */
+    public boolean isRootFixedPositionPane() {
+        return rootPane instanceof FixedPositionPane;
     }
 
     /**

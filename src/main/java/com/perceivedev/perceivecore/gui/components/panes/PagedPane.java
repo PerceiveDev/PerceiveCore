@@ -13,7 +13,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.base.AbstractPane;
 import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
+import com.perceivedev.perceivecore.gui.base.FreeformPane;
+import com.perceivedev.perceivecore.gui.base.Pane;
 import com.perceivedev.perceivecore.gui.components.Button;
 import com.perceivedev.perceivecore.gui.components.panes.PagedPane.ItemPagePopulateFunction.ItemPopulateItem;
 import com.perceivedev.perceivecore.gui.components.simple.DisplayColor;
@@ -38,8 +40,8 @@ import com.perceivedev.perceivecore.util.TriFunction;
  * It can contain as many {@link Component}s as you please and
  * will create pages for that
  */
-@SuppressWarnings({ "WeakerAccess", "unused" })
-public class PagedPane extends AbstractPane {
+@SuppressWarnings({ "unused", "WeakerAccess" })
+public class PagedPane extends AbstractPane implements FixedPositionPane, FreeformPane {
 
     private Function<PagedPane, AnchorPane>                   pageGenerator;
     private BiConsumer<PagedPane, AnchorPane>                 pagePopulateFunction;
@@ -48,8 +50,17 @@ public class PagedPane extends AbstractPane {
     private List<AnchorPane>                                  pages       = new ArrayList<>();
     private int                                               currentPage = 0;
 
-    public PagedPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
-        super(Collections.emptyList(), width, height, inventoryMap);
+    /**
+     * @param width The width of this pane
+     * @param height The height of this pane
+     * @param inventoryMap The {@link InventoryMap} to use
+     *
+     * @throws NullPointerException if any parameter is null
+     * @throws IllegalArgumentException if the size of the InventoryMap is
+     *             different than the size of this Pane
+     */
+    public PagedPane(int width, int height, InventoryMap inventoryMap) {
+        super(width, height, inventoryMap);
 
         components.forEach(this::addComponent);
 
@@ -99,12 +110,14 @@ public class PagedPane extends AbstractPane {
         controlPlaceholderPredicate = (pagedPane, x, y) -> y < pagedPane.getHeight() - 2;
     }
 
-    public PagedPane(List<Component> components, int width, int height) {
-        this(components, width, height, new InventoryMap(new Dimension(width, height)));
-    }
-
+    /**
+     * An empty pane
+     * 
+     * @param width The width of this pane
+     * @param height The height of this pane
+     */
     public PagedPane(int width, int height) {
-        this(Collections.emptyList(), width, height);
+        this(width, height, new InventoryMap(new Dimension(width, height)));
     }
 
     /**
@@ -252,10 +265,16 @@ public class PagedPane extends AbstractPane {
      *         new one was created for it.
      */
     public boolean addComponent(Component component, int xPos, int yPos) {
+
+        if (xPos > 0 && yPos > 0) {
+            if (!controlPlaceholderPredicate.apply(this, xPos, yPos)) {
+                return false;
+            }
+        }
+
         for (int i = 0; i < pages.size(); i++) {
             AnchorPane page = pages.get(i);
             if (xPos < 0 || yPos < 0) {
-                // TODO: 23.11.2016 The 2 there. Make it different
                 for (int y = 0; y < page.getHeight(); y++) {
                     for (int x = 0; x < page.getWidth(); x++) {
                         if (!controlPlaceholderPredicate.apply(this, x, y)) {
@@ -290,11 +309,79 @@ public class PagedPane extends AbstractPane {
         return false;
     }
 
+    @Override
+    public boolean removeComponent(int x, int y) {
+        Optional<Component> component = getComponentAtPoint(x, y);
+
+        return component.isPresent() && removeComponent(component.get());
+    }
+
     /**
      * Adds a new pane
+     * 
+     * The page will be appended to the <b>END</b>
      */
-    private void addNewPane() {
+    public void addNewPane() {
         pages.add(pageGenerator.apply(this));
+
+        // update buttons (MAX_PAGE) and stuff
+        requestReRender();
+    }
+
+    /**
+     * Returns the pane at the given index
+     * 
+     * @param index The index of the pane {@code [0; #getPageCount())}
+     * @throws IndexOutOfBoundsException if the index is < 0 or >=
+     *             {@link #getPageCount()}
+     * @return The pane at the index. Currently an AnchorPane (which is funny,
+     *         as you can not add components to that without casting)
+     */
+    public Pane getPane(int index) {
+        if (index < 0 || index >= getPageCount()) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + getPageCount());
+        }
+
+        return pages.get(index);
+    }
+
+    /**
+     * Removes a Pane
+     * 
+     * @param index The index of the pane to remove {@code [0; #getPageCount())}
+     * @throws IndexOutOfBoundsException if the index is < 0 or >=
+     *             {@link #getPageCount()}
+     */
+    public void removePane(int index) {
+        if (index < 0 || index >= getPageCount()) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + getPageCount());
+        }
+
+        pages.remove(index);
+
+        boolean reRender = false;
+
+        if (index == currentPage) {
+            // if the last page was deleted
+            if (currentPage >= pages.size()) {
+                currentPage = pages.size() - 1;
+            }
+
+            if (getPageCount() <= 0) {
+                addNewPane();
+                currentPage = 0;
+            }
+
+            reRender = true;
+        }
+
+        if (index == currentPage - 1 || index == currentPage + 1) {
+            reRender = true;
+        }
+
+        if (reRender) {
+            requestReRender();
+        }
     }
 
     @Override
@@ -387,9 +474,7 @@ public class PagedPane extends AbstractPane {
                     .addLore(buttonLoreOne, buttonLoreTwo)
                     .build();
 
-            Button button = new Button(itemStack, clickEvent -> {
-                pagedPane.selectPage(Math.max(pagedPane.getPageCount() + pageMod, 0));
-            }, Dimension.ONE);
+            Button button = new Button(itemStack, clickEvent -> pagedPane.selectPage(Math.max(pagedPane.getPageCount() + pageMod, 0)), Dimension.ONE);
 
             page.addComponent(button, x, y);
         }
@@ -448,8 +533,6 @@ public class PagedPane extends AbstractPane {
 
             int pointingTo = clamp(0, pagedPane.getPageCount() - 1, index + pageMod);
 
-            CraftPlayer player;
-
             {
                 ItemFactory factory = ItemFactory.builder(item);
                 List<String> lore = item.hasItemMeta() && item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
@@ -457,7 +540,7 @@ public class PagedPane extends AbstractPane {
                     String replaced = s.replace("{CURRENT_PAGE}", Integer.toString(index + 1));
                     replaced = replaced.replace("{MAX_PAGE}", Integer.toString(pagedPane.getPageCount()));
                     replaced = replaced.replace("{PREV_PAGE}", Integer.toString(Math.max(0, index - 1) + 1));
-                    replaced = replaced.replace("{NEXT_PAGE}", Integer.toString(Math.max(pagedPane.getPageCount(), index + 2)));
+                    replaced = replaced.replace("{NEXT_PAGE}", Integer.toString(Math.min(pagedPane.getPageCount(), index + 2)));
                     replaced = replaced.replace("{POINTED_PAGE}", Integer.toString(pointingTo));
 
                     return replaced;
@@ -473,9 +556,7 @@ public class PagedPane extends AbstractPane {
                 itemStack = factory.build();
             }
 
-            Button button = new Button(itemStack, clickEvent -> {
-                pagedPane.selectPage(pointingTo);
-            }, Dimension.ONE);
+            Button button = new Button(itemStack, clickEvent -> pagedPane.selectPage(pointingTo), Dimension.ONE);
 
             page.addComponent(button, x, y);
         }

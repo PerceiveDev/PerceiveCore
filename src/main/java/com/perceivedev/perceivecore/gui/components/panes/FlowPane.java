@@ -1,23 +1,19 @@
 package com.perceivedev.perceivecore.gui.components.panes;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import com.perceivedev.perceivecore.gui.base.AbstractPane;
 import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FreeformPane;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/** A pane that just throws the children in as they fit. */
+/**
+ * A pane that just throws the children in as they fit.
+ */
 @SuppressWarnings("WeakerAccess")
-public class FlowPane extends AbstractPane {
+public class FlowPane extends AbstractPane implements FreeformPane {
 
     /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
      * @param width The width of this pane
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
@@ -26,21 +22,8 @@ public class FlowPane extends AbstractPane {
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
      *             not equal size
      */
-    protected FlowPane(List<Component> components, int width, int height, FlowInventoryMap inventoryMap) {
-        super(components, width, height, inventoryMap);
-    }
-
-    /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
-     * @param width The width of this pane
-     * @param height The height of this pane
-     */
-    public FlowPane(List<Component> components, int width, int height) {
-        this(components, width, height, new FlowInventoryMap(new Dimension(width, height)));
+    protected FlowPane(int width, int height, FlowInventoryMap inventoryMap) {
+        super(width, height, inventoryMap);
     }
 
     /**
@@ -50,7 +33,7 @@ public class FlowPane extends AbstractPane {
      * @param height The height of this pane
      */
     public FlowPane(int width, int height) {
-        this(Collections.emptyList(), width, height);
+        this(width, height, new FlowInventoryMap(new Dimension(width, height)));
     }
 
     /**
