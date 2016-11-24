@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.packet;
 
 import java.util.HashMap;

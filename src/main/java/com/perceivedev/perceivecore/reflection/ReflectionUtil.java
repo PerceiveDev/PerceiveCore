@@ -252,7 +252,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns ALL fields (public -> private) of a class, filtered by the given
+     * Returns ALL fields (public {@code ->} private) of a class, filtered by
+     * the given
      * Predicate.
      *
      * @param clazz The Class to get the fields for
@@ -271,7 +272,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns ALL fields (public -> private) of a class
+     * Returns ALL fields (public {@code ->} private) of a class
      *
      * @param clazz The Class to get the fields for
      *
@@ -547,7 +548,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all methods (public -> private) from the class, filtered by the
+     * Returns all methods (public {@code ->} private) from the class, filtered
+     * by the
      * given predicate
      *
      * @param clazz The Class to get the methods from
@@ -566,7 +568,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all methods (public -> private) from the class
+     * Returns all methods (public {@code ->} private) from the class
      *
      * @param clazz The Class to get the methods from
      *
@@ -673,7 +675,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all constructors (public -> private) from the class, filtered by
+     * Returns all constructors (public {@code ->} private) from the class,
+     * filtered by
      * the given predicate
      *
      * @param clazz The class to get the constructors from
@@ -692,7 +695,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all (public -> private) constructors of a class.
+     * Returns all (public {@code ->} private) constructors of a class.
      *
      * @param clazz The Class to get the constructors for
      *

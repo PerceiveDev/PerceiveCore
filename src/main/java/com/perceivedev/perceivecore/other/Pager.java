@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.Pager.Options;
 
 /** Pages something. */
 public class Pager {
@@ -501,18 +500,22 @@ public class Pager {
          * <ul>
          * <li>Defaults:
          * <ul>
-         * <li>"pager_header" ==> The header. The key can be customized via the
-         * constructor.</li>
+         * <li>"pager_header" {@code ==>} The header. The key can be customized
+         * via the
+         * constructor.
          * <ul>
-         * <li>{0} ==> The current page</li>
-         * <li>{1} ==> The amount of pages</li>
+         * <li>{0} {@code ==>} The current page</li>
+         * <li>{1} {@code ==>} The amount of pages</li>
          * </ul>
-         * <li>"pager_footer" ==> The footer. The key can be customized via the
-         * constructor.</li>
+         * </li>
+         * <li>"pager_footer" {@code ==>} The footer. The key can be customized
+         * via the
+         * constructor.
          * <ul>
-         * <li>{0} ==> The current page</li>
-         * <li>{1} ==> The amount of pages</li>
+         * <li>{0} {@code ==>} The current page</li>
+         * <li>{1} {@code ==>} The amount of pages</li>
          * </ul>
+         * </li>
          * </ul>
          * </li>
          * </ul>

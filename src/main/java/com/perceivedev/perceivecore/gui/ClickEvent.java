@@ -43,7 +43,7 @@ public class ClickEvent {
      * @param lastPane The last pane it went through
      * @param component The component that was clicked
      * 
-     * @see #ClickEvent(InventoryClickEvent, Pane, int, int)
+     * @see #ClickEvent(InventoryClickEvent, Pane, Component, int, int)
      */
     public ClickEvent(InventoryClickEvent raw, Pane lastPane, Component component) {
         this(raw, lastPane, component, 0, 0);

@@ -79,7 +79,7 @@ public interface Component {
      *
      * @param slot The slot
      *
-     * @return The grid position. [0] ==> X, [1] == Y
+     * @return The grid position. [0] {@code ==>} X, [1] == Y
      */
     default int[] slotToGrid(int slot) {
         return new int[] { slot % 9, slot / 9 };

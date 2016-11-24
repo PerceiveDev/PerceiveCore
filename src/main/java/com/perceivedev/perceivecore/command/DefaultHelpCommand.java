@@ -41,18 +41,8 @@ import com.perceivedev.perceivecore.util.TextUtils;
  * <p>
  * Keys:
  * <ul>
- *     <li>"command.help.format.with.usage" ==> The help format with the usage.
- *       <br><b>Default:</b> <i>"&3{0}&9: &7{1} &7<&6{2}&7><newline>  &cUsage: {3}"</i>
- *       <br><b>Format parameters:</b>
- *     </li>
- *       <ol>
- *           <li>Name</li>
- *           <li>Description</li>
- *           <li>Children amount</li>
- *           <li>Usage</li>
- *       </ol>
- *     <li>"command.help.format.without.usage" ==> The help format without the usage.
- *       <br><b>Default: </b> <i>"&3{0}&9: &7{1} &7<&6{2}&7>"</i>
+ *     <li>"command.help.format.with.usage" {@code ==>} The help format with the usage.
+ *       <br><b>Default:</b> <i>{@code "&3{0}&9: &7{1} &7<&6{2}&7><newline>  &cUsage: {3}"}</i>
  *       <br><b>Format parameters:</b>
  *       <ol>
  *           <li>Name</li>
@@ -61,13 +51,23 @@ import com.perceivedev.perceivecore.util.TextUtils;
  *           <li>Usage</li>
  *       </ol>
  *     </li>
- *     <li>"command.help.top.level.prefix" ==> The prefix for a top level command
+ *     <li>"command.help.format.without.usage" {@code ==>} The help format without the usage.
+ *       <br><b>Default: </b> <i>{@code "&3{0}&9: &7{1} &7<&6{2}&7>"}</i>
+ *       <br><b>Format parameters:</b>
+ *       <ol>
+ *           <li>Name</li>
+ *           <li>Description</li>
+ *           <li>Children amount</li>
+ *           <li>Usage</li>
+ *       </ol>
+ *     </li>
+ *     <li>"command.help.top.level.prefix" {@code ==>} The prefix for a top level command
  *       <br><b>Default:</b> <i>Nothing</i>
  *     </li>
- *     <li>"command.help.sub.level.prefix" ==> The prefix for a sub level command
+ *     <li>"command.help.sub.level.prefix" {@code ==>} The prefix for a sub level command
  *       <br><b>Default:</b> <i>Nothing</i>
  *     </li>
- *     <li>"command.help.padding.char"     ==> The padding char
+ *     <li>"command.help.padding.char"     {@code ==>} The padding char
  *       <br><b>Default:</b> <i>Space</i>
  *     </li>
  * </ul>
@@ -142,8 +142,9 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
      * @param language The language to use for the key translation
      * @param node The CommandNode to start with
      * @param withUsage If true, the usage will be shown
-     * @param maxDepth The maximum depth. Index based. 0 ==> Just this command,
-     *            1 ==> Command and children
+     * @param maxDepth The maximum depth. Index based. 0 {@code ==>} Just this
+     *            command,
+     *            1 {@code ==>} Command and children
      * @param counter The current counter. Just supply 0. Used for recursion.
      */
     private static List<PagerFilterable> getCommandFilterable(MessageProvider language, CommandNode node, CommandTree tree,

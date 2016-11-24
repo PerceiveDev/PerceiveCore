@@ -349,7 +349,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          *         something else went wrong.
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          * @throws NullPointerException if component is null
          */
         public boolean addComponent(int x, int y, Component component) {
@@ -378,7 +378,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param y The y coordinate
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         protected void ensureInSize(int x, int y) {
             if (x < 0) {
@@ -431,8 +431,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param value The value to fill it with
          *
          * @throws IllegalArgumentException if
-         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
-         * or minX > maxX or minY > maxY</code>
+         *             {@code minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * or minX > maxX or minY > maxY}
          */
         protected void fillInterval(int minX, int maxX, int minY, int maxY, boolean value) {
             ensureInSize(minX, minY);
@@ -460,8 +460,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param value The value to fill it with
          *
          * @throws IllegalArgumentException if
-         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
-         * or minX > maxX or minY > maxY</code>
+         *             {@code minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * or minX > maxX or minY > maxY}
          * @see #fillInterval(int, int, int, int, boolean)
          */
         protected void fillInterval(Interval interval, boolean value) {
@@ -477,7 +477,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @return The Component at the given location, if any
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         public Optional<Component> getComponent(int x, int y) {
             ensureInSize(x, y);
@@ -520,7 +520,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @return True if there is enum space
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         public boolean hasEnoughSpace(int x, int y, Dimension dimension) {
             ensureInSize(x, y);

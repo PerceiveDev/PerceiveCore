@@ -6,10 +6,18 @@ import java.util.concurrent.TimeUnit;
 /** Ticks {@link Tickable}s at some interval :) */
 public interface Ticker {
 
-    /** Starts the ticking */
+    /**
+     * Starts the ticking
+     * 
+     * @return This ticker
+     */
     Ticker startTicker();
 
-    /** Stops the ticking */
+    /**
+     * Stops the ticking
+     * 
+     * @return This ticker
+     */
     Ticker stopTicker();
 
     /**

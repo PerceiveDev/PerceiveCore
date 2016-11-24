@@ -56,7 +56,8 @@ public class Gui implements InventoryHolder {
      * @param name The name of the Gui
      * @param rows The amount of rows (each has 9 slots) in the gui
      *
-     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} -> passes an
+     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} {@code ->}
+     *      passes an
      *      AnchorPane
      */
     public Gui(String name, int rows) {

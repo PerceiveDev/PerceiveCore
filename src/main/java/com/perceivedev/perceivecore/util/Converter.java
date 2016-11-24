@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.util;
 
 /** @author Rayzr */

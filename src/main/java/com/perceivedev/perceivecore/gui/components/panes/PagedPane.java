@@ -258,8 +258,8 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
      * Complexity is quite high
      *
      * @param component The {@link Component} to add
-     * @param xPos The x pos to add it to. < 0 for search free
-     * @param yPos The y pos to add it to. < 0 for search free
+     * @param xPos The x pos to add it to. {@code < 0} for search free
+     * @param yPos The y pos to add it to. {@code < 0} for search free
      *
      * @return True if the component was added to an existing page, false if a
      *         new one was created for it.
@@ -332,7 +332,7 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
      * Returns the pane at the given index
      * 
      * @param index The index of the pane {@code [0; #getPageCount())}
-     * @throws IndexOutOfBoundsException if the index is < 0 or >=
+     * @throws IndexOutOfBoundsException if the index is {@code < 0 or >=}
      *             {@link #getPageCount()}
      * @return The pane at the index. Currently an AnchorPane (which is funny,
      *         as you can not add components to that without casting)
@@ -349,7 +349,7 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
      * Removes a Pane
      * 
      * @param index The index of the pane to remove {@code [0; #getPageCount())}
-     * @throws IndexOutOfBoundsException if the index is < 0 or >=
+     * @throws IndexOutOfBoundsException if the index is {@code < 0 or >=}
      *             {@link #getPageCount()}
      */
     public void removePane(int index) {
@@ -486,11 +486,11 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
      * <p>
      * <b>Placeholders in the item's name and lore:</b>
      * <ul>
-     *     <li>"{@code {CURRENT_PAGE}}" --> The current page</li>
-     *     <li>"{@code {MAX_PAGE}}" --> The maximum page</li>
-     *     <li>"{@code {PREV_PAGE}}" --> The previous page</li>
-     *     <li>"{@code {NEXT_PAGE}}" --> The next page</li>
-     *     <li>"{@code {POINTED_PAGE}}" --> The page it leads to</li>
+     *     <li>"{@code {CURRENT_PAGE}}" {@code -->} The current page</li>
+     *     <li>"{@code {MAX_PAGE}}" {@code -->} The maximum page</li>
+     *     <li>"{@code {PREV_PAGE}}" {@code -->} The previous page</li>
+     *     <li>"{@code {NEXT_PAGE}}" {@code -->} The next page</li>
+     *     <li>"{@code {POINTED_PAGE}}" {@code -->} The page it leads to</li>
      * </ul>
      */
     // @formatter:on

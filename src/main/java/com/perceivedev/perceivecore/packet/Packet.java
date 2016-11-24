@@ -69,7 +69,6 @@ public class Packet {
      * 
      * @param a the first class
      * @param b the second class
-     * @param converter the converter itself
      * @return Whether or not it actually removed anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
      *      java.lang.Class)

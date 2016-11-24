@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.perceivedev.perceivecore.util;
 
 import java.lang.reflect.Constructor;
@@ -146,7 +143,7 @@ public class JSONMessage {
 
     /**
      * Converts this JSONMessage object to the legacy formatting system, which
-     * uses formatting codes (like &6, &l, &4, etc.)
+     * uses formatting codes (like {@code &6, &l, &4}, etc.)
      * 
      * @return This JSONMessage using legacy formatting
      */

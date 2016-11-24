@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.config.util;
 
 import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
@@ -68,7 +65,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
-     * @see #DataManager(Path, Class, Map)
+     * @see #DataManager(Path, Class, Class, Map)
      */
     public DataManager(Path path, Class<K> keyClass, Class<V> dataClass) {
         this(path, keyClass, dataClass, new LinkedHashMap<>());
@@ -83,7 +80,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
-     * @see #DataManager(Path, Class)
+     * @see #DataManager(Path, Class, Class)
      */
     public DataManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
         this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);

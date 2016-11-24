@@ -18,7 +18,7 @@ public class TextUtils {
      * Colors the text
      * <p>
      * Uses {@link ChatColor#translateAlternateColorCodes(char, String)} with
-     * '&' as color char
+     * '{@code &}' as color char
      *
      * @param text The text to color
      *
@@ -101,13 +101,13 @@ public class TextUtils {
      * <p>
      * Example outputs with upperCaseAfterSpace set to <b>false</b>:
      * <ul>
-     *     <li><code>"SWORD" ==> "Sword"</code></li>
-     *     <li><code>"DIAMOND_SWORD" ==> "Diamond sword"</code></li>
+     *     <li>{@code "SWORD" ==> "Sword"}</li>
+     *     <li>{@code "DIAMOND_SWORD" ==> "Diamond sword"}</li>
      * </ul>
      * Example outputs with upperCaseAfterSpace set to <b>true</b>:
      * <ul>
-     *     <li><code>"SWORD" ==> "Sword"</code></li>
-     *     <li><code>"DIAMOND_SWORD" ==> "Diamond Sword"</code></li>
+     *     <li>{@code "SWORD" ==> "Sword"}</li>
+     *     <li>{@code "DIAMOND_SWORD" ==> "Diamond Sword"}</li>
      * </ul>
      *
      * @param text The constant to format
