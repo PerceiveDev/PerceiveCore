@@ -20,8 +20,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 
-/** Manages the {@link Gui}s */
-public class GuiManager implements Listener {
+/**
+ * Manages the {@link Gui}s
+ */
+public enum GuiManager implements Listener {
+    INSTANCE;
 
     /**
      * Opens the first GUI on the stack for the player. After closing that
@@ -32,7 +35,7 @@ public class GuiManager implements Listener {
      * @return If a GUI was actually opened for the player
      */
     public static boolean openFirst(Player player) {
-        return PerceiveCore.getInstance().getGuiManager().openCurrentGui(player.getUniqueId());
+        return INSTANCE.openCurrentGui(player.getUniqueId());
     }
 
     private Map<UUID, PlayerGuiData> playerMap = new HashMap<>();
@@ -239,12 +242,16 @@ public class GuiManager implements Listener {
             }.runTaskLater(PerceiveCore.getInstance(), 2L);
         }
 
-        /** Closes the currently open Inventory for the player */
+        /**
+         * Closes the currently open Inventory for the player
+         */
         private void closeCurrentInventory() {
             getPlayer().ifPresent(Player::closeInventory);
         }
 
-        /** @return The Player if he is online */
+        /**
+         * @return The Player if he is online
+         */
         private Optional<Player> getPlayer() {
             return Optional.ofNullable(Bukkit.getPlayer(playerID));
         }
@@ -257,7 +264,7 @@ public class GuiManager implements Listener {
             return;
         }
 
-        PlayerGuiData playerData = PerceiveCore.getInstance().getGuiManager().getOrCreatePlayerData(event.getPlayer().getUniqueId());
+        PlayerGuiData playerData = INSTANCE.getOrCreatePlayerData(event.getPlayer().getUniqueId());
         playerData.reactToClose((Gui) holder);
     }
 

@@ -26,7 +26,7 @@ public class PerceiveCore extends JavaPlugin {
 
         logger.info(versionText() + " enabled");
 
-        Bukkit.getPluginManager().registerEvents((guiManager = new GuiManager()), this);
+        Bukkit.getPluginManager().registerEvents(GuiManager.INSTANCE, this);
     }
 
     @Override
@@ -40,14 +40,21 @@ public class PerceiveCore extends JavaPlugin {
         return getName() + " v" + getDescription().getVersion();
     }
 
-    /** @return The {@link DisableManager} */
+    /**
+     * @return The {@link DisableManager}
+     */
     public DisableManager getDisableManager() {
         return disableManager;
     }
 
-    /** @return The {@link GuiManager} */
+    /**
+     * This is the same as {@link GuiManager#INSTANCE} and only exists for
+     * plugins depending on this method
+     * 
+     * @return The {@link GuiManager}
+     */
     public GuiManager getGuiManager() {
-        return guiManager;
+        return GuiManager.INSTANCE;
     }
 
     /**
