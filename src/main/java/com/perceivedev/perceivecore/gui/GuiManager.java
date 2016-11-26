@@ -221,6 +221,7 @@ public enum GuiManager implements Listener {
 
             if (gui.isKillMe() || !gui.isReopenOnClose()) {
                 removeGui(gui);
+                gui.onClose();
                 runLater(this::openNextGui);
             } else {
                 // reopen it

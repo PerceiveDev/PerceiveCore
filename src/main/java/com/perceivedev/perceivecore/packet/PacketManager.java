@@ -16,7 +16,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 
-/** Manages PacketListeners and stuff */
+/**
+ * Manages PacketListeners and stuff
+ * <p>
+ * This Manager removes the listeners when the Player leaves. You do not need to
+ * keep track of that!
+ */
 public class PacketManager implements Listener {
 
     private static PacketManager            instance;

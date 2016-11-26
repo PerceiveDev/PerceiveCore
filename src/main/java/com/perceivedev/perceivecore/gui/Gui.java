@@ -241,6 +241,14 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Called when the Gui is closed. You may overwrite it to listen to close
+     * events
+     */
+    protected void onClose() {
+
+    }
+
+    /**
      * Checks if an Inventory belongs to this Gui
      *
      * @param inventory The inventory to check
@@ -261,6 +269,17 @@ public class Gui implements InventoryHolder {
             return Optional.empty();
         }
         return Optional.ofNullable(Bukkit.getPlayer(playerID));
+    }
+
+    /**
+     * Returns the player this Gui was/is opened for.
+     * <p>
+     * Will return an empty optional if the GUI was never opened
+     * 
+     * @return The {@link UUID} of the player this gui is opened for, if any
+     */
+    protected Optional<UUID> getPlayerID() {
+        return Optional.ofNullable(playerID);
     }
 
     @Override
