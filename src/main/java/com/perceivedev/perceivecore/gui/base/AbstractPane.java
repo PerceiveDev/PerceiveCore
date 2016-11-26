@@ -149,6 +149,11 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return;
         }
 
+        // user clicked in his own inventory. Silently drop it
+        if (clickEvent.getRaw().getRawSlot() > clickEvent.getRaw().getInventory().getSize()) {
+            return;
+        }
+
         int x = slotToGrid(clickEvent.getSlot())[0] - clickEvent.getOffsetX();
         int y = slotToGrid(clickEvent.getSlot())[1] - clickEvent.getOffsetY();
 
@@ -218,8 +223,10 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     // <editor-fold desc="Interval">
     // -------------------- Interval -------------------- //
 
-    /** An Interval */
-    public static class Interval implements Cloneable {
+    /**
+     * An Interval
+     */
+    protected static class Interval implements Cloneable {
         private int minX, maxX;
         private int minY, maxY;
 
@@ -231,34 +238,49 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param minY The min y (inclusive)
          * @param maxY The max y (exclusive)
          */
-        public Interval(int minX, int maxX, int minY, int maxY) {
+        protected Interval(int minX, int maxX, int minY, int maxY) {
             this.minX = minX;
             this.maxX = maxX;
             this.minY = minY;
             this.maxY = maxY;
         }
 
-        /** @return The min x. Inclusive. */
+        /**
+         * @return The min x. Inclusive.
+         */
         public int getMinX() {
             return minX;
         }
 
-        /** @return The max x. Exclusive. */
-        public int getMaxX() {
+        /**
+         * @return The max x. Exclusive.
+         */
+        protected int getMaxX() {
             return maxX;
         }
 
-        /** @return The min y. Inclusive. */
+        /**
+         * @return The min y. Inclusive.
+         */
         public int getMinY() {
             return minY;
         }
 
-        /** @return The max y. Exclusive. */
-        public int getMaxY() {
+        /**
+         * @return The max y. Exclusive.
+         */
+        protected int getMaxY() {
             return maxY;
         }
 
-        public boolean isInside(int x, int y) {
+        /**
+         * Checks if the given coordinates are inside the Interval
+         * 
+         * @param x The x coordinate to check
+         * @param y The y coordinate to check
+         * @return True if the coordinates are inside this Interval
+         */
+        protected boolean isInside(int x, int y) {
             return x >= minX && x < maxX
                     && y >= minY && y < maxY;
         }
@@ -565,77 +587,79 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         }
 
         // TODO: 02.10.2016 Remove these visualizing methods
-
-        protected void printLines() {
-            Status[][] array = new Status[lines.length][];
-            for (int y = 0; y < lines.length; y++) {
-                array[y] = new Status[lines[y].length];
-
-                for (int x = 0; x < lines[0].length; x++) {
-                    array[y][x] = lines[y][x] ? Status.TAKEN : Status.FREE;
-                }
-            }
-
-            printLines(array);
-        }
-
-        protected void printLines(Status[][] lines) {
-            for (Status[] line : lines) {
-                StringBuilder builder = new StringBuilder();
-                builder.append("[");
-                for (Status b : line) {
-                    String string = b.toString();
-                    string = padRight(string, 6);
-                    string = b.color(string);
-                    string = string + ANSI_RESET;
-                    builder.append(string);
-                }
-                builder.append("]");
-                System.out.println(builder);
-            }
-        }
-
-        protected static String padRight(String s, int n) {
-            return String.format("%1$-" + n + "s", s);
-        }
-
-        protected static final String ANSI_RESET  = "\u001B[0m";
-        protected static final String ANSI_BLACK  = "\u001B[30m";
-        protected static final String ANSI_RED    = "\u001B[31m";
-        protected static final String ANSI_GREEN  = "\u001B[32m";
-        protected static final String ANSI_YELLOW = "\u001B[33m";
-        protected static final String ANSI_BLUE   = "\u001B[34m";
-        protected static final String ANSI_PURPLE = "\u001B[35m";
-        protected static final String ANSI_CYAN   = "\u001B[36m";
-        protected static final String ANSI_WHITE  = "\u001B[37m";
-
-        protected enum Status {
-            TAKEN(ANSI_RED),
-            FREE(ANSI_GREEN),
-            MAYBE(ANSI_BLUE);
-
-            private String color;
-
-            Status(String color) {
-                this.color = color;
-            }
-
-            protected String color(String input) {
-                return color + input;
-            }
-
-            @Override
-            public String toString() {
-                switch (this) {
-                    case FREE:
-                        return "free";
-                    case MAYBE:
-                        return "maybe";
-                    default:
-                        return "taken";
-                }
-            }
-        }
+        /*
+         * 
+         * protected void printLines() {
+         * Status[][] array = new Status[lines.length][];
+         * for (int y = 0; y < lines.length; y++) {
+         * array[y] = new Status[lines[y].length];
+         * 
+         * for (int x = 0; x < lines[0].length; x++) {
+         * array[y][x] = lines[y][x] ? Status.TAKEN : Status.FREE;
+         * }
+         * }
+         * 
+         * printLines(array);
+         * }
+         * 
+         * protected void printLines(Status[][] lines) {
+         * for (Status[] line : lines) {
+         * StringBuilder builder = new StringBuilder();
+         * builder.append("[");
+         * for (Status b : line) {
+         * String string = b.toString();
+         * string = padRight(string, 6);
+         * string = b.color(string);
+         * string = string + ANSI_RESET;
+         * builder.append(string);
+         * }
+         * builder.append("]");
+         * System.out.println(builder);
+         * }
+         * }
+         * 
+         * protected static String padRight(String s, int n) {
+         * return String.format("%1$-" + n + "s", s);
+         * }
+         * 
+         * protected static final String ANSI_RESET = "\u001B[0m";
+         * protected static final String ANSI_BLACK = "\u001B[30m";
+         * protected static final String ANSI_RED = "\u001B[31m";
+         * protected static final String ANSI_GREEN = "\u001B[32m";
+         * protected static final String ANSI_YELLOW = "\u001B[33m";
+         * protected static final String ANSI_BLUE = "\u001B[34m";
+         * protected static final String ANSI_PURPLE = "\u001B[35m";
+         * protected static final String ANSI_CYAN = "\u001B[36m";
+         * protected static final String ANSI_WHITE = "\u001B[37m";
+         * 
+         * protected enum Status {
+         * TAKEN(ANSI_RED),
+         * FREE(ANSI_GREEN),
+         * MAYBE(ANSI_BLUE);
+         * 
+         * private String color;
+         * 
+         * Status(String color) {
+         * this.color = color;
+         * }
+         * 
+         * protected String color(String input) {
+         * return color + input;
+         * }
+         * 
+         * @Override
+         * public String toString() {
+         * switch (this) {
+         * case FREE:
+         * return "free";
+         * case MAYBE:
+         * return "maybe";
+         * default:
+         * return "taken";
+         * }
+         * }
+         * }
+         */
 
     }
     // </editor-fold>
