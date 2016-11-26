@@ -12,8 +12,6 @@ public class PerceiveCore extends JavaPlugin {
     private static PerceiveCore instance;
 
     private Logger              logger;
-
-    private GuiManager          guiManager;
     private DisableManager      disableManager;
 
     @Override
