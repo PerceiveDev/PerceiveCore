@@ -62,8 +62,6 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
     public PagedPane(int width, int height, InventoryMap inventoryMap) {
         super(width, height, inventoryMap);
 
-        components.forEach(this::addComponent);
-
         pageGenerator = pagedPane -> new AnchorPane(getWidth(), getHeight());
         pagePopulateFunction = (pagedPane, anchorPane) -> {
             anchorPane.addComponent(new SimpleLabel(new Dimension(9, 1), StandardDisplayTypes.FLAT, DisplayColor.BLACK, " "), 0, getHeight() - 2);
@@ -108,6 +106,8 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
         };
 
         controlPlaceholderPredicate = (pagedPane, x, y) -> y < pagedPane.getHeight() - 2;
+
+        addNewPane();
     }
 
     /**
@@ -121,6 +121,17 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
     }
 
     /**
+     * Gets the Page generator
+     * <p>
+     * This function generates a new AnchorPane when needed
+     * 
+     * @return The current Page generator
+     */
+    public Function<PagedPane, AnchorPane> getPageGenerator() {
+        return pageGenerator;
+    }
+
+    /**
      * Sets the Page generator
      * <p>
      * This function generates a new AnchorPane when needed
@@ -129,6 +140,18 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
      */
     public void setPageGenerator(Function<PagedPane, AnchorPane> pageGenerator) {
         this.pageGenerator = pageGenerator;
+    }
+
+    /**
+     * Gets the current PagePopulateFunction
+     * <p>
+     * This function should add buttons to navigate the pages as well as some
+     * sort of separator between them and the pane contents
+     * 
+     * @return The current PagePopulate function
+     */
+    public BiConsumer<PagedPane, AnchorPane> getPagePopulateFunction() {
+        return pagePopulateFunction;
     }
 
     /**
@@ -324,6 +347,8 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
     public void addNewPane() {
         pages.add(pageGenerator.apply(this));
 
+        updateComponentHierarchy(pages.get(pages.size() - 1));
+
         // update buttons (MAX_PAGE) and stuff
         requestReRender();
     }
@@ -441,6 +466,13 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
     public static class TranslatedPagePopulateFunction implements BiConsumer<PagedPane, AnchorPane> {
 
         private MessageProvider language;
+
+        /**
+         * @param language The {@link MessageProvider} to use
+         */
+        public TranslatedPagePopulateFunction(MessageProvider language) {
+            this.language = language;
+        }
 
         @Override
         public void accept(PagedPane pagedPane, AnchorPane anchorPane) {

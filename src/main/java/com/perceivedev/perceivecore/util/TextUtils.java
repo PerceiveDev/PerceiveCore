@@ -129,7 +129,7 @@ public class TextUtils {
         for (char c : text.toCharArray()) {
             if (c == '_') {
                 upperCase = true;
-                result.append("_");
+                result.append(" ");
                 continue;
             }
             if (upperCase) {
