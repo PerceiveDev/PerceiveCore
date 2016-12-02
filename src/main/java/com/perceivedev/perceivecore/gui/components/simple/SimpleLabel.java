@@ -18,11 +18,11 @@ import com.perceivedev.perceivecore.util.TextUtils;
 /** @author Rayzr */
 public class SimpleLabel extends AbstractComponent {
 
-    private DisplayType    displayType;
+    private DisplayType displayType;
     protected DisplayColor color;
 
-    protected String       name = "Label";
-    private List<String>   lore = Collections.emptyList();
+    protected String name = "Label";
+    private List<String> lore = Collections.emptyList();
 
     public SimpleLabel(Dimension size, DisplayType type, DisplayColor color, String name, String... lore) {
         super(size);

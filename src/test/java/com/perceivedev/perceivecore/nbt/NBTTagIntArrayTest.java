@@ -15,9 +15,9 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagIntArray;
 public class NBTTagIntArrayTest {
 
     private NBTTagIntArray array;
-    private int[]          data   = new int[2000];
+    private int[] data = new int[2000];
 
-    private final int      AMOUNT = 10000;
+    private final int AMOUNT = 10000;
 
     @Before
     public void init() {

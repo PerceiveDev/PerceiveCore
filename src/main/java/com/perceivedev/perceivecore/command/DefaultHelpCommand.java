@@ -76,7 +76,7 @@ import com.perceivedev.perceivecore.util.TextUtils;
 public class DefaultHelpCommand extends TranslatedCommandNode {
 
     private OptionsParser parser = new OptionsParser();
-    private CommandTree   commandTree;
+    private CommandTree commandTree;
 
     /**
      * The base key will be "command.help". <br>
@@ -173,13 +173,13 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
 
     private static class CommandFilterable implements PagerFilterable {
 
-        private CommandNode     node;
-        private boolean         showUsage;
-        private String          childrenAmount;
+        private CommandNode node;
+        private boolean showUsage;
+        private String childrenAmount;
         private MessageProvider language;
-        private int             depth;
+        private int depth;
 
-        private List<String>    allLines;
+        private List<String> allLines;
 
         CommandFilterable(CommandNode node, boolean showUsage, int childrenAmount,
                 MessageProvider language, int depth) {

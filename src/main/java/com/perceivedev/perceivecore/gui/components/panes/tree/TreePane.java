@@ -16,7 +16,7 @@ public class TreePane extends AbstractPane {
 
     private TreePaneNode root;
     private TreePaneNode selected;
-    private Pane         currentPane;
+    private Pane currentPane;
 
     /**
      * Creates a pane with the given components

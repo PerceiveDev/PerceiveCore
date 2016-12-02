@@ -14,16 +14,16 @@ import com.perceivedev.perceivecore.gui.base.Pane;
  */
 public abstract class TreePaneNode {
 
-    private static int         counter;
+    private static int counter;
 
     /**
      * An unique ID for equals and hashcode
      */
-    private int                ID = counter++;
+    private int ID = counter++;
 
-    private TreePaneNode       parent;
+    private TreePaneNode parent;
     private List<TreePaneNode> children;
-    private TreePane           owner;
+    private TreePane owner;
 
     /**
      * Creates a new {@link TreePaneNode} with the given parent and children

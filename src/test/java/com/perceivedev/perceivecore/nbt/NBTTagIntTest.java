@@ -12,9 +12,9 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagInt;
 public class NBTTagIntTest {
 
     private NBTTagInt nbtTagInt = new NBTTagInt(1);
-    private int       value;
+    private int value;
 
-    private final int AMOUNT    = 10000;
+    private final int AMOUNT = 10000;
 
     @Test
     public void set() throws Exception {

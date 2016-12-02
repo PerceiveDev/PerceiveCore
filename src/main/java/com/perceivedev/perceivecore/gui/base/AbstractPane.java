@@ -36,7 +36,7 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     protected List<Component> components;
-    private InventoryMap      inventoryMap;
+    private InventoryMap inventoryMap;
 
     /**
      * Creates a pane with the given components
@@ -328,7 +328,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * you really want. Could be useful if you make a optimised version
      */
     public static class InventoryMap implements Cloneable {
-        protected boolean[][]              lines;
+        protected boolean[][] lines;
         protected Map<Interval, Component> componentMap = new HashMap<>();
 
         /**

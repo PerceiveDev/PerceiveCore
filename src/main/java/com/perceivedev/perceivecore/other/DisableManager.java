@@ -22,10 +22,10 @@ import org.bukkit.plugin.Plugin;
  */
 public class DisableManager implements Listener {
 
-    private final Collection<DisableListener> listeners    = new ArrayList<>();
-    private final Set<DisableListener>        weakListener = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Collection<DisableListener> listeners = new ArrayList<>();
+    private final Set<DisableListener> weakListener = Collections.newSetFromMap(new WeakHashMap<>());
 
-    private Plugin                            plugin;
+    private Plugin plugin;
 
     /**
      * @param plugin The owning plugin

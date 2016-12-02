@@ -8,7 +8,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 public class ReflectedField {
 
     protected Object instance;
-    protected Field  field;
+    protected Field field;
 
     /**
      * @param instance

@@ -155,10 +155,10 @@ public class Pager {
      */
     @SuppressWarnings("WeakerAccess")
     public static class Options {
-        private int             entriesPerPage;
-        private int             pageIndex;
+        private int entriesPerPage;
+        private int pageIndex;
         private Set<SearchMode> searchModes;
-        private String          searchPattern;
+        private String searchPattern;
 
         private Options(int entriesPerPage, int pageIndex,
                 @Nonnull Set<SearchMode> searchModes, @Nonnull String searchPattern) {
@@ -228,10 +228,10 @@ public class Pager {
         /** The Builder of the {@link Options} object. */
         public static final class Builder {
 
-            private int             entriesPerPage = 10;
-            private int             pageIndex      = 0;
-            private Set<SearchMode> searchModes    = EnumSet.of(SearchMode.CONTAINS);
-            private String          searchPattern  = "";
+            private int entriesPerPage = 10;
+            private int pageIndex = 0;
+            private Set<SearchMode> searchModes = EnumSet.of(SearchMode.CONTAINS);
+            private String searchPattern = "";
 
             /** No instantiation from outside */
             private Builder() {
@@ -421,11 +421,11 @@ public class Pager {
 
     /** A displayable page */
     public static class Page {
-        private final int          maxPages;
-        private final int          pageIndex;
+        private final int maxPages;
+        private final int pageIndex;
         private final List<String> entries;
-        private final String       headerKey;
-        private final String       footerKey;
+        private final String headerKey;
+        private final String footerKey;
 
         /**
          * The language Keys can be found in the

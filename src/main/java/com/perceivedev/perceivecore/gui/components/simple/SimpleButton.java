@@ -13,7 +13,7 @@ public class SimpleButton extends SimpleLabel {
     private Consumer<ClickEvent> clickHandler;
 
     /** Whether or not to close the inventory when the button is clicked */
-    private boolean              closeOnClick = false;
+    private boolean closeOnClick = false;
 
     public SimpleButton(Dimension size, DisplayType type, DisplayColor color, String name,
             Consumer<ClickEvent> clickHandler) {

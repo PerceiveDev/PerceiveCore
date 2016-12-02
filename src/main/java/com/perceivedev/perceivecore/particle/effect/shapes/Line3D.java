@@ -15,7 +15,7 @@ import com.perceivedev.perceivecore.particle.math.SphericalCoordinates;
 public class Line3D extends AxisAlignedLine {
 
     private SphericalCoordinates differenceCoordinates;
-    private double               distance;
+    private double distance;
 
     /**
      * @param granularity The granularity. The granularity is the distance

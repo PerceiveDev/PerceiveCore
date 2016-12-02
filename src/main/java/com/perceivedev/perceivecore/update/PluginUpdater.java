@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PluginUpdater {
 
-    private Updater    updater;
+    private Updater updater;
     private JavaPlugin plugin;
 
     /**

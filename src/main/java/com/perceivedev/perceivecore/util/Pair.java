@@ -17,8 +17,8 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 public class Pair<K, V> implements Serializable, ConfigurationSerializable {
     private static final long serialVersionUID = 7388136271482352386L;
 
-    private K                 key;
-    private V                 value;
+    private K key;
+    private V value;
 
     public Pair(K key, V value) {
         this.key = key;

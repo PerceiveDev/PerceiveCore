@@ -16,7 +16,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
  */
 public class ReflectedClass<T> {
 
-    protected T        instance;
+    protected T instance;
     protected Class<?> clazz;
 
     protected ReflectedClass(T instance) {

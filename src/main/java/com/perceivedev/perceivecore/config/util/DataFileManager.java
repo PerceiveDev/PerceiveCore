@@ -103,7 +103,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
     @Override
     public void load() {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(path.toFile());
-        
+
         clear();
 
         for (String configKey : configuration.getKeys(false)) {

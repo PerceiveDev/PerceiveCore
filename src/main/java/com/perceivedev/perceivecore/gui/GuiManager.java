@@ -113,7 +113,7 @@ public enum GuiManager implements Listener {
     }
 
     private static class PlayerGuiData {
-        private UUID       playerID;
+        private UUID playerID;
         private Stack<Gui> guis;
 
         /** @param playerID The {@link UUID} of the player */

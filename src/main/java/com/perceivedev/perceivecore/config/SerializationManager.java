@@ -36,7 +36,7 @@ import com.perceivedev.perceivecore.util.Pair;
 /** Manages the serialization */
 public class SerializationManager {
 
-    private static final int           MAX_DEPTH              = 20;
+    private static final int MAX_DEPTH = 20;
     private static final Set<Class<?>> RAW_INSERTABLE_CLASSES = new HashSet<>();
 
     static {

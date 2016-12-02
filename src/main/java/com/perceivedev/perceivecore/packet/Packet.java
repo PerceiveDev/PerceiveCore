@@ -110,7 +110,7 @@ public class Packet {
     }
 
     private Class<?> packetClass;
-    private Object   obj;
+    private Object obj;
 
     private Packet(Class<?> packetClass) throws Exception {
         this(packetClass.getConstructor().newInstance());

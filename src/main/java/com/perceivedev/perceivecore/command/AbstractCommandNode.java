@@ -33,8 +33,8 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 /** A skeleton implementation for {@link CommandNode} */
 public abstract class AbstractCommandNode implements CommandNode {
 
-    private List<AbstractCommandNode>     children = new ArrayList<>();
-    private Permission                    permission;
+    private List<AbstractCommandNode> children = new ArrayList<>();
+    private Permission permission;
     private Collection<CommandSenderType> acceptedSenders;
 
     /**

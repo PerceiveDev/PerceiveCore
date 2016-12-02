@@ -12,9 +12,9 @@ import com.perceivedev.perceivecore.gui.base.Pane;
 /** A Click Event */
 public class ClickEvent {
     private InventoryClickEvent raw;
-    private Pane                lastPane;
-    private Component           component;
-    private int                 offsetX, offsetY;
+    private Pane lastPane;
+    private Component component;
+    private int offsetX, offsetY;
 
     /**
      * Creates a ClickEvent. This sets the raw InventoryClickEvent to cancelled

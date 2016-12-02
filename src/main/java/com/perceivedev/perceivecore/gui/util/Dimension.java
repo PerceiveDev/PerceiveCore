@@ -9,7 +9,7 @@ public class Dimension implements Cloneable {
 
     public static final Dimension ONE = new Dimension(1, 1);
 
-    private int                   width, height;
+    private int width, height;
 
     /**
      * @param width The width

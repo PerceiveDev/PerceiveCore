@@ -11,9 +11,9 @@ import com.perceivedev.perceivecore.util.ticker.Ticker.Tickable;
 /** A particle effect that replays itself */
 public abstract class RecurringParticleEffect implements ParticleEffect, Tickable {
 
-    private Ticker   ticker;
+    private Ticker ticker;
     private Location center;
-    private double   granularity;
+    private double granularity;
 
     /**
      * Adds this {@link Tickable} too

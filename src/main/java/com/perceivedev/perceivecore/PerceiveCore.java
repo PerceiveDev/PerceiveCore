@@ -11,8 +11,8 @@ import com.perceivedev.perceivecore.other.DisableManager;
 public class PerceiveCore extends JavaPlugin {
     private static PerceiveCore instance;
 
-    private Logger              logger;
-    private DisableManager      disableManager;
+    private Logger logger;
+    private DisableManager disableManager;
 
     @Override
     public void onEnable() {

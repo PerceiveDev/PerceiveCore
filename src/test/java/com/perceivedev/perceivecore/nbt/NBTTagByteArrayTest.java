@@ -16,7 +16,7 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagByteArray;
 public class NBTTagByteArrayTest {
 
     private NBTTagByteArray array;
-    private byte[]          data = new byte[2000];
+    private byte[] data = new byte[2000];
 
     @Before
     public void init() {

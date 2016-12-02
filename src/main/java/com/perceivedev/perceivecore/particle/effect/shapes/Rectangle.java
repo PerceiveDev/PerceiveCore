@@ -12,8 +12,8 @@ import org.bukkit.util.Vector;
  */
 public class Rectangle extends AbstractParticleShape {
 
-    private double  width;
-    private double  height;
+    private double width;
+    private double height;
     private boolean filled;
 
     /**

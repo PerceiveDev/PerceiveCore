@@ -14,7 +14,7 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 public class GridPane extends AbstractPane implements FixedPositionPane, FreeformPane {
 
     private boolean[][] slots;
-    private int         gridWidth, gridHeight;
+    private int gridWidth, gridHeight;
 
     /**
      * Creates a pane with the given components

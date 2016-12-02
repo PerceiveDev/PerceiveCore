@@ -19,11 +19,11 @@ public abstract class AbstractComponent implements Component, Cloneable {
      * This variable is expected to be final. Cloning prohibits actually doing
      * this, but to communicate the fact, it is written in CAPS
      */
-    private int        ID      = counter++;
+    private int ID = counter++;
 
-    protected Gui      ownerGui;
+    protected Gui ownerGui;
 
-    private Dimension  size;
+    private Dimension size;
 
     /** @param size The size of the component */
     public AbstractComponent(Dimension size) {

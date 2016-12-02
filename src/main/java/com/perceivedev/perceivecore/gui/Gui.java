@@ -26,13 +26,13 @@ public class Gui implements InventoryHolder {
 
     private static int counter;
 
-    private final int  ID = counter++;
+    private final int ID = counter++;
 
-    private UUID       playerID;
-    private Inventory  inventory;
-    private Pane       rootPane;
-    private boolean    reopenOnClose;
-    private boolean    killMe;
+    private UUID playerID;
+    private Inventory inventory;
+    private Pane rootPane;
+    private boolean reopenOnClose;
+    private boolean killMe;
 
     /**
      * @param name The name of the Gui

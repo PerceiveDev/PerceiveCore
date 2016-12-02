@@ -27,10 +27,10 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 public abstract class DataManager<K, V extends ConfigSerializable> {
     private static final String ERROR_MESSAGE = "The path failed the `isValidPath` check for your DataManager instance";
 
-    protected Path              path;
-    protected final Class<K>    keyClass;
-    protected final Class<V>    dataClass;
-    protected Map<K, V>         map;
+    protected Path path;
+    protected final Class<K> keyClass;
+    protected final Class<V> dataClass;
+    protected Map<K, V> map;
 
     /**
      * Creates a new {@link DataManager} that saves and loads data class of the

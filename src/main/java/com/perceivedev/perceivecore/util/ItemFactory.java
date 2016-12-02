@@ -28,12 +28,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 @SuppressWarnings("WeakerAccess")
 public class ItemFactory implements Cloneable {
 
-    private static final Set<Material> COLOURABLE     = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
+    private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
             Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
     private static final Set<Material> LEATHER_ARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
             Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 
-    private ItemStack                  itemStack;
+    private ItemStack itemStack;
 
     private ItemFactory(ItemStack itemStack) {
         Objects.requireNonNull(itemStack, "itemStack can not be null");

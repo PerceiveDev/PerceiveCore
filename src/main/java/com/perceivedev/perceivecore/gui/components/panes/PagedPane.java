@@ -43,12 +43,12 @@ import com.perceivedev.perceivecore.util.TriFunction;
 @SuppressWarnings({ "unused", "WeakerAccess" })
 public class PagedPane extends AbstractPane implements FixedPositionPane, FreeformPane {
 
-    private Function<PagedPane, AnchorPane>                   pageGenerator;
-    private BiConsumer<PagedPane, AnchorPane>                 pagePopulateFunction;
+    private Function<PagedPane, AnchorPane> pageGenerator;
+    private BiConsumer<PagedPane, AnchorPane> pagePopulateFunction;
     private TriFunction<PagedPane, Integer, Integer, Boolean> controlPlaceholderPredicate;
 
-    private List<AnchorPane>                                  pages       = new ArrayList<>();
-    private int                                               currentPage = 0;
+    private List<AnchorPane> pages = new ArrayList<>();
+    private int currentPage = 0;
 
     /**
      * @param width The width of this pane
@@ -595,7 +595,7 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
 
         public static class ItemPopulateItem {
             private ItemStack itemStack;
-            private int       pageMod;
+            private int pageMod;
 
             public ItemPopulateItem(ItemStack itemStack, int pageMod) {
                 this.itemStack = itemStack;

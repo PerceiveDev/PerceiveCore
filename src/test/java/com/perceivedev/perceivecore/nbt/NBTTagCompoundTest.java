@@ -26,7 +26,7 @@ public class NBTTagCompoundTest {
 
     private NBTTagCompound compound = new NBTTagCompound();
 
-    private final int      AMOUNT   = 10000;
+    private final int AMOUNT = 10000;
 
     @Test
     public void remove() throws Exception {

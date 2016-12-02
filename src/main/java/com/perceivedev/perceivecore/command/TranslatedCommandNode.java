@@ -19,7 +19,7 @@ import com.perceivedev.perceivecore.language.MessageProvider;
  */
 public abstract class TranslatedCommandNode extends AbstractCommandNode {
 
-    private String          keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
+    private String keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
     private MessageProvider messageProvider;
 
     /**

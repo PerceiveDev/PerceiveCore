@@ -21,11 +21,11 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagString;
 /** A bad test for lists. */
 public class NBTTagListTest {
 
-    private NBTTagList     list   = new NBTTagList();
-    private INBTBase       type;
+    private NBTTagList list = new NBTTagList();
+    private INBTBase type;
     private List<INBTBase> values;
 
-    private final int      AMOUNT = 1000;
+    private final int AMOUNT = 1000;
 
     @Test
     public void add() throws Exception {

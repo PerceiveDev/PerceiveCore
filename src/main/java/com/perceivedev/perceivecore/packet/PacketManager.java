@@ -24,7 +24,7 @@ import com.perceivedev.perceivecore.PerceiveCore;
  */
 public class PacketManager implements Listener {
 
-    private static PacketManager            instance;
+    private static PacketManager instance;
 
     private final Map<UUID, PacketInjector> injectorMap = new HashMap<>();
 

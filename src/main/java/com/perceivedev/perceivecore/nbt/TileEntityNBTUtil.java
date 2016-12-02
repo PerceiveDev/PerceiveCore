@@ -33,8 +33,8 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 @SuppressWarnings("unused")
 public class TileEntityNBTUtil {
 
-    private static Method         loadFromNBT, saveToNBT, getTileEntity;
-    private static boolean        error = false;
+    private static Method loadFromNBT, saveToNBT, getTileEntity;
+    private static boolean error = false;
 
     private static final Class<?> CRAFT_BLOCK_STATE_CLASS;
 

@@ -9,7 +9,7 @@ import java.util.List;
  * will still need to pass it.
  */
 public class CommandFindResult {
-    private CommandNode  commandNode;
+    private CommandNode commandNode;
     private List<String> restArgs;
 
     /**

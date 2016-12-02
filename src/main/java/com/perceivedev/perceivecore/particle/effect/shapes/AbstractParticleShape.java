@@ -10,8 +10,8 @@ import org.bukkit.Particle;
 public abstract class AbstractParticleShape implements ParticleShape {
 
     private Orientation orientation;
-    private double      granularity;
-    private Particle    particle;
+    private double granularity;
+    private Particle particle;
 
     /**
      * @param orientation The {@link Orientation} of the effect

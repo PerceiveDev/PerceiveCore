@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 /** A packet event */
 public class PacketEvent {
 
-    private Packet              packet;
-    private Player              player;
-    private boolean             cancelled;
+    private Packet packet;
+    private Player player;
+    private boolean cancelled;
     private ConnectionDirection direction;
 
     /**
