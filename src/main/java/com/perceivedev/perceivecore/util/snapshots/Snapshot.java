@@ -56,6 +56,7 @@ public class Snapshot<T> implements ConfigSerializable {
      * 
      * @see #Snapshot(Object, Collection)
      */
+    @SafeVarargs
     public Snapshot(T target, SnapshotProperty<? super T>... properties) {
         this(target, Arrays.asList(properties));
     }

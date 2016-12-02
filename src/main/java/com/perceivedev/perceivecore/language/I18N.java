@@ -41,7 +41,7 @@ public class I18N implements MessageProvider {
      * "Test 1234 [[path.to.other.message]]" ==> Matches
      * "[[path.to.other.message]]"
      */
-    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=]])");
 
     private Set<String> categories = new HashSet<>();
     private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
@@ -214,7 +214,7 @@ public class I18N implements MessageProvider {
             try {
                 format = new MessageFormat(pattern, getLanguage());
             } catch (IllegalArgumentException e) {
-                String fixedPattern = pattern.replaceAll("\\{\\d.+?\\}", "[$1]");
+                String fixedPattern = pattern.replaceAll("\\{\\d.+?}", "[$1]");
                 format = new MessageFormat(fixedPattern, getLanguage());
             }
 

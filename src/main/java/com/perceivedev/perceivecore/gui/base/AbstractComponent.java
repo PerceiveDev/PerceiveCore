@@ -24,6 +24,7 @@ public abstract class AbstractComponent implements Component, Cloneable {
     protected Gui ownerGui;
 
     private Dimension size;
+    private boolean visible = true;
 
     /** @param size The size of the component */
     public AbstractComponent(Dimension size) {
@@ -53,6 +54,20 @@ public abstract class AbstractComponent implements Component, Cloneable {
     @Override
     public Dimension getSize() {
         return size;
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+
+        if (getGui() != null) {
+            getGui().reRender();
+        }
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
     }
 
     @Override

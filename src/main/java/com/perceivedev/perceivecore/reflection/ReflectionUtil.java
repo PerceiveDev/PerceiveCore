@@ -761,9 +761,9 @@ public class ReflectionUtil {
     /** The namespaces */
     public enum NameSpace {
         /** The {@code net.minecraft.server} namespace */
-        NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
+        NMS(Pattern.compile("\\{nms}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
         /** The {@code org.bukkit.craftbukkit} namespace */
-        OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
+        OBC(Pattern.compile("\\{obc}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
 
         private Pattern detectionPattern;
         private Function<String, String> resolverFunction;

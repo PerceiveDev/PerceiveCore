@@ -141,6 +141,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     @Override
     public void onClick(ClickEvent clickEvent) {
+        if (!isVisible()) {
+            return;
+        }
         clickEvent.setLastPane(this);
 
         if (clickEvent.isOutsideInventory()) {
@@ -159,21 +162,45 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         Optional<Component> componentOptional = getInventoryMap().getComponent(x, y);
         if (componentOptional.isPresent()) {
-            Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(componentOptional.get());
+            Component component = componentOptional.get();
+
+            if (!component.isVisible()) {
+                return;
+            }
+
+            Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(component);
             // Adjust the offsets you pass one, to make the calculations for the
             // next pane work
             intervalOpt.ifPresent(interval -> {
                 clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
                 clickEvent.setOffsetY(clickEvent.getOffsetY() + interval.getMinY());
-                clickEvent.setComponent(componentOptional.get());
+                clickEvent.setComponent(component);
             });
-            componentOptional.get().onClick(clickEvent);
+            component.onClick(clickEvent);
         }
     }
 
+    /**
+     * Renders the component in the Inventory
+     * <p>
+     * <b>If you overwrite this method, check if the components are visible
+     * before rendering them!</b>
+     * 
+     * @param inventory The inventory to render in
+     * @param player The Player to render for
+     * @param x The x offset
+     * @param y The y offset
+     */
     @Override
     public void render(Inventory inventory, Player player, int x, int y) {
+        if (!isVisible()) {
+            return;
+        }
         for (Entry<Interval, Component> entry : getInventoryMap().getComponentMap().entrySet()) {
+            // skip invisible ones
+            if (!entry.getValue().isVisible()) {
+                continue;
+            }
             if (fitsInside(inventory, x, y, entry.getKey())) {
                 // render the components
                 entry.getValue().render(inventory, player, x + entry.getKey().getMinX(), y + entry.getKey().getMinY());

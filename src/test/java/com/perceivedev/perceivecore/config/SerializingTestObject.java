@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /** A small testobject */
+@SuppressWarnings({ "unused", "WeakerAccess" })
 public class SerializingTestObject implements ConfigSerializable {
 
     private String testString;
