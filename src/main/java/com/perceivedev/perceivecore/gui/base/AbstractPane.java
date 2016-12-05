@@ -169,7 +169,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             }
 
             Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(component);
-            // Adjust the offsets you pass one, to make the calculations for the
+            // Adjust the offsets you pass on, to make the calculations for the
             // next pane work
             intervalOpt.ifPresent(interval -> {
                 clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
