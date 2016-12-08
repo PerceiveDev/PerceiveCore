@@ -442,6 +442,14 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
         return given;
     }
 
+    @Override
+    public PagedPane deepClone() {
+        PagedPane clone = (PagedPane) super.deepClone();
+        clone.pages = new ArrayList<>(pages);
+
+        return clone;
+    }
+
     // @formatter:off
     /**
      * A page populate function that takes the name, lore one, lore two and

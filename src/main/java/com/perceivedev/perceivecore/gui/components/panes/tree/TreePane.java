@@ -109,4 +109,15 @@ public class TreePane extends AbstractPane {
 
         currentPane.onClick(clickEvent);
     }
+
+    @Override
+    public TreePane deepClone() {
+        TreePane clone = (TreePane) super.deepClone();
+        clone.currentPane = currentPane.deepClone();
+        clone.root = root.clone();
+        clone.selected = selected.clone();
+        clone.ownerGui = ownerGui;
+
+        return clone;
+    }
 }

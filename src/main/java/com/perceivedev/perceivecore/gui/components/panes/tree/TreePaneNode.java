@@ -12,7 +12,7 @@ import com.perceivedev.perceivecore.gui.base.Pane;
 /**
  * A {@link TreePane} node
  */
-public abstract class TreePaneNode {
+public abstract class TreePaneNode implements Cloneable {
 
     private static int counter;
 
@@ -158,6 +158,22 @@ public abstract class TreePaneNode {
      * @return The pane for the node
      */
     public abstract Pane getPane();
+
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    @Override
+    public TreePaneNode clone() {
+        try {
+            TreePaneNode clone = (TreePaneNode) super.clone();
+            clone.ID = ID + 1;
+            clone.parent = parent;
+            clone.children = new ArrayList<>(children);
+            clone.owner = owner;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public boolean equals(Object o) {
