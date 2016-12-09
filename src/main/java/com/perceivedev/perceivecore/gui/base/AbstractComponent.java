@@ -70,6 +70,13 @@ public abstract class AbstractComponent implements Component, Cloneable {
         return visible;
     }
 
+    /**
+     * @return The Unique ID for this component
+     */
+    public int getID() {
+        return ID;
+    }
+
     @Override
     protected Object clone() {
         try {

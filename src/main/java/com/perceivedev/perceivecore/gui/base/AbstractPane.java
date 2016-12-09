@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.Gui;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
 // @formatter:off
@@ -96,6 +97,15 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     @Override
     public Collection<Component> getChildren() {
         return Collections.unmodifiableList(components);
+    }
+
+    @Override
+    public void setGui(Gui gui) {
+        // Update for all!
+        super.setGui(gui);
+        for (Component component : getChildren()) {
+            component.setGui(gui);
+        }
     }
 
     // @formatter:off

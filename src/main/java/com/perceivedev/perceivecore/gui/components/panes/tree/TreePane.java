@@ -17,6 +17,7 @@ public class TreePane extends AbstractPane {
     private TreePaneNode root;
     private TreePaneNode selected;
     private Pane currentPane;
+    private boolean dirty;
 
     /**
      * Creates a pane with the given components
@@ -81,7 +82,11 @@ public class TreePane extends AbstractPane {
         // throw new IllegalArgumentException("The node is not a child of the
         // root node!");
         // }
+        if (selected != null && selected.equals(node)) {
+            return;
+        }
         selected = node;
+        dirty = true;
 
         if (getGui() != null) {
             requestReRender();
@@ -93,10 +98,13 @@ public class TreePane extends AbstractPane {
         if (selected == null) {
             return;
         }
-        currentPane = selected.getPane();
-        updateComponentHierarchy(currentPane);
+        if (dirty) {
+            currentPane = selected.getPane();
+            updateComponentHierarchy(currentPane);
+        }
 
         currentPane.render(inventory, player, x, y);
+        dirty = false;
     }
 
     @Override
