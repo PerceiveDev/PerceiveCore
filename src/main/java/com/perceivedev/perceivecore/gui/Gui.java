@@ -53,6 +53,23 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Creates a gui with the given Inventory
+     * 
+     * @param name The name of the Gui
+     * @param rootPane The root pane to use
+     * @param inventory The inventory to use
+     */
+    protected Gui(String name, int rows, Pane rootPane, Inventory inventory) {
+        Objects.requireNonNull(name, "name can not be null!");
+        Objects.requireNonNull(rootPane, "rootPane can not be null!");
+        Objects.requireNonNull(inventory, "inventory can not be null!");
+
+        this.inventory = inventory;
+        this.rootPane = rootPane;
+        rootPane.setGui(this);
+    }
+
+    /**
      * @param name The name of the Gui
      * @param rows The amount of rows (each has 9 slots) in the gui
      *
@@ -246,6 +263,15 @@ public class Gui implements InventoryHolder {
      */
     protected void onClose() {
 
+    }
+
+    /**
+     * Sets the inventory
+     * 
+     * @param inventory The inventory to use
+     */
+    protected void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     /**
