@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,11 +65,6 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
         }, Dimension.ONE), slot.getSlot(), 0);
     }
 
-    @Override
-    public void onClick(InventoryClickEvent event) {
-        System.out.println("Hey, my friend");
-        super.onClick(event);
-    }
 
     /**
      * @param event The {@link AnvilClickEvent}
