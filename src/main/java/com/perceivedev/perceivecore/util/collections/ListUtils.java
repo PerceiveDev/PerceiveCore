@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.collections;
 
 import java.util.List;
 import java.util.Objects;
@@ -6,6 +6,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 public class ListUtils {
 

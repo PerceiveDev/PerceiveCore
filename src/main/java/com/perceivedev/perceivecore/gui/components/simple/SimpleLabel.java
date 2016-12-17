@@ -12,8 +12,8 @@ import com.perceivedev.perceivecore.gui.base.AbstractComponent;
 import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
-import com.perceivedev.perceivecore.util.ListUtils;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.collections.ListUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /** @author Rayzr */
 public class SimpleLabel extends AbstractComponent {

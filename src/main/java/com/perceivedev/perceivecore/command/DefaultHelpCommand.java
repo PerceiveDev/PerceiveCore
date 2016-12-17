@@ -1,6 +1,6 @@
 package com.perceivedev.perceivecore.command;
 
-import static com.perceivedev.perceivecore.util.TextUtils.colorize;
+import static com.perceivedev.perceivecore.util.text.TextUtils.colorize;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import java.util.ArrayList;
@@ -23,12 +23,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.util.Pager;
-import com.perceivedev.perceivecore.util.Pager.Options;
-import com.perceivedev.perceivecore.util.Pager.Page;
-import com.perceivedev.perceivecore.util.Pager.PagerFilterable;
-import com.perceivedev.perceivecore.util.Pager.SearchMode;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.Pager;
+import com.perceivedev.perceivecore.util.text.Pager.Options;
+import com.perceivedev.perceivecore.util.text.Pager.Page;
+import com.perceivedev.perceivecore.util.text.Pager.PagerFilterable;
+import com.perceivedev.perceivecore.util.text.Pager.SearchMode;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 // @formatter:off I WANT THAT FORMATTING
 /**

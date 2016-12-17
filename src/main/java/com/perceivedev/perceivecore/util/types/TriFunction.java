@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.types;
 
 /**
  * A Function taking three inputs and having one output

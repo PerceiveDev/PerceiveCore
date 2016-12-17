@@ -1,6 +1,6 @@
 package com.perceivedev.perceivecore.config.util;
 
-import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
+import static com.perceivedev.perceivecore.util.text.TextUtils.normalizePathName;
 
 import java.io.IOException;
 import java.nio.file.Files;

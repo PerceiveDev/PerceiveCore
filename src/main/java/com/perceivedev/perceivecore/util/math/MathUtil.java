@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.math;
 
 /**
  * @author Rayzr

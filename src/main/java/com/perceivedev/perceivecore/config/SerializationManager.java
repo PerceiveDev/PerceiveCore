@@ -31,7 +31,7 @@ import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
-import com.perceivedev.perceivecore.util.Pair;
+import com.perceivedev.perceivecore.util.types.Pair;
 
 /** Manages the serialization */
 public class SerializationManager {

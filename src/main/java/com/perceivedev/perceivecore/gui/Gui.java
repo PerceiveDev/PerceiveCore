@@ -15,7 +15,7 @@ import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
 import com.perceivedev.perceivecore.gui.base.FreeformPane;
 import com.perceivedev.perceivecore.gui.base.Pane;
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /**
  * A Gui for a player

@@ -1,5 +1,5 @@
 
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.text;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

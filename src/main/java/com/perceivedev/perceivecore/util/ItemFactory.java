@@ -20,6 +20,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import com.perceivedev.perceivecore.util.collections.ListUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
+
 /**
  * Represents an ItemStack with utility methods to modify it's appearance.
  *

@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.types;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

@@ -5,8 +5,8 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import com.perceivedev.perceivecore.particle.math.RotationMatrices;
-import com.perceivedev.perceivecore.particle.math.SphericalCoordinates;
+import com.perceivedev.perceivecore.util.math.RotationMatrices;
+import com.perceivedev.perceivecore.util.math.SphericalCoordinates;
 
 /**
  * A particle sphere

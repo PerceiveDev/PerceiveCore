@@ -6,13 +6,19 @@
 	<version>0.0.1</version>
 	<name>PerceiveCore</name>
 	<description>A core plugin for Bukkit containing all sorts of utilities, making your life easier.</description>
-	<repositories>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
-	<dependencies>
+
+    <dependencies>
 		<!--Bukkit API -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
@@ -26,7 +32,8 @@
 			<version>4.12</version>
 		</dependency>
 	</dependencies>
-	<build>
+
+    <build>
 		<defaultGoal>clean compile test package install</defaultGoal>
 		<finalName>${project.name}-${project.version}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>

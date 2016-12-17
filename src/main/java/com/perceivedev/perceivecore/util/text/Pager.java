@@ -1,6 +1,4 @@
-package com.perceivedev.perceivecore.util;
-
-import static com.perceivedev.perceivecore.util.TextUtils.colorize;
+package com.perceivedev.perceivecore.util.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -532,7 +530,7 @@ public class Pager {
             sender.sendMessage(language.trOrDefault(headerKey,
                     "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
                     pageIndex + 1, maxPages));
-            entries.forEach(s -> sender.sendMessage(colorize(s)));
+            entries.forEach(s -> sender.sendMessage(TextUtils.colorize(s)));
             sender.sendMessage(language.trOrDefault(footerKey,
                     "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
                     pageIndex + 1, maxPages));

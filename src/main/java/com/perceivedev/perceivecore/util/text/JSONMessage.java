@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.text;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

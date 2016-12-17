@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.particle.math;
+package com.perceivedev.perceivecore.util.math;
 
 import java.text.DecimalFormat;
 

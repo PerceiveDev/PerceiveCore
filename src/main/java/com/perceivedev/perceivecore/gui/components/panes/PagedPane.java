@@ -31,8 +31,8 @@ import com.perceivedev.perceivecore.gui.components.simple.StandardDisplayTypes;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.language.MessageProvider;
 import com.perceivedev.perceivecore.util.ItemFactory;
-import com.perceivedev.perceivecore.util.ListUtils;
-import com.perceivedev.perceivecore.util.TriFunction;
+import com.perceivedev.perceivecore.util.collections.ListUtils;
+import com.perceivedev.perceivecore.util.types.TriFunction;
 
 /**
  * A paged pane.

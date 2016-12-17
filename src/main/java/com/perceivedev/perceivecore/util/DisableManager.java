@@ -15,6 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
+import com.perceivedev.perceivecore.util.types.DisableListener;
+
 /**
  * Allows DisableListeners to be added
  * 

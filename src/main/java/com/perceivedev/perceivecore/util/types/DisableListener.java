@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.types;
 
 /**
  * An object that needs to be informed about Plugin deactivation

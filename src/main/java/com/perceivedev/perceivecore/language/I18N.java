@@ -31,7 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /** An implementation of the {@link MessageProvider} using */
 public class I18N implements MessageProvider {

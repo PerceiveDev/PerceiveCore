@@ -23,7 +23,9 @@ import org.bukkit.entity.Player;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
-/** Provides utility methods for reflection */
+/**
+ * Provides utility methods for reflection
+ */
 @SuppressWarnings({ "WeakerAccess", "unused" })
 public class ReflectionUtil {
 
@@ -165,8 +167,6 @@ public class ReflectionUtil {
 
         return getClass(className);
     }
-
-    // TODO: 30.10.2016 Needed? @Rayzr? Can it be generalised?
 
     /**
      * Gets a Wrapper for a {@link Player}
