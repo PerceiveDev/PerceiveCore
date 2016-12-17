@@ -181,6 +181,10 @@ public class Gui implements InventoryHolder {
 
     /**
      * Opens the Gui for the player, if no other Gui is opened
+     * <p>
+     * The Guis for the player are organized in a Stack. This means opening a
+     * Gui while one is already opened will just push it on the stack, and open
+     * it as next Gui
      *
      * @param player The player to open the Gui for
      */
@@ -213,7 +217,18 @@ public class Gui implements InventoryHolder {
 
         reRender();
 
+        onDisplay();
+
         player.openInventory(getInventory());
+    }
+
+    /**
+     * Called when this gui is displayed to a player
+     * <p>
+     * {@link #getPlayer()} is already set at this point
+     */
+    protected void onDisplay() {
+
     }
 
     /**

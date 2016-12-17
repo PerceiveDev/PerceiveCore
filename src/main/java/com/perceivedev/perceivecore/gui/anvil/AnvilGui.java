@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,9 +39,8 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
     }
 
     @Override
-    public void open(Player player) {
-        PacketManager.getInstance().addListener(listener, player);
-        super.open(player);
+    protected void onDisplay() {
+        getPlayer().ifPresent(player -> PacketManager.getInstance().addListener(listener, player));
     }
 
     @Override
@@ -65,6 +64,12 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
                 clickEvent.setCancelled(false);
             }
         }, Dimension.ONE), slot.getSlot(), 0);
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent event) {
+        System.out.println("Hey, my friend");
+        super.onClick(event);
     }
 
     /**

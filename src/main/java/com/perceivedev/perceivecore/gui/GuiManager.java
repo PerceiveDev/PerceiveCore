@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,6 +49,30 @@ public enum GuiManager implements Listener {
      */
     public void addGui(UUID playerID, Gui gui) {
         getOrCreatePlayerData(playerID).addGui(gui);
+    }
+
+    /**
+     * Adds a Gui to the player's stack, pushing the currently opened Gui back,
+     * if any.
+     * <br>
+     * Does not open a new Gui, if none is opened.
+     *
+     * @param playerID The {@link UUID} of the player
+     * @param gui The {@link UUID} to add
+     */
+    public void addGuiAndBringToFront(UUID playerID, Gui gui) {
+        getOrCreatePlayerData(playerID).addGui(gui);
+        getOrCreatePlayerData(playerID).freezeCurrentSelectNext();
+    }
+
+    /**
+     * Closes the currently opened Gui for the player, without removing it from
+     * the stack. Will be reopened when you call {@link #openCurrentGui(UUID)}
+     * 
+     * @param playerID The {@link UUID} of the player
+     */
+    public void closeGuiWithoutRemoving(UUID playerID) {
+        getOrCreatePlayerData(playerID).freezeCurrentGui();
     }
 
     /**
@@ -116,7 +141,15 @@ public enum GuiManager implements Listener {
         private UUID playerID;
         private Stack<Gui> guis;
 
-        /** @param playerID The {@link UUID} of the player */
+        /**
+         * If this returns true, the execution of the {@link #reactToClose(Gui)}
+         * will stop right there
+         */
+        private Function<Gui, Boolean> specialCloseBehaviour;
+
+        /**
+         * @param playerID The {@link UUID} of the player
+         */
         private PlayerGuiData(UUID playerID) {
             this.playerID = playerID;
             this.guis = new Stack<>();
@@ -128,7 +161,52 @@ public enum GuiManager implements Listener {
          * @param gui The {@link UUID} to add
          */
         private void addGui(Gui gui) {
-            guis.add(gui);
+            guis.push(gui);
+        }
+
+        /**
+         * Freezes the current Gui, hides it (does NOT destroy it) and then
+         * displays the next one.
+         * <br>
+         * If there is just one Gui, this method does nothing.
+         */
+        private void freezeCurrentSelectNext() {
+            if (guis.size() < 2) {
+                return;
+            }
+
+            getPlayer().ifPresent(player -> {
+                specialCloseBehaviour = gui -> {
+                    runLater(() -> guis.peek().openInventory(player.getPlayer()));
+                    return true;
+                };
+
+                // trigger a call of the `reactToClose` method, which will open
+                // the next for us
+                player.closeInventory();
+            });
+        }
+
+        private void freezeCurrentGui() {
+            if (guis.isEmpty()) {
+                return;
+            }
+
+            getPlayer().ifPresent(player -> {
+                if (player.getOpenInventory().getTopInventory() == null) {
+                    return;
+                }
+                InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+
+                // has a Gui opened
+                if (guis.peek().equals(holder)) {
+                    // just swallow the close event
+                    specialCloseBehaviour = gui -> true;
+
+                    // trigger a call of the `reactToClose` method
+                    player.closeInventory();
+                }
+            });
         }
 
         /**
@@ -147,12 +225,20 @@ public enum GuiManager implements Listener {
                 if (gui.equals(holder)) {
                     // it may be called in the PlayerCloseInventoryEvent, which
                     // could introduce bugs without this line
-                    runLater(this::closeCurrentInventory);
+                    runLater(() -> {
+                        // the Gui may be already closed. Yes, I know that we
+                        // only waited the one needed tick, go ask bukkit
+                        if (gui.equals(playerOptional.get().getOpenInventory().getTopInventory().getHolder())) {
+                            closeCurrentInventory();
+                        }
+                    });
                 }
             }
         }
 
-        /** Removes and closes all {@link Gui}s */
+        /**
+         * Removes and closes all {@link Gui}s
+         */
         private void removeAllGuis() {
             guis.clear();
             closeOpenedGui();
@@ -218,6 +304,18 @@ public enum GuiManager implements Listener {
             }
 
             Player player = playerOptional.get();
+
+            // Special behaviour is defined
+            if (specialCloseBehaviour != null) {
+                boolean stopHere = specialCloseBehaviour.apply(gui);
+
+                // reset it!
+                specialCloseBehaviour = null;
+
+                if (stopHere) {
+                    return;
+                }
+            }
 
             if (gui.isKillMe() || !gui.isReopenOnClose()) {
                 removeGui(gui);
