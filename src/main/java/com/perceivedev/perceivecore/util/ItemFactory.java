@@ -512,7 +512,9 @@ public class ItemFactory implements Cloneable {
         return new ItemFactory(new ItemStack(type));
     }
 
-    /** @return The finished ItemStack. */
+    /**
+     * @return The finished ItemStack.
+     */
     @Nonnull
     public ItemStack build() {
         return itemStack.clone();

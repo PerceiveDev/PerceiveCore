@@ -23,11 +23,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.Pager;
-import com.perceivedev.perceivecore.other.Pager.Options;
-import com.perceivedev.perceivecore.other.Pager.Page;
-import com.perceivedev.perceivecore.other.Pager.PagerFilterable;
-import com.perceivedev.perceivecore.other.Pager.SearchMode;
+import com.perceivedev.perceivecore.util.Pager;
+import com.perceivedev.perceivecore.util.Pager.Options;
+import com.perceivedev.perceivecore.util.Pager.Page;
+import com.perceivedev.perceivecore.util.Pager.PagerFilterable;
+import com.perceivedev.perceivecore.util.Pager.SearchMode;
 import com.perceivedev.perceivecore.util.TextUtils;
 
 // @formatter:off I WANT THAT FORMATTING

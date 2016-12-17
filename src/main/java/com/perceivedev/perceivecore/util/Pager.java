@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.other;
+package com.perceivedev.perceivecore.util;
 
 import static com.perceivedev.perceivecore.util.TextUtils.colorize;
 

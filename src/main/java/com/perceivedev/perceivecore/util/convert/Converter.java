@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.convert;
 
 /** @author Rayzr */
 public interface Converter<A, B> {

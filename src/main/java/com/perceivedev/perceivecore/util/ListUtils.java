@@ -16,7 +16,9 @@ public class ListUtils {
      * @param delimiter The delimiter
      *
      * @return The joined list
+     * @deprecated Use {@link String#join(CharSequence, Iterable)}
      */
+    @Deprecated
     @Nonnull
     public static String concatList(@Nonnull List<String> list, @Nonnull String delimiter) {
         Objects.requireNonNull(list, "list can not be null");

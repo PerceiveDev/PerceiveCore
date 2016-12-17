@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.other;
+package com.perceivedev.perceivecore.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

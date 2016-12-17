@@ -9,7 +9,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import com.perceivedev.perceivecore.config.SerializationManager;
 
 /**
- * Better than an {@link Map.Entry} ;)
+ * Better than an {@link Map.Entry} ;) - NO [I Al Istannen]
  *
  * @param <K> The key type
  * @param <V> The Value type
@@ -37,22 +37,30 @@ public class Pair<K, V> implements Serializable, ConfigurationSerializable {
         this.value = (V) deserializePairPart(map.get("value"));
     }
 
-    /** @return the key */
+    /**
+     * @return the key
+     */
     public K getKey() {
         return key;
     }
 
-    /** @param key the key to set */
+    /**
+     * @param key the key to set
+     */
     public void setKey(K key) {
         this.key = key;
     }
 
-    /** @return the value */
+    /**
+     * @return the value
+     */
     public V getValue() {
         return value;
     }
 
-    /** @param value the value to set */
+    /**
+     * @param value the value to set
+     */
     public void setValue(V value) {
         this.value = value;
     }

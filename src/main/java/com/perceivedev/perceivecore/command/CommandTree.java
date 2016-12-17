@@ -17,8 +17,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.DisableListener;
-import com.perceivedev.perceivecore.other.DisableManager;
+import com.perceivedev.perceivecore.util.DisableListener;
+import com.perceivedev.perceivecore.util.DisableManager;
 
 /** A Command tree */
 public class CommandTree {

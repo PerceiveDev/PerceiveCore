@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
-import com.perceivedev.perceivecore.util.Converter;
-import com.perceivedev.perceivecore.util.Converters;
+import com.perceivedev.perceivecore.util.convert.Converter;
+import com.perceivedev.perceivecore.util.convert.Converters;
 
 /**
  * A class which represents a packet.
@@ -42,7 +42,7 @@ public class Packet {
      * @param converter the converter to add
      * @return Whether or not it actually added anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#addConverter(java.lang.Class,
-     *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
+     *      java.lang.Class, Converter)
      */
     public static <A, B> boolean addConverter(Class<?> a, Class<?> b, Converter<A, B> converter) {
         return converters.addConverter(a, b, converter);
@@ -57,7 +57,7 @@ public class Packet {
      * @param converter the converter itself
      * @return Whether or not it actually removed anything
      * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
-     *      java.lang.Class, com.perceivedev.perceivecore.util.Converter)
+     *      java.lang.Class, Converter)
      */
     public static <A, B> boolean removeConverter(Class<A> a, Class<B> b, Converter<A, B> converter) {
         return converters.removeConverter(a, b, converter);
