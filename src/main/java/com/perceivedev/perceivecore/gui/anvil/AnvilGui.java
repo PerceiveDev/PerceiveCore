@@ -38,7 +38,7 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
     }
 
     @Override
-    protected void onDisplay() {
+    protected void onDisplay(Gui previous) {
         getPlayer().ifPresent(player -> PacketManager.getInstance().addListener(listener, player));
     }
 

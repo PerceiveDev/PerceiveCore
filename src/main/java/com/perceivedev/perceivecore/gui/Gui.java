@@ -209,15 +209,18 @@ public class Gui implements InventoryHolder {
      * Opens the inventory for the player
      *
      * @param player The Player to open it for
+     * @param previous The previous Gui that was displayed. {@code null} if this
+     *            is the first
+     * 
      */
-    void openInventory(Player player) {
+    void openInventory(Player player, Gui previous) {
         Objects.requireNonNull(player);
 
         playerID = player.getUniqueId();
 
         reRender();
 
-        onDisplay();
+        onDisplay(previous);
 
         player.openInventory(getInventory());
     }
@@ -226,8 +229,11 @@ public class Gui implements InventoryHolder {
      * Called when this gui is displayed to a player
      * <p>
      * {@link #getPlayer()} is already set at this point
+     * 
+     * @param previous The previous Gui that was displayed. {@code null} if this
+     *            is the first
      */
-    protected void onDisplay() {
+    protected void onDisplay(Gui previous) {
 
     }
 

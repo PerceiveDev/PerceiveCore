@@ -103,7 +103,7 @@ public enum GuiManager implements Listener {
      *         put back to later open it
      */
     public boolean openCurrentGui(UUID playerID) {
-        return getOrCreatePlayerData(playerID).openNextGui();
+        return getOrCreatePlayerData(playerID).openNextGui(null);
     }
 
     /**
@@ -117,7 +117,7 @@ public enum GuiManager implements Listener {
     public boolean submit(UUID playerID, Gui gui) {
         PlayerGuiData playerData = getOrCreatePlayerData(playerID);
         playerData.addGui(gui);
-        return playerData.openNextGui();
+        return playerData.openNextGui(null);
     }
 
     /**
@@ -177,7 +177,7 @@ public enum GuiManager implements Listener {
 
             getPlayer().ifPresent(player -> {
                 specialCloseBehaviour = gui -> {
-                    runLater(() -> guis.peek().openInventory(player.getPlayer()));
+                    runLater(() -> guis.peek().openInventory(player.getPlayer(), gui));
                     return true;
                 };
 
@@ -248,8 +248,10 @@ public enum GuiManager implements Listener {
          * Opens the next gui, if the player has no gui opened currently
          *
          * @return True if a gui was opened
+         * @param previous The previous Gui that was displayed. {@code null} if
+         *            this is the first
          */
-        private boolean openNextGui() {
+        private boolean openNextGui(Gui previous) {
             if (guis.isEmpty()) {
                 return false;
             }
@@ -265,7 +267,7 @@ public enum GuiManager implements Listener {
                 return false;
             }
 
-            guis.peek().openInventory(player);
+            guis.peek().openInventory(player, previous);
 
             return true;
         }
@@ -320,7 +322,7 @@ public enum GuiManager implements Listener {
             if (gui.isKillMe() || !gui.isReopenOnClose()) {
                 removeGui(gui);
                 gui.onClose();
-                runLater(this::openNextGui);
+                runLater(() -> openNextGui(gui));
             } else {
                 // reopen it
                 runLater(() -> player.openInventory(gui.getInventory()));
