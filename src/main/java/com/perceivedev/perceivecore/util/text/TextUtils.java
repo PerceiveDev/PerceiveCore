@@ -58,6 +58,7 @@ public class TextUtils {
      * Replaces {@link ChatColor#COLOR_CHAR} ('{@value ChatColor#COLOR_CHAR}')
      *
      * @param text The text to replace the color codes with
+     * @param newColorChar The new color char to use
      *
      * @return The text with the color codes replaced
      */

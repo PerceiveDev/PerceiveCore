@@ -56,6 +56,7 @@ public class Gui implements InventoryHolder {
      * Creates a gui with the given Inventory
      * 
      * @param name The name of the Gui
+     * @param rows The amount of rows in the Inventory. Each row has 9 slots.
      * @param rootPane The root pane to use
      * @param inventory The inventory to use
      */

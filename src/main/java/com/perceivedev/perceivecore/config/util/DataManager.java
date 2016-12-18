@@ -105,6 +105,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
      * @return The value for the given key
      * 
      * @see java.util.Map#get(java.lang.Object)
@@ -125,6 +126,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
      * @return The value previously associated with the key
      * 
      * @see java.util.Map#remove(java.lang.Object)
@@ -211,6 +213,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     /**
      * @param key The key to remove
      * @param value The value to remove
+     * @return {@code true} if the value was removed
      * 
      * @see java.util.Map#remove(java.lang.Object, java.lang.Object)
      */
@@ -275,6 +278,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * methods to use.
      *
      * @param path The path to check
+     * @return True if the path is valid
      */
     public abstract boolean isValidPath(Path path);
 

@@ -62,6 +62,7 @@ public class ListUtils {
      * 
      * This will not modify the passed list
      * 
+     * @param <T> The class of the objects in the list
      * @param list The list to replace the string in
      * @param replacementFunction The function to use to replace things
      * @return The replaced list

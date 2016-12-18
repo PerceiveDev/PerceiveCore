@@ -166,8 +166,8 @@ public class TileEntityNBTUtil {
 
     /**
      * Checks whether you can pass the {@link BlockState} the the
-     * {@link #setNbtTag(BlockState, NBTTagCompound)} or
-     * {@link #getNbtTag(BlockState)} methods
+     * {@link TileEntityNBTUtil#setNbtTag(BlockState, NBTTagCompound)} or
+     * {@link TileEntityNBTUtil#getNbtTag(BlockState)} methods
      *
      * @param blockState The Bukkit {@link BlockState} to check
      *

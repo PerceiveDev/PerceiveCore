@@ -141,6 +141,7 @@ public class ReflectionUtil {
     /**
      * Gets a {@link ReflectedClass} from the object
      *
+     * @param <T> The class of the object
      * @param object the object
      *
      * @return the ReflectedClass, this will be null if the object is null
@@ -1105,6 +1106,8 @@ public class ReflectionUtil {
          * Sets the type of the {@link Field}
          *
          * @param type The type of the {@link Field}
+         * 
+         * @return This {@link FieldPredicate}
          */
         public FieldPredicate setType(Class<?> type) {
             this.type = type;
