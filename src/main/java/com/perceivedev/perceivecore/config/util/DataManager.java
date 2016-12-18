@@ -87,6 +87,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return The size of the DataManager
+     * 
      * @see java.util.Map#size()
      */
     public int size() {
@@ -94,6 +96,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return Whether the manager is empty
+     * 
      * @see java.util.Map#isEmpty()
      */
     public boolean isEmpty() {
@@ -101,6 +105,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return The value for the given key
+     * 
      * @see java.util.Map#get(java.lang.Object)
      */
     public V get(K key) {
@@ -108,6 +114,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to add
+     * @param value The value to add
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public V put(K key, V value) {
@@ -115,6 +125,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#remove(java.lang.Object)
      */
     public V remove(K key) {
@@ -122,6 +134,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param m The map with values to add
+     * 
      * @see java.util.Map#putAll(java.util.Map)
      */
     public void putAll(Map<? extends K, ? extends V> m) {
@@ -136,6 +150,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the keys in a set
+     * 
      * @see java.util.Map#keySet()
      */
     public Set<K> keySet() {
@@ -143,6 +159,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the values in a Collection
+     * 
      * @see java.util.Map#values()
      */
     public Collection<V> values() {
@@ -150,6 +168,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the Keys and Values
+     * 
      * @see java.util.Map#entrySet()
      */
     public Set<Entry<K, V>> entrySet() {
@@ -157,6 +177,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
+     * @param defaultValue The default value
+     * @return The value or the default
+     * 
      * @see java.util.Map#getOrDefault(java.lang.Object, java.lang.Object)
      */
     public V getOrDefault(K key, V defaultValue) {
@@ -165,6 +189,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param action The consumer
+     * 
      * @see java.util.Map#forEach(java.util.function.BiConsumer)
      */
     public void forEach(BiConsumer<? super K, ? super V> action) {
@@ -172,6 +198,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to add
+     * @param value The value to add
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#putIfAbsent(java.lang.Object, java.lang.Object)
      */
     public V putIfAbsent(K key, V value) {
@@ -179,6 +209,9 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to remove
+     * @param value The value to remove
+     * 
      * @see java.util.Map#remove(java.lang.Object, java.lang.Object)
      */
     public boolean remove(K key, V value) {

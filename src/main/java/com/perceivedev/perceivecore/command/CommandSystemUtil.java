@@ -57,6 +57,8 @@ public class CommandSystemUtil {
      * @param commandName The name of the command to register
      * @param owner The owning plugin
      * @param aliases The aliases for the command
+     * @param executor The {@link CommandExecutor} to register
+     * @param tabCompleter The {@link TabCompleter} to register
      */
     public static void registerCommand(String commandName, Plugin owner, List<String> aliases, CommandExecutor executor, TabCompleter tabCompleter) {
         PluginCommand command = instantiateCommand(commandName, owner);

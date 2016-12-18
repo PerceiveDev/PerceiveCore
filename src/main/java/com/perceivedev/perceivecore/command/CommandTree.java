@@ -40,7 +40,9 @@ public class CommandTree {
      * Creates a new Command Tree
      *
      * Creates a new {@link DisableManager} for the given plugin
-     *
+     * 
+     * @param plugin The Plugin this is for
+     * 
      * @see #CommandTree(DisableManager)
      */
     public CommandTree(Plugin plugin) {

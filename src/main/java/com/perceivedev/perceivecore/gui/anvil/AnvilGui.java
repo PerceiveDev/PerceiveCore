@@ -27,6 +27,7 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
 
     /**
      * @param name The name of the Gui
+     * @param callback The callback
      */
     public AnvilGui(String name, Consumer<Optional<String>> callback) {
         super(name, 1, new AnchorPane(3, 1));
@@ -64,7 +65,6 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
             }
         }, Dimension.ONE), slot.getSlot(), 0);
     }
-
 
     /**
      * @param event The {@link AnvilClickEvent}
