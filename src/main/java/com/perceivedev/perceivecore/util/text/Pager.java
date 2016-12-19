@@ -128,7 +128,7 @@ public class Pager {
 
         /** @param string The String */
         private StringFilterable(String string) {
-            Objects.requireNonNull(string, "String can not be null!");
+            Objects.requireNonNull(string, "String cannot be null!");
 
             this.string = string;
         }

@@ -69,8 +69,8 @@ public class ListUtils {
      */
     @Nonnull
     public static <T> List<T> replaceInAll(@Nonnull List<T> list, @Nonnull Function<T, T> replacementFunction) {
-        Objects.requireNonNull(list, "list can not be null!");
-        Objects.requireNonNull(replacementFunction, "replacementFunction can not be null!");
+        Objects.requireNonNull(list, "list cannot be null!");
+        Objects.requireNonNull(replacementFunction, "replacementFunction cannot be null!");
 
         return list.stream()
                 .map(replacementFunction)

@@ -65,7 +65,7 @@ public class ArrayUtils {
      * @return True if the element is in the given array
      */
     public static <T> boolean contains(T[] array, T element) {
-        Objects.requireNonNull(array, "array can not be null!");
+        Objects.requireNonNull(array, "array cannot be null!");
         return Arrays.stream(array).anyMatch(element::equals);
     }
 

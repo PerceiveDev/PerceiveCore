@@ -152,7 +152,7 @@ public class TextUtils {
      */
     @Nonnull
     public static String hideText(@Nonnull String text) {
-        Objects.requireNonNull(text, "text can not be null!");
+        Objects.requireNonNull(text, "text cannot be null!");
 
         StringBuilder output = new StringBuilder();
 
@@ -175,7 +175,7 @@ public class TextUtils {
      */
     @Nonnull
     public static String revealText(@Nonnull String text) {
-        Objects.requireNonNull(text, "text can not be null!");
+        Objects.requireNonNull(text, "text cannot be null!");
 
         if (text.isEmpty()) {
             return text;

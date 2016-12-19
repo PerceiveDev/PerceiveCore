@@ -61,9 +61,9 @@ public class Gui implements InventoryHolder {
      * @param inventory The inventory to use
      */
     protected Gui(String name, int rows, Pane rootPane, Inventory inventory) {
-        Objects.requireNonNull(name, "name can not be null!");
-        Objects.requireNonNull(rootPane, "rootPane can not be null!");
-        Objects.requireNonNull(inventory, "inventory can not be null!");
+        Objects.requireNonNull(name, "name cannot be null!");
+        Objects.requireNonNull(rootPane, "rootPane cannot be null!");
+        Objects.requireNonNull(inventory, "inventory cannot be null!");
 
         this.inventory = inventory;
         this.rootPane = rootPane;

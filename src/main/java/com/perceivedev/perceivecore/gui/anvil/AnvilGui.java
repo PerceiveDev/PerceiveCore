@@ -34,7 +34,7 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
 
         setInventory(Bukkit.createInventory(this, InventoryType.ANVIL, name));
 
-        Objects.requireNonNull(callback, "callback can not be null!");
+        Objects.requireNonNull(callback, "callback cannot be null!");
         this.callback = callback;
     }
 
@@ -57,7 +57,7 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
      *            output is NEVER movable
      */
     public void setItem(AnvilSlot slot, ItemStack itemStack, boolean movable) {
-        Objects.requireNonNull(slot, "slot can not be null!");
+        Objects.requireNonNull(slot, "slot cannot be null!");
 
         getRootAsFixedPosition().addComponent(new Button(itemStack, clickEvent -> {
             if (movable) {

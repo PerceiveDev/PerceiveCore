@@ -302,8 +302,8 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, ConfigurationSection data) {
-        Objects.requireNonNull(data, "data can not be null!");
-        Objects.requireNonNull(clazz, "clazz can not be null!");
+        Objects.requireNonNull(data, "data cannot be null!");
+        Objects.requireNonNull(clazz, "clazz cannot be null!");
 
         return deserialize(clazz, convertToMap(data), 0);
     }
@@ -318,8 +318,8 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, Map<String, Object> data) {
-        Objects.requireNonNull(data, "data can not be null!");
-        Objects.requireNonNull(clazz, "clazz can not be null!");
+        Objects.requireNonNull(data, "data cannot be null!");
+        Objects.requireNonNull(clazz, "clazz cannot be null!");
 
         return deserialize(clazz, data, 0);
     }

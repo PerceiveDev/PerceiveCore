@@ -98,7 +98,7 @@ public class NBTWrappers {
          * @param string The String value
          */
         public NBTTagString(String string) {
-            Objects.requireNonNull(string, "string can not be null!");
+            Objects.requireNonNull(string, "string cannot be null!");
             this.string = string;
         }
 
@@ -106,7 +106,7 @@ public class NBTWrappers {
          * @param string The new value
          */
         public void setString(String string) {
-            Objects.requireNonNull(string, "string can not be null!");
+            Objects.requireNonNull(string, "string cannot be null!");
             this.string = string;
         }
 
@@ -168,53 +168,53 @@ public class NBTWrappers {
         private final Map<String, INBTBase> map = new HashMap<>();
 
         public void set(String key, INBTBase value) {
-            Objects.requireNonNull(key, "key can not be null!");
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             map.put(key, value);
         }
 
         public void setByte(String key, byte value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagByte(value));
         }
 
         public void setShort(String key, short value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagShort(value));
         }
 
         public void setInt(String key, int value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagInt(value));
         }
 
         public void setLong(String key, long value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagLong(value));
         }
 
         public void setFloat(String key, float value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagFloat(value));
         }
 
         public void setDouble(String key, double value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagDouble(value));
         }
 
         public void setString(String key, String value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             map.put(key, new NBTTagString(value));
         }
 
         public void setByteArray(String key, byte[] value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagByteArray(value));
         }
 
         public void setIntArray(String key, int[] value) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.put(key, new NBTTagIntArray(value));
         }
 
@@ -223,18 +223,18 @@ public class NBTWrappers {
         }
 
         public boolean hasKey(String key) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             return map.containsKey(key);
         }
 
         public boolean hasKeyOfType(String key, Class<? extends INBTBase> type) {
-            Objects.requireNonNull(key, "key can not be null!");
-            Objects.requireNonNull(type, "type can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
+            Objects.requireNonNull(type, "type cannot be null!");
             return map.containsKey(key) && map.get(key) != null && map.get(key).getClass() == type;
         }
 
         public void remove(String key) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             map.remove(key);
         }
 
@@ -244,7 +244,7 @@ public class NBTWrappers {
          * @return The assigned {@link INBTBase} or null if none
          */
         public INBTBase get(String key) {
-            Objects.requireNonNull(key, "key can not be null!");
+            Objects.requireNonNull(key, "key cannot be null!");
             return map.get(key);
         }
 
@@ -490,7 +490,7 @@ public class NBTWrappers {
          * @return True if it was added.
          */
         public boolean add(INBTBase base) {
-            Objects.requireNonNull(base, "base can not be null!");
+            Objects.requireNonNull(base, "base cannot be null!");
             return isType(base.getClass()) && list.add(base);
         }
 
@@ -502,7 +502,7 @@ public class NBTWrappers {
          * @return {@code true} if this list contained the specified element
          */
         public boolean remove(INBTBase base) {
-            Objects.requireNonNull(base, "base can not be null!");
+            Objects.requireNonNull(base, "base cannot be null!");
             return list.remove(base);
         }
 
@@ -532,7 +532,7 @@ public class NBTWrappers {
          * @return True if the list is empty or this type
          */
         public boolean isType(Class<? extends INBTBase> type) {
-            Objects.requireNonNull(type, "type can not be null!");
+            Objects.requireNonNull(type, "type cannot be null!");
             return list.isEmpty() || list.get(0).getClass() == type;
         }
 
@@ -692,7 +692,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.doubleValue();
         }
 
@@ -774,7 +774,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.intValue();
         }
 
@@ -857,7 +857,7 @@ public class NBTWrappers {
          * @param value The Int value
          */
         public NBTTagIntArray(int[] value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value;
         }
 
@@ -938,7 +938,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.byteValue();
         }
 
@@ -1014,7 +1014,7 @@ public class NBTWrappers {
          * @param value The Byte value
          */
         public NBTTagByteArray(byte[] value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value;
         }
 
@@ -1095,7 +1095,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.shortValue();
         }
 
@@ -1176,7 +1176,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.longValue();
         }
 
@@ -1263,7 +1263,7 @@ public class NBTWrappers {
          */
         @Override
         public void set(Number value) {
-            Objects.requireNonNull(value, "value can not be null!");
+            Objects.requireNonNull(value, "value cannot be null!");
             this.value = value.floatValue();
         }
 
