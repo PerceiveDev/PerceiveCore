@@ -31,6 +31,9 @@ public enum GuiManager implements Listener {
      * Opens the first GUI on the stack for the player. After closing that
      * window, the next GUI on the stack will open, etc. until the stack is
      * empty.
+     * <p>
+     * <br>
+     * This method will open the Gui immediately.
      * 
      * @param player The player to open the GUI for
      * @return If a GUI was actually opened for the player
@@ -38,6 +41,8 @@ public enum GuiManager implements Listener {
     public static boolean openFirst(Player player) {
         return INSTANCE.openCurrentGui(player.getUniqueId());
     }
+
+    // ==== START OF INSTANCE RELEVANT CODE ====
 
     private Map<UUID, PlayerGuiData> playerMap = new HashMap<>();
 
@@ -57,6 +62,10 @@ public enum GuiManager implements Listener {
      * <br>
      * Does not open a new Gui, if none is opened.
      *
+     * <p>
+     * <br>
+     * This method will add the Gui immediately and open it on the next tick
+     * 
      * @param playerID The {@link UUID} of the player
      * @param gui The {@link UUID} to add
      */
@@ -69,6 +78,10 @@ public enum GuiManager implements Listener {
      * Closes the currently opened Gui for the player, without removing it from
      * the stack. Will be reopened when you call {@link #openCurrentGui(UUID)}
      * 
+     * <p>
+     * <br>
+     * This method closes the Gui immediately
+     * 
      * @param playerID The {@link UUID} of the player
      */
     public void closeGuiWithoutRemoving(UUID playerID) {
@@ -76,8 +89,29 @@ public enum GuiManager implements Listener {
     }
 
     /**
+     * Closes the currently opened Gui for the Player and calls
+     * {@link #removeGui(UUID, Gui)} on it
+     * <p>
+     * Does nothing if no Gui is opened
+     * 
+     * <p>
+     * <br>
+     * This method closes the Gui immediately
+     * 
+     * @param playerID The {@link UUID} of the player
+     */
+    public void closeOpenedGui(UUID playerID) {
+        getOrCreatePlayerData(playerID).closeOpenedGui();
+    }
+
+    /**
      * Removes the Gui, closing it if it was opened
-     *
+     * <p>
+     * <br>
+     * This method removes the Gui immediately and closes it on the next tick,
+     * if
+     * it was opened.
+     * 
      * @param uuid The {@link UUID} of the player
      * @param gui The {@link Gui} to remove
      */
@@ -87,7 +121,10 @@ public enum GuiManager implements Listener {
 
     /**
      * Removes ALL {@link Gui}s for the Player, closing any that is opened
-     *
+     * <p>
+     * <br>
+     * This method removes and closes all Guis immediately.
+     * 
      * @param uuid The {@link UUID} of the player
      */
     public void removeAll(UUID uuid) {
@@ -109,6 +146,10 @@ public enum GuiManager implements Listener {
     /**
      * Adds the Gui and tries to open it
      *
+     * <p>
+     * <br>
+     * This method will open the Gui immediately (if it is its turn)
+     * 
      * @param playerID The {@link UUID} of the player
      * @param gui The gui to open
      *
