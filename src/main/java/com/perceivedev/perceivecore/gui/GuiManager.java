@@ -1,5 +1,7 @@
 package com.perceivedev.perceivecore.gui;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +47,16 @@ public enum GuiManager implements Listener {
     // ==== START OF INSTANCE RELEVANT CODE ====
 
     private Map<UUID, PlayerGuiData> playerMap = new HashMap<>();
+
+    {
+        // close guis on reload/restart
+        PerceiveCore.getInstance().getDisableManager().addListener(() -> {
+            Collection<UUID> uuidList = new ArrayList<>(playerMap.keySet());
+            uuidList.forEach(this::removeAll);
+        });
+    }
+
+    // ==== METHODS ====
 
     /**
      * Adds a Gui to the player's stack, without opening it
