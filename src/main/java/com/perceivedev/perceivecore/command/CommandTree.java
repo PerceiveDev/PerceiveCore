@@ -20,7 +20,9 @@ import com.perceivedev.perceivecore.language.MessageProvider;
 import com.perceivedev.perceivecore.util.DisableManager;
 import com.perceivedev.perceivecore.util.types.DisableListener;
 
-/** A Command tree */
+/**
+ * A Command tree
+ */
 public class CommandTree {
 
     private TreeRoot root;

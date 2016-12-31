@@ -904,6 +904,25 @@ public class ReflectionUtil {
         }
 
         /**
+         * Returns the raw value, or throws an exception if the result is
+         * {@link ResultType#ERROR} or {@link ResultType#NOT_FOUND}
+         * 
+         * @param messages The messages to append to the Exception. May NOT be
+         *            null, but empty
+         * @return The raw value
+         */
+        public T getValueOrThrow(String... messages) {
+            Objects.requireNonNull(messages, "messages can not be null!");
+
+            if (getResultType() == ResultType.ERROR) {
+                throw new RuntimeException(String.join(" - ", messages), getException());
+            } else if (getResultType() == ResultType.NOT_FOUND) {
+                throw new RuntimeException(String.join(" - ", messages) + " Result was 'NOT_FOUND'");
+            }
+            return getValue();
+        }
+
+        /**
          * Returns the result type
          *
          * @return The result type
