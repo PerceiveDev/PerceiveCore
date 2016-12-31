@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
@@ -398,7 +399,7 @@ public class NBTWrappers {
 
             Optional<Class<?>> nbtBase = ReflectionUtil.getClass(NMS, "NBTBase");
             if (!nbtBase.isPresent()) {
-                System.out.println("Can't find NBTBase class from NBTTagCompound toNBT");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTBase class from NBTTagCompound toNBT");
                 return null;
             }
 
@@ -430,7 +431,7 @@ public class NBTWrappers {
                     .withParameters(String.class));
 
             if (!getMethod.isSuccessful()) {
-                System.out.println("Didn't find get method in NBTTagCompound class fromNBT");
+                PerceiveCore.getInstance().getLogger().warning("Didn't find get method in NBTTagCompound class fromNBT");
                 return null;
             }
 
@@ -560,7 +561,7 @@ public class NBTWrappers {
             Object nbtList = ReflectionUtil.instantiate(NBT_TAG_LIST_CONSTRUCTOR).getValue();
             Optional<Class<?>> nbtBase = ReflectionUtil.getClass(NMS, "NBTBase");
             if (!nbtBase.isPresent()) {
-                System.out.println("Can't find NBTBase class from NBTTagList toNBT");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTBase class from NBTTagList toNBT");
                 return null;
             }
 
@@ -579,7 +580,7 @@ public class NBTWrappers {
             ReflectResponse<Object> listResponse = ReflectionUtil.getFieldValue("list", nbtObject.getClass(), nbtObject);
 
             if (!listResponse.isValuePresent()) {
-                System.out.println("An error occurred reading an NBTTagList from nbt. Response: " + listResponse);
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading an NBTTagList from nbt. Response: " + listResponse);
             }
 
             List<?> savedList = (List<?>) listResponse.getValue();
@@ -712,13 +713,13 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagDouble");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagDouble class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagDouble class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), double.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagDouble! The value was null. Response object: "
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading from an NBTTagDouble! The value was null. Response object: "
                         + response);
             }
 
@@ -799,13 +800,13 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagInt");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagInt class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagInt class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), int.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagInt! The value was null. Response object: "
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading from an NBTTagInt! The value was null. Response object: "
                         + response);
             }
 
@@ -878,13 +879,13 @@ public class NBTWrappers {
                     new MethodPredicate().withReturnType(int[].class));
 
             if (!methodResponse.isValuePresent()) {
-                System.out.println("No getter found for NBTTagIntArray");
+                PerceiveCore.getInstance().getLogger().warning("No getter found for NBTTagIntArray");
                 return null;
             }
             ReflectResponse<Object> dataResponse = ReflectionUtil.invokeMethod(methodResponse.getValue(), nbtObject);
 
             if (!dataResponse.isSuccessful()) {
-                System.out.println("NBTTagIntArray getter method raised an error. The response object: " + dataResponse);
+                PerceiveCore.getInstance().getLogger().warning("NBTTagIntArray getter method raised an error. The response object: " + dataResponse);
             }
 
             return new NBTTagIntArray((int[]) dataResponse.getValue());
@@ -958,13 +959,13 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagByte");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagByte class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagByte class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), byte.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagByte! The value was null. Response object: "
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading from an NBTTagByte! The value was null. Response object: "
                         + response);
             }
             Byte value = (Byte) response.getValue();
@@ -1035,13 +1036,13 @@ public class NBTWrappers {
                     new MethodPredicate().withReturnType(byte[].class));
 
             if (!methodResponse.isValuePresent()) {
-                System.out.println("No getter found for NBTTagByteArray!");
+                PerceiveCore.getInstance().getLogger().warning("No getter found for NBTTagByteArray!");
                 return null;
             }
             ReflectResponse<Object> dataResponse = ReflectionUtil.invokeMethod(methodResponse.getValue(), nbtObject);
 
             if (!dataResponse.isSuccessful()) {
-                System.out.println("NBTTagByteArray getter method raised an error. The response object: " + dataResponse);
+                PerceiveCore.getInstance().getLogger().warning("NBTTagByteArray getter method raised an error. The response object: " + dataResponse);
             }
 
             return new NBTTagByteArray((byte[]) dataResponse.getValue());
@@ -1115,14 +1116,16 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagShort");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagShort class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagShort class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), short.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagShort! The value was null. Response object: "
-                        + response);
+                PerceiveCore.getInstance()
+                        .getLogger()
+                        .warning("An error occurred reading from an NBTTagShort! The value was null. "
+                                + "Response object: " + response);
             }
             Short value = (Short) response.getValue();
             return new NBTTagShort(value == null ? 0 : value);
@@ -1201,13 +1204,13 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagLong");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagLong class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagLong class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), long.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagLong! The value was null. Response object: "
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading from an NBTTagLong! The value was null. Response object: "
                         + response);
             }
 
@@ -1283,13 +1286,13 @@ public class NBTWrappers {
         public static INBTBase fromNBT(Object nbtObject) {
             Optional<Class<?>> clazz = ReflectionUtil.getClass(NMS, "NBTTagFloat");
             if (!clazz.isPresent()) {
-                System.out.println("Can't find NBTTagFloat class");
+                PerceiveCore.getInstance().getLogger().warning("Can't find NBTTagFloat class");
                 return null;
             }
             Method method = findNBTNumberGetMethod(clazz.get(), float.class);
             ReflectResponse<Object> response = ReflectionUtil.invokeMethod(method, nbtObject);
             if (!response.isValuePresent()) {
-                System.out.println("An error occurred reading from an NBTTagFloat! The value was null. Response object: "
+                PerceiveCore.getInstance().getLogger().warning("An error occurred reading from an NBTTagFloat! The value was null. Response object: "
                         + response);
             }
 

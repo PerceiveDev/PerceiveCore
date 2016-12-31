@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 import com.perceivedev.perceivecore.util.text.TextUtils;
@@ -116,7 +117,7 @@ public class I18N implements MessageProvider {
 
         categories.forEach(category -> {
             if (!createBundle(category)) {
-                System.out.println("Not found: " + category);
+                PerceiveCore.getInstance().getLogger().warning("Not found: " + category);
                 // TODO: Log this properly
             }
         });

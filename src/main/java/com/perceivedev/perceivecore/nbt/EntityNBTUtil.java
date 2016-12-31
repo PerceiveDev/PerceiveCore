@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
@@ -40,7 +41,7 @@ public class EntityNBTUtil {
         Optional<Class<?>> craftEntityClass = ReflectionUtil.getClass(OBC, "entity.CraftEntity");
         if (!craftEntityClass.isPresent()) {
             error = true;
-            System.out.println("Can't find CraftEntity class! @EntityNBTUtil static block");
+            PerceiveCore.getInstance().getLogger().warning("Can't find CraftEntity class! @EntityNBTUtil static block");
         } else {
             ReflectionUtil.ReflectResponse<Method> getHandleMethod = ReflectionUtil
                     .getMethod(craftEntityClass.get(), new ReflectionUtil.MethodPredicate().withName("getHandle"));
@@ -48,7 +49,7 @@ public class EntityNBTUtil {
             if (getHandleMethod.isValuePresent()) {
                 getHandle = getHandleMethod.getValue();
             } else {
-                System.out.println("getHandle not found: "
+                PerceiveCore.getInstance().getLogger().warning("getHandle not found: "
                         + Bukkit.getServer().getClass().getName());
                 error = true;
             }
@@ -174,7 +175,7 @@ public class EntityNBTUtil {
         Optional<Class<?>> entityClass = ReflectionUtil.getClass(NMS, "Entity");
         if (!entityClass.isPresent()) {
             error = true;
-            System.out.println("Couldn't find entity class");
+            PerceiveCore.getInstance().getLogger().warning("Couldn't find entity class");
             sample.remove();
             return;
         }
@@ -186,7 +187,7 @@ public class EntityNBTUtil {
         }
 
         if (saveToNbtMethod == null || loadFromNbtMethod == null) {
-            System.out.println("Couldn't find the methods. This could help: "
+            PerceiveCore.getInstance().getLogger().warning("Couldn't find the methods. This could help: "
                     + entityClass.get().getName()
                     + " save " + (saveToNbtMethod == null)
                     + " load " + (loadFromNbtMethod == null));
@@ -221,8 +222,9 @@ public class EntityNBTUtil {
                 if (!compound.isEmpty()) {
                     if (saveToNbtMethod != null) {
                         saveToNbtMethod = null;
-                        System.out.println("Couldn't find the saving method for an entity. This should help: "
-                                + entityClass.getName());
+                        PerceiveCore.getInstance().getLogger()
+                                .warning("Couldn't find the saving method for an entity. This should help: "
+                                        + entityClass.getName());
                         error = true;
                         return;
                     }
@@ -252,9 +254,10 @@ public class EntityNBTUtil {
 
                 if (compound.isEmpty()) {
                     if (loadFromNbtMethod != null) {
-                        System.out.println("Couldn't find the loading method for an entity. This should help: "
-                                + entityClass.getName()
-                                + " found methods: " + loadFromNbtMethod + " " + method);
+                        PerceiveCore.getInstance().getLogger()
+                                .warning("Couldn't find the loading method for an entity. This should help: "
+                                        + entityClass.getName()
+                                        + " found methods: " + loadFromNbtMethod + " " + method);
                         loadFromNbtMethod = null;
                         error = true;
                         return;
@@ -262,9 +265,10 @@ public class EntityNBTUtil {
                     loadFromNbtMethod = method;
                 } else {
                     if (saveToNbtMethod != null) {
-                        System.out.println("Couldn't find the saving method for an entity. This should help: "
-                                + entityClass.getName()
-                                + " found methods: " + saveToNbtMethod + " " + method);
+                        PerceiveCore.getInstance().getLogger()
+                                .warning("Couldn't find the saving method for an entity. This should help: "
+                                        + entityClass.getName()
+                                        + " found methods: " + saveToNbtMethod + " " + method);
                         error = true;
                         saveToNbtMethod = null;
                         return;

@@ -22,5 +22,5 @@ public interface UpdateStrategy<T> {
      *            Version, ...)
      * @return True if the first is newer than the second
      */
-    boolean isNewer(T identifierFirst, T identifierSecond);
+    int compare(T identifierFirst, T identifierSecond);
 }

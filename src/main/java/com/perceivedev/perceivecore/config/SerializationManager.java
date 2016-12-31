@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.config.handlers.EnumSerializer;
 import com.perceivedev.perceivecore.config.handlers.LocationSerializer;
 import com.perceivedev.perceivecore.config.handlers.MapSerializer;
@@ -445,7 +446,8 @@ public class SerializationManager {
                 if (isConstructorPresent(type, Map.class)) {
                     return instantiate(type, new Class[] { Map.class }, object);
                 } else {
-                    System.out.println("No deserialization method found for ConfigurationSerializable " + type.getName());
+                    PerceiveCore.getInstance().getLogger()
+                            .warning("No deserialization method found for ConfigurationSerializable " + type.getName());
                 }
             } else {
                 return object;

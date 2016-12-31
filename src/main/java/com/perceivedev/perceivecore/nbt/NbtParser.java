@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.bukkit.Bukkit;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
@@ -25,7 +26,7 @@ public class NbtParser {
         Optional<Class<?>> mojangsonParserClass = ReflectionUtil.getClass(NMS, "MojangsonParser");
 
         if (!mojangsonParserClass.isPresent()) {
-            System.out.println("Can't find the class MojangsonParser: "
+            PerceiveCore.getInstance().getLogger().warning("Can't find the class MojangsonParser: "
                     + Bukkit.getServer().getClass().getName());
             error = true;
             PARSE_METHOD = null;
@@ -37,7 +38,7 @@ public class NbtParser {
             if (parseMethod.isValuePresent()) {
                 PARSE_METHOD = parseMethod.getValue();
             } else {
-                System.out.println("Can't find MojangsonParser's parse method: "
+                PerceiveCore.getInstance().getLogger().warning("Can't find MojangsonParser's parse method: "
                         + mojangsonParserClass.get().getName());
                 error = true;
                 PARSE_METHOD = null;

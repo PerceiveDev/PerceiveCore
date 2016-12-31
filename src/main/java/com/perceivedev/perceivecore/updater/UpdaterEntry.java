@@ -2,6 +2,7 @@ package com.perceivedev.perceivecore.updater;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * An entry in the updater. Represents some version, past, present or future.
@@ -52,5 +53,33 @@ public class UpdaterEntry {
      */
     public URL getDownloadUrl() {
         return downloadUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdaterEntry{" +
+                "name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", releaseTime=" + releaseTime +
+                ", downloadUrl=" + downloadUrl +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof UpdaterEntry))
+            return false;
+        UpdaterEntry entry = (UpdaterEntry) o;
+        return Objects.equals(name, entry.name) &&
+                Objects.equals(version, entry.version) &&
+                Objects.equals(releaseTime, entry.releaseTime) &&
+                Objects.equals(downloadUrl, entry.downloadUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, version, releaseTime, downloadUrl);
     }
 }

@@ -35,6 +35,7 @@ public interface Updater {
     enum UpdateResult {
         SUCCESSFULLY_COPIED_TO_UPDATE_DIR,
         ERROR_WHILE_DOWNLOADING,
+        ERROR_WHILE_CREATING_OUTPUT_FOLDER,
         ERROR_WHILE_COPYING
     }
 

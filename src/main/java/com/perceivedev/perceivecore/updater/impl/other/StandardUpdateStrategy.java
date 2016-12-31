@@ -2,7 +2,7 @@ package com.perceivedev.perceivecore.updater.impl.other;
 
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.Objects;
-import java.util.function.BiPredicate;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,62 +20,57 @@ public enum StandardUpdateStrategy implements UpdateStrategy {
             (o, o2) -> {
                 ChronoLocalDateTime<?> first = (ChronoLocalDateTime<?>) o;
                 ChronoLocalDateTime<?> second = (ChronoLocalDateTime<?>) o2;
-                return first.compareTo(second) > 0;
+                return first.compareTo(second);
             },
             ChronoLocalDateTime.class),
     SEMANTIC_VERSIONING(UpdaterEntry::getVersion, (
-            o, o2) -> true,
+            o, o2) -> 1,
             String.class) {
 
-        // @formatter:off
-        /**
-         * Matches things like in the groups [1-3]:
-         * <ul>
-         *     <li>2.5.21</li>
-         *     <li>5.6.67</li>
-         *     <li>65.32.54</li>
-         *     <li>5.5.5-SNAPSHOT</li>
-         * </ul>
-         */
-        // @formatter:on
-        private final Pattern PATTERN = Pattern.compile("(\\d{1,5})\\.(\\d{1,5})\\.(\\d{1,5})(-.+)?");
+        private final Pattern PATTERN = Pattern.compile("(\\d{1,5})");
+
+        private final Pattern IS_VALID_IDENTIFIER_PATTERN = Pattern.compile("(\\d+)(\\.(\\d+))*(-.+)?");
 
         @Override
         public Object identifierFromEntry(UpdaterEntry entry) {
             String version = entry.getVersion();
-            return PATTERN.matcher(version).find() ? version : null;
+            return IS_VALID_IDENTIFIER_PATTERN.matcher(version).find() ? version : null;
         }
 
         @Override
-        public boolean isNewer(Object identifierFirst, Object identifierSecond) {
+        public int compare(Object identifierFirst, Object identifierSecond) {
             String first = (String) identifierFirst;
             String second = (String) identifierSecond;
-            return firstIsNewer(first, second);
+            return compare(first, second);
         }
 
-        private boolean firstIsNewer(String first, String second) {
+        private int compare(String first, String second) {
             int[] versionsFirst = extractVersions(first);
             int[] versionsSecond = extractVersions(second);
 
             for (int i = 0; i < versionsFirst.length; i++) {
                 if (versionsFirst[i] < versionsSecond[i]) {
-                    return false;
+                    // is older
+                    return -1;
                 }
                 if (versionsFirst[i] > versionsSecond[i]) {
-                    return true;
+                    // is newer
+                    return 1;
                 }
             }
-            return false;
+            // is same
+            return 0;
         }
 
         private int[] extractVersions(String string) {
             Matcher matcher = PATTERN.matcher(string);
+            // fill with 0s
+            // Otherwise "1.5" couldn't be parsed, but it means
+            // "1.5.0"
             int[] versions = { 0, 0, 0 };
 
-            if (matcher.find()) {
-                for (int i = 0; i < 3; i++) {
-                    versions[i] = Integer.parseInt(matcher.group(i + 1));
-                }
+            for (int counter = 0; matcher.find(); counter++) {
+                versions[counter] = Integer.parseInt(matcher.group(1));
             }
 
             return versions;
@@ -83,11 +78,11 @@ public enum StandardUpdateStrategy implements UpdateStrategy {
     };
 
     private Function<UpdaterEntry, Object> identifierExtractor;
-    private BiPredicate<Object, Object> firstIsNewer;
+    private BiFunction<Object, Object, Integer> firstIsNewer;
 
     private Class<?> elementType;
 
-    StandardUpdateStrategy(Function<UpdaterEntry, Object> identifierExtractor, BiPredicate<Object, Object> firstIsNewer,
+    StandardUpdateStrategy(Function<UpdaterEntry, Object> identifierExtractor, BiFunction<Object, Object, Integer> firstIsNewer,
             Class<?> elementType) {
         this.identifierExtractor = identifierExtractor;
         this.firstIsNewer = firstIsNewer;
@@ -119,7 +114,7 @@ public enum StandardUpdateStrategy implements UpdateStrategy {
      * @return True if the first is newer than the second
      */
     @Override
-    public boolean isNewer(Object identifierFirst, Object identifierSecond) {
+    public int compare(Object identifierFirst, Object identifierSecond) {
         Objects.requireNonNull(identifierFirst, "identifierFirst can not be null!");
         Objects.requireNonNull(identifierSecond, "identifierSecond can not be null!");
 
@@ -135,6 +130,6 @@ public enum StandardUpdateStrategy implements UpdateStrategy {
                     + " not "
                     + elementType.getName());
         }
-        return firstIsNewer.test(identifierFirst, identifierSecond);
+        return firstIsNewer.apply(identifierFirst, identifierSecond);
     }
 }

@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
+import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.INBTBase;
 import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagCompound;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
@@ -42,7 +43,7 @@ public class TileEntityNBTUtil {
         CRAFT_BLOCK_STATE_CLASS = ReflectionUtil.getClass(OBC, "block.CraftBlockState").orElse(null);
 
         if (CRAFT_BLOCK_STATE_CLASS == null) {
-            System.out.println("CraftBlockState not found. Version: "
+            PerceiveCore.getInstance().getLogger().warning("CraftBlockState not found. Version: "
                     + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
             error = true;
         }
@@ -51,7 +52,7 @@ public class TileEntityNBTUtil {
                 .withName("getTileEntity").withParameters());
 
         if (!tileEntityMethod.isValuePresent()) {
-            System.out.println("getTileEntity not found. Version: "
+            PerceiveCore.getInstance().getLogger().warning("getTileEntity not found. Version: "
                     + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
             error = true;
         } else {
@@ -221,7 +222,7 @@ public class TileEntityNBTUtil {
         }
 
         if (loadFromNBT == null || saveToNBT == null) {
-            System.out.println("Null: "
+            PerceiveCore.getInstance().getLogger().warning("Null: "
                     + " load " + (loadFromNBT == null)
                     + " save " + (saveToNBT == null)
                     + ". Version: " + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
@@ -256,7 +257,7 @@ public class TileEntityNBTUtil {
                 }
 
                 if (saveToNBT != null) {
-                    System.out.println("Found more than one save method. Version: "
+                    PerceiveCore.getInstance().getLogger().warning("Found more than one save method. Version: "
                             + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
                     error = true;
                     return;
@@ -287,7 +288,7 @@ public class TileEntityNBTUtil {
                 if (compound.isEmpty()) {
                     // load method
                     if (loadFromNBT != null) {
-                        System.out.println("Found more than one load method. Version: "
+                        PerceiveCore.getInstance().getLogger().warning("Found more than one load method. Version: "
                                 + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
                         error = true;
                         return;
@@ -296,7 +297,7 @@ public class TileEntityNBTUtil {
                 } else {
                     // save method
                     if (saveToNBT != null) {
-                        System.out.println("Found more than one save method. Version: "
+                        PerceiveCore.getInstance().getLogger().warning("Found more than one save method. Version: "
                                 + Bukkit.getBukkitVersion() + " " + Bukkit.getVersion());
                         error = true;
                         return;

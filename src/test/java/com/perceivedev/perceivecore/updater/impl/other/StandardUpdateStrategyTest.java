@@ -56,17 +56,17 @@ public class StandardUpdateStrategyTest {
             LocalDateTime less = middle.minusSeconds(20);
             LocalDateTime more = middle.plusSeconds(20);
 
-            Assert.assertTrue(strategy.isNewer(more, middle));
-            Assert.assertTrue(strategy.isNewer(more, less));
-            Assert.assertTrue(strategy.isNewer(middle, less));
+            Assert.assertTrue(strategy.compare(more, middle) > 0);
+            Assert.assertTrue(strategy.compare(more, less) > 0);
+            Assert.assertTrue(strategy.compare(middle, less) > 0);
 
-            Assert.assertFalse(strategy.isNewer(less, middle));
-            Assert.assertFalse(strategy.isNewer(less, more));
-            Assert.assertFalse(strategy.isNewer(middle, more));
+            Assert.assertTrue(strategy.compare(less, middle) < 0);
+            Assert.assertTrue(strategy.compare(less, more) < 0);
+            Assert.assertTrue(strategy.compare(middle, more) < 0);
 
-            Assert.assertFalse(strategy.isNewer(less, less));
-            Assert.assertFalse(strategy.isNewer(middle, middle));
-            Assert.assertFalse(strategy.isNewer(more, more));
+            Assert.assertTrue(strategy.compare(less, less) == 0);
+            Assert.assertTrue(strategy.compare(middle, middle) == 0);
+            Assert.assertTrue(strategy.compare(more, more) == 0);
         }
 
         {
@@ -78,17 +78,17 @@ public class StandardUpdateStrategyTest {
                 String less = versionFromInts(modifiedCopy(middleNumbers, i, -1));
                 String more = versionFromInts(modifiedCopy(middleNumbers, i, +1));
 
-                Assert.assertTrue(strategy.isNewer(middle, less));
-                Assert.assertTrue(strategy.isNewer(more, less));
-                Assert.assertTrue(strategy.isNewer(more, middle));
+                Assert.assertTrue(strategy.compare(more, middle) > 0);
+                Assert.assertTrue(strategy.compare(more, less) > 0);
+                Assert.assertTrue(strategy.compare(middle, less) > 0);
 
-                Assert.assertFalse(strategy.isNewer(less, middle));
-                Assert.assertFalse(strategy.isNewer(less, more));
-                Assert.assertFalse(strategy.isNewer(middle, more));
+                Assert.assertTrue(strategy.compare(less, middle) < 0);
+                Assert.assertTrue(strategy.compare(less, more) < 0);
+                Assert.assertTrue(strategy.compare(middle, more) < 0);
 
-                Assert.assertFalse(strategy.isNewer(less, less));
-                Assert.assertFalse(strategy.isNewer(middle, middle));
-                Assert.assertFalse(strategy.isNewer(more, more));
+                Assert.assertTrue(strategy.compare(less, less) == 0);
+                Assert.assertTrue(strategy.compare(middle, middle) == 0);
+                Assert.assertTrue(strategy.compare(more, more) == 0);
             }
         }
     }
