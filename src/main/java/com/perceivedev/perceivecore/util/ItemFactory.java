@@ -20,6 +20,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import com.google.common.base.Preconditions;
+import com.perceivedev.perceivecore.gui.components.simple.DisplayColor;
 import com.perceivedev.perceivecore.util.collections.ListUtils;
 import com.perceivedev.perceivecore.util.text.TextUtils;
 
@@ -31,8 +33,11 @@ import com.perceivedev.perceivecore.util.text.TextUtils;
 @SuppressWarnings("WeakerAccess")
 public class ItemFactory implements Cloneable {
 
-    private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
-            Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
+    private static Set<Material> COLOURABLE = EnumSet.of(Material.STAINED_CLAY,
+            Material.STAINED_GLASS, Material.STAINED_GLASS_PANE,
+            Material.WOOL,
+            Material.INK_SACK,
+            Material.CARPET);
     private static final Set<Material> LEATHER_ARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
             Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 
@@ -287,18 +292,47 @@ public class ItemFactory implements Cloneable {
      *
      * @throws IllegalStateException If the {@link ItemStack} is not
      *             colourable
+     * @deprecated This method was never accurate (Dye counts differently). Use
+     *             {@link #setColour(DisplayColor)} instead
+     * @see #setColour(DisplayColor) #setColour(DisplayColor)
      */
     @Nonnull
+    @Deprecated
     @SuppressWarnings("deprecation")
     public ItemFactory setColour(@Nonnull DyeColor colour) {
         Objects.requireNonNull(colour, "colour can not be null");
 
         if (COLOURABLE.contains(itemStack.getType())) {
-            itemStack.setDurability(colour.getData());
+            itemStack.setDurability(colour.getWoolData());
         } else {
             throw new IllegalStateException("Itemstack type is not colourable!");
         }
         return this;
+    }
+
+    /**
+     * Sets the colour of the item, if it is a colourable item/block.
+     *
+     * @param colour The color to set the itemstack as
+     *
+     * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not
+     *             colourable
+     */
+    @Nonnull
+    public ItemFactory setColour(@Nonnull DisplayColor colour) {
+        Objects.requireNonNull(colour, "colour can not be null");
+
+        Preconditions.checkState(
+                COLOURABLE.contains(itemStack.getType()),
+                "ItemStack type is not colourable (" + itemStack.getType() + ")");
+
+        // Dye (INK_SACK) is (15 - dataValue)
+        if (itemStack.getType() == Material.INK_SACK) {
+            return setDurability((short) (15 - colour.getDataValue()));
+        }
+        return setDurability(colour.getDataValue());
     }
 
     /**

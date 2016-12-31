@@ -7,7 +7,9 @@ import org.bukkit.Material;
 
 import com.perceivedev.perceivecore.util.ItemFactory;
 
-/** The different colours you can display */
+/**
+ * The different colours you can display
+ */
 public enum DisplayColor {
 
     // follows glass + glass panes + + stained clay + wool ids + carpet ids. Dye
@@ -63,17 +65,23 @@ public enum DisplayColor {
         this(isDyeColor, material, 0);
     }
 
-    /** @return whether this is a dye color */
+    /**
+     * @return whether this is a dye color
+     */
     public boolean isDyeColor() {
         return isDyeColor;
     }
 
-    /** @return the material */
+    /**
+     * @return the material
+     */
     public Material getMaterial() {
         return material;
     }
 
-    /** @return the data value */
+    /**
+     * @return the data value
+     */
     public short getDataValue() {
         return dataValue;
     }
