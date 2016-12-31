@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.reflection;
 
 import java.lang.reflect.Method;
@@ -13,7 +10,9 @@ public class ReflectedMethod {
     protected Method method;
     protected Object instance;
 
-    /** @param method */
+    /**
+     * @param method The method to reflect
+     */
     protected ReflectedMethod(Object instance, Method method) {
         this.instance = instance;
         this.method = method;

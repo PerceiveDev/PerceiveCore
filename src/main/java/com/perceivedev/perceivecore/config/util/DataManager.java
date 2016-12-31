@@ -1,9 +1,6 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.config.util;
 
-import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
+import static com.perceivedev.perceivecore.util.text.TextUtils.normalizePathName;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -30,10 +27,10 @@ import com.perceivedev.perceivecore.config.SerializationManager;
 public abstract class DataManager<K, V extends ConfigSerializable> {
     private static final String ERROR_MESSAGE = "The path failed the `isValidPath` check for your DataManager instance";
 
-    protected Path              path;
-    protected final Class<K>    keyClass;
-    protected final Class<V>    dataClass;
-    protected Map<K, V>         map;
+    protected Path path;
+    protected final Class<K> keyClass;
+    protected final Class<V> dataClass;
+    protected Map<K, V> map;
 
     /**
      * Creates a new {@link DataManager} that saves and loads data class of the
@@ -68,7 +65,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
-     * @see #DataManager(Path, Class, Map)
+     * @see #DataManager(Path, Class, Class, Map)
      */
     public DataManager(Path path, Class<K> keyClass, Class<V> dataClass) {
         this(path, keyClass, dataClass, new LinkedHashMap<>());
@@ -83,13 +80,15 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      *            {@link SerializationManager#isSerializableToString(Class)}
      *            must return true when given this.
      * @param dataClass The data class that this {@link DataManager} handles
-     * @see #DataManager(Path, Class)
+     * @see #DataManager(Path, Class, Class)
      */
     public DataManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
         this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);
     }
 
     /**
+     * @return The size of the DataManager
+     * 
      * @see java.util.Map#size()
      */
     public int size() {
@@ -97,6 +96,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return Whether the manager is empty
+     * 
      * @see java.util.Map#isEmpty()
      */
     public boolean isEmpty() {
@@ -104,6 +105,9 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
+     * @return The value for the given key
+     * 
      * @see java.util.Map#get(java.lang.Object)
      */
     public V get(K key) {
@@ -111,6 +115,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to add
+     * @param value The value to add
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public V put(K key, V value) {
@@ -118,6 +126,9 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#remove(java.lang.Object)
      */
     public V remove(K key) {
@@ -125,6 +136,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param m The map with values to add
+     * 
      * @see java.util.Map#putAll(java.util.Map)
      */
     public void putAll(Map<? extends K, ? extends V> m) {
@@ -139,6 +152,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the keys in a set
+     * 
      * @see java.util.Map#keySet()
      */
     public Set<K> keySet() {
@@ -146,6 +161,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the values in a Collection
+     * 
      * @see java.util.Map#values()
      */
     public Collection<V> values() {
@@ -153,6 +170,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @return All the Keys and Values
+     * 
      * @see java.util.Map#entrySet()
      */
     public Set<Entry<K, V>> entrySet() {
@@ -160,6 +179,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key
+     * @param defaultValue The default value
+     * @return The value or the default
+     * 
      * @see java.util.Map#getOrDefault(java.lang.Object, java.lang.Object)
      */
     public V getOrDefault(K key, V defaultValue) {
@@ -168,6 +191,8 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param action The consumer
+     * 
      * @see java.util.Map#forEach(java.util.function.BiConsumer)
      */
     public void forEach(BiConsumer<? super K, ? super V> action) {
@@ -175,6 +200,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to add
+     * @param value The value to add
+     * @return The value previously associated with the key
+     * 
      * @see java.util.Map#putIfAbsent(java.lang.Object, java.lang.Object)
      */
     public V putIfAbsent(K key, V value) {
@@ -182,6 +211,10 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
     }
 
     /**
+     * @param key The key to remove
+     * @param value The value to remove
+     * @return {@code true} if the value was removed
+     * 
      * @see java.util.Map#remove(java.lang.Object, java.lang.Object)
      */
     public boolean remove(K key, V value) {
@@ -245,6 +278,7 @@ public abstract class DataManager<K, V extends ConfigSerializable> {
      * methods to use.
      *
      * @param path The path to check
+     * @return True if the path is valid
      */
     public abstract boolean isValidPath(Path path);
 

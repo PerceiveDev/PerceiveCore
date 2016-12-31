@@ -15,20 +15,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
+import com.perceivedev.perceivecore.gui.Gui;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
-/** A Skeleton implementation for the {@link Pane} class */
+// @formatter:off
+/**
+ * A Skeleton implementation for the {@link Pane} class
+ * <p>
+ * A note regarding <b>adding</b>:
+ * <ul>
+ *     <li>
+ *         <b><i>It must update the {@link #getInventoryMap()} itself.</i></b>
+ *         <p>
+ *         <b>You should call upon successful add
+ *         {@link #updateComponentHierarchy(Component)} or perform the tasks
+ *         yourself</b>
+ *     </li>
+ * </ul>
+ */
+// @formatter:on
 public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     protected List<Component> components;
-    private InventoryMap      inventoryMap;
+    private InventoryMap inventoryMap;
 
     /**
      * Creates a pane with the given components
      * <p>
      * Automatically calls addComponent for each
      *
-     * @param components The components to add
      * @param width The width of this pane
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
@@ -37,10 +52,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * @throws IllegalArgumentException if the size of the InventoryMap is
      *             different than the size of this Pane
      */
-    public AbstractPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
+    public AbstractPane(int width, int height, InventoryMap inventoryMap) {
         super(new Dimension(width, height));
 
-        Objects.requireNonNull(components);
         Objects.requireNonNull(inventoryMap);
 
         if (!inventoryMap.getSize().equals(getSize())) {
@@ -49,21 +63,6 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
         this.components = new ArrayList<>();
         this.inventoryMap = inventoryMap;
-
-        components.forEach(this::addComponent);
-    }
-
-    /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
-     * @param width The width of this pane
-     * @param height The height of this pane
-     */
-    public AbstractPane(List<Component> components, int width, int height) {
-        this(components, width, height, new InventoryMap(new Dimension(width, height)));
     }
 
     /**
@@ -73,7 +72,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * @param height The height of this pane
      */
     public AbstractPane(int width, int height) {
-        this(Collections.emptyList(), width, height);
+        this(width, height, new InventoryMap(new Dimension(width, height)));
     }
 
     /**
@@ -100,22 +99,14 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         return Collections.unmodifiableList(components);
     }
 
-    /**
-     * Adds a component. You can't add the same pane twice.
-     * <p>
-     * <b><i>Must update the {@link #getInventoryMap()} itself.</i></b>
-     * <p>
-     * <b>You should call upon successful add
-     * {@link #updateComponentHierarchy(Component)} or perform the tasks
-     * yourself</b>
-     *
-     * @param component The component to add. You can't add the same component
-     *            twice.
-     *
-     * @return True if the component was added
-     */
     @Override
-    public abstract boolean addComponent(Component component);
+    public void setGui(Gui gui) {
+        // Update for all!
+        super.setGui(gui);
+        for (Component component : getChildren()) {
+            component.setGui(gui);
+        }
+    }
 
     // @formatter:off
     /**
@@ -160,6 +151,9 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
 
     @Override
     public void onClick(ClickEvent clickEvent) {
+        if (!isVisible()) {
+            return;
+        }
         clickEvent.setLastPane(this);
 
         if (clickEvent.isOutsideInventory()) {
@@ -168,26 +162,55 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             return;
         }
 
+        // user clicked in his own inventory. Silently drop it
+        if (clickEvent.getRaw().getRawSlot() > clickEvent.getRaw().getInventory().getSize()) {
+            return;
+        }
+
         int x = slotToGrid(clickEvent.getSlot())[0] - clickEvent.getOffsetX();
         int y = slotToGrid(clickEvent.getSlot())[1] - clickEvent.getOffsetY();
 
         Optional<Component> componentOptional = getInventoryMap().getComponent(x, y);
         if (componentOptional.isPresent()) {
-            Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(componentOptional.get());
-            // Adjust the offsets you pass one, to make the calculations for the
+            Component component = componentOptional.get();
+
+            if (!component.isVisible()) {
+                return;
+            }
+
+            Optional<Interval> intervalOpt = getInventoryMap().getComponentInterval(component);
+            // Adjust the offsets you pass on, to make the calculations for the
             // next pane work
             intervalOpt.ifPresent(interval -> {
                 clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
                 clickEvent.setOffsetY(clickEvent.getOffsetY() + interval.getMinY());
-                clickEvent.setComponent(componentOptional.get());
+                clickEvent.setComponent(component);
             });
-            componentOptional.get().onClick(clickEvent);
+            component.onClick(clickEvent);
         }
     }
 
+    /**
+     * Renders the component in the Inventory
+     * <p>
+     * <b>If you overwrite this method, check if the components are visible
+     * before rendering them!</b>
+     * 
+     * @param inventory The inventory to render in
+     * @param player The Player to render for
+     * @param x The x offset
+     * @param y The y offset
+     */
     @Override
     public void render(Inventory inventory, Player player, int x, int y) {
+        if (!isVisible()) {
+            return;
+        }
         for (Entry<Interval, Component> entry : getInventoryMap().getComponentMap().entrySet()) {
+            // skip invisible ones
+            if (!entry.getValue().isVisible()) {
+                continue;
+            }
             if (fitsInside(inventory, x, y, entry.getKey())) {
                 // render the components
                 entry.getValue().render(inventory, player, x + entry.getKey().getMinX(), y + entry.getKey().getMinY());
@@ -237,8 +260,10 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     // <editor-fold desc="Interval">
     // -------------------- Interval -------------------- //
 
-    /** An Interval */
-    public static class Interval implements Cloneable {
+    /**
+     * An Interval
+     */
+    protected static class Interval implements Cloneable {
         private int minX, maxX;
         private int minY, maxY;
 
@@ -250,34 +275,49 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param minY The min y (inclusive)
          * @param maxY The max y (exclusive)
          */
-        public Interval(int minX, int maxX, int minY, int maxY) {
+        protected Interval(int minX, int maxX, int minY, int maxY) {
             this.minX = minX;
             this.maxX = maxX;
             this.minY = minY;
             this.maxY = maxY;
         }
 
-        /** @return The min x. Inclusive. */
+        /**
+         * @return The min x. Inclusive.
+         */
         public int getMinX() {
             return minX;
         }
 
-        /** @return The max x. Exclusive. */
-        public int getMaxX() {
+        /**
+         * @return The max x. Exclusive.
+         */
+        protected int getMaxX() {
             return maxX;
         }
 
-        /** @return The min y. Inclusive. */
+        /**
+         * @return The min y. Inclusive.
+         */
         public int getMinY() {
             return minY;
         }
 
-        /** @return The max y. Exclusive. */
-        public int getMaxY() {
+        /**
+         * @return The max y. Exclusive.
+         */
+        protected int getMaxY() {
             return maxY;
         }
 
-        public boolean isInside(int x, int y) {
+        /**
+         * Checks if the given coordinates are inside the Interval
+         * 
+         * @param x The x coordinate to check
+         * @param y The y coordinate to check
+         * @return True if the coordinates are inside this Interval
+         */
+        protected boolean isInside(int x, int y) {
             return x >= minX && x < maxX
                     && y >= minY && y < maxY;
         }
@@ -325,7 +365,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
      * you really want. Could be useful if you make a optimised version
      */
     public static class InventoryMap implements Cloneable {
-        protected boolean[][]              lines;
+        protected boolean[][] lines;
         protected Map<Interval, Component> componentMap = new HashMap<>();
 
         /**
@@ -368,7 +408,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          *         something else went wrong.
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          * @throws NullPointerException if component is null
          */
         public boolean addComponent(int x, int y, Component component) {
@@ -397,7 +437,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param y The y coordinate
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         protected void ensureInSize(int x, int y) {
             if (x < 0) {
@@ -450,8 +490,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param value The value to fill it with
          *
          * @throws IllegalArgumentException if
-         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
-         * or minX > maxX or minY > maxY</code>
+         *             {@code minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * or minX > maxX or minY > maxY}
          */
         protected void fillInterval(int minX, int maxX, int minY, int maxY, boolean value) {
             ensureInSize(minX, minY);
@@ -479,8 +519,8 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @param value The value to fill it with
          *
          * @throws IllegalArgumentException if
-         *             <code>minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
-         * or minX > maxX or minY > maxY</code>
+         *             {@code minX/maxX < 0 or minY/maxY < 0 or minX/maxX > width or minY/maxY > height
+         * or minX > maxX or minY > maxY}
          * @see #fillInterval(int, int, int, int, boolean)
          */
         protected void fillInterval(Interval interval, boolean value) {
@@ -496,7 +536,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @return The Component at the given location, if any
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         public Optional<Component> getComponent(int x, int y) {
             ensureInSize(x, y);
@@ -539,7 +579,7 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
          * @return True if there is enum space
          *
          * @throws IllegalArgumentException if
-         *             <code>x < 0 or y < 0 or x > width or y > height</code>
+         *             {@code x < 0 or y < 0 or x > width or y > height}
          */
         public boolean hasEnoughSpace(int x, int y, Dimension dimension) {
             ensureInSize(x, y);
@@ -584,77 +624,79 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
         }
 
         // TODO: 02.10.2016 Remove these visualizing methods
-
-        protected void printLines() {
-            Status[][] array = new Status[lines.length][];
-            for (int y = 0; y < lines.length; y++) {
-                array[y] = new Status[lines[y].length];
-
-                for (int x = 0; x < lines[0].length; x++) {
-                    array[y][x] = lines[y][x] ? Status.TAKEN : Status.FREE;
-                }
-            }
-
-            printLines(array);
-        }
-
-        protected void printLines(Status[][] lines) {
-            for (Status[] line : lines) {
-                StringBuilder builder = new StringBuilder();
-                builder.append("[");
-                for (Status b : line) {
-                    String string = b.toString();
-                    string = padRight(string, 6);
-                    string = b.color(string);
-                    string = string + ANSI_RESET;
-                    builder.append(string);
-                }
-                builder.append("]");
-                System.out.println(builder);
-            }
-        }
-
-        protected static String padRight(String s, int n) {
-            return String.format("%1$-" + n + "s", s);
-        }
-
-        protected static final String ANSI_RESET  = "\u001B[0m";
-        protected static final String ANSI_BLACK  = "\u001B[30m";
-        protected static final String ANSI_RED    = "\u001B[31m";
-        protected static final String ANSI_GREEN  = "\u001B[32m";
-        protected static final String ANSI_YELLOW = "\u001B[33m";
-        protected static final String ANSI_BLUE   = "\u001B[34m";
-        protected static final String ANSI_PURPLE = "\u001B[35m";
-        protected static final String ANSI_CYAN   = "\u001B[36m";
-        protected static final String ANSI_WHITE  = "\u001B[37m";
-
-        protected enum Status {
-            TAKEN(ANSI_RED),
-            FREE(ANSI_GREEN),
-            MAYBE(ANSI_BLUE);
-
-            private String color;
-
-            Status(String color) {
-                this.color = color;
-            }
-
-            protected String color(String input) {
-                return color + input;
-            }
-
-            @Override
-            public String toString() {
-                switch (this) {
-                    case FREE:
-                        return "free";
-                    case MAYBE:
-                        return "maybe";
-                    default:
-                        return "taken";
-                }
-            }
-        }
+        /*
+         * 
+         * protected void printLines() {
+         * Status[][] array = new Status[lines.length][];
+         * for (int y = 0; y < lines.length; y++) {
+         * array[y] = new Status[lines[y].length];
+         * 
+         * for (int x = 0; x < lines[0].length; x++) {
+         * array[y][x] = lines[y][x] ? Status.TAKEN : Status.FREE;
+         * }
+         * }
+         * 
+         * printLines(array);
+         * }
+         * 
+         * protected void printLines(Status[][] lines) {
+         * for (Status[] line : lines) {
+         * StringBuilder builder = new StringBuilder();
+         * builder.append("[");
+         * for (Status b : line) {
+         * String string = b.toString();
+         * string = padRight(string, 6);
+         * string = b.color(string);
+         * string = string + ANSI_RESET;
+         * builder.append(string);
+         * }
+         * builder.append("]");
+         * System.out.println(builder);
+         * }
+         * }
+         * 
+         * protected static String padRight(String s, int n) {
+         * return String.format("%1$-" + n + "s", s);
+         * }
+         * 
+         * protected static final String ANSI_RESET = "\u001B[0m";
+         * protected static final String ANSI_BLACK = "\u001B[30m";
+         * protected static final String ANSI_RED = "\u001B[31m";
+         * protected static final String ANSI_GREEN = "\u001B[32m";
+         * protected static final String ANSI_YELLOW = "\u001B[33m";
+         * protected static final String ANSI_BLUE = "\u001B[34m";
+         * protected static final String ANSI_PURPLE = "\u001B[35m";
+         * protected static final String ANSI_CYAN = "\u001B[36m";
+         * protected static final String ANSI_WHITE = "\u001B[37m";
+         * 
+         * protected enum Status {
+         * TAKEN(ANSI_RED),
+         * FREE(ANSI_GREEN),
+         * MAYBE(ANSI_BLUE);
+         * 
+         * private String color;
+         * 
+         * Status(String color) {
+         * this.color = color;
+         * }
+         * 
+         * protected String color(String input) {
+         * return color + input;
+         * }
+         * 
+         * @Override
+         * public String toString() {
+         * switch (this) {
+         * case FREE:
+         * return "free";
+         * case MAYBE:
+         * return "maybe";
+         * default:
+         * return "taken";
+         * }
+         * }
+         * }
+         */
 
     }
     // </editor-fold>

@@ -22,8 +22,8 @@ public class DefaultCommandExecutor implements CommandExecutor {
 
     private static final String LANGUAGE_PREFIX = "command.executor.";
 
-    private CommandTree         tree;
-    private MessageProvider     language;
+    private CommandTree tree;
+    private MessageProvider language;
 
     /**
      * Creates a Default command executor. It has some language keys to modify

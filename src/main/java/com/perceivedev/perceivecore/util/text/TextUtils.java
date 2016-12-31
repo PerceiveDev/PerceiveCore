@@ -1,11 +1,15 @@
 
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.text;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.bukkit.ChatColor;
 
 public class TextUtils {
@@ -14,7 +18,7 @@ public class TextUtils {
      * Colors the text
      * <p>
      * Uses {@link ChatColor#translateAlternateColorCodes(char, String)} with
-     * '&' as color char
+     * '{@code &}' as color char
      *
      * @param text The text to color
      *
@@ -54,6 +58,7 @@ public class TextUtils {
      * Replaces {@link ChatColor#COLOR_CHAR} ('{@value ChatColor#COLOR_CHAR}')
      *
      * @param text The text to replace the color codes with
+     * @param newColorChar The new color char to use
      *
      * @return The text with the color codes replaced
      */
@@ -97,13 +102,13 @@ public class TextUtils {
      * <p>
      * Example outputs with upperCaseAfterSpace set to <b>false</b>:
      * <ul>
-     *     <li><code>"SWORD" ==> "Sword"</code></li>
-     *     <li><code>"DIAMOND_SWORD" ==> "Diamond sword"</code></li>
+     *     <li>{@code "SWORD" ==> "Sword"}</li>
+     *     <li>{@code "DIAMOND_SWORD" ==> "Diamond sword"}</li>
      * </ul>
      * Example outputs with upperCaseAfterSpace set to <b>true</b>:
      * <ul>
-     *     <li><code>"SWORD" ==> "Sword"</code></li>
-     *     <li><code>"DIAMOND_SWORD" ==> "Diamond Sword"</code></li>
+     *     <li>{@code "SWORD" ==> "Sword"}</li>
+     *     <li>{@code "DIAMOND_SWORD" ==> "Diamond Sword"}</li>
      * </ul>
      *
      * @param text The constant to format
@@ -125,7 +130,7 @@ public class TextUtils {
         for (char c : text.toCharArray()) {
             if (c == '_') {
                 upperCase = true;
-                result.append("_");
+                result.append(" ");
                 continue;
             }
             if (upperCase) {
@@ -137,5 +142,58 @@ public class TextUtils {
         }
 
         return result.toString();
+    }
+
+    /**
+     * Hides text in color codes
+     * 
+     * @param text The text to hide
+     * @return The hidden text
+     */
+    @Nonnull
+    public static String hideText(@Nonnull String text) {
+        Objects.requireNonNull(text, "text cannot be null!");
+
+        StringBuilder output = new StringBuilder();
+
+        byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+        String hex = Hex.encodeHexString(bytes);
+
+        for (char c : hex.toCharArray()) {
+            output.append(ChatColor.COLOR_CHAR).append(c);
+        }
+
+        return output.toString();
+    }
+
+    /**
+     * Reveals the text hidden in color codes
+     * 
+     * @param text The hidden text
+     * @throws IllegalArgumentException if an error occurred while decoding.
+     * @return The revealed text
+     */
+    @Nonnull
+    public static String revealText(@Nonnull String text) {
+        Objects.requireNonNull(text, "text cannot be null!");
+
+        if (text.isEmpty()) {
+            return text;
+        }
+
+        char[] chars = text.toCharArray();
+
+        char[] hexChars = new char[chars.length / 2];
+
+        IntStream.range(0, chars.length)
+                .filter(value -> value % 2 != 0)
+                .forEach(value -> hexChars[value / 2] = chars[value]);
+
+        try {
+            return new String(Hex.decodeHex(hexChars), StandardCharsets.UTF_8);
+        } catch (DecoderException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Couldn't decode text", e);
+        }
     }
 }

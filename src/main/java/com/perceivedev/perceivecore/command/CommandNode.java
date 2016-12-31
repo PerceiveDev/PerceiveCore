@@ -6,10 +6,16 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
-/** A command */
+/**
+ * A command
+ */
 public interface CommandNode {
 
-    /** Returns the children of this command */
+    /**
+     * Returns the direct children of this command
+     * 
+     * @return ALl direct children of this command
+     */
     List<CommandNode> getChildren();
 
     /**

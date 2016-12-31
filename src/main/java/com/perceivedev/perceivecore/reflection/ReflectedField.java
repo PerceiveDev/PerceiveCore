@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.reflection;
 
 import java.lang.reflect.Field;
@@ -11,11 +8,11 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
 public class ReflectedField {
 
     protected Object instance;
-    protected Field  field;
+    protected Field field;
 
     /**
-     * @param instance
-     * @param field
+     * @param instance The instance
+     * @param field The field
      */
     protected ReflectedField(Object instance, Field field) {
         this.instance = instance;

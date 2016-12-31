@@ -31,7 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /** An implementation of the {@link MessageProvider} using */
 public class I18N implements MessageProvider {
@@ -41,21 +41,21 @@ public class I18N implements MessageProvider {
      * "Test 1234 [[path.to.other.message]]" ==> Matches
      * "[[path.to.other.message]]"
      */
-    private static final Pattern        REFERENCE_PATTERN   = Pattern.compile("(?<=\\[\\[)(.+?)(?=\\]\\])");
+    private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=]])");
 
-    private Set<String>                 categories          = new HashSet<>();
+    private Set<String> categories = new HashSet<>();
     private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
-    private Map<String, ResourceBundle> jarResourceBundles  = new HashMap<>();
+    private Map<String, ResourceBundle> jarResourceBundles = new HashMap<>();
 
-    private Locale                      currentLanguage;
-    private String                      basePackage;
+    private Locale currentLanguage;
+    private String basePackage;
 
-    private ClassLoader                 callerClassLoader, fileClassLoader;
+    private ClassLoader callerClassLoader, fileClassLoader;
 
-    private String                      defaultCategory;
+    private String defaultCategory;
 
     /** Cache to increase performance. May be left out. */
-    private Map<String, MessageFormat>  messageFormatCache  = new HashMap<>();
+    private Map<String, MessageFormat> messageFormatCache = new HashMap<>();
 
     /**
      * @param currentLanguage The current language
@@ -214,7 +214,7 @@ public class I18N implements MessageProvider {
             try {
                 format = new MessageFormat(pattern, getLanguage());
             } catch (IllegalArgumentException e) {
-                String fixedPattern = pattern.replaceAll("\\{\\d.+?\\}", "[$1]");
+                String fixedPattern = pattern.replaceAll("\\{\\d.+?}", "[$1]");
                 format = new MessageFormat(fixedPattern, getLanguage());
             }
 

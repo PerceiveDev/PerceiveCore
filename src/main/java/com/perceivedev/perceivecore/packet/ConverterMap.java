@@ -1,12 +1,9 @@
-/**
- * 
- */
 package com.perceivedev.perceivecore.packet;
 
 import java.util.HashMap;
 
-import com.perceivedev.perceivecore.util.Converter;
-import com.perceivedev.perceivecore.util.Pair;
+import com.perceivedev.perceivecore.util.convert.Converter;
+import com.perceivedev.perceivecore.util.types.Pair;
 
 /** @author Rayzr */
 public class ConverterMap extends HashMap<Pair<Class<?>, Class<?>>, Converter<?, ?>> {

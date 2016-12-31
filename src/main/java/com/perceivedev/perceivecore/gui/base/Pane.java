@@ -7,15 +7,6 @@ import java.util.Optional;
 public interface Pane extends Component {
 
     /**
-     * Adds a {@link Component}
-     *
-     * @param component The {@link Component} to add
-     *
-     * @return <code>true</code> if the component could be added
-     */
-    boolean addComponent(Component component);
-
-    /**
      * Removes a {@link Component}
      *
      * @param component The {@link Component} to remove

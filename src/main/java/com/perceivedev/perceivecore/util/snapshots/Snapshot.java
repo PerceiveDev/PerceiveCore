@@ -39,8 +39,8 @@ public class Snapshot<T> implements ConfigSerializable {
      * @param properties The properties to snapshot
      */
     public Snapshot(T target, Collection<SnapshotProperty<? super T>> properties) {
-        Objects.requireNonNull(target, "target can not be null!");
-        Objects.requireNonNull(properties, "properties can not be null!");
+        Objects.requireNonNull(target, "target cannot be null!");
+        Objects.requireNonNull(properties, "properties cannot be null!");
 
         properties.stream()
                 .map(property -> property.createForTarget(target))
@@ -56,6 +56,7 @@ public class Snapshot<T> implements ConfigSerializable {
      * 
      * @see #Snapshot(Object, Collection)
      */
+    @SafeVarargs
     public Snapshot(T target, SnapshotProperty<? super T>... properties) {
         this(target, Arrays.asList(properties));
     }
@@ -66,7 +67,7 @@ public class Snapshot<T> implements ConfigSerializable {
      * @param target The target to restoreFor it to
      */
     public void restore(T target) {
-        Objects.requireNonNull(target, "target can not be null!");
+        Objects.requireNonNull(target, "target cannot be null!");
 
         snapshotProperties.forEach(property -> property.restoreFor(target));
     }
@@ -77,7 +78,7 @@ public class Snapshot<T> implements ConfigSerializable {
      * @param target The target to update its state from
      */
     public void update(T target) {
-        Objects.requireNonNull(target, "target can not be null!");
+        Objects.requireNonNull(target, "target cannot be null!");
 
         snapshotProperties.forEach(property -> property.update(target));
     }

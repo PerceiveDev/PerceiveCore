@@ -13,9 +13,9 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagByte;
 /** A bad test for bytes */
 public class NBTTagByteTest {
 
-    private NBTTagByte aByte  = new NBTTagByte((byte) 1);
+    private NBTTagByte aByte = new NBTTagByte((byte) 1);
 
-    private final int  AMOUNT = 10000;
+    private final int AMOUNT = 10000;
 
     @Test
     public void set() throws Exception {

@@ -31,12 +31,12 @@ import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
-import com.perceivedev.perceivecore.util.Pair;
+import com.perceivedev.perceivecore.util.types.Pair;
 
 /** Manages the serialization */
 public class SerializationManager {
 
-    private static final int           MAX_DEPTH              = 20;
+    private static final int MAX_DEPTH = 20;
     private static final Set<Class<?>> RAW_INSERTABLE_CLASSES = new HashSet<>();
 
     static {
@@ -302,8 +302,8 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, ConfigurationSection data) {
-        Objects.requireNonNull(data, "data can not be null!");
-        Objects.requireNonNull(clazz, "clazz can not be null!");
+        Objects.requireNonNull(data, "data cannot be null!");
+        Objects.requireNonNull(clazz, "clazz cannot be null!");
 
         return deserialize(clazz, convertToMap(data), 0);
     }
@@ -318,8 +318,8 @@ public class SerializationManager {
      * @return The deserialized class
      */
     public static <T> T deserialize(Class<T> clazz, Map<String, Object> data) {
-        Objects.requireNonNull(data, "data can not be null!");
-        Objects.requireNonNull(clazz, "clazz can not be null!");
+        Objects.requireNonNull(data, "data cannot be null!");
+        Objects.requireNonNull(clazz, "clazz cannot be null!");
 
         return deserialize(clazz, data, 0);
     }

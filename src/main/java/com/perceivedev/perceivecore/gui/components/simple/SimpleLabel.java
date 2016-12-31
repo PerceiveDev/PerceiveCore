@@ -12,17 +12,17 @@ import com.perceivedev.perceivecore.gui.base.AbstractComponent;
 import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
-import com.perceivedev.perceivecore.util.ListUtils;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.collections.ListUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /** @author Rayzr */
 public class SimpleLabel extends AbstractComponent {
 
-    private DisplayType    displayType;
+    private DisplayType displayType;
     protected DisplayColor color;
 
-    protected String       name = "Label";
-    private List<String>   lore = Collections.emptyList();
+    protected String name = "Label";
+    private List<String> lore = Collections.emptyList();
 
     public SimpleLabel(Dimension size, DisplayType type, DisplayColor color, String name, String... lore) {
         super(size);
@@ -64,7 +64,6 @@ public class SimpleLabel extends AbstractComponent {
     /**
      * @param name the name to set
      *
-     * @return this label (useful for chaining method calls)
      */
     public void setName(String name) {
         this.name = TextUtils.colorize(name);
@@ -78,7 +77,6 @@ public class SimpleLabel extends AbstractComponent {
     /**
      * @param lore the lore to set
      *
-     * @return this label (useful for chaining method calls)
      */
     public void setLore(List<String> lore) {
         this.lore = ListUtils.colorList(lore);
@@ -87,7 +85,6 @@ public class SimpleLabel extends AbstractComponent {
     /**
      * @param lore the lore to set
      *
-     * @return this label (useful for chaining method calls)
      */
     public void setLore(String... lore) {
         setLore(Arrays.asList(lore));

@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /** A Thread that ticks! */
 class TickerThread extends AbstractTicker {
 
-    private Thread                 ticker;
-    private volatile AtomicBoolean started  = new AtomicBoolean(false);
-    private volatile AtomicLong    lastTick = new AtomicLong(System.nanoTime());
+    private Thread ticker;
+    private volatile AtomicBoolean started = new AtomicBoolean(false);
+    private volatile AtomicLong lastTick = new AtomicLong(System.nanoTime());
 
     /** @param sleepMillis the time to sleep */
     TickerThread(long sleepMillis) {

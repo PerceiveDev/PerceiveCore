@@ -1,6 +1,6 @@
 package com.perceivedev.perceivecore.config.util;
 
-import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
+import static com.perceivedev.perceivecore.util.text.TextUtils.normalizePathName;
 
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
@@ -108,9 +108,9 @@ public class DataFolderManager<K, V extends ConfigSerializable> extends DataMana
         if (!Files.exists(path)) {
             return;
         }
-        
+
         clear();
-        
+
         try {
             Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), 0, new SimpleFileVisitor<Path>() {
                 @Override

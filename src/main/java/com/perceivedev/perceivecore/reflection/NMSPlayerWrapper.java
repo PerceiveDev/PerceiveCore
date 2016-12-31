@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.perceivedev.perceivecore.reflection;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
@@ -11,7 +8,7 @@ import com.perceivedev.perceivecore.packet.Packet;
 public class NMSPlayerWrapper extends ReflectedClass<Object> {
 
     protected ReflectedClass<Object> connection;
-    protected ReflectedMethod        sendPacket;
+    protected ReflectedMethod sendPacket;
 
     /** @param nmsPlayer The NMS player */
     protected NMSPlayerWrapper(Object nmsPlayer) {

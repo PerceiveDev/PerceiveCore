@@ -1,7 +1,4 @@
-/**
- *
- */
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.text;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -146,7 +143,7 @@ public class JSONMessage {
 
     /**
      * Converts this JSONMessage object to the legacy formatting system, which
-     * uses formatting codes (like &6, &l, &4, etc.)
+     * uses formatting codes (like {@code &6, &l, &4}, etc.)
      * 
      * @return This JSONMessage using legacy formatting
      */
@@ -373,11 +370,11 @@ public class JSONMessage {
      */
     public class MessagePart {
 
-        private MessageEvent    onClick;
-        private MessageEvent    onHover;
+        private MessageEvent onClick;
+        private MessageEvent onHover;
         private List<ChatColor> styles = new ArrayList<>();
-        private ChatColor       color;
-        private String          text;
+        private ChatColor color;
+        private String text;
 
         /**
          * Creates a new {@link MessagePart} from the given text
@@ -640,25 +637,25 @@ public class JSONMessage {
     // <editor-fold desc="ReflectionHelper">
     private static class ReflectionHelper {
 
-        private static Class<?>       craftPlayer;
+        private static Class<?> craftPlayer;
 
         private static Constructor<?> chatComponentText;
-        private static Class<?>       packetPlayOutChat;
-        private static Class<?>       packetPlayOutTitle;
-        private static Class<?>       iChatBaseComponent;
-        private static Class<?>       titleAction;
+        private static Class<?> packetPlayOutChat;
+        private static Class<?> packetPlayOutTitle;
+        private static Class<?> iChatBaseComponent;
+        private static Class<?> titleAction;
 
-        private static Field          connection;
-        private static Method         getHandle;
-        private static Method         sendPacket;
-        private static Method         stringToChat;
+        private static Field connection;
+        private static Method getHandle;
+        private static Method sendPacket;
+        private static Method stringToChat;
 
-        private static Object         actionTitle;
-        private static Object         actionSubtitle;
+        private static Object actionTitle;
+        private static Object actionSubtitle;
 
-        private static String         version;
+        private static String version;
 
-        private static boolean        SETUP = false;
+        private static boolean SETUP = false;
 
         static {
 

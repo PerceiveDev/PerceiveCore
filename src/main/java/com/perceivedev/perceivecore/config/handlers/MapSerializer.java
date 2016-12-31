@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import com.perceivedev.perceivecore.config.SerializationManager;
 import com.perceivedev.perceivecore.config.SerializationProxy;
-import com.perceivedev.perceivecore.util.Pair;
+import com.perceivedev.perceivecore.util.types.Pair;
 
 /**
  * Adds the ability for {@link SerializationManager} to serialize and

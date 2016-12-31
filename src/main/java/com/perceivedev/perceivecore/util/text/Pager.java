@@ -1,6 +1,4 @@
-package com.perceivedev.perceivecore.other;
-
-import static com.perceivedev.perceivecore.util.TextUtils.colorize;
+package com.perceivedev.perceivecore.util.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +15,6 @@ import javax.annotation.Nonnull;
 import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.Pager.Options;
 
 /** Pages something. */
 public class Pager {
@@ -131,7 +128,7 @@ public class Pager {
 
         /** @param string The String */
         private StringFilterable(String string) {
-            Objects.requireNonNull(string, "String can not be null!");
+            Objects.requireNonNull(string, "String cannot be null!");
 
             this.string = string;
         }
@@ -156,10 +153,10 @@ public class Pager {
      */
     @SuppressWarnings("WeakerAccess")
     public static class Options {
-        private int             entriesPerPage;
-        private int             pageIndex;
+        private int entriesPerPage;
+        private int pageIndex;
         private Set<SearchMode> searchModes;
-        private String          searchPattern;
+        private String searchPattern;
 
         private Options(int entriesPerPage, int pageIndex,
                 @Nonnull Set<SearchMode> searchModes, @Nonnull String searchPattern) {
@@ -229,10 +226,10 @@ public class Pager {
         /** The Builder of the {@link Options} object. */
         public static final class Builder {
 
-            private int             entriesPerPage = 10;
-            private int             pageIndex      = 0;
-            private Set<SearchMode> searchModes    = EnumSet.of(SearchMode.CONTAINS);
-            private String          searchPattern  = "";
+            private int entriesPerPage = 10;
+            private int pageIndex = 0;
+            private Set<SearchMode> searchModes = EnumSet.of(SearchMode.CONTAINS);
+            private String searchPattern = "";
 
             /** No instantiation from outside */
             private Builder() {
@@ -422,11 +419,11 @@ public class Pager {
 
     /** A displayable page */
     public static class Page {
-        private final int          maxPages;
-        private final int          pageIndex;
+        private final int maxPages;
+        private final int pageIndex;
         private final List<String> entries;
-        private final String       headerKey;
-        private final String       footerKey;
+        private final String headerKey;
+        private final String footerKey;
 
         /**
          * The language Keys can be found in the
@@ -501,18 +498,22 @@ public class Pager {
          * <ul>
          * <li>Defaults:
          * <ul>
-         * <li>"pager_header" ==> The header. The key can be customized via the
-         * constructor.</li>
+         * <li>"pager_header" {@code ==>} The header. The key can be customized
+         * via the
+         * constructor.
          * <ul>
-         * <li>{0} ==> The current page</li>
-         * <li>{1} ==> The amount of pages</li>
+         * <li>{0} {@code ==>} The current page</li>
+         * <li>{1} {@code ==>} The amount of pages</li>
          * </ul>
-         * <li>"pager_footer" ==> The footer. The key can be customized via the
-         * constructor.</li>
+         * </li>
+         * <li>"pager_footer" {@code ==>} The footer. The key can be customized
+         * via the
+         * constructor.
          * <ul>
-         * <li>{0} ==> The current page</li>
-         * <li>{1} ==> The amount of pages</li>
+         * <li>{0} {@code ==>} The current page</li>
+         * <li>{1} {@code ==>} The amount of pages</li>
          * </ul>
+         * </li>
          * </ul>
          * </li>
          * </ul>
@@ -529,7 +530,7 @@ public class Pager {
             sender.sendMessage(language.trOrDefault(headerKey,
                     "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
                     pageIndex + 1, maxPages));
-            entries.forEach(s -> sender.sendMessage(colorize(s)));
+            entries.forEach(s -> sender.sendMessage(TextUtils.colorize(s)));
             sender.sendMessage(language.trOrDefault(footerKey,
                     "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
                     pageIndex + 1, maxPages));

@@ -9,7 +9,7 @@ import com.perceivedev.perceivecore.util.snapshots.SnapshotProperty;
  */
 public class PlayerFoodProperty extends SnapshotProperty<Player> {
 
-    private int   foodLevel  = -1;
+    private int foodLevel = -1;
     private float saturation = -1;
 
     @Override

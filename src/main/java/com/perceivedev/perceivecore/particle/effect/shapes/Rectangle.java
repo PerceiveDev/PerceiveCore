@@ -12,8 +12,8 @@ import org.bukkit.util.Vector;
  */
 public class Rectangle extends AbstractParticleShape {
 
-    private double  width;
-    private double  height;
+    private double width;
+    private double height;
     private boolean filled;
 
     /**
@@ -27,8 +27,8 @@ public class Rectangle extends AbstractParticleShape {
      */
     public Rectangle(Orientation orientation, double width, double height, double granularity, Particle particle, boolean filled) {
         super(orientation, granularity, particle);
-        Objects.requireNonNull(orientation, "orientation can not be null!");
-        Objects.requireNonNull(particle, "particle can not be null!");
+        Objects.requireNonNull(orientation, "orientation cannot be null!");
+        Objects.requireNonNull(particle, "particle cannot be null!");
 
         this.width = width;
         this.height = height;

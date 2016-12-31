@@ -9,13 +9,13 @@ public class Dimension implements Cloneable {
 
     public static final Dimension ONE = new Dimension(1, 1);
 
-    private int                   width, height;
+    private int width, height;
 
     /**
      * @param width The width
      * @param height The height
      *
-     * @throws IllegalArgumentException if width or height <= 0
+     * @throws IllegalArgumentException if width or height {@code <= 0}
      */
     public Dimension(int width, int height) {
         ensureValidDimension(width, height);
@@ -59,7 +59,7 @@ public class Dimension implements Cloneable {
      * @param width The width
      * @param height The height
      *
-     * @throws IllegalArgumentException if width or height <= 0
+     * @throws IllegalArgumentException if width or height {@code <= 0}
      */
     private static void ensureValidDimension(int width, int height) {
         if (width <= 0) {

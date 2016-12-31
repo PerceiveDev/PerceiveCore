@@ -23,7 +23,9 @@ import org.bukkit.entity.Player;
 
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.ResultType;
 
-/** Provides utility methods for reflection */
+/**
+ * Provides utility methods for reflection
+ */
 @SuppressWarnings({ "WeakerAccess", "unused" })
 public class ReflectionUtil {
 
@@ -139,6 +141,7 @@ public class ReflectionUtil {
     /**
      * Gets a {@link ReflectedClass} from the object
      *
+     * @param <T> The class of the object
      * @param object the object
      *
      * @return the ReflectedClass, this will be null if the object is null
@@ -165,8 +168,6 @@ public class ReflectionUtil {
 
         return getClass(className);
     }
-
-    // TODO: 30.10.2016 Needed? @Rayzr? Can it be generalised?
 
     /**
      * Gets a Wrapper for a {@link Player}
@@ -252,7 +253,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns ALL fields (public -> private) of a class, filtered by the given
+     * Returns ALL fields (public {@code ->} private) of a class, filtered by
+     * the given
      * Predicate.
      *
      * @param clazz The Class to get the fields for
@@ -271,7 +273,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns ALL fields (public -> private) of a class
+     * Returns ALL fields (public {@code ->} private) of a class
      *
      * @param clazz The Class to get the fields for
      *
@@ -547,7 +549,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all methods (public -> private) from the class, filtered by the
+     * Returns all methods (public {@code ->} private) from the class, filtered
+     * by the
      * given predicate
      *
      * @param clazz The Class to get the methods from
@@ -566,7 +569,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all methods (public -> private) from the class
+     * Returns all methods (public {@code ->} private) from the class
      *
      * @param clazz The Class to get the methods from
      *
@@ -673,7 +676,8 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all constructors (public -> private) from the class, filtered by
+     * Returns all constructors (public {@code ->} private) from the class,
+     * filtered by
      * the given predicate
      *
      * @param clazz The class to get the constructors from
@@ -692,7 +696,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Returns all (public -> private) constructors of a class.
+     * Returns all (public {@code ->} private) constructors of a class.
      *
      * @param clazz The Class to get the constructors for
      *
@@ -758,11 +762,11 @@ public class ReflectionUtil {
     /** The namespaces */
     public enum NameSpace {
         /** The {@code net.minecraft.server} namespace */
-        NMS(Pattern.compile("\\{nms\\}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
+        NMS(Pattern.compile("\\{nms}\\.", Pattern.CASE_INSENSITIVE), string -> "net.minecraft.server." + SERVER_VERSION + "." + string),
         /** The {@code org.bukkit.craftbukkit} namespace */
-        OBC(Pattern.compile("\\{obc\\}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
+        OBC(Pattern.compile("\\{obc}\\.", Pattern.CASE_INSENSITIVE), string -> "org.bukkit.craftbukkit." + SERVER_VERSION + "." + string);
 
-        private Pattern                  detectionPattern;
+        private Pattern detectionPattern;
         private Function<String, String> resolverFunction;
 
         /**
@@ -841,9 +845,9 @@ public class ReflectionUtil {
      * @param <T> The class that is wrapped
      */
     public static class ReflectResponse<T> {
-        private T          value;
+        private T value;
         private ResultType resultType;
-        private Throwable  exception;
+        private Throwable exception;
 
         private ReflectResponse(T value, ResultType resultType, Throwable exception) {
             this.value = value;
@@ -897,6 +901,25 @@ public class ReflectionUtil {
          */
         public T getValue() {
             return value;
+        }
+
+        /**
+         * Returns the raw value, or throws an exception if the result is
+         * {@link ResultType#ERROR} or {@link ResultType#NOT_FOUND}
+         * 
+         * @param messages The messages to append to the Exception. May NOT be
+         *            null, but empty
+         * @return The raw value
+         */
+        public T getValueOrThrow(String... messages) {
+            Objects.requireNonNull(messages, "messages can not be null!");
+
+            if (getResultType() == ResultType.ERROR) {
+                throw new RuntimeException(String.join(" - ", messages), getException());
+            } else if (getResultType() == ResultType.NOT_FOUND) {
+                throw new RuntimeException(String.join(" - ", messages) + " Result was 'NOT_FOUND'");
+            }
+            return getValue();
         }
 
         /**
@@ -963,8 +986,8 @@ public class ReflectionUtil {
      */
     public static class MemberPredicate<T extends Member> implements Predicate<T> {
 
-        private String               name;
-        private Collection<Modifier> modifiers       = Collections.emptyList();
+        private String name;
+        private Collection<Modifier> modifiers = Collections.emptyList();
         private Collection<Modifier> withoutModifier = Collections.emptyList();
 
         /**
@@ -1102,6 +1125,8 @@ public class ReflectionUtil {
          * Sets the type of the {@link Field}
          *
          * @param type The type of the {@link Field}
+         * 
+         * @return This {@link FieldPredicate}
          */
         public FieldPredicate setType(Class<?> type) {
             this.type = type;

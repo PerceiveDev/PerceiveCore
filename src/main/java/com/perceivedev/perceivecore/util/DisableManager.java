@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.other;
+package com.perceivedev.perceivecore.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
+import com.perceivedev.perceivecore.util.types.DisableListener;
+
 /**
  * Allows DisableListeners to be added
  * 
@@ -22,10 +24,10 @@ import org.bukkit.plugin.Plugin;
  */
 public class DisableManager implements Listener {
 
-    private final Collection<DisableListener> listeners    = new ArrayList<>();
-    private final Set<DisableListener>        weakListener = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Collection<DisableListener> listeners = new ArrayList<>();
+    private final Set<DisableListener> weakListener = Collections.newSetFromMap(new WeakHashMap<>());
 
-    private Plugin                            plugin;
+    private Plugin plugin;
 
     /**
      * @param plugin The owning plugin

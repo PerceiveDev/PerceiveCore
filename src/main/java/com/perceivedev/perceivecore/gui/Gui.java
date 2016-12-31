@@ -11,10 +11,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.perceivedev.perceivecore.PerceiveCore;
-import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
+import com.perceivedev.perceivecore.gui.base.FreeformPane;
 import com.perceivedev.perceivecore.gui.base.Pane;
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /**
  * A Gui for a player
@@ -25,13 +26,13 @@ public class Gui implements InventoryHolder {
 
     private static int counter;
 
-    private final int  ID = counter++;
+    private final int ID = counter++;
 
-    private UUID       playerID;
-    private Inventory  inventory;
-    private Pane       rootPane;
-    private boolean    reopenOnClose;
-    private boolean    killMe;
+    private UUID playerID;
+    private Inventory inventory;
+    private Pane rootPane;
+    private boolean reopenOnClose;
+    private boolean killMe;
 
     /**
      * @param name The name of the Gui
@@ -52,10 +53,29 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Creates a gui with the given Inventory
+     * 
+     * @param name The name of the Gui
+     * @param rows The amount of rows in the Inventory. Each row has 9 slots.
+     * @param rootPane The root pane to use
+     * @param inventory The inventory to use
+     */
+    protected Gui(String name, int rows, Pane rootPane, Inventory inventory) {
+        Objects.requireNonNull(name, "name cannot be null!");
+        Objects.requireNonNull(rootPane, "rootPane cannot be null!");
+        Objects.requireNonNull(inventory, "inventory cannot be null!");
+
+        this.inventory = inventory;
+        this.rootPane = rootPane;
+        rootPane.setGui(this);
+    }
+
+    /**
      * @param name The name of the Gui
      * @param rows The amount of rows (each has 9 slots) in the gui
      *
-     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} -> passes an
+     * @see #Gui(String, int, Pane) {@link #Gui(String, int, Pane)} {@code ->}
+     *      passes an
      *      AnchorPane
      */
     public Gui(String name, int rows) {
@@ -71,8 +91,44 @@ public class Gui implements InventoryHolder {
         return rootPane;
     }
 
-    public boolean addComponent(Component component) {
-        return getRootPane().addComponent(component);
+    /**
+     * Returns the root as a {@link FixedPositionPane}
+     * 
+     * @throws ClassCastException if the root is NOT a {@link FixedPositionPane}
+     * @return The root pane
+     */
+    public FixedPositionPane getRootAsFixedPosition() {
+        return (FixedPositionPane) rootPane;
+    }
+
+    /**
+     * Returns the root as a {@link FreeformPane}
+     * 
+     * @throws ClassCastException if the root is NOT a {@link FreeformPane}
+     * @return The root pane
+     */
+    public FreeformPane getRootAsFreeform() {
+        return (FreeformPane) rootPane;
+    }
+
+    /**
+     * Checks whether the root pane is a {@link FreeformPane}
+     * 
+     * @return True if the root pane ({@link #getRootPane()}) is a
+     *         {@link FreeformPane}
+     */
+    public boolean isRootFreeformPane() {
+        return rootPane instanceof FreeformPane;
+    }
+
+    /**
+     * Checks whether the root pane is a {@link FixedPositionPane}
+     * 
+     * @return True if the root pane ({@link #getRootPane()}) is a
+     *         {@link FixedPositionPane}
+     */
+    public boolean isRootFixedPositionPane() {
+        return rootPane instanceof FixedPositionPane;
     }
 
     /**
@@ -126,6 +182,10 @@ public class Gui implements InventoryHolder {
 
     /**
      * Opens the Gui for the player, if no other Gui is opened
+     * <p>
+     * The Guis for the player are organized in a Stack. This means opening a
+     * Gui while one is already opened will just push it on the stack, and open
+     * it as next Gui
      *
      * @param player The player to open the Gui for
      */
@@ -150,15 +210,32 @@ public class Gui implements InventoryHolder {
      * Opens the inventory for the player
      *
      * @param player The Player to open it for
+     * @param previous The previous Gui that was displayed. {@code null} if this
+     *            is the first
+     * 
      */
-    void openInventory(Player player) {
+    void openInventory(Player player, Gui previous) {
         Objects.requireNonNull(player);
 
         playerID = player.getUniqueId();
 
         reRender();
 
+        onDisplay(previous);
+
         player.openInventory(getInventory());
+    }
+
+    /**
+     * Called when this gui is displayed to a player
+     * <p>
+     * {@link #getPlayer()} is already set at this point
+     * 
+     * @param previous The previous Gui that was displayed. {@code null} if this
+     *            is the first
+     */
+    protected void onDisplay(Gui previous) {
+
     }
 
     /**
@@ -203,6 +280,23 @@ public class Gui implements InventoryHolder {
     }
 
     /**
+     * Called when the Gui is closed. You may overwrite it to listen to close
+     * events
+     */
+    protected void onClose() {
+
+    }
+
+    /**
+     * Sets the inventory
+     * 
+     * @param inventory The inventory to use
+     */
+    protected void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    /**
      * Checks if an Inventory belongs to this Gui
      *
      * @param inventory The inventory to check
@@ -223,6 +317,17 @@ public class Gui implements InventoryHolder {
             return Optional.empty();
         }
         return Optional.ofNullable(Bukkit.getPlayer(playerID));
+    }
+
+    /**
+     * Returns the player this Gui was/is opened for.
+     * <p>
+     * Will return an empty optional if the GUI was never opened
+     * 
+     * @return The {@link UUID} of the player this gui is opened for, if any
+     */
+    protected Optional<UUID> getPlayerID() {
+        return Optional.ofNullable(playerID);
     }
 
     @Override

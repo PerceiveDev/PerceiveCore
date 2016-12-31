@@ -12,7 +12,7 @@ import java.net.URL;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.perceivedev.perceivecore.util.TextUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
 
 /** @author ZP4RKER */
 public abstract class Updater {

@@ -10,8 +10,8 @@ import org.bukkit.Particle;
 public abstract class AbstractParticleShape implements ParticleShape {
 
     private Orientation orientation;
-    private double      granularity;
-    private Particle    particle;
+    private double granularity;
+    private Particle particle;
 
     /**
      * @param orientation The {@link Orientation} of the effect
@@ -38,7 +38,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
      */
     @Override
     public void setOrientation(Orientation orientation) {
-        Objects.requireNonNull(orientation, "orientation can not be null!");
+        Objects.requireNonNull(orientation, "orientation cannot be null!");
 
         this.orientation = orientation;
     }
@@ -76,7 +76,7 @@ public abstract class AbstractParticleShape implements ParticleShape {
      */
     @Override
     public void setParticle(Particle particle) {
-        Objects.requireNonNull(particle, "particle can not be null!");
+        Objects.requireNonNull(particle, "particle cannot be null!");
 
         this.particle = particle;
     }

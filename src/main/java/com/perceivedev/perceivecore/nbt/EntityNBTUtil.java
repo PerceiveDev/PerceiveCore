@@ -33,7 +33,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 @SuppressWarnings("unused") // just by me...
 public class EntityNBTUtil {
 
-    private static Method  loadFromNbtMethod, saveToNbtMethod, getHandle;
+    private static Method loadFromNbtMethod, saveToNbtMethod, getHandle;
     private static boolean error = false;
 
     static {

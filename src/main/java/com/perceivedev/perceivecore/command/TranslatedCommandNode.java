@@ -19,7 +19,7 @@ import com.perceivedev.perceivecore.language.MessageProvider;
  */
 public abstract class TranslatedCommandNode extends AbstractCommandNode {
 
-    private String          keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
+    private String keywordKey, keywordRegExKey, usageKey, descriptionKey, nameKey;
     private MessageProvider messageProvider;
 
     /**
@@ -107,18 +107,31 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
     }
 
     /**
+     * Translates a message and colors it
+     * 
+     * @param key The key to translate
+     * @param category The category to translate it from
+     * @param formattingObjects The Objects to format this message
+     * 
+     * @return The translated message
      * @see com.perceivedev.perceivecore.language.MessageProvider#tr(java.lang.String,
      *      java.lang.String, java.lang.Object[])
      */
-    public String tr(String key, String category, Object... formattingObjects) {
+    protected String tr(String key, String category, Object... formattingObjects) {
         return messageProvider.tr(key, category, formattingObjects);
     }
 
     /**
+     * Translates a message and colors it
+     *
+     * @param key The key to translate
+     * @param formattingObjects The Objects to format this message
+     *
+     * @return The translated message
      * @see com.perceivedev.perceivecore.language.MessageProvider#tr(java.lang.String,
      *      java.lang.Object[])
      */
-    public String tr(String key, Object... formattingObjects) {
+    protected String tr(String key, Object... formattingObjects) {
         return messageProvider.tr(key, formattingObjects);
     }
 

@@ -17,10 +17,12 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.DisableListener;
-import com.perceivedev.perceivecore.other.DisableManager;
+import com.perceivedev.perceivecore.util.DisableManager;
+import com.perceivedev.perceivecore.util.types.DisableListener;
 
-/** A Command tree */
+/**
+ * A Command tree
+ */
 public class CommandTree {
 
     private TreeRoot root;
@@ -40,7 +42,9 @@ public class CommandTree {
      * Creates a new Command Tree
      *
      * Creates a new {@link DisableManager} for the given plugin
-     *
+     * 
+     * @param plugin The Plugin this is for
+     * 
      * @see #CommandTree(DisableManager)
      */
     public CommandTree(Plugin plugin) {

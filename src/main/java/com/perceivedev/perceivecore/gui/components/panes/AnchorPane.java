@@ -1,20 +1,16 @@
 package com.perceivedev.perceivecore.gui.components.panes;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.perceivedev.perceivecore.gui.base.AbstractPane;
 import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
 
 /** A simple anchor pane */
-public class AnchorPane extends AbstractPane {
+public class AnchorPane extends AbstractPane implements FixedPositionPane {
 
     /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
      * @param width The width of this pane
      * @param height The height of this pane
      * @param inventoryMap The {@link InventoryMap} to use
@@ -23,21 +19,8 @@ public class AnchorPane extends AbstractPane {
      * @throws IllegalArgumentException if InventoryMap{@link #getSize()} does
      *             not equal size
      */
-    protected AnchorPane(List<Component> components, int width, int height, InventoryMap inventoryMap) {
-        super(components, width, height, inventoryMap);
-    }
-
-    /**
-     * Creates a pane with the given components
-     * <p>
-     * Automatically calls addComponent for each
-     *
-     * @param components The components to add
-     * @param width The width of this pane
-     * @param height The height of this pane
-     */
-    public AnchorPane(List<Component> components, int width, int height) {
-        super(components, width, height);
+    protected AnchorPane(int width, int height, InventoryMap inventoryMap) {
+        super(width, height, inventoryMap);
     }
 
     /**
@@ -48,25 +31,6 @@ public class AnchorPane extends AbstractPane {
      */
     public AnchorPane(int width, int height) {
         super(width, height);
-    }
-
-    /**
-     * <i>Does nothing. Use the {@link #addComponent(Component, int, int)}
-     * method.</i>
-     *
-     * @param component The component to add. You can't add the same component
-     *            twice.
-     *
-     * @return It throws
-     *
-     * @throws UnsupportedOperationException As this method can not be supported
-     * @see #addComponent(Component, int, int)
-     * @deprecated Use {@link #addComponent(Component, int, int)}
-     */
-    @Deprecated
-    @Override
-    public boolean addComponent(Component component) {
-        throw new UnsupportedOperationException("AnchorPane doesn't support adding without coordinates given");
     }
 
     /**
@@ -81,6 +45,7 @@ public class AnchorPane extends AbstractPane {
      *
      * @throws NullPointerException if component is null
      */
+    @Override
     public boolean addComponent(Component component, int x, int y) {
         Objects.requireNonNull(component, "component can not be null");
 
@@ -99,6 +64,13 @@ public class AnchorPane extends AbstractPane {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean removeComponent(int x, int y) {
+        Optional<Component> component = getComponentAtPoint(x, y);
+
+        return component.isPresent() && removeComponent(component.get());
     }
 
     @Override

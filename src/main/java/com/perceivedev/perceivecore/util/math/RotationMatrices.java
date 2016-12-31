@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.particle.math;
+package com.perceivedev.perceivecore.util.math;
 
 import java.util.Objects;
 
@@ -57,7 +57,7 @@ public class RotationMatrices {
      * @see #rotateRadian(Vector, double, double)
      */
     public static Vector rotateRadian(Vector in, double yaw, double pitch) {
-        Objects.requireNonNull(in, "in can not be null!");
+        Objects.requireNonNull(in, "in cannot be null!");
 
         Vector out = in.clone();
         out = RotationMatrices.rotateY(out, -yaw);
@@ -75,7 +75,7 @@ public class RotationMatrices {
      * @return A clone with the new coordinates
      */
     public static Vector rotateX(Vector in, double theta) {
-        Objects.requireNonNull(in, "in can not be null!");
+        Objects.requireNonNull(in, "in cannot be null!");
 
         double y = Math.cos(theta) * in.getY() - Math.sin(theta) * in.getZ();
         double z = Math.sin(theta) * in.getY() + Math.cos(theta) * in.getZ();
@@ -92,7 +92,7 @@ public class RotationMatrices {
      * @return A clone with the new coordinates
      */
     public static Vector rotateY(Vector in, double theta) {
-        Objects.requireNonNull(in, "in can not be null!");
+        Objects.requireNonNull(in, "in cannot be null!");
 
         double x = in.getX() * Math.cos(theta) + in.getZ() * Math.sin(theta);
         double z = in.getX() * -Math.sin(theta) + in.getZ() * Math.cos(theta);

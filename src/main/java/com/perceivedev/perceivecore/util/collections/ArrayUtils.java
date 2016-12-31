@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.collections;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
  * The ArrayUtils class contains various methods for manipulating arrays
  *
  * @author Rayzr
- * @see ArrayUtils#concat(Object[], String)
  */
 public class ArrayUtils {
 
@@ -27,7 +26,10 @@ public class ArrayUtils {
      * @param filler the String to concatenate the objects with
      *
      * @return The concatenated String
+     * @deprecated Use {@link String#join(CharSequence, CharSequence...)}
+     *             instead
      */
+    @Deprecated
     @Nonnull
     public static String concat(@Nonnull Object[] arr, @Nonnull String filler) {
         Objects.requireNonNull(arr, "array can not be null");
@@ -63,7 +65,7 @@ public class ArrayUtils {
      * @return True if the element is in the given array
      */
     public static <T> boolean contains(T[] array, T element) {
-        Objects.requireNonNull(array, "array can not be null!");
+        Objects.requireNonNull(array, "array cannot be null!");
         return Arrays.stream(array).anyMatch(element::equals);
     }
 

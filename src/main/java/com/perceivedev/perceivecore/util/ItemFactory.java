@@ -20,6 +20,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import com.perceivedev.perceivecore.util.collections.ListUtils;
+import com.perceivedev.perceivecore.util.text.TextUtils;
+
 /**
  * Represents an ItemStack with utility methods to modify it's appearance.
  *
@@ -28,12 +31,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 @SuppressWarnings("WeakerAccess")
 public class ItemFactory implements Cloneable {
 
-    private static final Set<Material> COLOURABLE     = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
+    private static final Set<Material> COLOURABLE = EnumSet.of(Material.WOOL, Material.STAINED_CLAY,
             Material.STAINED_GLASS, Material.STAINED_GLASS_PANE, Material.CARPET, Material.INK_SACK);
     private static final Set<Material> LEATHER_ARMOUR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
             Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 
-    private ItemStack                  itemStack;
+    private ItemStack itemStack;
 
     private ItemFactory(ItemStack itemStack) {
         Objects.requireNonNull(itemStack, "itemStack can not be null");
@@ -512,7 +515,9 @@ public class ItemFactory implements Cloneable {
         return new ItemFactory(new ItemStack(type));
     }
 
-    /** @return The finished ItemStack. */
+    /**
+     * @return The finished ItemStack.
+     */
     @Nonnull
     public ItemStack build() {
         return itemStack.clone();

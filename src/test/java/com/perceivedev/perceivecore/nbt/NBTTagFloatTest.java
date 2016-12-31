@@ -15,7 +15,7 @@ public class NBTTagFloatTest {
 
     private NBTTagFloat nbtTagFloat = new NBTTagFloat(1);
 
-    private final int   AMOUNT      = 10000;
+    private final int AMOUNT = 10000;
 
     @Test
     public void set() throws Exception {

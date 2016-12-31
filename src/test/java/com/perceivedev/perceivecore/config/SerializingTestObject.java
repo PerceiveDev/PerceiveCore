@@ -9,25 +9,26 @@ import java.util.UUID;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /** A small testobject */
+@SuppressWarnings({ "unused", "WeakerAccess" })
 public class SerializingTestObject implements ConfigSerializable {
 
-    private String              testString;
-    private byte                testByte;
-    private short               testShort;
-    private int                 testInt;
-    private long                testLong;
-    private float               testFloat;
-    private double              testDouble;
+    private String testString;
+    private byte testByte;
+    private short testShort;
+    private int testInt;
+    private long testLong;
+    private float testFloat;
+    private double testDouble;
 
-    private transient String    transientString;
+    private transient String transientString;
 
     private Map<Object, Object> testMap;
-    private NestedObjectClass   nestedObjectClass;
-    private ConfigurationTest   configurationTest;
+    private NestedObjectClass nestedObjectClass;
+    private ConfigurationTest configurationTest;
 
-    private UUID                testUUID;
-    private TestEnum            testEnum;
-    private List<Object>        testList;
+    private UUID testUUID;
+    private TestEnum testEnum;
+    private List<Object> testList;
 
     public SerializingTestObject() {
     }
@@ -192,7 +193,7 @@ public class SerializingTestObject implements ConfigSerializable {
     public static class ConfigurationTest implements ConfigurationSerializable {
 
         private String name;
-        private int    age;
+        private int age;
 
         public ConfigurationTest(String name, int age) {
             this.name = name;

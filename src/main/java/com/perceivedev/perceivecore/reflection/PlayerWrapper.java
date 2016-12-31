@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.perceivedev.perceivecore.reflection;
 
 import java.lang.reflect.Method;

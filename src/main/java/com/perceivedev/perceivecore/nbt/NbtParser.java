@@ -19,7 +19,7 @@ import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse.Re
 public class NbtParser {
 
     private static final Method PARSE_METHOD;
-    private static boolean      error = false;
+    private static boolean error = false;
 
     static {
         Optional<Class<?>> mojangsonParserClass = ReflectionUtil.getClass(NMS, "MojangsonParser");

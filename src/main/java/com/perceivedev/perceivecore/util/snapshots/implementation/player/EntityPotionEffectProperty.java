@@ -65,7 +65,7 @@ public class EntityPotionEffectProperty extends SnapshotProperty<LivingEntity> {
 
     @Override
     public void restoreFor(LivingEntity target) {
-        Objects.requireNonNull(target, "target can not be null!");
+        Objects.requireNonNull(target, "target cannot be null!");
 
         target.getActivePotionEffects().stream()
                 .map(PotionEffect::getType)
@@ -76,7 +76,7 @@ public class EntityPotionEffectProperty extends SnapshotProperty<LivingEntity> {
 
     @Override
     public SnapshotProperty<LivingEntity> update(LivingEntity target) {
-        Objects.requireNonNull(target, "target can not be null!");
+        Objects.requireNonNull(target, "target cannot be null!");
 
         potionEffects.clear();
 

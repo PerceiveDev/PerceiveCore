@@ -1,6 +1,6 @@
 package com.perceivedev.perceivecore.config.util;
 
-import static com.perceivedev.perceivecore.util.TextUtils.normalizePathName;
+import static com.perceivedev.perceivecore.util.text.TextUtils.normalizePathName;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -103,7 +103,7 @@ public class DataFileManager<K, V extends ConfigSerializable> extends DataManage
     @Override
     public void load() {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(path.toFile());
-        
+
         clear();
 
         for (String configKey : configuration.getKeys(false)) {

@@ -19,12 +19,14 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
-/** A simple packet injector, to modify the packets sent and received */
+/**
+ * A simple packet injector, to modify the packets sent and received
+ */
 class PacketInjector extends ChannelDuplexHandler {
 
-    private boolean               isClosed;
-    private Channel               channel;
-    private List<PacketListener>  packetListeners = new ArrayList<>();
+    private boolean isClosed;
+    private Channel channel;
+    private List<PacketListener> packetListeners = new ArrayList<>();
     private WeakReference<Player> playerWeakReference;
 
     /**

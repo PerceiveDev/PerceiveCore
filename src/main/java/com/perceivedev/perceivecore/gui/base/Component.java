@@ -17,7 +17,7 @@ public interface Component {
      *
      * @param inventory The inventory to render in
      * @param player The Player to render for
-     * @param offsetX The c offset
+     * @param offsetX The x offset
      * @param offsetY The y offset
      */
     void render(Inventory inventory, Player player, int offsetX, int offsetY);
@@ -51,6 +51,24 @@ public interface Component {
     Dimension getSize();
 
     /**
+     * Toggles the visibility of a component
+     * <p>
+     * If not, no clicks will register and the component will not be rendered
+     * 
+     * @param visible Whether the Component is visible
+     */
+    void setVisible(boolean visible);
+
+    /**
+     * Checks if the Component is visible.
+     * <p>
+     * If not, no clicks will register and the component will not be rendered
+     * 
+     * @return Whether the Component is visible
+     */
+    boolean isVisible();
+
+    /**
      * Deep clones this component
      *
      * @return A deep clone of this component
@@ -79,7 +97,7 @@ public interface Component {
      *
      * @param slot The slot
      *
-     * @return The grid position. [0] ==> X, [1] == Y
+     * @return The grid position. [0] {@code ==>} X, [1] == Y
      */
     default int[] slotToGrid(int slot) {
         return new int[] { slot % 9, slot / 9 };

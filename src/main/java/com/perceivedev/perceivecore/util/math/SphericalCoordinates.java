@@ -1,4 +1,4 @@
-package com.perceivedev.perceivecore.particle.math;
+package com.perceivedev.perceivecore.util.math;
 
 import java.text.DecimalFormat;
 
@@ -11,7 +11,7 @@ public class SphericalCoordinates implements Cloneable {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("#.####");
 
-    private double                     rho, phi, theta;
+    private double rho, phi, theta;
 
     /**
      * @param rho The distance rho

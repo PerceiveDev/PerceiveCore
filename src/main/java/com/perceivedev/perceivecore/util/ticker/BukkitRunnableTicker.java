@@ -7,9 +7,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 /** Uses a BukkitRunnable to tick */
 abstract class BukkitRunnableTicker extends AbstractTicker {
 
-    BukkitRunnable  runnable;
-    private long    lastTick = System.nanoTime();
-    private boolean started  = false;
+    BukkitRunnable runnable;
+    private long lastTick = System.nanoTime();
+    private boolean started = false;
 
     /**
      * Creates a new AbstractTicker

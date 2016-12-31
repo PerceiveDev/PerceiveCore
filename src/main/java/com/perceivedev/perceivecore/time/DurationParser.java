@@ -12,12 +12,12 @@ public class DurationParser {
      * bad!
      * <p>
      * Format: <br>
-     * "xxS" ==> milliseconds <br>
-     * "xxt" ==> ticks <br>
-     * "xxs" ==> seconds <br>
-     * "xxm" ==> minutes <br>
-     * "xxh" ==> hours <br>
-     * "xxd" ==> days
+     * "xxS" {@code ==>} milliseconds <br>
+     * "xxt" {@code ==>} ticks <br>
+     * "xxs" {@code ==>} seconds <br>
+     * "xxm" {@code ==>} minutes <br>
+     * "xxh" {@code ==>} hours <br>
+     * "xxd" {@code ==>} days
      *
      * @param input The input string
      *
@@ -36,12 +36,12 @@ public class DurationParser {
      * bad!
      * <p>
      * Format: <br>
-     * "xxS" ==> milliseconds <br>
-     * "xxt" ==> ticks <br>
-     * "xxs" ==> seconds <br>
-     * "xxm" ==> minutes <br>
-     * "xxh" ==> hours <br>
-     * "xxd" ==> days
+     * "xxS" {@code ==>} milliseconds <br>
+     * "xxt" {@code ==>} ticks <br>
+     * "xxs" {@code ==>} seconds <br>
+     * "xxm" {@code ==>} minutes <br>
+     * "xxh" {@code ==>} hours <br>
+     * "xxd" {@code ==>} days
      *
      * @param input The input string
      *

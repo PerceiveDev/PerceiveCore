@@ -1,19 +1,20 @@
 package com.perceivedev.perceivecore.gui.components.panes;
 
-import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
 import com.perceivedev.perceivecore.gui.base.AbstractPane;
 import com.perceivedev.perceivecore.gui.base.Component;
+import com.perceivedev.perceivecore.gui.base.FixedPositionPane;
+import com.perceivedev.perceivecore.gui.base.FreeformPane;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 
 /** A Grid pane */
-public class GridPane extends AbstractPane {
+public class GridPane extends AbstractPane implements FixedPositionPane, FreeformPane {
 
     private boolean[][] slots;
-    private int         gridWidth, gridHeight;
+    private int gridWidth, gridHeight;
 
     /**
      * Creates a pane with the given components
@@ -33,7 +34,7 @@ public class GridPane extends AbstractPane {
      *             not equal size
      */
     public GridPane(int width, int height, InventoryMap inventoryMap, int columns, int rows) {
-        super(Collections.emptyList(), width, height, inventoryMap);
+        super(width, height, inventoryMap);
 
         gridWidth = (int) Math.floor(getSize().getWidth() / (double) columns);
         gridHeight = (int) Math.floor(getSize().getHeight() / (double) rows);
@@ -172,6 +173,7 @@ public class GridPane extends AbstractPane {
      *
      * @throws NullPointerException if component is null
      */
+    @Override
     public boolean addComponent(Component component, int slotX, int slotY) {
         Objects.requireNonNull(component, "component can not be null");
 
@@ -249,6 +251,7 @@ public class GridPane extends AbstractPane {
      * @param x The x coordinate of the slot
      * @param y The y coordinate of the slot
      */
+    @Override
     public boolean removeComponent(int x, int y) {
         if (x < 0 || y < 0) {
             return false;

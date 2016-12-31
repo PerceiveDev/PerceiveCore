@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.perceivedev.perceivecore.util;
+package com.perceivedev.perceivecore.util.convert;
 
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 
@@ -18,9 +15,9 @@ public class Converters {
     private static Class<?> OBC_ITEM;
     private static Class<?> NMS_ITEM;
 
-    private static Method   ITEM_TO_NMS;
-    private static Method   ITEM_TO_BUKK;
-    private static boolean  SETUP;
+    private static Method ITEM_TO_NMS;
+    private static Method ITEM_TO_BUKK;
+    private static boolean SETUP;
 
     static {
 

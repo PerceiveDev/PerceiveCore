@@ -10,10 +10,10 @@ import java.util.List;
 
 public class Table {
 
-    private String       name;
+    private String name;
     private List<Column> columns = new ArrayList<>();
-    private Column       primaryKey;
-    private SQLite       sqLite;
+    private Column primaryKey;
+    private SQLite sqLite;
 
     public Table(String name, Column primaryKey, Column... columns) {
         this.name = name;

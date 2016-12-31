@@ -37,9 +37,9 @@ public enum DisplayColor {
             Material.INK_SACK,
             Material.CARPET);
 
-    private boolean              isDyeColor;
-    private Material             material;
-    private short                dataValue;
+    private boolean isDyeColor;
+    private Material material;
+    private short dataValue;
 
     /**
      * @param isDyeColor Whether this is a dye color

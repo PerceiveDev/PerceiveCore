@@ -13,7 +13,7 @@ import org.bukkit.conversations.ValidatingPrompt;
  */
 public class ConfirmConversation extends ValidatingPrompt {
 
-    private boolean       conversing = true;
+    private boolean conversing = true;
     private PluginUpdater updater;
 
     public ConfirmConversation(PluginUpdater updater) {

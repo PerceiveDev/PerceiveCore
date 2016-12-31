@@ -12,9 +12,9 @@ import com.perceivedev.perceivecore.nbt.NBTWrappers.NBTTagString;
 public class NBTTagStringTest {
 
     private NBTTagString nbtTagString = new NBTTagString("");
-    private String       value;
+    private String value;
 
-    private final int    AMOUNT       = 10000;
+    private final int AMOUNT = 10000;
 
     @Test
     public void setString() throws Exception {
