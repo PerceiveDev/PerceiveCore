@@ -16,7 +16,9 @@ import org.bukkit.command.CommandSender;
 
 import com.perceivedev.perceivecore.language.MessageProvider;
 
-/** Pages something. */
+/**
+ * Pages something (normally Strings).
+ */
 public class Pager {
 
     /**
@@ -359,22 +361,36 @@ public class Pager {
     /** The search mode */
     @SuppressWarnings("WeakerAccess")
     public enum SearchMode {
-        /** The string is contained */
+        /**
+         * The string is contained
+         */
         CONTAINS(String::contains),
-        /** The string is contained, ignoring case */
+        /**
+         * The string is contained, ignoring case
+         */
         CONTAINS_IGNORE_CASE((test, pattern) -> test.toLowerCase().contains(pattern.toLowerCase())),
-        /** The strings are equal */
+        /**
+         * The strings are equal
+         */
         EQUALS(String::equals),
-        /** The strings are equal, ignoring case */
+        /**
+         * The strings are equal, ignoring case
+         */
         EQUALS_IGNORE_CASE(String::equalsIgnoreCase),
-        /** The regular expression matches */
+        /**
+         * The regular expression matches
+         */
         REGEX_MATCHES(String::matches),
-        /** The regular expression matches, no matter the case */
+        /**
+         * The regular expression matches, no matter the case
+         */
         REGEX_MATCHES_CASE_INSENSITIVE((test, pattern) -> Pattern
                 .compile(pattern, Pattern.CASE_INSENSITIVE)
                 .matcher(test)
                 .matches()),
-        /** The regular expression can be found in the string */
+        /**
+         * The regular expression can be found in the string
+         */
         REGEX_FIND((test, pattern) -> Pattern
                 .compile(pattern)
                 .matcher(test)
@@ -388,7 +404,9 @@ public class Pager {
                 .matcher(test)
                 .find());
 
-        /** The first one is the String to test, the second the pattern */
+        /**
+         * The first one is the String to test, the second the pattern
+         */
         private BiFunction<String, String, Boolean> accept;
 
         /**
@@ -417,7 +435,9 @@ public class Pager {
         }
     }
 
-    /** A displayable page */
+    /**
+     * A displayable page
+     */
     public static class Page {
         private final int maxPages;
         private final int pageIndex;

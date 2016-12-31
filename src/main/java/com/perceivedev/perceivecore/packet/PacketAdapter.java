@@ -1,6 +1,8 @@
 package com.perceivedev.perceivecore.packet;
 
-/** Does nothing. Overwrite what you need */
+/**
+ * Does nothing. Overwrite what you need
+ */
 public class PacketAdapter implements PacketListener {
 
     @Override

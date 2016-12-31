@@ -21,7 +21,7 @@ public class SpigetUpdater extends Updater {
     @Override
     String getLatestVersion() {
         String data = getJSON("https://api.spiget.org/v2/resources/" + id + "/versions?spiget__ua=SpigetDocs");
-        JSONObject json = null;
+        JSONObject json;
         if (data != null) {
             JSONParser parser = new JSONParser();
             try {
@@ -37,7 +37,7 @@ public class SpigetUpdater extends Updater {
     @Override
     String getDownload() {
         String data = getJSON("https://api.spiget.org/v2/resources/" + id + "?spiget__ua=SpigetDocs");
-        JSONObject json = null;
+        JSONObject json;
         if (data != null) {
             JSONParser parser = new JSONParser();
             try {

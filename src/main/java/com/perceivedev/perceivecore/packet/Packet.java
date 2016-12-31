@@ -3,201 +3,138 @@ package com.perceivedev.perceivecore.packet;
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.$;
 import static com.perceivedev.perceivecore.reflection.ReflectionUtil.NameSpace.NMS;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
-import com.perceivedev.perceivecore.PerceiveCore;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.ReflectResponse;
-import com.perceivedev.perceivecore.util.convert.Converter;
-import com.perceivedev.perceivecore.util.convert.Converters;
 
 /**
  * A class which represents a packet.
  *
- * @author Rayzr
  * @see #create(String)
  */
 public class Packet {
-
-    private static ConverterMap converters = new ConverterMap();
-
-    static {
-
-        // Load the Converters class. This should work...
-        Converters.class.getName();
-
-    }
-
-    /**
-     * Attempts to add a converter. This will return false if there was already
-     * a converter for that class pair. This ignores the ordering of {@code a}
-     * and {@code b}
-     * 
-     * @param a the first class
-     * @param b the second class
-     * @param converter the converter to add
-     * @return Whether or not it actually added anything
-     * @see com.perceivedev.perceivecore.packet.ConverterMap#addConverter(java.lang.Class,
-     *      java.lang.Class, Converter)
-     */
-    public static <A, B> boolean addConverter(Class<?> a, Class<?> b, Converter<A, B> converter) {
-        return converters.addConverter(a, b, converter);
-    }
-
-    /**
-     * Attempts to remove a converter. This ignores the ordering of {@code a}
-     * and {@code b}
-     * 
-     * @param a the first class
-     * @param b the second class
-     * @param converter the converter itself
-     * @return Whether or not it actually removed anything
-     * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
-     *      java.lang.Class, Converter)
-     */
-    public static <A, B> boolean removeConverter(Class<A> a, Class<B> b, Converter<A, B> converter) {
-        return converters.removeConverter(a, b, converter);
-    }
-
-    /**
-     * Attempts to remove a converter. This ignores the ordering of {@code a}
-     * and {@code b}
-     * 
-     * @param a the first class
-     * @param b the second class
-     * @return Whether or not it actually removed anything
-     * @see com.perceivedev.perceivecore.packet.ConverterMap#removeConverter(java.lang.Class,
-     *      java.lang.Class)
-     */
-    public static <A, B> boolean removeConverter(Class<A> a, Class<B> b) {
-        return converters.removeConverter(a, b);
-    }
-
-    /**
-     * Returns whether or not a converter is provided for the given class pair.
-     * This ignores the ordering of {@code a} and {@code b}
-     * 
-     * @param a the first class
-     * @param b the second class
-     * @return Whether or not a converter exists for the given pair of
-     *         classes
-     */
-    public static <A, B> boolean hasConverter(Class<A> a, Class<B> b) {
-        return converters.hasConverter(a, b);
-    }
 
     /**
      * The net.minecraft.server.Packet class
      * <p>
      * Will be null if not found
      */
-    private static final Class<?> NMS_PACKET_CLASS;
-
-    static {
-
-        Optional<Class<?>> packet = ReflectionUtil.getClass(NMS, "Packet");
-        if (!packet.isPresent()) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Can't find NMS Packet base class.");
-            NMS_PACKET_CLASS = null;
-        } else {
-            NMS_PACKET_CLASS = packet.get();
-        }
-
-    }
+    private static final Class<?> NMS_PACKET_CLASS = ReflectionUtil.getClass(NMS, "Packet")
+            .orElseThrow(() -> new RuntimeException("Can't find NMS Packet base class."));
 
     private Class<?> packetClass;
-    private Object obj;
+    private Object rawPacket;
 
-    private Packet(Class<?> packetClass) throws Exception {
+    /**
+     * Creates a packet
+     * 
+     * @param packetClass The class of the packet
+     * @throws NoSuchMethodException if the packet has no default constructor
+     * @throws IllegalAccessException if I have no rights to use reflection
+     * @throws InvocationTargetException if the packet constructor threw an
+     *             error
+     * @throws InstantiationException if an error occurred finding something to
+     *             instantiate
+     */
+    private Packet(Class<?> packetClass) throws NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            InstantiationException {
         this(packetClass.getConstructor().newInstance());
-        this.packetClass = packetClass;
     }
 
+    /**
+     * @param packet The raw NMS packet
+     */
     private Packet(Object packet) {
-        this.obj = packet;
+        this.rawPacket = packet;
         this.packetClass = packet.getClass();
     }
 
     /**
      * Creates a new {@link Packet}
      *
-     * @param name the packet class name
+     * @param name the packet class name. Can be in two forms: "PacketXXX" or
+     *            "XXX" (e.g. "PacketPlayOutPosition" or "PlayOutPosition"
      *
      * @return a new Packet, or null if something went wrong
      *
      * @throws IllegalArgumentException if it couldn't find the specified packet
      *             class
+     * @throws RuntimeException wrapping any of the exceptions occurring due to
+     *             Reflection (i.e. {@link NoSuchMethodException},
+     *             {@link IllegalAccessException},
+     *             {@link InvocationTargetException},
+     *             {@link InstantiationException})
      */
     public static Packet create(String name) {
-        if (!name.startsWith("Packet")) {
-            name = "Packet" + name;
+        String packetName = name;
+        if (!packetName.startsWith("Packet")) {
+            packetName = "Packet" + packetName;
         }
 
-        Optional<Class<?>> oClass = $("{nms}." + name);
-
-        if (!oClass.isPresent()) {
-            throw new IllegalArgumentException("The packet class '" + name + "' could not be found!");
-        }
+        Class<?> packetClass = ReflectionUtil.getClass(NMS, packetName)
+                .orElseThrow(() -> new IllegalArgumentException("The packet class '" + name + "' could not be found!"));
 
         try {
-            return new Packet(oClass.get());
-        } catch (Exception e) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to create packet!", e);
-            return null;
+            return new Packet(packetClass);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            String message = "Failed to create packet!"
+                    + String.format("Name: %s, Replaced, %s Class: %s", name, packetName, packetClass);
+            throw new RuntimeException(message, e);
         }
     }
 
     /**
      * Creates a new Packet
      *
-     * @param obj The NMS packet object
+     * @param nmsPacket The NMS packet object
      *
      * @return The wrapping Packet
      *
      * @throws IllegalStateException if it couldn't find the NMS base class
      *             "Packet" (You are screwed)
      * @throws IllegalArgumentException if it isn't a packet.
+     * @throws RuntimeException if <i>some</i> error occurred instantiating the
+     *             {@link Packet}
      */
-    public static Packet createFromObject(Object obj) {
-        Objects.requireNonNull(obj, "obj can not be null");
-
-        if (obj instanceof Packet) {
-            return (Packet) obj;
-        }
+    public static Packet createFromNMSPacket(Object nmsPacket) {
+        Objects.requireNonNull(nmsPacket, "nmsPacket can not be null");
 
         if (NMS_PACKET_CLASS == null) {
-            throw new IllegalStateException("Could not find packet class!");
+            throw new IllegalStateException("Could not find packet class! Therefore this class is broken.");
         }
 
-        if (!NMS_PACKET_CLASS.isAssignableFrom(obj.getClass())) {
-            throw new IllegalArgumentException("You must pass a packet object!");
+        if (!ReflectionUtil.inheritsFrom(nmsPacket.getClass(), NMS_PACKET_CLASS)) {
+            throw new IllegalArgumentException("You must pass a 'Packet' object!");
         }
 
         try {
-            return new Packet(obj);
+            return new Packet(nmsPacket);
         } catch (Exception e) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING, "Failed to create packet!", e);
-            return null;
+            throw new RuntimeException("Failed to create packet!", e);
         }
     }
 
-    /** @return the NMS packet */
+    /**
+     * @return the NMS packet
+     */
     public Object getNMSPacket() {
-        return obj;
+        return rawPacket;
     }
 
     /**
      * Sets one of the fields of the packet
-     *
+     * 
      * @param field the field to set
      * @param value the value to set
      */
-    public void set(String field, Object value) {
-        ReflectionUtil.setFieldValue(field, packetClass, obj, value);
+    public ReflectResponse<Void> set(String field, Object value) {
+        return ReflectionUtil.setFieldValue(field, packetClass, rawPacket, value);
     }
 
     /**
@@ -208,7 +145,7 @@ public class Packet {
      * @return The field
      */
     public ReflectResponse<Object> get(String field) {
-        return ReflectionUtil.getFieldValue(field, packetClass, obj);
+        return ReflectionUtil.getFieldValue(field, packetClass, rawPacket);
     }
 
     /**
@@ -222,9 +159,10 @@ public class Packet {
         }
     }
 
-    /** @return the packet's class */
+    /**
+     * @return the packet's class
+     */
     public Class<?> getPacketClass() {
         return packetClass;
     }
-
 }

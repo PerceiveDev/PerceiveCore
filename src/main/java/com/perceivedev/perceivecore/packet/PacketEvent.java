@@ -21,7 +21,7 @@ public class PacketEvent {
      * @throws IllegalArgumentException if 'object' isn't a packet.
      */
     protected PacketEvent(Object packet, boolean cancelled, ConnectionDirection direction, Player player) {
-        this.packet = Packet.createFromObject(packet);
+        this.packet = Packet.createFromNMSPacket(packet);
         this.cancelled = cancelled;
         this.direction = direction;
         this.player = player;

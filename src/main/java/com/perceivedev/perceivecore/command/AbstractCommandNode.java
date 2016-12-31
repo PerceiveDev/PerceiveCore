@@ -203,7 +203,8 @@ public abstract class AbstractCommandNode implements CommandNode {
      *
      * @param sender The CommandSender to find it for
      * @param args The Arguments to pass
-     *
+     * @throws RuntimeException if the {@link CommandNode} returns {@code null}
+     *             in its execute method
      * @return The Result of invoking the command
      */
     public CommandResult findAndExecute(CommandSender sender, Collection<String> args) {
@@ -217,10 +218,9 @@ public abstract class AbstractCommandNode implements CommandNode {
                 commandFindResult.getRestArgs().toArray(new String[commandFindResult.getRestArgs().size()]));
 
         if (result == null) {
-            PerceiveCore.getInstance().getLogger().log(Level.WARNING,
-                    "Plugin returns null in on command " + commandFindResult.getCommandNode().getClass().getName());
+            throw new RuntimeException("Plugin returns null in on command " + commandFindResult.getCommandNode().getClass().getName());
         }
-        return result == null ? CommandResult.ERROR : result;
+        return result;
     }
 
     /**
