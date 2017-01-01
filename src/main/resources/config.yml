@@ -1,0 +1,9 @@
+# A global setting for all plugins using PcCore to update
+# Values:
+#   - "CHECK_AND_UPDATE"
+#     * Checks for updates and copies them to the update folder
+#   - "CHECK"
+#     * Checks for updates and notifies you, but doesn't download them
+#   - "DISABLED"
+#     * Doesn't even check
+global_update_settings: "CHECK_AND_UPDATE"

@@ -75,6 +75,9 @@ public class CurseAPIUpdater extends AbstractUpdater {
      */
     @Override
     public UpdateCheckResult searchForUpdate() {
+        if (getUpdateCheckSettings() == UpdateCheckSettings.DISABLED) {
+            return UpdateCheckResult.DISABLED;
+        }
         String fullUrl = BASE_URL + "?projectIds=" + slug;
 
         CurseProjectResponse[] elements = getCurseResponse(fullUrl);

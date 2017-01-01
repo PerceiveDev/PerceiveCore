@@ -1,7 +1,13 @@
 package com.perceivedev.perceivecore.updater;
 
+import java.util.Locale;
+
+import com.perceivedev.perceivecore.PerceiveCore;
+
 /**
  * A base updater
+ * <p>
+ * <b>Subclasses must respect {@link #getUpdateCheckSettings()}</b>
  */
 public interface Updater {
 
@@ -30,13 +36,22 @@ public interface Updater {
     UpdateResult update();
 
     /**
+     * @return The current global {@link UpdateCheckSettings}
+     */
+    default UpdateCheckSettings getUpdateCheckSettings() {
+        String updateSettings = PerceiveCore.getInstance().getConfig().getString("global_update_settings");
+        return UpdateCheckSettings.getFromString(updateSettings, UpdateCheckSettings.DISABLED);
+    }
+
+    /**
      * The result of updating
      */
     enum UpdateResult {
         SUCCESSFULLY_COPIED_TO_UPDATE_DIR,
         ERROR_WHILE_DOWNLOADING,
         ERROR_WHILE_CREATING_OUTPUT_FOLDER,
-        ERROR_WHILE_COPYING
+        ERROR_WHILE_COPYING,
+        DISABLED
     }
 
     /**
@@ -46,6 +61,34 @@ public interface Updater {
         NO_NEW_VERSION,
         UPDATE_FOUND,
         NOT_SEARCHED,
-        ERROR_SEARCHING
+        ERROR_SEARCHING,
+        DISABLED
+    }
+
+    /**
+     * The mode defined in the config
+     */
+    enum UpdateCheckSettings {
+        CHECK,
+        CHECK_AND_UPDATE,
+        DISABLED;
+
+        /**
+         * Parses a String to a setting
+         * 
+         * @param input The input String
+         * @param def The default value
+         * @return The parsed value or the default
+         */
+        public static UpdateCheckSettings getFromString(String input, UpdateCheckSettings def) {
+            if (input == null) {
+                return def;
+            }
+            try {
+                return valueOf(input.toUpperCase(Locale.ROOT).replace(" ", "_"));
+            } catch (IllegalArgumentException e) {
+                return def;
+            }
+        }
     }
 }

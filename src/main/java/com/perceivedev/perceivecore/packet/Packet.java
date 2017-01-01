@@ -132,6 +132,7 @@ public class Packet {
      * 
      * @param field the field to set
      * @param value the value to set
+     * @return The {@link ReflectResponse} detailing if it was successful
      */
     public ReflectResponse<Void> set(String field, Object value) {
         return ReflectionUtil.setFieldValue(field, packetClass, rawPacket, value);

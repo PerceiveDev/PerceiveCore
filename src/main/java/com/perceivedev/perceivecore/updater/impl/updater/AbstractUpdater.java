@@ -67,6 +67,10 @@ public abstract class AbstractUpdater implements Updater {
      * @return The result of updating
      */
     protected UpdateResult downloadAndCopy(UpdaterEntry entry, Function<String, String> nameTransformation) {
+        if (getUpdateCheckSettings() != UpdateCheckSettings.CHECK_AND_UPDATE) {
+            return UpdateResult.DISABLED;
+        }
+
         Objects.requireNonNull(entry, "entry can not be null!");
         Objects.requireNonNull(nameTransformation, "nameTransformation can not be null!");
 

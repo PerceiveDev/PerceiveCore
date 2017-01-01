@@ -18,6 +18,8 @@ public class PerceiveCore extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        saveDefaultConfig();
+
         logger = getLogger();
 
         disableManager = new DisableManager(this);
