@@ -1,28 +1,17 @@
 package com.perceivedev.perceivecore.updater.impl.updater;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.common.base.Throwables;
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
-import com.perceivedev.perceivecore.reflection.ReflectionUtil;
-import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
-import com.perceivedev.perceivecore.updater.UpdateStrategy;
+import com.google.gson.JsonSyntaxException;
 import com.perceivedev.perceivecore.updater.Updater;
 import com.perceivedev.perceivecore.updater.UpdaterEntry;
 
@@ -36,34 +25,16 @@ public class CurseAPIUpdater extends AbstractUpdater {
 
     private long slug;
 
-    private List<UpdaterEntry> entryList;
-
-    private Function<String, String> versionFromName = Function.identity();
-
     /**
      * @param plugin The {@link JavaPlugin} this updater belongs to
      * @param slug The slug to use
      */
     public CurseAPIUpdater(JavaPlugin plugin, long slug) {
         super(plugin);
-        this.slug = slug;
-    }
 
-    /**
-     * This extracts the raw version (XX.XX.XX) from the name
-     * <p>
-     * <br>
-     * <b>Example:</b>
-     * <br>
-     * "DecoHeads v1.4" {@code ==>} "1.4"
-     * <br>
-     * "Test plugin version 1.6.3" {@code ==>} "1.6.3"
-     * 
-     * @param versionFromName This function extracts the raw version (XX.XX.XX)
-     *            from the name
-     */
-    public void setVersionFromName(Function<String, String> versionFromName) {
-        this.versionFromName = versionFromName;
+        Preconditions.checkArgument(slug > 0, "Slug must be greater than 0!");
+
+        this.slug = slug;
     }
 
     /**
@@ -84,7 +55,7 @@ public class CurseAPIUpdater extends AbstractUpdater {
 
         LocalDateTime lastTime = LocalDateTime.now().minusDays(20);
 
-        entryList = new ArrayList<>(elements.length);
+        List<UpdaterEntry> entryList = new ArrayList<>(elements.length);
 
         for (CurseProjectResponse element : elements) {
             URL url;
@@ -97,7 +68,7 @@ public class CurseAPIUpdater extends AbstractUpdater {
                 continue;
             }
 
-            String version = versionFromName.apply(element.name);
+            String version = getVersionFromName().apply(element.name);
             UpdaterEntry entry = new UpdaterEntry(element.name, version, lastTime, url);
 
             // filter invalid
@@ -110,63 +81,15 @@ public class CurseAPIUpdater extends AbstractUpdater {
             lastTime = lastTime.plusSeconds(10);
         }
 
-        @SuppressWarnings("unchecked")
-        UpdateStrategy<Object> strategy = (UpdateStrategy<Object>) getUpdateStrategy();
+        sortUpdaterEntries(entryList);
 
-        entryList.sort((o1, o2) -> {
-            Object identifierOne = strategy.identifierFromEntry(o1);
-            Object identifierTwo = strategy.identifierFromEntry(o2);
-            if (identifierOne == null && identifierTwo == null) {
-                return 0;
-            }
-            if (identifierOne == null) {
-                return -1;
-            }
-            if (identifierTwo == null) {
-                return 1;
-            }
-
-            // sort highest to lowest
-            return strategy.compare(identifierTwo, identifierOne);
-        });
+        setEntryList(entryList);
 
         if (entryList.isEmpty()) {
             return UpdateCheckResult.NO_NEW_VERSION;
         }
 
-        String pluginVersion = getPlugin().getDescription().getVersion();
-
-        UpdaterEntry newestEntry = entryList.get(0);
-
-        // it is exactly the same
-        if (newestEntry.getVersion().equalsIgnoreCase(pluginVersion)) {
-            return UpdateCheckResult.NO_NEW_VERSION;
-        }
-
-        File pluginJar = returnPluginJar(getPlugin());
-
-        UpdaterEntry thisPluginJar = new UpdaterEntry(
-                getPlugin().getName(),
-                getPlugin().getDescription().getVersion(),
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(pluginJar.lastModified()), ZoneId.systemDefault()),
-                null);
-
-        {
-            Object newestIdentifier = strategy.identifierFromEntry(newestEntry);
-            Object thisIdentifier = strategy.identifierFromEntry(thisPluginJar);
-
-            if (strategy.compare(thisIdentifier, newestIdentifier) >= 0) {
-                return UpdateCheckResult.NO_NEW_VERSION;
-            }
-        }
-
-        return UpdateCheckResult.UPDATE_FOUND;
-    }
-
-    private File returnPluginJar(JavaPlugin plugin) {
-        return (File) ReflectionUtil
-                .invokeMethod(JavaPlugin.class, new MethodPredicate().withName("getFile"), plugin)
-                .getValueOrThrow();
+        return compareEntryWithCurrentlyRunning(entryList.get(0));
     }
 
     /**
@@ -179,15 +102,7 @@ public class CurseAPIUpdater extends AbstractUpdater {
      */
     @Override
     public UpdateResult update() {
-        return downloadAndCopy(getEntryList().get(0), Function.identity());
-    }
-
-    /**
-     * @return All entries pulled in the last {@link #searchForUpdate()} method
-     *         call
-     */
-    public List<UpdaterEntry> getEntryList() {
-        return Collections.unmodifiableList(entryList);
+        return getEntryList().isEmpty() ? UpdateResult.NO_UPDATE_FOUND : downloadAndCopy(getEntryList().get(0), getFinalNameTransform());
     }
 
     /**
@@ -195,22 +110,15 @@ public class CurseAPIUpdater extends AbstractUpdater {
      * 
      * @param urlString The url of the website
      * @return The parsed JSONArray
+     * @throws RuntimeException Wrapping a {@link JsonSyntaxException}, if the
+     *             JSON is malformed
+     * @see #readWebsiteContent(String)
      */
     private CurseProjectResponse[] getCurseResponse(String urlString) {
-        URL url;
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw Throwables.propagate(e);
-        }
-
-        try (InputStream inputStream = url.openStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader reader = new BufferedReader(inputStreamReader)) {
-
-            return GSON.fromJson(reader, CurseProjectResponse[].class);
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading from the curse API", e);
+            return GSON.fromJson(readWebsiteContent(urlString), CurseProjectResponse[].class);
+        } catch (JsonSyntaxException e) {
+            throw new RuntimeException("Error reading from Curse API, JSON malformed", e);
         }
     }
 

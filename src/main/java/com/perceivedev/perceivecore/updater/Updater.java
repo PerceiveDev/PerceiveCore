@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.updater;
 
+import java.util.List;
 import java.util.Locale;
 
 import com.perceivedev.perceivecore.PerceiveCore;
@@ -36,6 +37,12 @@ public interface Updater {
     UpdateResult update();
 
     /**
+     * @return All entries pulled in the last {@link #searchForUpdate()} method
+     *         call
+     */
+    List<UpdaterEntry> getEntryList();
+
+    /**
      * @return The current global {@link UpdateCheckSettings}
      */
     default UpdateCheckSettings getUpdateCheckSettings() {
@@ -51,6 +58,7 @@ public interface Updater {
         ERROR_WHILE_DOWNLOADING,
         ERROR_WHILE_CREATING_OUTPUT_FOLDER,
         ERROR_WHILE_COPYING,
+        NO_UPDATE_FOUND,
         DISABLED
     }
 
