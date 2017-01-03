@@ -247,6 +247,10 @@ public class ItemFactory implements Cloneable {
 
     /**
      * Sets the owner of a player head.
+     * <p>
+     * It will automatically call {@link #setDurability(short)} with 3 (player
+     * head), so you only need to make sure the type is
+     * {@link Material#SKULL_ITEM}
      *
      * @param name The name of the player
      *
@@ -260,6 +264,9 @@ public class ItemFactory implements Cloneable {
         Objects.requireNonNull(name, "name can not be null");
 
         if (itemStack.getType() == Material.SKULL_ITEM) {
+            // make it a player skull!
+            setDurability((short) 3);
+
             SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
             skullMeta.setOwner(name);
             itemStack.setItemMeta(skullMeta);
