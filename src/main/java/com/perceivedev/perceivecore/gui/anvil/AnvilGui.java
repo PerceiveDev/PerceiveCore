@@ -47,11 +47,31 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
                 false);
     }
 
+    /**
+     * Called when this gui is displayed to a player
+     * <p>
+     * {@link #getPlayer()} is already set at this point
+     * <p>
+     * <br>
+     * <strong><em>Must be called by sub classes, or the Gui WILL NOT
+     * WORK</em></strong>
+     *
+     * @param previous The previous Gui that was displayed. {@code null} if this
+     *            is the first
+     */
     @Override
     protected void onDisplay(Gui previous) {
         getPlayer().ifPresent(player -> PacketManager.getInstance().addListener(listener, player));
     }
 
+    /**
+     * Called when the Gui is closed. You may overwrite it to listen to close
+     * events
+     * <p>
+     * <br>
+     * <strong><em>Must be called by sub classes, or the Gui WILL NOT
+     * WORK</em></strong>
+     */
     @Override
     protected void onClose() {
         getPlayer().ifPresent(player -> PacketManager.getInstance().removeListener(listener, player));
