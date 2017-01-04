@@ -18,7 +18,7 @@
  * <br><b>General workflow:</b>
  * <ol>
  *     <li>
- *         </b>{@link com.perceivedev.perceivecore.updater.Updater#searchForUpdate() Updater#searchForUpdate()}</b>
+ *         <b>{@link com.perceivedev.perceivecore.updater.Updater#searchForUpdate() Updater#searchForUpdate()}</b>
  *         <br>This will return an {@link com.perceivedev.perceivecore.updater.Updater.UpdateCheckResult UpdateCheckResult}.
  *             Decide what you want to do with it, maybe notify, check if auto-update is on.
  *         <br>You can also check {@link com.perceivedev.perceivecore.updater.Updater#getUpdateCheckSettings() Updater#getUpdateCheckSettings()}, which returns
