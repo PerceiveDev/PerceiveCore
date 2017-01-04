@@ -15,6 +15,7 @@ import com.perceivedev.perceivecore.gui.components.Button;
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
 import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.packet.PacketManager;
+import com.perceivedev.perceivecore.util.ItemFactory;
 
 /**
  * A Gui taking input by allowing the user to write something in an Anvil
@@ -26,6 +27,8 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
     private Consumer<Optional<String>> callback;
 
     /**
+     * It will add a Paper with the name " " as the default item.
+     * 
      * @param name The name of the Gui
      * @param callback The callback
      */
@@ -36,6 +39,12 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
 
         Objects.requireNonNull(callback, "callback cannot be null!");
         this.callback = callback;
+
+        // Set the item to a paper with a space. This makes it actually work as
+        // an input (Can be any item)
+        setItem(AnvilSlot.INPUT_LEFT,
+                ItemFactory.builder(Material.PAPER).setName(" ").build(),
+                false);
     }
 
     @Override
