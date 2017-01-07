@@ -447,7 +447,7 @@ public abstract class AbstractCommandNode implements CommandNode {
      * @return The Result of invoking this command
      */
     protected CommandResult executeBlock(BlockCommandSender block, String... args) {
-        return executeBlock(block, args);
+        return executeGeneral(block, args);
     }
 
     // -------------------- Tab completion -------------------- //
