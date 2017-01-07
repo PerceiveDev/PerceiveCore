@@ -119,6 +119,24 @@ public class SphericalCoordinates implements Cloneable {
     }
 
     /**
+     * Converts Spherical Coordinates to Cartesian and accounts for Minecraft's
+     * y-z swap
+     * 
+     * @return The Coordinates in the cartesian coordinate system <b>and</b> y
+     *         and z switched
+     */
+    public Vector toBukkitCartesian() {
+        Vector vector = toCartesian();
+
+        // swap y and z
+        double y = vector.getY();
+        vector.setY(vector.getZ());
+        vector.setZ(y);
+
+        return vector;
+    }
+
+    /**
      * Converts cartesian coordinates to Spherical ones
      * 
      * @param x The x coordinate
