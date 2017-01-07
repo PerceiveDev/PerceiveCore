@@ -246,7 +246,23 @@ public abstract class AbstractCommandNode implements CommandNode {
 
         // use the generic method
         if (getAcceptedCommandSenders().contains(CommandSenderType.ALL) || getAcceptedCommandSenders().contains(CommandSenderType.UNKNOWN)) {
-            return executeGeneral(sender, args);
+            CommandSenderType type = CommandSenderType.getType(sender);
+            switch (type) {
+                case ALL:
+                case CONSOLE:
+                case UNKNOWN: {
+                    return executeGeneral(sender, args);
+                }
+                case BLOCK: {
+                    return executeBlock((BlockCommandSender) sender, args);
+                }
+                case PLAYER: {
+                    return executePlayer((Player) sender, args);
+                }
+                default: {
+                    return executeGeneral(sender, args);
+                }
+            }
         }
 
         if (sender instanceof Player) {
@@ -412,7 +428,7 @@ public abstract class AbstractCommandNode implements CommandNode {
      * @return The Result of invoking this command
      */
     protected CommandResult executePlayer(Player player, String... args) {
-        return CommandResult.SEND_USAGE;
+        return executeGeneral(player, args);
     }
 
     /**
@@ -431,7 +447,7 @@ public abstract class AbstractCommandNode implements CommandNode {
      * @return The Result of invoking this command
      */
     protected CommandResult executeBlock(BlockCommandSender block, String... args) {
-        return CommandResult.SEND_USAGE;
+        return executeBlock(block, args);
     }
 
     // -------------------- Tab completion -------------------- //
