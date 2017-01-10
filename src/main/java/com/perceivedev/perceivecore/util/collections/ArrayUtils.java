@@ -26,10 +26,8 @@ public class ArrayUtils {
      * @param filler the String to concatenate the objects with
      *
      * @return The concatenated String
-     * @deprecated Use {@link String#join(CharSequence, CharSequence...)}
-     *             instead
+     * @see String#join(CharSequence, CharSequence...)
      */
-    @Deprecated
     @Nonnull
     public static String concat(@Nonnull Object[] arr, @Nonnull String filler) {
         Objects.requireNonNull(arr, "array can not be null");
