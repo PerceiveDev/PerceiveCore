@@ -529,10 +529,13 @@ public class PagedPane extends AbstractPane implements FixedPositionPane, Freefo
 
             originalButton.ifPresent(page::removeComponent);
 
-            String buttonName = language.tr(baseKey + ".name", index + pageMod + 1, pagedPane.getPageCount());
-            String buttonLoreOne = language.tr(baseKey + ".lore.one", index + pageMod + 1, pagedPane.getPageCount());
-            String buttonLoreTwo = language.tr(baseKey + ".lore.two", index + pageMod + 1, pagedPane.getPageCount());
-            String materialName = language.tr(baseKey + ".material", index + pageMod + 1, pagedPane.getPageCount());
+            String buttonName = language.translate(baseKey + ".name", index + pageMod + 1, pagedPane.getPageCount());
+            String buttonLoreOne = language.translate(baseKey + ".lore.one", index + pageMod + 1, pagedPane
+                    .getPageCount());
+            String buttonLoreTwo = language.translate(baseKey + ".lore.two", index + pageMod + 1, pagedPane
+                    .getPageCount());
+            String materialName = language.translate(baseKey + ".material", index + pageMod + 1, pagedPane
+                    .getPageCount());
             Material material = Material.matchMaterial(materialName) == null
                                 ? Material.WOOL
                                 : Material.matchMaterial(materialName);

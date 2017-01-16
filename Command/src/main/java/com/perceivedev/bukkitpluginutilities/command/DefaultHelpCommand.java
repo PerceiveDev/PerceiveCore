@@ -224,13 +224,13 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
             {
                 if (showUsage) {
                     String key = "command.help.format.with.usage";
-                    finalString = language.trOrDefault(key,
+                    finalString = language.translateOrDefault(key,
                             "&3{0}&9: &7{1} &7<&6{2}&7><newline>  &cUsage: {3}",
                             new Object[]{node.getName(), node.getDescription(), childrenAmount, node.getUsage()});
                 }
                 else {
                     String key = "command.help.format.without.usage";
-                    finalString = language.trOrDefault(key,
+                    finalString = language.translateOrDefault(key,
                             "&3{0}&9: &7{1} &7<&6{2}&7>",
                             new Object[]{node.getName(), node.getDescription(), childrenAmount, node.getUsage()});
                 }
@@ -241,12 +241,12 @@ public class DefaultHelpCommand extends TranslatedCommandNode {
 
             for (String s : finalString.split("<newline>")) {
                 if (depth == 0) {
-                    s = colorize(language.trOrDefault("command.help.top.level.prefix", "")) + s;
+                    s = colorize(language.translateOrDefault("command.help.top.level.prefix", "")) + s;
                 }
                 else {
-                    s = colorize(language.trOrDefault("command.help.sub.level.prefix", "")) + s;
+                    s = colorize(language.translateOrDefault("command.help.sub.level.prefix", "")) + s;
                 }
-                s = TextUtils.repeat(language.trOrDefault("command.help.padding.char", "  "), depth) + s;
+                s = TextUtils.repeat(language.translateOrDefault("command.help.padding.char", "  "), depth) + s;
 
                 if (!s.isEmpty()) {
                     list.add(s);

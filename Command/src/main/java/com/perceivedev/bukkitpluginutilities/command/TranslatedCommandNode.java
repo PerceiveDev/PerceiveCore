@@ -75,27 +75,27 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
 
     @Override
     public boolean isYourKeyword(String string) {
-        return string.matches(messageProvider.trUncolored(keywordRegExKey));
+        return string.matches(messageProvider.translateUncolored(keywordRegExKey));
     }
 
     @Override
     public String getKeyword() {
-        return messageProvider.tr(keywordKey);
+        return messageProvider.translate(keywordKey);
     }
 
     @Override
     public String getUsage() {
-        return messageProvider.tr(usageKey);
+        return messageProvider.translate(usageKey);
     }
 
     @Override
     public String getDescription() {
-        return messageProvider.tr(descriptionKey);
+        return messageProvider.translate(descriptionKey);
     }
 
     @Override
     public String getName() {
-        return messageProvider.tr(nameKey);
+        return messageProvider.translate(nameKey);
     }
 
     /**
@@ -117,12 +117,12 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
      *
      * @return The translated message
      *
-     * @see MessageProvider#tr(String,
+     * @see MessageProvider#translate(String,
      * String, Object[])
      */
     @SuppressWarnings("unused")
-    protected String tr(String key, String category, Object... formattingObjects) {
-        return messageProvider.tr(key, category, formattingObjects);
+    protected String translate(String key, String category, Object... formattingObjects) {
+        return messageProvider.translate(key, category, formattingObjects);
     }
 
     /**
@@ -133,12 +133,12 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
      *
      * @return The translated message
      *
-     * @see MessageProvider#tr(String,
+     * @see MessageProvider#translate(String,
      * Object[])
      */
     @SuppressWarnings("unused")
-    protected String tr(String key, Object... formattingObjects) {
-        return messageProvider.tr(key, formattingObjects);
+    protected String translate(String key, Object... formattingObjects) {
+        return messageProvider.translate(key, formattingObjects);
     }
 
 }

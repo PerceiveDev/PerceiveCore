@@ -582,11 +582,11 @@ public class Pager {
             Objects.requireNonNull(sender, "Sender can not be null");
             Objects.requireNonNull(language, "Language can not be null");
 
-            sender.sendMessage(language.trOrDefault(headerKey,
+            sender.sendMessage(language.translateOrDefault(headerKey,
                     "\n&a&l+&8&m-------------&a&l Page &8(&a{0}&8/&2{1}&8) &8&m----------------&a&l+\n ",
                     pageIndex + 1, maxPages));
             entries.forEach(s -> sender.sendMessage(TextUtils.colorize(s)));
-            sender.sendMessage(language.trOrDefault(footerKey,
+            sender.sendMessage(language.translateOrDefault(footerKey,
                     "\n&a&l+&8&m-----------------&8 (&a{0}&8/&2{1}&8) &8&m------------------&a&l+\n ",
                     pageIndex + 1, maxPages));
         }

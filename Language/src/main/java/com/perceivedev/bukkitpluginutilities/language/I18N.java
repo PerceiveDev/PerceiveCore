@@ -244,7 +244,7 @@ public class I18N implements MessageProvider {
         Matcher matcher = REFERENCE_PATTERN.matcher(string);
         while (matcher.find()) {
             String found = matcher.group(1);
-            String resolved = tr(found, category);
+            String resolved = translate(found, category);
             result = result.replace("[[" + found + "]]", resolved);
         }
         return result;
@@ -252,7 +252,8 @@ public class I18N implements MessageProvider {
 
     @Override
     @Nonnull
-    public String trOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, @Nonnull
+    public String translateOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, 
+                                     @Nonnull
             Object... formattingObjects) {
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
@@ -277,7 +278,7 @@ public class I18N implements MessageProvider {
      */
     @Override
     @Nonnull
-    public String trUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+    public String translateUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(category, "category can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
@@ -299,12 +300,12 @@ public class I18N implements MessageProvider {
      *
      * @return The translated, uncolored String
      *
-     * @see #trUncolored(String, String, Object...)
+     * @see #translateUncolored(String, String, Object...)
      */
     @Override
     @Nonnull
-    public String trUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
-        return trUncolored(key, defaultCategory, formattingObjects);
+    public String translateUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
+        return translateUncolored(key, defaultCategory, formattingObjects);
     }
 
     @Override
