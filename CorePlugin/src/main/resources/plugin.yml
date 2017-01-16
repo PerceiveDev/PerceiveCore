@@ -1,5 +1,5 @@
 name: CorePlugin
 version: ${project.version}
-main: me.ialistannen.bukkitpluginutilities.coreplugin.CorePlugin
+main: CorePlugin
 authors: [I_Al_Istannen]
 description: The core plugin

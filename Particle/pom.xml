@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BukkitUtilities</artifactId>
-        <groupId>me.ialistannen</groupId>
+        <groupId>com.perceivedev</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,13 +15,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.ialistannen</groupId>
+            <groupId>com.perceivedev</groupId>
             <artifactId>CorePlugin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.ialistannen</groupId>
+            <groupId>com.perceivedev</groupId>
             <artifactId>ModuleSystem</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
