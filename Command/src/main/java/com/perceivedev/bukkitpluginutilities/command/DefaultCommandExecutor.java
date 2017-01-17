@@ -48,8 +48,11 @@ public class DefaultCommandExecutor implements CommandExecutor {
         CommandFindResult findResult = tree.find(commandSender, arguments);
 
         if (!findResult.wasFound()) {
-            commandSender.sendMessage(language.translateOrDefault(LANGUAGE_PREFIX + "not.found", "&cCommand not found" +
-                    "."));
+            commandSender.sendMessage(
+                    language.translateOrDefault(
+                            LANGUAGE_PREFIX + "not.found", "&cCommand not found."
+                    )
+            );
             return true;
         }
 
@@ -60,19 +63,28 @@ public class DefaultCommandExecutor implements CommandExecutor {
         }
         switch (result) {
             case NO_PERMISSION: {
-                commandSender.sendMessage(language.translateOrDefault(LANGUAGE_PREFIX + "no.permission", "&cNo permission!"));
+                commandSender.sendMessage(
+                        language.translateOrDefault(
+                                LANGUAGE_PREFIX + "no.permission", "&cNo permission!"
+                        )
+                );
                 return true;
             }
             case ERROR: {
-                commandSender.sendMessage(language.translateOrDefault(LANGUAGE_PREFIX + "error.invoking", "&cAn internal " +
-                        "error occurred!"));
+                commandSender.sendMessage(
+                        language.translateOrDefault(
+                                LANGUAGE_PREFIX + "error.invoking", "&cAn internal error occurred!")
+                );
                 return true;
             }
             case SEND_USAGE: {
-                commandSender.sendMessage(language.translateOrDefault(LANGUAGE_PREFIX + "usage", "&cUsage: {0}", (Object)
-                        findResult
-                                .getCommandNode()
-                                .getUsage()));
+                commandSender.sendMessage(
+                        language.translateOrDefault(
+                                LANGUAGE_PREFIX + "usage",
+                                "&cUsage: {0}",
+                                findResult.getCommandNode().getUsage()
+                        )
+                );
                 return true;
             }
             case SUCCESSFULLY_INVOKED: {

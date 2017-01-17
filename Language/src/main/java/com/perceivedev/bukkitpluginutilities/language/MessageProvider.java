@@ -21,15 +21,18 @@ public interface MessageProvider {
      *
      * @return The translated, colored String
      *
-     * @see #translateUncolored(String, String, Object...)
+     * @see #translateCategoryUncolored(String, String, Object...)
      */
     @Nonnull
-    default String translate(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+    default String translateCategory(@Nonnull String key, @Nonnull String category,
+                                     @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(category, "category can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
-        return ChatColor.translateAlternateColorCodes('&', translateUncolored(key, category, formattingObjects));
+        return ChatColor.translateAlternateColorCodes(
+                '&', translateCategoryUncolored(key, category, formattingObjects)
+        );
     }
 
     /**
@@ -40,7 +43,7 @@ public interface MessageProvider {
      *
      * @return The translated, colored String
      *
-     * @see #translate(String, String, Object...) #translate(String, String, Object...) with
+     * @see #translateCategory(String, String, Object...) #translateCategory(String, String, Object...) with
      * the default category
      */
     @SuppressWarnings("unused")
@@ -63,8 +66,8 @@ public interface MessageProvider {
      * @return The translated String
      */
     @Nonnull
-    String translateOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, @Nonnull
-            Object... formattingObjects);
+    String translateCategoryOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString,
+                                      @Nonnull Object... formattingObjects);
 
     /**
      * Translates the message if found, otherwise translates the passed String
@@ -75,18 +78,18 @@ public interface MessageProvider {
      *
      * @return The translated String
      *
-     * @see #translateOrDefault(String, String, String, Object...) #translateOrDefault(String,
+     * @see #translateCategoryOrDefault(String, String, String, Object...) #translateCategoryOrDefault(String,
      * String, String, Object...) with the #getDefaultCategory()
      */
     @SuppressWarnings("unused")
     @Nonnull
-    default String translateOrDefault(@Nonnull String key, @Nonnull String defaultString, @Nonnull Object...
-            formattingObjects) {
+    default String translateOrDefault(@Nonnull String key, @Nonnull String defaultString,
+                                      @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(defaultString, "defaultString can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
-        return translateOrDefault(key, getDefaultCategory(), defaultString, formattingObjects);
+        return translateCategoryOrDefault(key, getDefaultCategory(), defaultString, formattingObjects);
     }
 
     /**
@@ -99,7 +102,8 @@ public interface MessageProvider {
      * @return The translated, uncolored String
      */
     @Nonnull
-    String translateUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects);
+    String translateCategoryUncolored(@Nonnull String key, @Nonnull String category,
+                                      @Nonnull Object... formattingObjects);
 
     /**
      * Translates a message <b>and doesn't color it</b>
@@ -109,7 +113,7 @@ public interface MessageProvider {
      *
      * @return The translated, uncolored String
      *
-     * @see #translateUncolored(String, String, Object...) #translateUncolored(String, String,
+     * @see #translateCategoryUncolored(String, String, Object...) #translateCategoryUncolored(String, String,
      * Object...) with the default category
      */
     @Nonnull
@@ -117,7 +121,7 @@ public interface MessageProvider {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
-        return translateUncolored(key, getDefaultCategory(), formattingObjects);
+        return translateCategoryUncolored(key, getDefaultCategory(), formattingObjects);
     }
 
     /**

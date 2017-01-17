@@ -40,6 +40,7 @@ import javax.annotation.Nonnull;
 public class I18N implements MessageProvider {
 
     private static final Logger LOGGER = Logger.getLogger("I18N");
+    private static final String PREFIX = "[I18N] ";
 
     /**
      * Regex it find things references e.g.
@@ -130,7 +131,7 @@ public class I18N implements MessageProvider {
 
         categories.forEach(category -> {
             if (!createBundle(category)) {
-                LOGGER.warning("Not found: " + category);
+                LOGGER.warning(PREFIX + "Not found: " + category);
             }
         });
     }
@@ -252,9 +253,9 @@ public class I18N implements MessageProvider {
 
     @Override
     @Nonnull
-    public String translateOrDefault(@Nonnull String key, @Nonnull String category, @Nonnull String defaultString, 
-                                     @Nonnull
-            Object... formattingObjects) {
+    public String translateCategoryOrDefault(@Nonnull String key, @Nonnull String category,
+                                             @Nonnull String defaultString,
+                                             @Nonnull Object... formattingObjects) {
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Unknown category");
         }
@@ -278,7 +279,8 @@ public class I18N implements MessageProvider {
      */
     @Override
     @Nonnull
-    public String translateUncolored(@Nonnull String key, @Nonnull String category, @Nonnull Object... formattingObjects) {
+    public String translateCategoryUncolored(@Nonnull String key, @Nonnull String category,
+                                             @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
         Objects.requireNonNull(category, "category can not be null");
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
@@ -300,12 +302,12 @@ public class I18N implements MessageProvider {
      *
      * @return The translated, uncolored String
      *
-     * @see #translateUncolored(String, String, Object...)
+     * @see #translateCategoryUncolored(String, String, Object...)
      */
     @Override
     @Nonnull
     public String translateUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
-        return translateUncolored(key, defaultCategory, formattingObjects);
+        return translateCategoryUncolored(key, defaultCategory, formattingObjects);
     }
 
     @Override

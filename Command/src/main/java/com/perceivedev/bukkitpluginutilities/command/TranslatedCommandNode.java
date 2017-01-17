@@ -117,12 +117,11 @@ public abstract class TranslatedCommandNode extends AbstractCommandNode {
      *
      * @return The translated message
      *
-     * @see MessageProvider#translate(String,
-     * String, Object[])
+     * @see MessageProvider#translateCategory(String, String, Object[])
      */
     @SuppressWarnings("unused")
-    protected String translate(String key, String category, Object... formattingObjects) {
-        return messageProvider.translate(key, category, formattingObjects);
+    protected String translateCategory(String key, String category, Object... formattingObjects) {
+        return messageProvider.translateCategory(key, category, formattingObjects);
     }
 
     /**
