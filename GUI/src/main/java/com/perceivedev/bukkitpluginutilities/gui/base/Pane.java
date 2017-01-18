@@ -18,6 +18,12 @@ public interface Pane extends Component {
     boolean removeComponent(Component component);
 
     /**
+     * Removes <i>all</i> components.
+     */
+    @SuppressWarnings("unused")
+    void removeAllComponents();
+
+    /**
      * Checks if the Pane contains the {@link Component}.
      *
      * @param component The {@link Component}

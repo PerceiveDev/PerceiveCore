@@ -6,7 +6,7 @@ package com.perceivedev.bukkitpluginutilities.gui.base;
 public interface FixedPositionPane extends Pane {
 
     /**
-     * Adds a {@link Component}
+     * Adds a {@link Component}, if there isn't one at the given coordinates already
      *
      * @param component The {@link Component} to add
      * @param x The x index

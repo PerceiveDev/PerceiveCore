@@ -6,7 +6,7 @@ package com.perceivedev.bukkitpluginutilities.gui.base;
 public interface FreeformPane extends Pane {
 
     /**
-     * Adds a {@link Component}
+     * Adds a {@link Component}, if possible. If all space is blocked, it will do nothing.
      *
      * @param component The {@link Component} to add
      *

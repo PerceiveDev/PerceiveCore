@@ -142,6 +142,13 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
     }
 
     @Override
+    public void removeAllComponents() {
+        for (Component component : new ArrayList<>(components)) {
+            removeComponent(component);
+        }
+    }
+
+    @Override
     public boolean requestReRender() {
         if (ownerGui == null) {
             return false;
