@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.perceivedev</groupId>
-    <artifactId>BukkitUtilities</artifactId>
+    <artifactId>PerceiveCore</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>BukkitUtilities</name>
+    <name>PerceiveCore</name>
 
     <description>Provides some utility methods to ease working with bukkit</description>
     <properties>

@@ -1,5 +1,5 @@
-name: CorePlugin
+name: PerceiveCore
 version: ${project.version}
-main: com.perceivedev.bukkitpluginutilities.coreplugin.CorePlugin
+main: com.perceivedev.perceivecore.coreplugin.PerceiveCore
 authors: [I_Al_Istannen]
 description: The core plugin

@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.perceivedev</groupId>
-        <artifactId>BukkitUtilities</artifactId>
+        <artifactId>PerceiveCore</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -17,4 +17,8 @@
     <name>ModuleSystem</name>
 
     <description>The module representing the module system.</description>
+
+    <build>
+        <finalName>ModuleSystem</finalName>
+    </build>
 </project>
