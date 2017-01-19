@@ -1,5 +1,6 @@
 package com.perceivedev.perceivecore.config.util;
 
+import java.io.File;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -14,7 +15,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.config.ConfigSerializable;
 import com.perceivedev.perceivecore.config.SerializationManager;
-import com.perceivedev.perceivecore.utilities.text.TextUtils;
 
 /**
  * DataManager is an extension of a Map that supports saving and loading
@@ -91,7 +91,7 @@ public abstract class DataManager <K, V extends ConfigSerializable> {
      */
     @SuppressWarnings("unused")
     public DataManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
-        this(plugin.getDataFolder().toPath().resolve(TextUtils.normalizePathName(path)), keyClass, dataClass);
+        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);
     }
 
     /**
@@ -340,4 +340,15 @@ public abstract class DataManager <K, V extends ConfigSerializable> {
      */
     @SuppressWarnings("unused")
     public abstract void load();
+
+    /**
+     * Normalizes a path name
+     *
+     * @param path The Path name to normalize
+     *
+     * @return The normalized path name
+     */
+    protected static String normalizePathName(String path) {
+        return path.replace("/", File.separator).replace("\\", File.separator);
+    }
 }

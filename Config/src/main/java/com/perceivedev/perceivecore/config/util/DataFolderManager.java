@@ -17,7 +17,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.perceivedev.perceivecore.config.ConfigSerializable;
 import com.perceivedev.perceivecore.config.SerializationManager;
-import com.perceivedev.perceivecore.utilities.text.TextUtils;
 
 
 /**
@@ -71,7 +70,7 @@ public class DataFolderManager <K, V extends ConfigSerializable> extends DataMan
      * @see #DataFolderManager(Path, Class, Class)
      */
     public DataFolderManager(Plugin plugin, String path, Class<K> keyClass, Class<V> dataClass) {
-        this(plugin.getDataFolder().toPath().resolve(TextUtils.normalizePathName(path)), keyClass, dataClass);
+        this(plugin.getDataFolder().toPath().resolve(normalizePathName(path)), keyClass, dataClass);
     }
 
     @Override

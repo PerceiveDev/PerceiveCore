@@ -23,11 +23,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.perceivedev.perceivecore.config.handlers.EnumSerializer;
 import com.perceivedev.perceivecore.config.handlers.LocationSerializer;
 import com.perceivedev.perceivecore.config.handlers.MapSerializer;
+import com.perceivedev.perceivecore.config.handlers.PotionEffectSerializer;
 import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
@@ -84,6 +86,7 @@ public class SerializationManager {
         addSerializationProxy(UUID.class, new UUIDSerializer());
         addSerializationProxy(Map.class, new MapSerializer());
         addSerializationProxy(Enum.class, new EnumSerializer());
+        addSerializationProxy(PotionEffect.class, new PotionEffectSerializer());
     }
 
     /**
