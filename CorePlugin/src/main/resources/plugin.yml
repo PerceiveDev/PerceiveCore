@@ -1,5 +1,5 @@
 name: PerceiveCore
 version: ${project.version}
 main: com.perceivedev.perceivecore.coreplugin.PerceiveCore
-authors: [I_Al_Istannen]
+authors: [PerceiveDev team]
 description: The core plugin
