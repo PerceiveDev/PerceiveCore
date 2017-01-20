@@ -3,6 +3,8 @@ package com.perceivedev.perceivecore.coreplugin;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.perceivedev.perceivecore.modulesystem.Module;
 import com.perceivedev.perceivecore.modulesystem.ModuleLoader;
+import com.perceivedev.perceivecore.modulesystem.ModuleLoader.PostponedMessage;
 import com.perceivedev.perceivecore.modulesystem.ModuleManager;
 import com.perceivedev.perceivecore.utilities.disable.DisableManager;
 
@@ -32,14 +35,19 @@ public final class PerceiveCore extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+        
+        saveDefaultConfig();
 
         getLogger().info("I have loaded "
                 + ModuleManager.INSTANCE.getModuleAmount()
                 + " module(s) at class construction.");
 
+        if (!moduleLoader.getPostponedMessages().isEmpty()) {
+            printPostponed(moduleLoader);
+        }
 
         if (!ModuleManager.INSTANCE.getModuleByName("Utilities").isPresent()) {
-            printError(
+            printError("error",
                     "Module 'Utilities' not found",
                     "The Utilities module is not installed.",
                     String.format(Locale.ROOT,
@@ -87,6 +95,29 @@ public final class PerceiveCore extends JavaPlugin {
         return instance;
     }
 
+    /**
+     * Prints all {@link PostponedMessage}s
+     *
+     * @param loader The {@link ModuleLoader} to get the {@link PostponedMessage}s from
+     */
+    private void printPostponed(ModuleLoader loader) {
+        if (getConfig().getBoolean("print-raw")) {
+            getLogger().warning("I have a few things to tell you:");
+        }
+        else {
+            Bukkit.getConsoleSender().sendMessage(color("&cI got a few things to tell you!"));
+        }
+        for (PostponedMessage postponedMessage : loader.getPostponedMessages()) {
+            String type = postponedMessage.getLevel().toString().toLowerCase();
+            printError(
+                    type,
+                    postponedMessage.getError(),
+                    postponedMessage.getReason(),
+                    postponedMessage.getDescription(),
+                    postponedMessage.getSolution()
+            );
+        }
+    }
 
     /**
      * Prints an error. You can leave any value at {@code null} to make it not appear
@@ -97,14 +128,10 @@ public final class PerceiveCore extends JavaPlugin {
      * @param solution The solution.
      */
     @SuppressWarnings("SameParameterValue")
-    private void printError(String error, String reason, String description, String solution) {
-        if (error != null) {
-            getLogger().severe("Error: " + ChatColor.stripColor(error));
-            getLogger().severe("More details follow in a formatted, colored way.");
-        }
+    private void printError(String type, String error, String reason, String description, String solution) {
         StringBuilder builder = new StringBuilder();
         builder.append(System.lineSeparator());
-        builder.append(color("&c==== Start of PerceiveCore error ===="));
+        builder.append(color("&c==== Start of PerceiveCore " + type + " ===="));
         builder.append(System.lineSeparator());
         builder.append(System.lineSeparator());
         boolean prevPrinted = false;
@@ -145,8 +172,14 @@ public final class PerceiveCore extends JavaPlugin {
         }
         builder.append(System.lineSeparator());
         builder.append(System.lineSeparator());
-        builder.append(color("&c==== End of PerceiveCore error ===="));
-        Bukkit.getConsoleSender().sendMessage(builder.toString());
+        builder.append(color("&c==== End of PerceiveCore " + type + " ===="));
+
+        if (getConfig().getBoolean("print-raw")) {
+            getLogger().warning(builder.toString());
+        }
+        else {
+            Bukkit.getConsoleSender().sendMessage(builder.toString());
+        }
     }
 
     /**
@@ -156,7 +189,19 @@ public final class PerceiveCore extends JavaPlugin {
      *
      * @return The colored message
      */
-    private static String color(String message) {
+    private String color(String message) {
+        if (getConfig().getBoolean("print-raw")) {
+            return stripColor(message);
+        }
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    /**
+     * @param input The input, with '&' as color char
+     *
+     * @return A clean version of it input, ready to be passed to {@link Logger#log(Level, String)}
+     */
+    private String stripColor(String input) {
+        return input.replaceAll("(?i)&[0-9a-fklmno]", "");
     }
 }

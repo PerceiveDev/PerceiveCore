@@ -13,9 +13,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Queue;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -24,7 +27,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.UnknownDependencyException;
 
 import com.google.common.base.Throwables;
 
@@ -38,6 +40,8 @@ public class ModuleLoader {
     private Set<Module> loadedModules = new HashSet<>();
     private Path moduleFolder;
     private Logger logger;
+
+    private Queue<PostponedMessage> postponedMessages = new LinkedList<>();
 
     /**
      * @param moduleFolder The {@link Path} to load the modules from
@@ -66,6 +70,13 @@ public class ModuleLoader {
                 new ModuleFile(moduleFolder, moduleSystemProperties)
         );
         ModuleManager.INSTANCE.registerModule(new ModuleSystemModule());
+    }
+
+    /**
+     * @return All the messages this loader postponed, as nobody looks <i>that</i> far up in a log.
+     */
+    public Queue<PostponedMessage> getPostponedMessages() {
+        return postponedMessages;
     }
 
     /**
@@ -115,22 +126,54 @@ public class ModuleLoader {
 
                         ModuleFile module = new ModuleFile(file, properties);
                         if (moduleFileMap.containsKey(module.getMain())) {
+                            String reason = String.format(
+                                    Locale.ROOT,
+                                    "&6Duplicate module: '&a%s&6' is already loaded from file '&a%s&6'!",
+                                    file.toString(), moduleFileMap.get(module.getMain()).getFile().toString()
+                            );
+                            postponedMessages.add(new PostponedMessage(
+                                    "&6Duplicate module",
+                                    reason,
+                                    "&6A module was loaded twice. There may be two jars in the module folder",
+                                    "&6Delete one of the two files mentioned in the 'Reason' part of the error",
+                                    Level.WARNING
+                            ));
+
                             throw new IllegalStateException("Duplicate module: '"
                                     + file
                                     + "' is already loaded from file '"
-                                    + moduleFileMap.get(module.getMain())
+                                    + moduleFileMap.get(module.getMain()).getFile().toString()
                                     + "'!");
                         }
                         moduleFileMap.put(module.getMain(), module);
                     } catch (Exception e) {
-                        logger.log(Level.WARNING, "Error reading module: '" + file + "'", e);
+                        postponedMessages.add(
+                                new PostponedMessage(
+                                        "&6Error reading module",
+                                        "&6An error occurred while loading the module: " + e.getMessage(),
+                                        "&6An unknown error occurred. More information is higher in this log.",
+                                        null,
+                                        Level.WARNING
+                                )
+                        );
+                        logger.log(Level.WARNING, "Error loading module", e);
                     }
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                    logger.log(Level.WARNING, "Error reading module: '" + file + "'", exc);
+                    postponedMessages.add(
+                            new PostponedMessage(
+                                    "&6Error reading a module file",
+                                    "&6Error reading module: '&a" + file + "&6'",
+                                    "&6Some error occurred while reading the file. More information is " +
+                                            "higher in this log",
+                                    null,
+                                    Level.WARNING
+                            )
+                    );
+                    logger.log(Level.WARNING, "Error reading module file", exc);
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -140,8 +183,17 @@ public class ModuleLoader {
                 }
             });
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Error loading modules", e);
-            e.printStackTrace();
+            postponedMessages.add(
+                    new PostponedMessage(
+                            "&6I/O Error reading module.",
+                            "&6An I/O error occurred reading a module: " + e.getMessage(),
+                            "&6Some error occurred while reading the file. More information is " +
+                                    "higher in this log",
+                            null,
+                            Level.WARNING
+                    )
+            );
+            logger.log(Level.WARNING, "I/O Error reading module", e);
             return Collections.emptySet();
         }
 
@@ -169,20 +221,47 @@ public class ModuleLoader {
                     .findAny()
                     .orElse(null);
             if (parentDependency == null) {
-                logger.log(
-                        Level.WARNING,
-                        "Unknown dependency for file: '" + moduleFile.file + "'",
-                        new UnknownDependencyException("Unknown dependency: '" + dependency + "'")
-                );
+                String reason = "&6Unknown dependency for file: '&a" + moduleFile.file + "&6'";
+                postponedMessages.add(new PostponedMessage(
+                        "&6Unknown dependency",
+                        reason,
+                        String.format(Locale.ROOT,
+                                "&6The module '&a%s&6' needs the dependency '&a%s&6', but it could not be found.",
+                                moduleFile.getName(), dependency
+                        ),
+                        String.format(Locale.ROOT,
+                                "&6Download the module '&a%s' and copy it in the modules folder",
+                                dependency
+                        ),
+                        Level.WARNING
+                ));
                 return;
             }
             loadModule(parentDependency);
         }
 
         Module module = getModuleFromFile(moduleFile);
-        if (module != null) {
-            loadedModules.add(module);
+        if (module == null) {
+            return;
         }
+        if (!module.isModuleCompatible()) {
+            String reason = String.format(Locale.ROOT,
+                    "&6The module '&a%s&6' is not compatible with your server version. It will not be enabled!",
+                    module.getModuleName()
+            );
+            postponedMessages.add(new PostponedMessage(
+                    "&6Module incompatible",
+                    reason,
+                    String.format(Locale.ROOT,
+                            "&6The module '&a%s&6' is not compatible with your minecraft version.",
+                            module.getModuleName()
+                    ),
+                    "&6Check if a newer version of the module is available.",
+                    Level.WARNING
+            ));
+            return;
+        }
+        loadedModules.add(module);
     }
 
     private Module getModuleFromFile(ModuleFile moduleFile) {
@@ -201,18 +280,48 @@ public class ModuleLoader {
                     "Malformed URL while creating Module ClassLoader",
                     e
             );
+            postponedMessages.add(new PostponedMessage(
+                    "&6Malformed URL",
+                    "&6Malformed URL while creating Module ClassLoader",
+                    String.format(Locale.ROOT,
+                            "&6The url to the module file ('&a%s&6') is not valid.",
+                            moduleFile.getFile().toAbsolutePath().toString()
+                    ),
+                    "&6Report this!",
+                    Level.WARNING
+            ));
         } catch (ClassNotFoundException e) {
             logger.log(
                     Level.WARNING,
                     "Error loading module '" + moduleFile.getName() + "'. Main class not found!",
                     new InvalidPluginException("Main class '" + moduleFile.getMain() + "' not found!")
             );
+            postponedMessages.add(new PostponedMessage(
+                    "&6Class not found",
+                    String.format(Locale.ROOT,
+                            "&6The main class of the module '&a%s&6'was not found.",
+                            moduleFile.getMain()
+                    ),
+                    "&6The main class is needed to load the module, but it wasn't where I was told :(",
+                    "&6Report the error. The module jar file probably needs to be corrected.",
+                    Level.WARNING
+            ));
         } catch (Exception e) {
             logger.log(
                     Level.WARNING,
                     "Error loading module '" + moduleFile.getName() + "'.",
                     e
             );
+            postponedMessages.add(new PostponedMessage(
+                    "&6An error occurred loading a module",
+                    String.format(Locale.ROOT,
+                            "&6The module '&a%s&6' could not be loaded: " + e.getMessage(),
+                            moduleFile.getName()
+                    ),
+                    "&6An unknown error occurred. More information is higher in this log.",
+                    null,
+                    Level.WARNING
+            ));
         }
 
         return null;
@@ -273,6 +382,64 @@ public class ModuleLoader {
         @Override
         public int hashCode() {
             return Objects.hash(file);
+        }
+    }
+
+    /**
+     * A postponed message
+     */
+    public static class PostponedMessage {
+        private String error, reason, description, solution;
+        private Level level;
+
+        /**
+         * @param error The error
+         * @param reason The reason for the error
+         * @param description A description of the error
+         * @param solution A solution for it
+         * @param level The level of the error
+         */
+        PostponedMessage(String error, String reason, String description, String solution, Level level) {
+            this.error = error;
+            this.reason = reason;
+            this.description = description;
+            this.solution = solution;
+            this.level = level;
+        }
+
+        /**
+         * @return The error
+         */
+        public String getError() {
+            return error;
+        }
+
+        /**
+         * @return The reason for the error
+         */
+        public String getReason() {
+            return reason;
+        }
+
+        /**
+         * @return A description of the error
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * @return A solution for the error
+         */
+        public String getSolution() {
+            return solution;
+        }
+
+        /**
+         * @return The {@link Level} of the message
+         */
+        public Level getLevel() {
+            return level;
         }
     }
 }

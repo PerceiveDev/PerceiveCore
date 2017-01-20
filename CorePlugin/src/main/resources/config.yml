@@ -1,0 +1,3 @@
+# If this is true, the messages will be printed without color using the normal logger
+# If this is false, the messages will be printed colored
+print-raw: false
