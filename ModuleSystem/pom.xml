@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.perceivedev</groupId>
-        <artifactId>PerceiveCore</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.perceivedev</groupId>
+		<artifactId>PerceiveCore</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>ModuleSystem</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+	<artifactId>ModuleSystem</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-    <name>ModuleSystem</name>
+	<name>ModuleSystem</name>
 
-    <description>The module representing the module system.</description>
+	<description>The module representing the module system.</description>
 
-    <build>
-        <finalName>ModuleSystem</finalName>
-    </build>
+	<build>
+		<finalName>ModuleSystem</finalName>
+	</build>
 </project>

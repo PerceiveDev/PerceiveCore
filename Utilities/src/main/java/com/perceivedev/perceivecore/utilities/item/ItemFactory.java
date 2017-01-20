@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -20,8 +23,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.google.common.base.Preconditions;
 import com.perceivedev.perceivecore.utilities.collections.ListUtils;
 import com.perceivedev.perceivecore.utilities.text.TextUtils;
-
-import javax.annotation.Nonnull;
 
 /**
  * Represents an ItemStack with utility methods to modify it's appearance.
@@ -224,8 +225,7 @@ public class ItemFactory implements Cloneable {
 
         if (level <= enchantment.getMaxLevel() && enchantment.canEnchantItem(itemStack)) {
             itemStack.addEnchantment(enchantment, level);
-        }
-        else {
+        } else {
             itemStack.addUnsafeEnchantment(enchantment, level);
         }
         return this;
@@ -266,7 +266,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#SKULL_ITEM}
+     *             {@link Material#SKULL_ITEM}
      */
     @Nonnull
     public ItemFactory setSkullOwner(@Nonnull String name) {
@@ -279,8 +279,7 @@ public class ItemFactory implements Cloneable {
             SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
             skullMeta.setOwner(name);
             itemStack.setItemMeta(skullMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack is not a SKULL_ITEM!");
         }
         return this;
@@ -311,7 +310,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not
-     *                               colourable
+     *             colourable
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -328,6 +327,32 @@ public class ItemFactory implements Cloneable {
         }
         return setDurability(colour.getDataValue());
     }
+    
+    /**
+     * Sets the colour of the item, if it is a colourable item/block.
+     *
+     * @param colour The color to set the itemstack as
+     *
+     * @return This ItemFactory instance
+     *
+     * @throws IllegalStateException If the {@link ItemStack} is not
+     *             colourable
+     */
+    @SuppressWarnings({ "unused", "deprecation" })
+    @Nonnull
+    public ItemFactory setColor(@Nonnull DyeColor colour) {
+        Objects.requireNonNull(colour, "colour can not be null");
+
+        Preconditions.checkState(
+                COLORABLE.contains(itemStack.getType()),
+                "ItemStack type is not colourable (" + itemStack.getType() + ")");
+
+        // Dye (INK_SACK) is (15 - dataValue)
+        if (itemStack.getType() == Material.INK_SACK) {
+            return setDurability((short) (15 - colour.getDyeData()));
+        }
+        return setDurability(colour.getDyeData());
+    }
 
     /**
      * Sets the colour of a piece of leather armour.
@@ -337,7 +362,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a type of
-     *                               leather armour
+     *             leather armour
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -348,8 +373,7 @@ public class ItemFactory implements Cloneable {
             LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
             meta.setColor(colour);
             itemStack.setItemMeta(meta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Itemstack is not a type of leather armour!");
         }
         return this;
@@ -367,7 +391,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -378,8 +402,7 @@ public class ItemFactory implements Cloneable {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setAuthor(TextUtils.colorize(author));
             itemStack.setItemMeta(bookMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack is not a WRITTEN_BOOK!");
         }
         return this;
@@ -393,7 +416,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      */
     @Nonnull
     public ItemFactory setPages(@Nonnull List<String> pages) {
@@ -403,8 +426,7 @@ public class ItemFactory implements Cloneable {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
@@ -418,7 +440,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      * @see #setPages(List)
      */
     @SuppressWarnings("unused")
@@ -437,7 +459,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -450,8 +472,7 @@ public class ItemFactory implements Cloneable {
             pages.add(page);
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
@@ -465,7 +486,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -478,8 +499,7 @@ public class ItemFactory implements Cloneable {
             original.addAll(Arrays.asList(pages));
             bookMeta.setPages(pages);
             itemStack.setItemMeta(bookMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
@@ -493,7 +513,7 @@ public class ItemFactory implements Cloneable {
      * @return This ItemFactory instance
      *
      * @throws IllegalStateException If the {@link ItemStack} is not a
-     *                               {@link Material#WRITTEN_BOOK}
+     *             {@link Material#WRITTEN_BOOK}
      */
     @SuppressWarnings("unused")
     @Nonnull
@@ -504,8 +524,7 @@ public class ItemFactory implements Cloneable {
             BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
             bookMeta.setTitle(TextUtils.colorize(title));
             itemStack.setItemMeta(bookMeta);
-        }
-        else {
+        } else {
             throw new IllegalStateException("ItemStack type is not a WRITTEN_BOOK!");
         }
         return this;
