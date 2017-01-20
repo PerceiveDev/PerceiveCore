@@ -1,6 +1,7 @@
 package com.perceivedev.perceivecore.coreplugin;
 
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -38,20 +39,19 @@ public final class PerceiveCore extends JavaPlugin {
 
 
         if (!ModuleManager.INSTANCE.getModuleByName("Utilities").isPresent()) {
-            Bukkit.getConsoleSender().sendMessage(
-                    ChatColor.RED + "===="
-                            + ChatColor.AQUA + " Start of PerceiveCore error"
-                            + ChatColor.RED + "===="
+            printError(
+                    "Module 'Utilities' not found",
+                    "The Utilities module is not installed.",
+                    String.format(Locale.ROOT,
+                            "I searched in my modules folder (%s) and sadly couldn't find this module.",
+                            MODULE_PATH.toString()
+                    ),
+                    String.format(Locale.ROOT,
+                            "Copy the 'UtilitiesModule.jar' file into the modules folder (%s)",
+                            MODULE_PATH.toString()
+                    )
             );
-            getLogger().severe("'Utilities' module not installed." +
-                    " This plugin will not function correctly and therefore shut down.");
-            getLogger().severe("Expect errors following this message.");
             getPluginLoader().disablePlugin(this);
-            Bukkit.getConsoleSender().sendMessage(
-                    ChatColor.RED + "===="
-                            + ChatColor.AQUA + " End of PerceiveCore error"
-                            + ChatColor.RED + "===="
-            );
             return;
         }
 
@@ -60,7 +60,9 @@ public final class PerceiveCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        disableManager.disable();
+        if (ModuleManager.INSTANCE.getModuleByName("Utilities").isPresent()) {
+            disableManager.disable();
+        }
 
         // prevent the old instance from still being around.
         instance = null;
@@ -85,4 +87,76 @@ public final class PerceiveCore extends JavaPlugin {
         return instance;
     }
 
+
+    /**
+     * Prints an error. You can leave any value at {@code null} to make it not appear
+     *
+     * @param error The error
+     * @param reason The reason for the error
+     * @param description A more detailed description of the error
+     * @param solution The solution.
+     */
+    @SuppressWarnings("SameParameterValue")
+    private void printError(String error, String reason, String description, String solution) {
+        if (error != null) {
+            getLogger().severe("Error: " + ChatColor.stripColor(error));
+            getLogger().severe("More details follow in a formatted, colored way.");
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(System.lineSeparator());
+        builder.append(color("&c==== Start of PerceiveCore error ===="));
+        builder.append(System.lineSeparator());
+        builder.append(System.lineSeparator());
+        boolean prevPrinted = false;
+        if (error != null) {
+            builder.append(System.lineSeparator());
+            builder.append("  ").append(color("&4Error: &6" + System.lineSeparator() + error));
+            prevPrinted = true;
+        }
+
+        if (reason != null) {
+            if (prevPrinted) {
+                builder.append(System.lineSeparator());
+            }
+            builder.append(System.lineSeparator());
+            builder.append("  ").append(color("&cReason: &6" + System.lineSeparator() + reason));
+            prevPrinted = true;
+        }
+        else {
+            prevPrinted = false;
+        }
+        if (description != null) {
+            if (prevPrinted) {
+                builder.append(System.lineSeparator());
+            }
+            builder.append(System.lineSeparator());
+            builder.append("  ").append(color("&bDescription: &6" + System.lineSeparator() + description));
+            prevPrinted = true;
+        }
+        else {
+            prevPrinted = false;
+        }
+        if (solution != null) {
+            if (prevPrinted) {
+                builder.append(System.lineSeparator());
+            }
+            builder.append(System.lineSeparator());
+            builder.append("  ").append(color("&aSolution: &6" + System.lineSeparator() + solution));
+        }
+        builder.append(System.lineSeparator());
+        builder.append(System.lineSeparator());
+        builder.append(color("&c==== End of PerceiveCore error ===="));
+        Bukkit.getConsoleSender().sendMessage(builder.toString());
+    }
+
+    /**
+     * Colors a String
+     *
+     * @param message The message to color
+     *
+     * @return The colored message
+     */
+    private static String color(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 }
