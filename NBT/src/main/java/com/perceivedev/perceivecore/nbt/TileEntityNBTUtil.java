@@ -289,7 +289,8 @@ public class TileEntityNBTUtil {
                 Object testCompound = new NBTWrappers.NBTTagCompound().toNBT();
                 ReflectionUtil.invokeMethod(method, tileEntity, testCompound);
 
-                NBTWrappers.NBTTagCompound compound = (NBTWrappers.NBTTagCompound) NBTWrappers.INBTBase.fromNBT(testCompound);
+                NBTWrappers.NBTTagCompound compound = (NBTWrappers.NBTTagCompound) NBTWrappers.INBTBase.fromNBT
+                        (testCompound);
                 if (compound == null) {
                     continue;
                 }

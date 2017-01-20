@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<artifactId>PerceiveCore</artifactId>
-		<groupId>com.perceivedev</groupId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>PerceiveCore</artifactId>
+        <groupId>com.perceivedev</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>Particle</artifactId>
+    <artifactId>Particle</artifactId>
 
-	<description>Provides libraries for particle effects</description>
+    <description>Provides libraries for particle effects</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.perceivedev</groupId>
-			<artifactId>CorePlugin</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.perceivedev</groupId>
-			<artifactId>ModuleSystem</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.perceivedev</groupId>
+            <artifactId>CorePlugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.perceivedev</groupId>
+            <artifactId>ModuleSystem</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<finalName>ParticleModule</finalName>
-	</build>
+    <build>
+        <finalName>ParticleModule</finalName>
+    </build>
 
 </project>
