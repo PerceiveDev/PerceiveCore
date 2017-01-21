@@ -41,7 +41,8 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
     private static AnvilItemRenameListener anvilItemRenameListener = new AnvilItemRenameListener();
 
     private Consumer<Optional<String>> callback;
-    private Consumer<AnvilTypeEvent> anvilTypeEventConsumer;
+    private Consumer<AnvilTypeEvent> anvilTypeEventConsumer = event -> {
+    };
 
     /**
      * It will add a Paper with the name " " as the default item.
@@ -136,6 +137,8 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
      */
     @SuppressWarnings("unused")
     public void setAnvilTypeEventConsumer(Consumer<AnvilTypeEvent> anvilTypeEventConsumer) {
+        Objects.requireNonNull(anvilTypeEventConsumer, "anvilTypeEventConsumer can not be null!");
+
         this.anvilTypeEventConsumer = anvilTypeEventConsumer;
     }
 
