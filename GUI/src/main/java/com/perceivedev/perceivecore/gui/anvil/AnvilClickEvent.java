@@ -65,7 +65,7 @@ public class AnvilClickEvent {
      */
     @SuppressWarnings("WeakerAccess")
     public ItemStack getInvolvedItem() {
-        return involvedItem;
+        return involvedItem == null ? null : involvedItem.clone();
     }
 
     /**
