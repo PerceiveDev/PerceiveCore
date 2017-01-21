@@ -35,7 +35,7 @@ public final class PerceiveCore extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
-        
+
         saveDefaultConfig();
 
         getLogger().info("I have loaded "

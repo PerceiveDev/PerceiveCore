@@ -128,8 +128,11 @@ class PacketInjector extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise)
             throws Exception {
-        PacketEvent event = new PacketEvent(packet, PacketEvent.ConnectionDirection.TO_CLIENT, playerWeakReference
-                .get());
+        PacketEvent event = new PacketEvent(
+                packet,
+                PacketEvent.ConnectionDirection.TO_CLIENT,
+                playerWeakReference.get()
+        );
 
         for (PacketListener packetListener : packetListeners) {
             try {
@@ -148,8 +151,11 @@ class PacketInjector extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-        PacketEvent event = new PacketEvent(packet, PacketEvent.ConnectionDirection.TO_SERVER, playerWeakReference
-                .get());
+        PacketEvent event = new PacketEvent(
+                packet,
+                PacketEvent.ConnectionDirection.TO_SERVER,
+                playerWeakReference.get()
+        );
 
         for (PacketListener packetListener : packetListeners) {
             try {

@@ -24,8 +24,10 @@ import com.perceivedev.perceivecore.utilities.item.ItemFactory;
 public class AnvilGui extends Gui implements AnvilInputHolder {
 
     private static AnvilPacketListener listener = new AnvilPacketListener();
+    private static AnvilItemRenameListener anvilItemRenameListener = new AnvilItemRenameListener();
 
     private Consumer<Optional<String>> callback;
+    private Consumer<AnvilTypeEvent> anvilTypeEventConsumer;
 
     /**
      * It will add a Paper with the name " " as the default item.
@@ -63,7 +65,10 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
      */
     @Override
     protected void onDisplay(Gui previous) {
-        getPlayer().ifPresent(player -> PacketManager.getInstance().addListener(listener, player));
+        getPlayer().ifPresent(player -> {
+            PacketManager.getInstance().addListener(listener, player);
+            PacketManager.getInstance().addListener(anvilItemRenameListener, player);
+        });
     }
 
     /**
@@ -76,7 +81,10 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
      */
     @Override
     protected void onClose() {
-        getPlayer().ifPresent(player -> PacketManager.getInstance().removeListener(listener, player));
+        getPlayer().ifPresent(player -> {
+            PacketManager.getInstance().removeListener(listener, player);
+            PacketManager.getInstance().removeListener(anvilItemRenameListener, player);
+        });
     }
 
     /**
@@ -91,11 +99,27 @@ public class AnvilGui extends Gui implements AnvilInputHolder {
     public void setItem(AnvilSlot slot, ItemStack itemStack, @SuppressWarnings("SameParameterValue") boolean movable) {
         Objects.requireNonNull(slot, "slot cannot be null!");
 
+        // remove it, if it is already set
+        getRootAsFixedPosition().removeComponent(slot.getSlot(), 0);
+
         getRootAsFixedPosition().addComponent(new Button(itemStack, clickEvent -> {
             if (movable) {
                 clickEvent.setCancelled(false);
             }
         }, Dimension.ONE), slot.getSlot(), 0);
+    }
+
+    /**
+     * @param anvilTypeEventConsumer The listener for {@link AnvilTypeEvent}s
+     */
+    @SuppressWarnings("unused")
+    public void setAnvilTypeEventConsumer(Consumer<AnvilTypeEvent> anvilTypeEventConsumer) {
+        this.anvilTypeEventConsumer = anvilTypeEventConsumer;
+    }
+
+    @Override
+    public void reactToTyping(AnvilTypeEvent event) {
+        anvilTypeEventConsumer.accept(event);
     }
 
     /**
