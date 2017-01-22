@@ -10,9 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -29,6 +33,7 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.perceivedev.perceivecore.language.YamlResourceBundle.YamlResourceBundleControl;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil.MethodPredicate;
 
@@ -48,6 +53,8 @@ public class I18N implements MessageProvider {
      * "[[path.to.other.message]]"
      */
     private static final Pattern REFERENCE_PATTERN = Pattern.compile("(?<=\\[\\[)(.+?)(?=]])");
+
+    private ResourceBundle.Control bundleControl;
 
     private Set<String> categories = new HashSet<>();
     private Map<String, ResourceBundle> fileResourceBundles = new HashMap<>();
@@ -77,8 +84,8 @@ public class I18N implements MessageProvider {
      * @throws NullPointerException If any parameter is null
      */
     @SuppressWarnings("WeakerAccess")
-    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader, String
-            defaultCategory, String... more) {
+    public I18N(Locale currentLanguage, String basePackage, Path savePath, ClassLoader callerClassLoader,
+                ResourceBundle.Control bundleControl, String defaultCategory, String... more) {
 
         Objects.requireNonNull(currentLanguage, "currentLanguage can not be null");
         Objects.requireNonNull(basePackage, "basePackage can not be null");
@@ -97,14 +104,36 @@ public class I18N implements MessageProvider {
 
         fileClassLoader = new FileClassLoader(savePath);
 
+        this.bundleControl = bundleControl;
+
         createBundles();
     }
 
+    /**
+     * @param plugin Your plugin
+     * @param basePackage The base package in the jar to read from
+     */
     @SuppressWarnings("unused")
     public I18N(JavaPlugin plugin, String basePackage) {
-        this(Locale.ENGLISH, basePackage, ensureDirExists(plugin.getDataFolder()
-                .toPath()
-                .resolve("language")), plugin.getClass().getClassLoader(), "Messages");
+        this(plugin, basePackage, null);
+    }
+
+    /**
+     * @param plugin Your plugin
+     * @param basePackage The base package in the jar to read from
+     * @param bundleControl The {@link ResourceBundle.Control} to use. You can use the
+     * {@link YamlResourceBundleControl}, if you want YAML language files
+     */
+    @SuppressWarnings({"unused", "WeakerAccess"})
+    public I18N(JavaPlugin plugin, String basePackage, ResourceBundle.Control bundleControl) {
+        this(Locale.ENGLISH,
+                basePackage,
+                ensureDirExists(plugin.getDataFolder()
+                        .toPath()
+                        .resolve("language")),
+                plugin.getClass().getClassLoader(),
+                bundleControl,
+                "Messages");
     }
 
     private static Path ensureDirExists(Path path) {
@@ -145,15 +174,28 @@ public class I18N implements MessageProvider {
      */
     private boolean createBundle(String category) {
         try {
-            ResourceBundle jarBundle = ResourceBundle.getBundle(basePackage + "." + category, currentLanguage,
-                    callerClassLoader);
+            ResourceBundle jarBundle;
+            if (bundleControl == null) {
+                jarBundle = ResourceBundle.getBundle(basePackage + "." + category, currentLanguage,
+                        callerClassLoader);
+            }
+            else {
+                jarBundle = ResourceBundle.getBundle(basePackage + "." + category, currentLanguage,
+                        callerClassLoader, bundleControl);
+            }
 
             jarResourceBundles.put(category, jarBundle);
         } catch (MissingResourceException ignored) {
         }
 
         try {
-            ResourceBundle fileBundle = ResourceBundle.getBundle(category, currentLanguage, fileClassLoader);
+            ResourceBundle fileBundle;
+            if (bundleControl == null) {
+                fileBundle = ResourceBundle.getBundle(category, currentLanguage, fileClassLoader);
+            }
+            else {
+                fileBundle = ResourceBundle.getBundle(category, currentLanguage, fileClassLoader, bundleControl);
+            }
 
             fileResourceBundles.put(category, fileBundle);
         } catch (MissingResourceException ignored) {
@@ -172,9 +214,29 @@ public class I18N implements MessageProvider {
      *
      * @throws IllegalArgumentException If the category isn't in
      *                                  {@link #categories}
+     * @see #impl_translateObject(String, String)
      */
-    private String translate(String key, String category) {
-        Optional<String> translated = translateOrEmpty(key, category);
+    private String translateString(String key, String category) {
+        Object object = impl_translateObject(key, category);
+        if (object instanceof String) {
+            return (String) object;
+        }
+        return "Key '" + key + "' is no String (" + object.getClass().getSimpleName() + ")";
+    }
+
+    /**
+     * Translates a String
+     *
+     * @param key The key
+     * @param category The category
+     *
+     * @return The translated String
+     *
+     * @throws IllegalArgumentException If the category isn't in
+     *                                  {@link #categories}
+     */
+    private Object impl_translateObject(String key, String category) {
+        Optional<Object> translated = translateOrEmpty(key, category);
         if (translated.isPresent()) {
             return translated.get();
         }
@@ -192,21 +254,21 @@ public class I18N implements MessageProvider {
      * @throws IllegalArgumentException If the category isn't in
      *                                  {@link #categories}
      */
-    private Optional<String> translateOrEmpty(String key, String category) {
+    private Optional<Object> translateOrEmpty(String key, String category) {
         if (!categories.contains(category)) {
             throw new IllegalArgumentException("Category unknown!");
         }
 
         if (fileResourceBundles.containsKey(category)) {
             try {
-                return Optional.of(fileResourceBundles.get(category).getString(key));
+                return Optional.of(fileResourceBundles.get(category).getObject(key));
             } catch (MissingResourceException ignored) {
             }
         }
 
         if (jarResourceBundles.containsKey(category)) {
             try {
-                return Optional.of(jarResourceBundles.get(category).getString(key));
+                return Optional.of(jarResourceBundles.get(category).getObject(key));
             } catch (MissingResourceException ignored) {
             }
         }
@@ -245,7 +307,7 @@ public class I18N implements MessageProvider {
         Matcher matcher = REFERENCE_PATTERN.matcher(string);
         while (matcher.find()) {
             String found = matcher.group(1);
-            String resolved = translate(found, category);
+            String resolved = translateString(found, category);
             result = result.replace("[[" + found + "]]", resolved);
         }
         return result;
@@ -260,10 +322,12 @@ public class I18N implements MessageProvider {
             throw new IllegalArgumentException("Unknown category");
         }
 
-        Optional<String> formatted = translateOrEmpty(key, category);
-        if (formatted.isPresent()) {
-            return color(format(formatted.get(), formattingObjects));
+        // it is present, let the correct method deal with it
+        if (translateOrEmpty(key, category).isPresent()) {
+            return translateCategory(key, category, formattingObjects);
         }
+
+        // do it yourself
         return color(format(defaultString, formattingObjects));
     }
 
@@ -289,7 +353,7 @@ public class I18N implements MessageProvider {
             throw new IllegalArgumentException("Unknown category");
         }
 
-        String formatted = format(translate(key, category), formattingObjects);
+        String formatted = format(translateString(key, category), formattingObjects);
 
         formatted = resolveReferences(formatted, category);
 
@@ -308,6 +372,56 @@ public class I18N implements MessageProvider {
     @Nonnull
     public String translateUncolored(@Nonnull String key, @Nonnull Object... formattingObjects) {
         return translateCategoryUncolored(key, defaultCategory, formattingObjects);
+    }
+
+    /**
+     * Retrieves a list and translates it
+     *
+     * @param translatedObject The translated Object
+     * @param key The key of the list
+     * @param category The category it belongs to
+     * @param formattingObjects The objects to format the message with
+     *
+     * @return The list, with all entries formatted and colored
+     */
+    private List<String> translateCollection(Object translatedObject, String key, String category,
+                                             Object... formattingObjects) {
+        if (!(translatedObject instanceof Collection)) {
+            return Collections.singletonList(
+                    "Key [" + key + "] is not a Collection, but rather " + translatedObject.getClass().getSimpleName()
+            );
+        }
+        Collection<?> collection = (Collection<?>) translatedObject;
+        List<String> result = new ArrayList<>(collection.size());
+
+        for (Object obj : collection) {
+            if (!(obj instanceof String)) {
+                return Collections.singletonList(
+                        "The values of key [" + key + "] are not Strings, but rather "
+                                + obj.getClass().getSimpleName()
+                );
+            }
+
+            String message = color(format((String) obj, formattingObjects));
+            message = resolveReferences(message, category);
+
+            result.add(message);
+        }
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public Object translateObjectCategory(@Nonnull String key, @Nonnull String category,
+                                          @Nonnull Object... formattingObjects) {
+
+        Object translatedObject = impl_translateObject(key, category);
+
+        if (translatedObject instanceof Collection) {
+            return translateCollection(translatedObject, key, category, formattingObjects);
+        }
+
+        return translatedObject;
     }
 
     @Override

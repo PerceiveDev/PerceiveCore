@@ -46,7 +46,6 @@ public interface MessageProvider {
      * @see #translateCategory(String, String, Object...) #translateCategory(String, String, Object...) with
      * the default category
      */
-    @SuppressWarnings("unused")
     @Nonnull
     default String translate(@Nonnull String key, @Nonnull Object... formattingObjects) {
         Objects.requireNonNull(key, "key can not be null");
@@ -122,6 +121,43 @@ public interface MessageProvider {
         Objects.requireNonNull(formattingObjects, "formattingObjects can not be null");
 
         return translateCategoryUncolored(key, getDefaultCategory(), formattingObjects);
+    }
+
+    /**
+     * Translates a message, returning the raw object defined in the language file
+     *
+     * @param key The key
+     * @param formattingObjects The objects to format the message with
+     *
+     * @return The Object returned by the {@link MessageProvider} implementation. May be a String, may be a more
+     * complex Object.
+     *
+     * @see #translateObjectCategory(String, String, Object...)
+     */
+    @SuppressWarnings("unused")
+    @Nonnull
+    default Object translateObject(@Nonnull String key, @Nonnull Object... formattingObjects) {
+        return translateObjectCategory(key, getDefaultCategory(), formattingObjects);
+    }
+
+    /**
+     * Translates a message, returning the raw object defined in the language file
+     *
+     * @param key The key
+     * @param category The category it belongs to
+     * @param formattingObjects The objects to format the message with
+     *
+     * @return The Object returned by the {@link MessageProvider} implementation. May be a String, may be a more
+     * complex Object.
+     */
+    @Nonnull
+    default Object translateObjectCategory(@Nonnull String key, @Nonnull String category,
+                                           @Nonnull Object... formattingObjects) {
+        Objects.requireNonNull(key, "key can not be null!");
+        Objects.requireNonNull(category, "category can not be null!");
+        Objects.requireNonNull(formattingObjects, "formattingObjects can not be null!");
+
+        return translateCategory(key, category, formattingObjects);
     }
 
     /**

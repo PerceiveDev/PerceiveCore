@@ -230,7 +230,7 @@ public class ModuleLoader {
                                 moduleFile.getName(), dependency
                         ),
                         String.format(Locale.ROOT,
-                                "&6Download the module '&a%s' and copy it in the modules folder",
+                                "&6Download the module '&a%s&6' and copy it in the modules folder",
                                 dependency
                         ),
                         Level.WARNING
