@@ -33,9 +33,8 @@ import com.perceivedev.perceivecore.config.handlers.PotionEffectSerializer;
 import com.perceivedev.perceivecore.config.handlers.UUIDSerializer;
 import com.perceivedev.perceivecore.config.handlers.VectorSerializer;
 import com.perceivedev.perceivecore.config.handlers.WorldSerializer;
+import com.perceivedev.perceivecore.config.util.Pair;
 import com.perceivedev.perceivecore.reflection.ReflectionUtil;
-
-import javafx.util.Pair;
 
 
 /**
@@ -154,9 +153,10 @@ public class SerializationManager {
      * @return True if the class is serializable
      */
     public static boolean isSerializable(Class<?> clazz) {
-        return ConfigurationSerializable.class.isAssignableFrom(clazz) || ConfigSerializable.class.isAssignableFrom
-                (clazz) || RAW_INSERTABLE_CLASSES
-                .contains(clazz)
+        return ConfigurationSerializable.class.isAssignableFrom(clazz)
+                || ConfigSerializable.class.isAssignableFrom(clazz)
+                || RAW_INSERTABLE_CLASSES.contains(clazz)
+                || ReflectionUtil.inheritsFrom(clazz, List.class)   // we can serialize lists, even if there is no proxy
                 || getSerializationProxy(clazz) != null;
 
     }
@@ -173,8 +173,8 @@ public class SerializationManager {
      * @return True if the class is serializable to a String
      */
     public static boolean isSerializableToString(Class<?> clazz) {
-        return RAW_INSERTABLE_CLASSES.contains(clazz) || getSerializationProxy(clazz) instanceof
-                SimpleSerializationProxy;
+        return RAW_INSERTABLE_CLASSES.contains(clazz)
+                || getSerializationProxy(clazz) instanceof SimpleSerializationProxy;
     }
 
     /**

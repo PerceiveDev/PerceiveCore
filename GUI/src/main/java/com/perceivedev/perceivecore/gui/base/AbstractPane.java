@@ -191,9 +191,21 @@ public abstract class AbstractPane extends AbstractComponent implements Pane {
             // Adjust the offsets you pass on, to make the calculations for the
             // next pane work
             intervalOpt.ifPresent(interval -> {
-                clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
-                clickEvent.setOffsetY(clickEvent.getOffsetY() + interval.getMinY());
                 clickEvent.setComponent(component);
+
+                // if we now pass it to a normal component, tell the component which part of it was clicked
+                // this allows for things like Buttons which only react to the middle or similar stuff
+                if (!(component instanceof Pane)) {
+                    int componentRelativeX = slotToGrid(clickEvent.getSlot())[0] - intervalOpt.get().getMinX();
+                    int componentRelativeY = slotToGrid(clickEvent.getSlot())[1] - intervalOpt.get().getMinY();
+                    clickEvent.setOffsetX(componentRelativeX);
+                    clickEvent.setOffsetY(componentRelativeY);
+                }
+                else {
+                    // if we pass it to panes, comply with that they need to find the component
+                    clickEvent.setOffsetX(clickEvent.getOffsetX() + interval.getMinX());
+                    clickEvent.setOffsetY(clickEvent.getOffsetY() + interval.getMinY());
+                }
             });
             component.onClick(clickEvent);
         }
