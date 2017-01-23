@@ -402,8 +402,9 @@ public class I18N implements MessageProvider {
                 );
             }
 
-            String message = color(format((String) obj, formattingObjects));
+            String message = format((String) obj, formattingObjects);
             message = resolveReferences(message, category);
+            message = color(message);
 
             result.add(message);
         }
