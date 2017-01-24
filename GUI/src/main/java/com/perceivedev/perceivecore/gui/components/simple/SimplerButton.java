@@ -110,10 +110,13 @@ public class SimplerButton extends SimplerLabel {
          * Sets the action of the button
          *
          * @param action The action when the button is clicked
+         *
+         * @return This builder
          */
         @SuppressWarnings({"unused", "WeakerAccess"})
-        public void setAction(Consumer<ClickEvent> action) {
+        public Builder setAction(Consumer<ClickEvent> action) {
             this.action = action;
+            return this;
         }
 
         @Override
