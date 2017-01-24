@@ -38,14 +38,14 @@ class DependencyManager {
      *
      * @param plugin The {@link JavaPlugin} to add
      */
-    void registerPlugin(JavaPlugin plugin) {
+    boolean registerPlugin(JavaPlugin plugin) {
         YamlConfiguration pluginYML = getPluginYML(plugin);
         if (!pluginYML.isList("module.dependencies")) {
             LOGGER.warning(LOGGER_PREFIX +
                     "Plugin '" + plugin.getName() + "' does not declare the dependencies in the plugin.yml " +
                     "under the key 'module.dependencies'"
             );
-            return;
+            return false;
         }
         for (String dependency : pluginYML.getStringList("module.dependencies")) {
             if (!ModuleManager.INSTANCE.hasModuleWithName(dependency)) {
@@ -55,12 +55,14 @@ class DependencyManager {
                 );
                 // TODO: 13.01.2017 Download it? 
                 plugin.getPluginLoader().disablePlugin(plugin);
-                return;
+                return false;
             }
         }
         String message = "Loaded plugin '" + plugin.getName() + "' with the following dependencies: ";
         message += String.join(", ", pluginYML.getStringList("module.dependencies"));
         LOGGER.info(LOGGER_PREFIX + message);
+
+        return true;
     }
 
     /**

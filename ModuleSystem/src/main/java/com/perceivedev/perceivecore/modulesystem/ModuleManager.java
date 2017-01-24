@@ -105,9 +105,11 @@ public enum ModuleManager {
      * Registers a JavaPlugin, downloading all needed dependencies
      *
      * @param plugin The {@link JavaPlugin} to register
+     *
+     * @return True if the plugin was registered successfully
      */
-    public void registerPlugin(JavaPlugin plugin) {
-        dependencyManager.registerPlugin(plugin);
+    public boolean registerPlugin(JavaPlugin plugin) {
+        return dependencyManager.registerPlugin(plugin);
     }
 
     /**
